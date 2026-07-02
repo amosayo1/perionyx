@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Outer vault arch + V shape -->
+  <path
+    d="M60 6C34.5 6 14 26.5 14 52v16c0 14 7.5 26.2 18.8 33L60 114l27.2-13C98.5 94.2 106 82 106 68V52c0-25.5-20.5-46-46-46z"
+    fill="currentColor"
+    opacity="0.08"
+  />
+  <!-- V letterform with keystone arch -->
+  <path
+    d="M60 24L28 88h12l20-42 20 42h12L60 24z"
+    fill="currentColor"
+  />
+  <!-- Keyhole negative space -->
+  <rect x="56" y="56" width="8" height="18" rx="3" fill="#0a0a0a" />
+  <circle cx="60" cy="54" r="6" fill="#0a0a0a" />
+  <!-- Subtle vault door line -->
+  <path
+    d="M34 60c0-14.4 11.6-26 26-26s26 11.6 26 26"
+    stroke="currentColor"
+    stroke-width="2"
+    opacity="0.3"
+    fill="none"
+  />
+</svg>

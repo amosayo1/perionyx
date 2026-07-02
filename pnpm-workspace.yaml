@@ -1,0 +1,10 @@
+allowBuilds:
+  '@sentry/cli': true
+  esbuild: true
+  prisma: true
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - esbuild
+  - prisma
+  - sharp
+  - unrs-resolver

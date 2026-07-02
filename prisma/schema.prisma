@@ -1,0 +1,1910 @@
+// Perionyx — PostgreSQL. Financial rules are enforced in services; not every rule is a DB constraint.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Auth (NextAuth / @auth/prisma-adapter)
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  /// Bcrypt for credentials sign-in; null for OAuth-only users.
+  passwordHash          String?    @map("password_hash")
+  /// Account lockout
+  failedLoginAttempts   Int        @default(0)
+  lockedUntil           DateTime?
+
+  accounts       Account[]
+  sessions       Session[]
+  authenticators Authenticator[]
+
+  /// At least one membership is required for normal product flows.
+  memberships         CompanyMembership[]
+  auditLogs           AuditLog[]          @relation("AuditActor")
+  transactionsCreated Transaction[]       @relation("TransactionCreatedBy")
+  userRoles           UserRole[]
+  approvalRulesCreated ApprovalRule[]     @relation("ApprovalRuleCreatedBy")
+  approvalRulesUpdated ApprovalRule[]     @relation("ApprovalRuleUpdatedBy")
+
+  notificationPreferences NotificationPreference[]
+  notifications           Notification[]
+  invitationsSent         Invitation[] @relation("InvitedBy")
+  approvalComments        ApprovalComment[] @relation("CommentAuthor")
+  approvalParticipants    ApprovalParticipant[] @relation("ParticipantUser")
+  objectVersions          ObjectVersion[] @relation("ObjectVersionAuthor")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, credentialID])
+}
+
+// ---------------------------------------------------------------------------
+// Tenancy
+// ---------------------------------------------------------------------------
+
+model Company {
+  id     String  @id @default(cuid())
+  name   String
+  slug   String  @unique
+  sandbox Boolean @default(false)
+
+  /// KYC / Entity Profile
+  legalName            String?  @map("legal_name")
+  ein                  String?  @map("ein")
+  jurisdiction         String?  @map("jurisdiction")
+  entityType           String?  @map("entity_type")
+  incorporationDate    DateTime? @map("incorporation_date")
+  address              String?
+  verificationStatus   String   @default("UNVERIFIED") @map("verification_status")
+  verifiedAt           DateTime? @map("verified_at")
+
+  memberships        CompanyMembership[]
+  wallets            Wallet[]
+  transactions       Transaction[]
+  ledgerEntries      LedgerEntry[]
+  auditLogs          AuditLog[]
+  idempotencyRecords IdempotencyRecord[]
+  roles              Role[]
+  userRoles          UserRole[]
+  approvalAuthorities ApprovalAuthority[]
+
+  approvalRules      ApprovalRule[]
+  transactionApprovals TransactionApproval[]
+  webhooks              Webhook[]
+  webhookDeliveries     WebhookDelivery[]
+  connectorConfigs      ConnectorConfig[]
+  settlementRecords     SettlementRecord[]
+
+  reconciliationRuns    ReconciliationRun[]
+  reconciliationReports ReconciliationReport[]
+  reconciliationExceptions ReconciliationException[]
+
+  treasuryAccounts      TreasuryAccount[]
+  accountControls       AccountControl[]
+  internalTransfers     InternalTransfer[]
+
+  policies              Policy[]
+  policyTestResults     PolicyTestResult[]
+
+  riskAlerts            RiskAlert[]
+  riskIncidents         RiskIncident[]
+
+  connectorRuns         ConnectorRun[]
+  connectorEvents       ConnectorEvent[]
+
+  calendarEvents        CalendarEvent[]
+
+  notificationChannels  NotificationChannel[]
+  notificationPreferences NotificationPreference[]
+  notifications         Notification[]
+  apiKeys               ApiKey[]
+  invitations           Invitation[]
+  exchangeRates         ExchangeRate[]
+  approvalThreads        ApprovalThread[]
+  approvalComments       ApprovalComment[]
+  approvalParticipants   ApprovalParticipant[]
+  licenses               License[]
+  copilotConversations   CopilotConversation[]
+  briefings              Briefing[]
+  intelligenceSnapshots  IntelligenceSnapshot[]
+  objectVersions         ObjectVersion[]
+  identityProviders      IdentityProvider[]
+
+  externalAccounts        ExternalAccount[]
+  externalTransactions    ExternalTransaction[]
+  externalBalances        ExternalBalance[]
+  syncLogs                SyncLog[]
+  accountingConnections   AccountingConnection[]
+  chartOfAccounts         ChartOfAccount[]
+  accountingVendors       AccountingVendor[]
+  accountingCustomers     AccountingCustomer[]
+  accountingInvoices      AccountingInvoice[]
+  reconciliationMatches   ReconciliationMatch[]
+  autoMatchRules          AutoMatchRule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CompanyRole {
+  OWNER
+  ADMIN
+  TREASURER
+  MEMBER
+  VIEWER
+}
+
+model CompanyMembership {
+  id        String      @id @default(cuid())
+  userId    String
+  companyId String
+  role      CompanyRole
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, companyId])
+  @@index([companyId])
+  @@map("company_memberships")
+}
+
+// ---------------------------------------------------------------------------
+// Identity Provider (Enterprise Identity Framework)
+// ---------------------------------------------------------------------------
+
+model IdentityProvider {
+  id        String   @id @default(cuid())
+  companyId String
+  kind      String
+  status    String   @default("configuring")
+  label     String
+  domain    String?
+  metadata  Json     @default("{}")
+  priority  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, kind])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@map("identity_providers")
+}
+
+// ---------------------------------------------------------------------------
+// Wallet
+// ---------------------------------------------------------------------------
+
+enum WalletKind {
+  STANDARD
+  /// Contra account for external flows (one per company per currency in practice).
+  SYSTEM_CLEARING
+}
+
+model Wallet {
+  id        String @id @default(cuid())
+  companyId String
+  kind      WalletKind @default(STANDARD)
+  name      String
+  currency  String     @default("USD") /// ISO 4217 (application validates length)
+
+  /// Kept in sync with ledger postings; STANDARD balances cannot go negative in app code.
+  balance Decimal @default(0) @db.Decimal(38, 12)
+  /// Bumped on each balance write inside financial transactions (optimistic lock).
+  version Int @default(0)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  ledgerEntries LedgerEntry[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([companyId, kind, currency])
+}
+
+// ---------------------------------------------------------------------------
+// Transactions (lifecycle in app: PENDING → PROCESSING → COMPLETED; FAILED for future async paths)
+// ---------------------------------------------------------------------------
+
+enum TransactionType {
+  INTERNAL_TRANSFER
+  WALLET_CREDIT
+  WALLET_DEBIT
+  ADJUSTMENT
+  REVERSAL
+}
+
+enum TransactionStatus {
+  PENDING
+  PENDING_APPROVAL
+  PROCESSING
+  COMPLETED
+  FAILED
+  REVERSED
+  CANCELLED
+}
+
+model Transaction {
+  id        String @id @default(cuid())
+  companyId String
+
+  type   TransactionType
+  status TransactionStatus @default(PENDING)
+
+  /// Amount the transaction represents; ledger lines realize it.
+  primaryAmount Decimal @db.Decimal(38, 12)
+  currency      String
+
+  reference      String?
+  idempotencyKey String?
+  metadata       Json?
+
+  createdByUserId String?
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  createdBy User?   @relation("TransactionCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  ledgerEntries LedgerEntry[]
+  approvals TransactionApproval[]
+  settlements SettlementRecord[]
+  approvalThread ApprovalThread?
+  externalTransactions ExternalTransaction[]
+  reconciliationMatches ReconciliationMatch[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([companyId, idempotencyKey])
+  @@index([companyId, createdAt])
+  @@index([companyId, type])
+}
+
+// ---------------------------------------------------------------------------
+// RBAC (Phase 7)
+// ---------------------------------------------------------------------------
+
+model Role {
+  id        String @id @default(cuid())
+  companyId String
+  name      String
+  description String?
+
+  permissions RolePermission[]
+  userRoles   UserRole[]
+  approvalAuthorities ApprovalAuthority[]
+
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+enum PermissionScopeType {
+  GLOBAL
+  COMPANY
+  WALLET
+  TRANSACTION_TYPE
+}
+
+model Permission {
+  id   String @id @default(cuid())
+  name String @unique
+  description String?
+
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+  scopeType    PermissionScopeType @default(GLOBAL)
+  scopeId      String?
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId, scopeType, scopeId])
+}
+
+model UserRole {
+  id        String @id @default(cuid())
+  userId    String
+  roleId    String
+  companyId String
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+
+  @@unique([userId, roleId, companyId])
+  @@index([companyId, userId])
+}
+
+// ---------------------------------------------------------------------------
+// Currency exchange
+// ---------------------------------------------------------------------------
+
+model ExchangeRate {
+  id            String   @id @default(cuid())
+  companyId     String
+  baseCurrency  String   /// ISO 4217 — the currency being converted FROM (e.g. "USD")
+  quoteCurrency String   /// ISO 4217 — the currency being converted TO (e.g. "EUR")
+  rate          Decimal  @db.Decimal(38, 12) /// 1 baseCurrency = this many quoteCurrency
+  source        String   @default("manual") /// "manual", "open-exchange-rates", "fixer"
+  validFrom     DateTime @default(now())
+  validTo       DateTime?
+  fetchedAt     DateTime? /// When this rate was last fetched from the provider
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, baseCurrency, quoteCurrency])
+  @@index([companyId, baseCurrency])
+  @@index([baseCurrency])
+  @@index([quoteCurrency])
+  @@index([fetchedAt])
+  @@map("exchange_rates")
+}
+
+enum ApprovalScopeType {
+  GLOBAL
+  WALLET
+  TRANSACTION_TYPE
+}
+
+model ApprovalAuthority {
+  id                 String            @id @default(cuid())
+  companyId          String
+  roleId             String
+  name               String
+  description        String?
+  scopeType          ApprovalScopeType @default(GLOBAL)
+  scopeId            String?
+  minAmount          Decimal?          @db.Decimal(38, 12)
+  maxAmount          Decimal?          @db.Decimal(38, 12)
+  requiresDualApproval Boolean         @default(false)
+  enabled            Boolean           @default(true)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role    Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, scopeType, scopeId])
+}
+
+// ---------------------------------------------------------------------------
+// Approval workflows
+// ---------------------------------------------------------------------------
+
+enum ApprovalScope {
+  GLOBAL
+  WALLET
+  WALLET_TYPE
+  TRANSACTION_TYPE
+  CONNECTOR_TYPE
+}
+
+enum ConditionOperator {
+  EQUALS
+  GREATER_THAN
+  LESS_THAN
+  BETWEEN
+  IN
+  CONTAINS
+}
+
+model ApprovalRule {
+  id                      String   @id @default(cuid())
+  companyId               String
+  name                    String
+  description             String?
+  
+  // Rule scope and priority
+  priority                Int      @default(100) // Lower = higher priority
+  scope                   ApprovalScope @default(GLOBAL)
+  scopeId                 String?  // Wallet ID, connector type, etc.
+  
+  // Amount thresholds
+  minAmount               Decimal  @db.Decimal(38, 12) @default(0)
+  maxAmount               Decimal? @db.Decimal(38, 12)
+  
+  // Transaction type applicability
+  applicableTransactionTypes String[]
+  
+  // Connector types (ACH, SWIFT, etc.)
+  applicableConnectorTypes String[]
+  
+  // Approval requirements
+  requiredApprovalsCount  Int      @default(1)
+  sequentialApproval      Boolean  @default(false)
+  dualApprovalRequired    Boolean  @default(false)
+  
+  // Escalation and timeouts
+  escalationPath          String[]
+  escalationTimeoutHours  Int?
+  autoEscalateAfterHours  Int?
+  
+  // Compliance and expiration
+  requiresComplianceReview Boolean @default(false)
+  expiresAt               DateTime?
+  
+  // Status
+  enabled                 Boolean  @default(true)
+  
+  // Conditions (flexible matching)
+  conditions              ApprovalCondition[]
+  
+  // Approval steps in this rule
+  approvalSteps           ApprovalStep[]
+  
+  // Audit trail
+  createdByUserId         String?
+  updatedByUserId         String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdBy User?  @relation("ApprovalRuleCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  updatedBy User?  @relation("ApprovalRuleUpdatedBy", fields: [updatedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([companyId, priority, enabled])
+  @@unique([companyId, name])
+}
+
+model ApprovalCondition {
+  id                String @id @default(cuid())
+  ruleId            String
+  
+  // Condition definition
+  fieldName         String // e.g., "amount", "transactionType", "walletId"
+  operator          ConditionOperator
+  value             String // JSON stringified for complex types
+  
+  ruleId_field_op   String? // Composite key for uniqueness
+  
+  rule ApprovalRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([ruleId])
+}
+
+model ApprovalStep {
+  id                String @id @default(cuid())
+  ruleId            String
+  
+  // Step definition
+  stepNumber        Int    // Order in approval chain
+  roleRequired      String // treasury_admin, compliance_officer, etc.
+  approvalCount     Int    @default(1) // How many approvers of this role
+  timeoutHours      Int?
+  
+  rule ApprovalRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([ruleId])
+}
+
+model TransactionApproval {
+  id               String   @id @default(cuid())
+  transactionId    String
+  companyId        String
+
+  status           String
+  approvingUserId  String?
+  approvingUserRole String?
+
+  approvedAt       DateTime?
+  rejectionReason  String?
+
+  level            Int
+  sequenceNumber   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, transactionId])
+}
+
+model ApprovalThread {
+  id            String   @id @default(cuid())
+  transactionId String
+  companyId     String
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  comments    ApprovalComment[]
+  participants ApprovalParticipant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([transactionId])
+  @@index([companyId])
+}
+
+model ApprovalComment {
+  id           String   @id @default(cuid())
+  threadId     String
+  companyId    String
+  authorUserId String
+  body         String
+  mentions     String[] /// ["@TREASURER", "@user-abc-123"]
+
+  thread     ApprovalThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  company    Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  author     User           @relation("CommentAuthor", fields: [authorUserId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([threadId])
+}
+
+model ApprovalParticipant {
+  id        String @id @default(cuid())
+  threadId  String
+  companyId String
+  userId    String
+
+  thread  ApprovalThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  company Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User           @relation("ParticipantUser", fields: [userId], references: [id])
+
+  @@unique([threadId, userId])
+}
+
+// ---------------------------------------------------------------------------
+// Ledger
+// ---------------------------------------------------------------------------
+
+enum LedgerSide {
+  DEBIT
+  CREDIT
+}
+
+model LedgerEntry {
+  id            String @id @default(cuid())
+  companyId     String
+  transactionId String
+  walletId      String
+
+  side   LedgerSide
+  /// Strictly positive magnitude; sign is expressed by `side`.
+  amount   Decimal @db.Decimal(38, 12)
+  currency String
+
+  /// Stable ordering within a transaction (0..n).
+  sequence Int
+
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Restrict)
+  wallet      Wallet      @relation(fields: [walletId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+
+  @@unique([transactionId, sequence])
+  @@index([companyId, walletId, createdAt])
+  @@index([transactionId])
+}
+
+// ---------------------------------------------------------------------------
+// Idempotency (Phase 2)
+// ---------------------------------------------------------------------------
+
+model IdempotencyRecord {
+  id String @id @default(cuid())
+
+  companyId      String
+  idempotencyKey String
+
+  /// Hash of request (method + path + body) for integrity
+  requestHash String
+
+  method String  /// HTTP method (POST, etc.)
+  path   String  /// API path
+
+  /// Cached response details
+  statusCode Int
+  responseBody Json
+
+  expiresAt DateTime /// Record expires and can be reused after this
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([companyId, idempotencyKey])
+  @@index([companyId, expiresAt])
+}
+
+// ---------------------------------------------------------------------------
+// Webhooks & Deliveries (Phase 8)
+// ---------------------------------------------------------------------------
+
+model Webhook {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  url       String
+  secret    String?
+  events    String[]
+  active    Boolean  @default(true)
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  deliveries WebhookDelivery[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model WebhookDelivery {
+  id           String   @id @default(cuid())
+  webhookId    String
+  companyId    String
+  event        String
+  payload      Json
+  status       String   @default("PENDING")
+  attempts     Int      @default(0)
+  lastError    String?
+  nextAttemptAt DateTime?
+
+  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status, nextAttemptAt])
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  key       String   /// AES-256-GCM encrypted value
+  keyHash   String   @unique /// SHA-256 hash for fast lookup
+  prefix    String   /// Visible prefix for identification (e.g. "va_abc...")
+  lastChars String   /// Last 4 chars shown in UI
+  scopes    String[] /// e.g. ["read:accounts", "write:transfers", "admin:webhooks"]
+  active    Boolean  @default(true)
+  expiresAt DateTime?
+  lastUsedAt DateTime?
+  usedCount Int      @default(0)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([keyHash])
+  @@index([companyId, active])
+  @@map("api_keys")
+}
+
+// ---------------------------------------------------------------------------
+// Invitations (Session 5)
+// ---------------------------------------------------------------------------
+
+model Invitation {
+  id        String   @id @default(cuid())
+  companyId String
+  email     String
+  role      CompanyRole @default(MEMBER)
+  token     String   @unique
+  invitedByUserId String
+  status    String   @default("PENDING") /// PENDING | ACCEPTED | EXPIRED | CANCELLED
+  expiresAt DateTime
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  invitedBy User   @relation("InvitedBy", fields: [invitedByUserId], references: [id], onDelete: Cascade)
+
+  acceptedByUserId String?
+  acceptedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([token])
+  @@map("invitations")
+}
+
+// ---------------------------------------------------------------------------
+// Connectors / Settlement (Phase 9)
+// ---------------------------------------------------------------------------
+
+model ConnectorConfig {
+  id         String  @id @default(cuid())
+  companyId  String
+  name       String
+  type       String
+  config     Json
+  active     Boolean @default(true)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  runs   ConnectorRun[]
+  events ConnectorEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model SettlementRecord {
+  id            String   @id @default(cuid())
+  companyId     String
+  transactionId String?
+  connectorName String
+  status        String   @default("PENDING")
+  externalId    String?
+  response      Json?
+  attempts      Int      @default(0)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  transaction Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([transactionId])
+}
+
+// ---------------------------------------------------------------------------
+// Reconciliation (Phase 10)
+// ---------------------------------------------------------------------------
+
+enum ReconciliationRunStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+model ReconciliationRun {
+  id        String                    @id @default(cuid())
+  companyId String
+  status    ReconciliationRunStatus   @default(PENDING)
+  type      String                    @default("FULL") // FULL, WALLET, TRANSACTION
+
+  summary Json? /// { walletsChecked, transactionsChecked, issuesFound, isHealthy }
+  metadata Json?
+
+  startedAt  DateTime?
+  completedAt DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  exceptions ReconciliationException[]
+  reports    ReconciliationReport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, createdAt])
+  @@index([companyId, status])
+}
+
+model ReconciliationException {
+  id              String   @id @default(cuid())
+  runId           String
+  companyId       String
+  type            String   // BALANCE_MISMATCH, TRANSACTION_UNBALANCED, LEDGER_ORPHAN, CURRENCY_MISMATCH
+  severity        String   @default("ERROR") // ERROR, WARNING
+  resourceType    String   // Wallet, Transaction, LedgerEntry
+  resourceId      String
+  message         String
+  details         Json?
+  resolved        Boolean  @default(false)
+  resolvedAt      DateTime?
+  resolvedByUserId String?
+
+  run ReconciliationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([runId])
+  @@index([companyId, resolved])
+  @@index([companyId, severity])
+}
+
+model ReconciliationReport {
+  id             String   @id @default(cuid())
+  runId          String
+  companyId      String
+  title          String
+  type           String   @default("FULL") // FULL, WALLET, TRANSACTION, CUSTOM
+  format         String   @default("JSON") // JSON, CSV, PDF
+  data           Json
+  totalIssues    Int      @default(0)
+  resolvedIssues Int      @default(0)
+
+  run ReconciliationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([runId])
+  @@index([companyId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Treasury Accounts (Phase 11)
+// ---------------------------------------------------------------------------
+
+enum AccountControlType {
+  SPENDING_LIMIT
+  VELOCITY_LIMIT
+  DEBIT_BLOCK
+  CREDIT_BLOCK
+  ALLOW_LIST
+  BLOCK_LIST
+}
+
+enum AccountControlScope {
+  DAILY
+  WEEKLY
+  MONTHLY
+  PER_TRANSACTION
+}
+
+model TreasuryAccount {
+  id             String   @id @default(cuid())
+  companyId      String
+  name           String
+  currency       String   @default("USD")
+  balance        Decimal  @default(0) @db.Decimal(38, 12)
+  description    String?
+  accountNumber  String?  /// External account reference (bank account, etc.)
+  routingInfo    Json?    /// Routing details for external transfers
+  isActive       Boolean  @default(true)
+
+  /// Plaid integration
+  plaidAccessToken  String?  @map("plaid_access_token")
+  plaidAccountId    String?  @map("plaid_account_id")
+  plaidItemId       String?  @map("plaid_item_id")
+  lastSyncedAt      DateTime? @map("last_synced_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  controls      AccountControl[]
+  transferHistory InternalTransfer[] @relation("TransferFromAccount")
+  incomingTransfers InternalTransfer[] @relation("TransferToAccount")
+
+  externalAccounts ExternalAccount[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@unique([companyId, name])
+  @@index([companyId, plaidItemId])
+  @@map("treasury_accounts")
+}
+
+model AccountControl {
+  id           String              @id @default(cuid())
+  accountId    String
+  companyId    String
+  type         AccountControlType
+  scope        AccountControlScope @default(PER_TRANSACTION)
+  value        Decimal             @db.Decimal(38, 12)
+  description  String?
+  enabled      Boolean             @default(true)
+
+  account TreasuryAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([accountId])
+  @@index([companyId, enabled])
+}
+
+enum InternalTransferStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model InternalTransfer {
+  id              String   @id @default(cuid())
+  companyId       String
+  fromAccountId   String
+  toAccountId     String
+  amount          Decimal  @db.Decimal(38, 12)
+  currency        String   @default("USD")
+  status          InternalTransferStatus @default(PENDING)
+  reference       String?
+  description     String?
+  failureReason   String?
+
+  fromAccount TreasuryAccount @relation("TransferFromAccount", fields: [fromAccountId], references: [id], onDelete: Restrict)
+  toAccount   TreasuryAccount @relation("TransferToAccount", fields: [toAccountId], references: [id], onDelete: Restrict)
+  company     Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([fromAccountId])
+  @@index([toAccountId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// External Financial Data (Phase 4A — Banking & Accounting Integrations)
+// ---------------------------------------------------------------------------
+
+/// Normalized external bank/financial account imported from Plaid or similar.
+model ExternalAccount {
+  id        String @id @default(cuid())
+  companyId String
+  source    String /// "plaid" | "manual" | etc.
+
+  /// Provider-specific identifiers
+  externalId  String /// Plaid account_id or similar
+  itemId      String? /// Plaid item_id
+  institutionName String?
+  institutionId   String?
+
+  /// Normalized account fields
+  name          String
+  officialName  String?
+  type          String? /// "checking", "savings", "credit", "investment"
+  subtype       String?
+  mask          String? /// Last 4 digits
+  currency      String @default("USD")
+
+  /// Link to internal treasury account (if connected)
+  treasuryAccountId String?
+  treasuryAccount   TreasuryAccount? @relation(fields: [treasuryAccountId], references: [id], onDelete: SetNull)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  balances ExternalBalance[]
+  transactions ExternalTransaction[]
+  syncLogs SyncLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, externalId, source])
+  @@index([companyId, source])
+  @@index([companyId, treasuryAccountId])
+  @@map("external_accounts")
+}
+
+/// Normalized external transaction from Plaid or similar.
+model ExternalTransaction {
+  id            String @id @default(cuid())
+  companyId     String
+  source        String /// "plaid" | "manual" | etc.
+
+  /// Provider-specific identifiers
+  externalId         String
+  externalAccountId  String
+  externalAccount    ExternalAccount @relation(fields: [externalAccountId], references: [id], onDelete: Cascade)
+
+  /// Normalized transaction fields
+  amount        Decimal @db.Decimal(38, 12)
+  currency      String  @default("USD")
+  description   String?
+  merchantName  String?
+  category      String?
+  categoryId    String?
+  pending       Boolean @default(false)
+  transactionDate DateTime?
+  postDate      DateTime?
+
+  /// Plaid-specific enrichment
+  paymentChannel String? /// "online", "in store", "other"
+  transactionType String? /// "digital", "place", "special", etc.
+  isoCurrencyCode String?
+  pendingExternalId String?
+
+  /// Link to internal ledger transaction (once reconciled)
+  reconciledTransactionId String?
+  reconciledTransaction   Transaction? @relation(fields: [reconciledTransactionId], references: [id], onDelete: SetNull)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  reconciliationMatches ReconciliationMatch[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, externalId, source])
+  @@index([companyId, externalAccountId])
+  @@index([companyId, transactionDate])
+  @@index([companyId, reconciledTransactionId])
+  @@map("external_transactions")
+}
+
+/// Normalized balance snapshot from external providers.
+model ExternalBalance {
+  id                  String   @id @default(cuid())
+  companyId           String
+  source              String   /// "plaid" | "manual" | etc.
+  externalAccountId   String
+  externalAccount     ExternalAccount @relation(fields: [externalAccountId], references: [id], onDelete: Cascade)
+
+  current Decimal @db.Decimal(38, 12)
+  available Decimal? @db.Decimal(38, 12)
+  limit     Decimal? @db.Decimal(38, 12)
+  currency  String @default("USD")
+
+  recordedAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, externalAccountId])
+  @@index([companyId, recordedAt])
+  @@map("external_balances")
+}
+
+/// Synchronization history for connectors.
+model SyncLog {
+  id            String   @id @default(cuid())
+  companyId     String
+  connectorId   String
+  source        String   /// "plaid" | "quickbooks" | etc.
+  syncType      String   /// "balance" | "transaction" | "accounting" | "full"
+  status        String   /// "running" | "completed" | "failed"
+
+  externalAccountId String?
+  externalAccount   ExternalAccount? @relation(fields: [externalAccountId], references: [id], onDelete: SetNull)
+
+  recordsProcessed Int @default(0)
+  recordsCreated   Int @default(0)
+  recordsUpdated   Int @default(0)
+  recordsFailed    Int @default(0)
+
+  errorMessage String?
+  startedAt    DateTime
+  completedAt  DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, connectorId])
+  @@index([companyId, syncType])
+  @@index([companyId, startedAt])
+  @@map("sync_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Accounting Integrations (Phase 4A — QuickBooks Online)
+// ---------------------------------------------------------------------------
+
+/// OAuth connection metadata for QBO.
+model AccountingConnection {
+  id             String @id @default(cuid())
+  companyId      String
+  connectorId    String
+  realmId        String /// QuickBooks company ID
+  clientId       String
+  accessToken    String /// encrypted
+  refreshToken   String? /// encrypted
+  tokenExpiresAt DateTime?
+  syncToken      String? /// QBO sync token for change tracking
+  connectedAt    DateTime
+  lastSyncAt     DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  invoices AccountingInvoice[]
+  chartOfAccounts ChartOfAccount[]
+  accountingVendors AccountingVendor[]
+  accountingCustomers AccountingCustomer[]
+
+  @@unique([companyId, realmId])
+  @@index([companyId])
+  @@map("accounting_connections")
+}
+
+/// Normalized Chart of Accounts from QBO.
+model ChartOfAccount {
+  id                String @id @default(cuid())
+  companyId         String
+  accountingConnectionId String
+  accountingConnection   AccountingConnection @relation(fields: [accountingConnectionId], references: [id], onDelete: Cascade)
+
+  externalId   String /// QBO account ID
+  name         String
+  accountType  String /// "Bank", "AccountsReceivable", "Expense", "Income", etc.
+  accountSubType String?
+  classification String? /// "Asset", "Liability", "Equity", "Revenue", "Expense"
+  active       Boolean @default(true)
+  balance      Decimal @default(0) @db.Decimal(38, 12)
+  currency     String  @default("USD")
+  description  String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, externalId])
+  @@index([companyId, accountType])
+  @@map("chart_of_accounts")
+}
+
+/// Normalized Vendor records from QBO.
+model AccountingVendor {
+  id                String @id @default(cuid())
+  companyId         String
+  accountingConnectionId String
+  accountingConnection   AccountingConnection @relation(fields: [accountingConnectionId], references: [id], onDelete: Cascade)
+
+  externalId   String /// QBO vendor ID
+  displayName  String
+  companyName  String?
+  email        String?
+  phone        String?
+  address      Json?
+  active       Boolean @default(true)
+  balance      Decimal @default(0) @db.Decimal(38, 12)
+  currency     String  @default("USD")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, externalId])
+  @@index([companyId])
+  @@map("accounting_vendors")
+}
+
+/// Normalized Customer records from QBO.
+model AccountingCustomer {
+  id                String @id @default(cuid())
+  companyId         String
+  accountingConnectionId String
+  accountingConnection   AccountingConnection @relation(fields: [accountingConnectionId], references: [id], onDelete: Cascade)
+
+  externalId   String /// QBO customer ID
+  displayName  String
+  companyName  String?
+  email        String?
+  phone        String?
+  address      Json?
+  active       Boolean @default(true)
+  balance      Decimal @default(0) @db.Decimal(38, 12)
+  currency     String  @default("USD")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, externalId])
+  @@index([companyId])
+  @@map("accounting_customers")
+}
+
+/// Normalized Invoice records from QBO.
+model AccountingInvoice {
+  id                String @id @default(cuid())
+  companyId         String
+  accountingConnectionId String
+  accountingConnection   AccountingConnection @relation(fields: [accountingConnectionId], references: [id], onDelete: Cascade)
+
+  externalId      String /// QBO invoice ID
+  docNumber       String? /// Invoice number
+  customerId      String? /// QBO customer ID
+  customerName    String?
+  totalAmount     Decimal @db.Decimal(38, 12)
+  balance         Decimal @db.Decimal(38, 12)
+  currency        String  @default("USD")
+  status          String  /// "Draft", "Sent", "Viewed", "Paid", "Overdue", "Void"
+  dueDate         DateTime?
+  transactionDate DateTime?
+  emailStatus     String?
+  deliveryInfo    Json?
+  lineItems       Json?
+  metadata        Json?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, externalId])
+  @@index([companyId, status])
+  @@index([companyId, dueDate])
+  @@map("accounting_invoices")
+}
+
+// ---------------------------------------------------------------------------
+// Reconciliation Matches (Phase 4A — Bank Transaction Reconciliation)
+// ---------------------------------------------------------------------------
+
+/// A match between an external transaction and an internal ledger transaction.
+model ReconciliationMatch {
+  id                      String @id @default(cuid())
+  companyId               String
+
+  externalTransactionId   String
+  externalTransaction     ExternalTransaction @relation(fields: [externalTransactionId], references: [id], onDelete: Cascade)
+
+  internalTransactionId String?
+  internalTransaction   Transaction? @relation(fields: [internalTransactionId], references: [id], onDelete: SetNull)
+
+  confidenceScore Float    /// 0.0 to 1.0
+  matchType        String  /// "auto" | "suggested" | "manual"
+  status           String  /// "pending" | "approved" | "rejected"
+  matchReason      String? /// "amount_match" | "date_match" | "description_match" | "ml_suggested"
+
+  approvedByUserId String?
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  rejectedReason    String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([companyId, externalTransactionId, internalTransactionId])
+  @@index([companyId, status])
+  @@index([companyId, confidenceScore])
+  @@index([companyId, externalTransactionId])
+  @@map("reconciliation_matches")
+}
+
+/// User-defined auto-match rules for reconciliation.
+model AutoMatchRule {
+  id         String @id @default(cuid())
+  companyId  String
+
+  name        String
+  description String?
+  enabled     Boolean @default(true)
+
+  /// Criteria (JSON): { amountTolerance, dateWindowDays, descriptionSimilarity, merchantMatch }
+  criteria    Json
+  priority    Int @default(0)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, enabled])
+  @@map("auto_match_rules")
+}
+
+enum PolicyType {
+  APPROVAL
+  TRANSACTION_LIMIT
+  COMPLIANCE
+  RISK
+  CUSTOM
+}
+
+enum PolicyRuleOperator {
+  EQUALS
+  NOT_EQUALS
+  GREATER_THAN
+  LESS_THAN
+  BETWEEN
+  IN
+  NOT_IN
+  CONTAINS
+  MATCHES
+}
+
+model Policy {
+  id            String   @id @default(cuid())
+  companyId     String
+  name          String
+  description   String?
+  type          PolicyType @default(APPROVAL)
+  enabled       Boolean  @default(true)
+  priority      Int      @default(100)
+
+  // Evaluation scope
+  appliesToTransactionTypes String[] /// Transaction types this policy applies to
+  appliesToConnectorTypes   String[]
+  appliesToCurrencies       String[]
+  minAmount                 Decimal? @db.Decimal(38, 12)
+  maxAmount                 Decimal? @db.Decimal(38, 12)
+
+  // Actions
+  actionType    String   @default("BLOCK") // BLOCK, FLAG, REQUIRE_APPROVAL, NOTIFY
+  actionConfig  Json?
+
+  rules         PolicyRule[]
+  testResults   PolicyTestResult[]
+
+  createdByUserId   String?
+  lastEvaluatedAt   DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId, enabled, priority])
+  @@index([companyId, type])
+}
+
+model PolicyRule {
+  id            String               @id @default(cuid())
+  policyId      String
+  field         String               /// Transaction field to evaluate (amount, type, currency, walletId, etc.)
+  operator      PolicyRuleOperator
+  value         String               /// Value or JSON stringified array/range
+  negate        Boolean              @default(false)
+
+  policy Policy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@index([policyId])
+}
+
+model PolicyTestResult {
+  id         String   @id @default(cuid())
+  policyId   String
+  companyId  String
+  input      Json     /// The test input (transaction data)
+  matched    Boolean
+  action     String?  /// What action would be taken
+  details    Json?    /// Evaluation details
+
+  policy Policy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([policyId])
+  @@index([companyId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Risk & Controls (Phase 13)
+// ---------------------------------------------------------------------------
+
+enum RiskAlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RiskAlertStatus {
+  OPEN
+  ACKNOWLEDGED
+  INVESTIGATING
+  RESOLVED
+  DISMISSED
+}
+
+enum RiskAlertCategory {
+  BALANCE_ANOMALY
+  FAILED_APPROVAL
+  FAILED_RECONCILIATION
+  CONNECTOR_FAILURE
+  POLICY_VIOLATION
+  SUSPICIOUS_ACTIVITY
+  SYSTEM_ERROR
+  COMPLIANCE
+  FX_SYNC
+}
+
+model RiskAlert {
+  id          String              @id @default(cuid())
+  companyId   String
+  category    RiskAlertCategory
+  severity    RiskAlertSeverity   @default(MEDIUM)
+  status      RiskAlertStatus     @default(OPEN)
+  title       String
+  description String?
+  source      String?             /// The system that generated this alert
+  resourceType String?            /// Transaction, Wallet, Connector, etc.
+  resourceId  String?
+  metadata    Json?
+  acknowledgedByUserId String?
+  acknowledgedAt       DateTime?
+  resolvedByUserId    String?
+  resolvedAt          DateTime?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([companyId, severity])
+  @@index([companyId, category])
+}
+
+model RiskIncident {
+  id          String   @id @default(cuid())
+  companyId   String
+  title       String
+  description String?
+  severity    RiskAlertSeverity @default(MEDIUM)
+  status      RiskAlertStatus  @default(OPEN)
+  category    RiskAlertCategory
+  alerts      String[]         /// Related alert IDs
+  rootCause   String?
+  resolution  String?
+  timeline    Json?            /// Incident timeline events
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([companyId, severity])
+}
+
+// ---------------------------------------------------------------------------
+// Connector Enhancements (Phase 14)
+// ---------------------------------------------------------------------------
+
+model ConnectorRun {
+  id             String   @id @default(cuid())
+  connectorId    String
+  companyId      String
+  status         String   @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED
+  event          String   /// The event type that triggered this run
+  input          Json?
+  output         Json?
+  error          String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+
+  connector ConnectorConfig @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  events ConnectorEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([connectorId, createdAt])
+  @@index([companyId, status])
+}
+
+model ConnectorEvent {
+  id             String   @id @default(cuid())
+  runId          String
+  connectorId    String
+  companyId      String
+  type           String   /// INFO, WARNING, ERROR, DEBUG
+  message        String
+  metadata       Json?
+  timestamp      DateTime @default(now())
+
+  run       ConnectorRun     @relation(fields: [runId], references: [id], onDelete: Cascade)
+  connector ConnectorConfig  @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+  company   Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([runId])
+  @@index([connectorId, timestamp])
+}
+
+// ---------------------------------------------------------------------------
+// Calendar (Phase 16)
+// ---------------------------------------------------------------------------
+
+enum CalendarEventType {
+  APPROVAL_DEADLINE
+  RECONCILIATION
+  SETTLEMENT
+  CONNECTOR_SCHEDULE
+  AUDIT
+  MANUAL
+}
+
+model CalendarEvent {
+  id          String             @id @default(cuid())
+  companyId   String
+  title       String
+  description String?
+  type        CalendarEventType
+  startDate   DateTime
+  endDate     DateTime?
+  allDay      Boolean            @default(true)
+  status      String             @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  referenceType String?          /// Transaction, Reconciliation, Connector, etc.
+  referenceId  String?
+  metadata     Json?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdByUserId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, startDate])
+  @@index([companyId, type])
+  @@index([companyId, status])
+}
+
+// ---------------------------------------------------------------------------
+// Audit
+// ---------------------------------------------------------------------------
+
+enum AuditSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  /// Null only for pre-tenant / global bootstrap events.
+  companyId String?
+
+  actorUserId String?
+
+  action       String
+  resourceType String
+  resourceId   String?
+
+  severity AuditSeverity @default(INFO)
+
+  metadata  Json?
+  requestId String?
+  /// Optional payload hash for tamper-evident chains (filled by the app when needed).
+  payloadHash String?
+
+  ipAddress String?
+  userAgent String? @db.Text
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  actor   User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([companyId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([resourceType, resourceId])
+}
+
+// ---------------------------------------------------------------------------
+// Copilot / AI Conversations
+// ---------------------------------------------------------------------------
+
+model CopilotConversation {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String
+  title     String   @default("New conversation")
+  modelUsed String   @default("gpt-4o-mini")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  messages CopilotMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, userId, updatedAt])
+  @@map("copilot_conversations")
+}
+
+model CopilotMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String   /// "user" | "assistant"
+  content        String
+  citations      String[] @default([])
+  followUps      String[] @default([])
+
+  conversation CopilotConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId, createdAt])
+  @@map("copilot_messages")
+}
+
+// ---------------------------------------------------------------------------
+// Intelligence Snapshots — Metric History for Trend Analysis
+// ---------------------------------------------------------------------------
+
+model IntelligenceSnapshot {
+  id        String   @id @default(cuid())
+  companyId String
+  metric    String   /// e.g. "cash_position", "risk_score", "approval_sla", "operational_efficiency"
+  value     Decimal  @db.Decimal(38, 12)
+  label     String?  /// Human-readable label for the metric
+  metadata  Json?    /// Extra context (e.g. { currency: "USD", walletCount: 5 })
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  takenAt DateTime @default(now())
+
+  @@index([companyId, metric, takenAt])
+  @@map("intelligence_snapshots")
+}
+
+// ---------------------------------------------------------------------------
+// Briefings — Persisted Intelligence Reports
+// ---------------------------------------------------------------------------
+
+model Briefing {
+  id        String   @id @default(cuid())
+  companyId String
+  period    String   /// "daily" | "weekly" | "monthly" | "quarterly"
+  title     String
+  summary   String?
+  sections  Json     /// Array of BriefingSection (title, summary, details, confidence, recommendations)
+  recommendations String[]
+  requestedByUserId String?  /// null for system-generated cron briefings
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([companyId, period, createdAt])
+  @@map("briefings")
+}
+
+// ---------------------------------------------------------------------------
+// AI Provider Usage Tracking
+// ---------------------------------------------------------------------------
+
+model AiUsage {
+  id              String   @id @default(cuid())
+  companyId       String
+  userId          String?
+  provider        String
+  model           String
+  feature         String
+  promptTokens    Int
+  completionTokens Int
+  totalTokens     Int
+  estimatedCost   Decimal  @db.Decimal(18, 10) @default(0)
+
+  createdAt       DateTime @default(now())
+
+  @@index([companyId, createdAt])
+  @@index([provider, createdAt])
+  @@index([model, createdAt])
+  @@map("ai_usage")
+}
+
+model AiProviderHealth {
+  id        String   @id @default(cuid())
+  provider  String
+  status    String
+  latency   Int?
+  error     String?
+  checkedAt DateTime @default(now())
+
+  @@index([provider, checkedAt])
+  @@map("ai_provider_health")
+}
+
+// ---------------------------------------------------------------------------
+// Enterprise Time Machine — Object Versioning (Phase 19)
+// ---------------------------------------------------------------------------
+
+enum VersionChangeType {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+model ObjectVersion {
+  id             String             @id @default(cuid())
+  companyId      String
+  entityType     String             /// Transaction, LedgerEntry, TransactionApproval, Policy, RiskIncident, TreasuryAccount
+  entityId       String             /// The ID of the tracked entity
+  version        Int                /// Monotonic version per (entityType, entityId)
+  data           Json               /// Full snapshot of the entity at this version
+  changedByUserId String?
+  changeType     VersionChangeType  @default(UPDATE)
+  changedFields  String[]           /// Field names that changed in this version
+  previousVersionId String?         /// Link to previous version for chain traversal
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  changedBy User?  @relation("ObjectVersionAuthor", fields: [changedByUserId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@unique([companyId, entityType, entityId, version])
+  @@index([companyId, entityType, entityId, createdAt])
+  @@index([companyId, entityType, entityId, version])
+  @@index([previousVersionId])
+  @@map("object_versions")
+}
+
+// ---------------------------------------------------------------------------
+// Notifications (Phase 18)
+// ---------------------------------------------------------------------------
+
+enum NotificationEventType {
+  APPROVAL_REQUIRED
+  APPROVAL_COMPLETED
+  APPROVAL_REJECTED
+  RISK_ALERT_CREATED
+  RISK_ALERT_RESOLVED
+  RECONCILIATION_COMPLETED
+  RECONCILIATION_FAILED
+  POLICY_VIOLATION
+  CONNECTOR_FAILURE
+  TRANSFER_COMPLETED
+  TRANSFER_FAILED
+  CALENDAR_EVENT_REMINDER
+  PLAID_SYNC_FAILED
+  PLAID_ACCOUNT_LINKED
+  PLAID_ACCOUNT_UNLINKED
+}
+
+model NotificationChannel {
+  id        String   @id @default(cuid())
+  companyId String
+  type      String   @default("IN_APP") /// IN_APP | EMAIL | SLACK
+  name      String   /// e.g. "Engineering Slack", "Finance Email"
+  config    Json     /// { webhookUrl?, email?, smtpHost?, smtpPort?, smtpUser?, smtpPass? }
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company      Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  preferences  NotificationPreference[]
+
+  @@map("notification_channels")
+}
+
+model NotificationPreference {
+  id        String   @id @default(cuid())
+  userId     String
+  companyId  String
+  eventType  NotificationEventType
+  channelId  String?
+  enabled    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  user    User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel NotificationChannel? @relation(fields: [channelId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, companyId, eventType, channelId])
+  @@map("notification_preferences")
+}
+
+model License {
+  id                String   @id @default(cuid())
+  companyId         String   @unique
+  key               String   @unique
+  status            String   @default("ACTIVE") /// ACTIVE | REVOKED | EXPIRED
+  seats             Int      @default(5)
+  features          Json     @default("{}")
+  issuedAt          DateTime @default(now())
+  expiresAt         DateTime?
+  revokedAt         DateTime?
+  revocationReason  String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([key])
+  @@map("licenses")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String?  /// null = broadcast to company
+  eventType NotificationEventType
+  title     String
+  message   String?
+  metadata  Json?
+  link      String?  /// deep link to resource
+  channel   String   @default("IN_APP")
+  read      Boolean  @default(false)
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, userId, read])
+  @@index([companyId, createdAt])
+  @@map("notifications")
+}
+
+model DemoRequest {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  company      String
+  role         String
+  companySize  String?
+  country      String?
+  message      String?
+  status       String   @default("PENDING")
+  source       String   @default("WEB")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("demo_requests")
+}

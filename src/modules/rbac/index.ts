@@ -1,0 +1,13 @@
+export { RBACService, rbacService } from "./rbac.service";
+export type { PermissionScope } from "./rbac.service";
+export { ApprovalAnalyticsService } from "./approval-analytics.service";
+export type { ApprovalMetrics, RuleUsage, ApprovalBottleneck, TransactionTypeMetrics } from "./approval-analytics.service";
+export { ApprovalAuthorityService } from "./approval-authority.service";
+export type { ApprovalAuthorityConfig } from "./approval-authority.service";
+export { ApprovalPolicyService } from "./approval-policy.service";
+export type { CreateRuleInput, UpdateRuleInput } from "./approval-policy.service";
+export type { PermissionDefinition } from "./permission-registry";
+export { PermissionRegistry } from "./permission-registry";
+export { requirePermission, requirePermissionMiddleware } from "./middleware";
+export { RuleEvaluationEngine } from "./rule-evaluation.engine";
+export type { TransactionContext, MatchedRule } from "./rule-evaluation.engine";

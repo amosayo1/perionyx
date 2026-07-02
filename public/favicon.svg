@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Vault arch -->
+  <path
+    d="M16 2C9.4 2 4 8 4 16v5c0 4.5 2.5 8.5 6 11l6 3 6-3c3.5-2.5 6-6.5 6-11v-5C28 8 22.6 2 16 2z"
+    fill="#d4af37"
+    opacity="0.15"
+  />
+  <!-- V letterform -->
+  <path
+    d="M16 7L8 26h6l2-7 2 7h6l-8-19z"
+    fill="#d4af37"
+  />
+  <!-- Keyhole -->
+  <rect x="14" y="16" width="4" height="8" rx="1.5" fill="#0a0a0a" />
+  <circle cx="16" cy="15" r="3" fill="#0a0a0a" />
+  <!-- Arch -->
+  <path
+    d="M8 18c0-4.5 3.5-8 8-8s8 3.5 8 8"
+    stroke="#d4af37"
+    stroke-width="0.8"
+    opacity="0.3"
+    fill="none"
+  />
+</svg>

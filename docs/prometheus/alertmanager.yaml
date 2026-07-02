@@ -1,0 +1,28 @@
+global: {}
+route:
+  group_by: ['alertname']
+  receiver: 'slack'
+  routes:
+    - match:
+        severity: 'page'
+      receiver: 'pagerduty'
+    - match:
+        severity: 'ticket'
+      receiver: 'slack'
+receivers:
+  - name: 'slack'
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/REPLACE/ME/TO/USE'
+        channel: '#alerts'
+        title: '{{ .CommonLabels.alertname }}'
+        text: '{{ range .Alerts }}
+- *Status:* {{ .Status }}
+- *Severity:* {{ .Labels.severity }}
+- *Summary:* {{ .Annotations.summary }}
+{{ end }}'
+  - name: 'pagerduty'
+    pagerduty_configs:
+      - routing_key: 'REPLACE_PAGERDUTY_INTEGRATION_KEY'
+        severity: '{{ .CommonLabels.severity }}'
+        details:
+          summary: '{{ .CommonAnnotations.summary }}'

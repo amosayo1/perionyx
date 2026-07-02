@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 96" fill="none">
+  <!-- Icon mark -->
+  <g transform="translate(12, 10)">
+    <!-- Vault arch background -->
+    <path
+      d="M36 2C15 2 0 18 0 38v14c0 11 5.5 20.5 14 26l22 12 22-12c8.5-5.5 14-15 14-26V38c0-20-15-36-36-36z"
+      fill="#d4af37"
+      opacity="0.1"
+    />
+    <!-- V letterform -->
+    <path
+      d="M36 14L12 66h16l8-22 8 22h16L36 14z"
+      fill="#d4af37"
+    />
+    <!-- Keyhole -->
+    <rect x="32" y="40" width="8" height="16" rx="3" fill="#0a0a0a" />
+    <circle cx="36" cy="38" r="6" fill="#0a0a0a" />
+    <!-- Arch line -->
+    <path
+      d="M14 44c0-12 10-22 22-22s22 10 22 22"
+      stroke="#d4af37"
+      stroke-width="1.5"
+      opacity="0.25"
+      fill="none"
+    />
+  </g>
+  <!-- PERIONYX wordmark -->
+  <text
+    x="90" y="60"
+    fill="#fafafa"
+    font-family="system-ui, -apple-system, sans-serif"
+    font-size="28"
+    font-weight="700"
+    letter-spacing="6"
+  >PERIONYX</text>
+  <!-- Tagline -->
+  <text
+    x="90" y="78"
+    fill="#71717a"
+    font-family="system-ui, -apple-system, sans-serif"
+    font-size="11"
+    font-weight="500"
+    letter-spacing="3"
+  >ENTERPRISE TREASURY OS</text>
+</svg>

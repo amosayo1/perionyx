@@ -1,0 +1,78 @@
+{
+  "annotations": { "list": [] },
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Webhook Deliveries by Status",
+      "targets": [
+        {
+          "expr": "sum by(status) (perionyx_webhook_deliveries_total)",
+          "legendFormat": "{{status}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Webhook Delivery Attempts",
+      "targets": [
+        {
+          "expr": "rate(perionyx_webhook_delivery_attempts_total[5m])",
+          "legendFormat": "attempts/sec"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Webhook Delivery Failures (rate)",
+      "targets": [
+        {
+          "expr": "rate(perionyx_webhook_deliveries_total{status=\\"FAILED\\"}[5m])",
+          "legendFormat": "failed/sec"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Settlements by Status",
+      "targets": [
+        {
+          "expr": "sum by(status) (perionyx_settlement_records_total)",
+          "legendFormat": "{{status}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Settlement Attempts (rate)",
+      "targets": [
+        {
+          "expr": "rate(perionyx_settlement_attempts_total[5m])",
+          "legendFormat": "attempts/sec"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Worker Health (up)",
+      "targets": [
+        {
+          "expr": "up{job=\"perionyx_worker\"}",
+          "legendFormat": "worker_up"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Idempotency Record Count",
+      "targets": [
+        {
+          "expr": "perionyx_idempotency_records_total",
+          "legendFormat": "idempotency_count"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 16,
+  "title": "Perionyx — Delivery & Settlements",
+  "version": 2
+}

@@ -1,0 +1,15 @@
+export { streamChatResponse, generateTitle } from "./ai.service";
+export type { PersonaRole, CommandCenterProfile } from "./command-center";
+export { getCommandCenterProfile, getAllPersonas } from "./command-center";
+export type { CopilotContext } from "./context-builder";
+export { buildCopilotContext } from "./context-builder";
+export type { ConversationSummary, MessageRow, ConversationDetail } from "./conversation.service";
+export { listConversations, getConversation, createConversation, deleteConversation, addUserMessage, addAssistantMessage, updateConversationTitle } from "./conversation.service";
+export type { BriefingSection, ExecutiveBriefing } from "./executive-briefing";
+export { generateExecutiveBriefing } from "./executive-briefing";
+export type { ToolDefinition } from "./intelligence-pipeline";
+export { buildIntelligenceSystemPrompt, buildFollowUpQuestions, extractSources, getProactiveRecommendations } from "./intelligence-pipeline";
+export type { ModuleData, KnowledgeIndexResult } from "./knowledge-index";
+export { buildKnowledgeIndex } from "./knowledge-index";
+export type { TimelineEvent, TimelineResult } from "./timeline-engine";
+export { traceTransactionLifecycle } from "./timeline-engine";

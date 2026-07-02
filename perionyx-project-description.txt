@@ -1,0 +1,333 @@
+================================================================================
+  PERIONYX — Enterprise Treasury Operating System
+  Full Project Description
+================================================================================
+
+1.  OVERVIEW
+    ----------------------------------------------------------------------------
+    A multi-tenant, double-entry treasury and financial operations platform.
+    Each tenant is a COMPANY with isolated wallets, transactions, users, roles,
+    policies, and bank connections. Built for teams that need coordinated
+    approval workflows, policy enforcement, bank integration, and audit trails.
+
+
+2.  STACK
+    ----------------------------------------------------------------------------
+    Framework....... Next.js 16 (App Router), React 19, TypeScript
+    Database........ PostgreSQL 16 via Prisma ORM (34 models, 16 enums)
+    UI.............. TailwindCSS 4, shadcn/ui (Radix primitives), Lucide icons
+    Auth............ Auth.js (NextAuth v5 beta), Prisma adapter, JWT sessions
+    Queue........... pg-boss (PostgreSQL-backed job queue)
+    Cache........... Redis 7 (rate limiting) + in-memory fallback
+    Banking......... Plaid (with mock fallback for dev)
+    Email........... Nodemailer (SMTP)
+    Notifications... In-app DB table, SMTP email, Slack webhook
+    Metrics......... prom-client (Prometheus)
+    Container....... Docker Compose (app + postgres + redis)
+
+
+3.  DIRECTORY STRUCTURE
+    ----------------------------------------------------------------------------
+    perionyxreloaded/
+    ├── src/
+    │   ├── app/                    Next.js App Router (pages + API routes)
+    │   │   ├── (auth)/             Sign-in, sign-up, invite pages
+    │   │   ├── (shell)/            Dashboard, admin, transaction UI
+    │   │   └── api/
+    │   │       ├── auth/           Register, session
+    │   │       ├── demo/           Demo bootstrap (dev only)
+    │   │       └── v1/             23 route areas (see section 6)
+    │   ├── components/             React UI components
+    │   ├── domain/                 Constants, schemas, business types
+    │   ├── lib/                    Utility libraries, error classes
+    │   ├── modules/                28 feature modules (see section 5)
+    │   ├── server/                 Server setup (auth, context, HTTP, security)
+    │   └── types/                  Global TypeScript definitions
+    ├── prisma/
+    │   ├── schema.prisma           Database schema (34 models)
+    │   └── migrations/             23 migrations
+    ├── test/                       23 test files, 161 tests total
+    ├── e2e/                        Playwright end-to-end tests
+    ├── docs/                       Documentation
+    ├── docker-compose.yml          Redis + PostgreSQL + App
+    ├── Dockerfile                  Production container
+    └── .env.example                All configurable environment variables
+
+
+4.  TENANCY & SECURITY
+    ----------------------------------------------------------------------------
+    Tenant isolation:   Every API route passes through requireTenantContext()
+                        which extracts { userId, companyId, role } from the JWT
+                        session. All database queries scoped by companyId.
+
+    Registration:       Invite-only after the first company exists.
+                        First user registers without invite (no companies exist),
+                        then creates their company as OWNER.
+
+    Company creation:   Only users with NO existing memberships can create
+                        a company. After one company exists, no more can be
+                        created (everyone is invited in, gets a membership).
+
+    License:            LICENSE_COMPANY_ID env var — hard gate at
+                        requireTenantContext(). If set, only that company ID
+                        passes. Optional License table with HMAC-SHA256 signed
+                        keys for programmatic management.
+
+    Authentication:     Auth.js with JWT, HTTP-only cookies, CSRF origin
+                        validation, rate limiting (Redis + in-memory fallback).
+
+
+5.  FEATURE MODULES (28 total in src/modules/)
+    ----------------------------------------------------------------------------
+    Module              Purpose
+    -------             -------
+    transactions        Core: credit wallets, transfer between wallets (single
+                        and cross-currency), 7-state lifecycle (PENDING,
+                        PROCESSING, COMPLETED, FAILED, REVERSED, etc.)
+
+    ledger              Double-entry bookkeeping (DEBIT/CREDIT), posting engine,
+                        balance assertions, optimistic concurrency via version
+
+    wallets             Internal wallet management (STANDARD, SYSTEM_CLEARING),
+                        balance queries
+
+    treasury            External bank accounts via Plaid (create, link, sync,
+                        transactions)
+
+    rbac                Roles (OWNER/ADMIN/TREASURER/MEMBER/VIEWER),
+                        permissions, approval authorities, rule evaluation
+
+    approval-workflow   Multi-level sequential/parallel approval engine with
+                        escalation, timeout, compliance review
+
+    approval-thread     Discussion threads on pending approvals — comments,
+                        participants, resolution
+
+    policies            Rule engine: conditions on amount/type/currency/fields
+                        with actions: BLOCK, FLAG, REQUIRE_APPROVAL
+
+    invites             Email-based invitation flow — create with role, accept
+                        with email match validation, 7-day expiry
+
+    companies           Company CRUD, membership management, default roles
+
+    notifications       Multi-channel delivery (in-app, SMTP email, Slack),
+                        preference management per user
+
+    webhooks            Outbound delivery with retries, secret signing, logs
+
+    api-keys            Programmatic API key authentication
+
+    audit               Immutable audit log for all financial + admin actions
+
+    risk                Risk alerts and incident tracking (severity levels)
+
+    reconciliation      Bank reconciliation runs with exception tracking
+
+    connectors          Bank connector config, settlement records, sync runs
+
+    fx                  Exchange rate management with provider abstraction
+
+    calendar            Financial calendar event scheduling and reminders
+
+    currency            Supported currencies (USD, EUR, GBP)
+
+    queue               pg-boss job definitions (webhook delivery, retries)
+
+    tick                Cron automation — auto-escalation, auto-rejection,
+                        Plaid sync, reconciliation reminders
+
+    secrets             Encryption/decryption for sensitive stored data
+
+    export              Data export functionality
+
+    integrations        External integration plumbing
+
+    metrics             Prometheus metrics (webhook counts, etc.)
+
+    users               User creation (password-based)
+
+    license             Key generation (HMAC-SHA256), validation with 60s TTL
+                        cache, seat enforcement check
+
+    approval-thread     (duplicate — same as above) Actually unique from the
+                        approval-workflow; handles comments and participant
+                        assignment on threads
+
+
+6.  API ROUTE AREAS (23 total in src/app/api/v1/)
+    ----------------------------------------------------------------------------
+    admin/              Approval rules, authorities, users, roles, permissions,
+                        connectors, settlements, webhooks, licenses, pending
+                        approvals, approval analytics, deliveries
+
+    api-keys/           CRUD for programmatic API keys
+
+    audit-logs/         Query immutable audit trail
+
+    calendar/           Financial calendar events CRUD
+
+    companies/          Company CRUD, membership queries
+
+    connectors/         Bank connector configuration and status
+
+    currencies/         Supported currencies, conversion rates
+
+    export/             Data export generation
+
+    fx/                 Exchange rates, sync, status
+
+    invites/            Get invite by token, accept invite
+
+    ledger/             Ledger entry queries
+
+    notifications/      Notification channels, preferences, history
+
+    plaid/              Link token, account sync, transactions
+
+    policies/           Policy CRUD and simulation
+
+    queue/              Queue status and management
+
+    rbac/               Role and permission management
+
+    reconciliation/     Reconciliation run management
+
+    risk/               Risk alerts and incidents
+
+    tick/               Cron automation trigger (protected by CRON_SECRET)
+
+    transactions/       Transaction lifecycle, approvals, approval actions
+
+    treasury/           Treasury account management
+
+    wallets/            Wallet CRUD and balance queries
+
+    webhooks/           Webhook endpoint management and delivery logs
+
+
+7.  DATABASE MODELS (34 total)
+    ----------------------------------------------------------------------------
+    Auth:               User, Account, Session, VerificationToken, Authenticator
+    Core:               Company, CompanyMembership, Wallet, Transaction
+    Ledger:             LedgerEntry, IdempotencyRecord
+    RBAC:               Role, Permission, RolePermission, UserRole
+    Approvals:          ApprovalRule, ApprovalCondition, ApprovalStep,
+                        ApprovalAuthority, TransactionApproval, ApprovalThread,
+                        ApprovalComment, ApprovalParticipant
+    Treasury:           TreasuryAccount, AccountControl, InternalTransfer
+    Operations:         Policy, PolicyRule, PolicyTestResult, RiskAlert,
+                        RiskIncident, ReconciliationRun, ReconciliationException,
+                        ReconciliationReport, ConnectorConfig, ConnectorRun,
+                        ConnectorEvent, SettlementRecord, CalendarEvent
+    Infrastructure:     AuditLog, Webhook, WebhookDelivery, ApiKey, Invitation,
+                        License, Notification, NotificationChannel,
+                        NotificationPreference, ExchangeRate
+
+
+8.  KEY BUSINESS FLOWS
+    ----------------------------------------------------------------------------
+    A. WALLET CREDIT / TRANSFER
+
+       1) Validate wallet exists, balance sufficient (for debits)
+       2) Evaluate policies — if BLOCK, reject immediately
+       3) Evaluate approval rules — if thresholds met:
+          a) Store ledger lines in transaction metadata
+          b) Create PENDING_APPROVAL records
+          c) Set status to PENDING_APPROVAL
+          d) Notify all eligible approvers (via NotificationService +
+             webhook queue)
+          e) Return early
+       4) If no approval needed:
+          a) Create LedgerEntry records
+          b) Update wallet balance (optimistic lock via version field)
+          c) Mark transaction COMPLETED
+       5) On approval (route): approve step → check if fully approved →
+          if yes, replay stored ledger lines (create entries, update
+          balances, mark COMPLETED)
+
+    B. INVITATION FLOW
+
+       1) Admin sends invite via /admin/users UI → select email + role
+       2) Service creates Invitation record with crypto token
+       3) Sends HTML email: BASE_URL/invite/{token} (7-day expiry)
+       4) Recipient clicks link:
+          - If not signed in: redirect to /sign-up?token=...
+          - If signed in: show "Accept & join" button
+       5) Registration includes inviteToken → server validates email match
+          → auto-accepts → creates membership with role → redirects to
+          dashboard
+
+    C. FIRST-TIME SETUP
+
+       1) Deploy with zero companies in DB
+       2) Register via API (no invite needed — detect 0 companies)
+       3) Create company via POST /api/v1/companies → become OWNER
+       4) Now company exists → all future registrations require invite
+       5) Use /admin/users to invite team members
+
+    D. LICENSE ENFORCEMENT
+
+       1) LICENSE_COMPANY_ID env var checked in requireTenantContext()
+          — synchronous, per-request
+       2) License table with signed keys (HMAC-SHA256) for programmatic
+          management via admin API
+       3) 60s in-memory TTL cache to reduce DB hits
+       4) Seat validation: check CompanyMembership count against
+          license.seats at invite time
+
+
+9.  TRANSACTION STATES
+    ----------------------------------------------------------------------------
+    PENDING           Created, not yet processed
+    PROCESSING        Ledger entries being applied
+    COMPLETED         Successfully processed
+    FAILED            Processing failed
+    REVERSED          Reversed after completion
+    CANCELLED         Cancelled before processing
+    PENDING_APPROVAL  Awaiting approval workflow
+
+
+10. ROLES & PERMISSIONS
+    ----------------------------------------------------------------------------
+    OWNER............. Full access, can manage everything
+    ADMIN............. Administrative access (users, roles, settings)
+    TREASURER......... Can initiate and approve transactions
+    MEMBER............ Basic access (view, limited actions)
+    VIEWER............ Read-only access
+
+    Permissions are granular strings (e.g., "transactions.transfer",
+    "approvals.approve", "admin.manage_users") assigned to roles via
+    RolePermission table.
+
+
+11. TEST SUITE
+    ----------------------------------------------------------------------------
+    23 test files, 161 tests total, all passing.
+
+    Coverage areas:
+    - Posting engine       - Ledger service
+    - Approvals workflow   - Approval thread service
+    - Transactions service - Wallets service
+    - Treasury service     - Policy engine
+    - Notifications        - API keys service
+    - Audit service        - FX rates
+    - Calendar service     - Reconciliation
+    - Connectors (3 files) - Health check
+    - Security             - RBAC webhooks
+    - Companies service    - Invites service
+    - Export button UI
+
+
+12. RUNNING THE PROJECT
+    ----------------------------------------------------------------------------
+    pnpm dev                  Development on localhost:3000
+    pnpm build                Production build
+    pnpm start                Start production server
+    pnpm test                 Run 161 tests
+    pnpm run typecheck        TypeScript check (0 errors)
+    pnpm run lint             ESLint
+    pnpm run db:studio        Prisma Studio (DB browser)
+    pnpm run db:migrate       Apply pending migrations
+    pnpm run db:seed          Seed demo data
+    docker compose up         Full stack (app + postgres + redis)

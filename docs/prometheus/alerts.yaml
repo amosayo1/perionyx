@@ -1,0 +1,40 @@
+groups:
+  - name: perionyx-delivery-alerts
+    rules:
+      - alert: HighWebhookFailureRate
+        expr: increase(perionyx_webhook_deliveries_total{status="FAILED"}[5m]) > 5
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: "High webhook failure rate"
+          description: "{{ $value }} failed webhook deliveries in 5m."
+
+      - alert: RepeatedDeliveryRetries
+        expr: increase(perionyx_webhook_delivery_attempts_total[10m]) > 100
+        for: 5m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "Many webhook delivery attempts"
+          description: "High number of webhook delivery attempts in 10m indicating retries."
+
+  - name: perionyx-settlement-alerts
+    rules:
+      - alert: ElevatedSettlementFailures
+        expr: increase(perionyx_settlement_records_total{status="FAILED"}[5m]) > 3
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: "Elevated settlement failure rate"
+          description: "{{ $value }} failed settlements in 5m."
+
+      - alert: SettlementThroughputDrop
+        expr: rate(perionyx_settlement_attempts_total[5m]) < 0.1
+        for: 10m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "Low settlement throughput"
+          description: "Settlement attempts per second dropped below threshold (5m avg)."
