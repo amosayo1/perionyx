@@ -4,6 +4,10 @@ import { recordAudit } from "@/modules/audit";
 import { notificationService, NotificationService } from "@/modules/notifications";
 import { encrypt, decrypt } from "@/server/security/encryption";
 import { isSimulated } from "@/modules/sandbox/simulation-flag";
+import { FinancialTransactionManager, RowLockManager } from "@/lib/financial-transaction";
+
+const plaidTxManager = new FinancialTransactionManager();
+const plaidLockManager = new RowLockManager(plaidTxManager);
 
 // Plaid types (avoid requiring the SDK just for env var checks)
 type PlaidConfig = {
@@ -193,38 +197,48 @@ export class PlaidService {
     const added = response.data.added;
     const modified = response.data.modified;
 
-    // Record the sync in audit log
-    await recordAudit(prisma, {
-      companyId: ctx.companyId, actorUserId: ctx.userId,
-      action: "PLAID_TRANSACTIONS_SYNCED", resourceType: "TreasuryAccount", resourceId: accountId,
-      metadata: { added: added.length, modified: modified.length },
-    });
-
-    await prisma.treasuryAccount.update({
-      where: { id: accountId },
-      data: { lastSyncedAt: new Date() },
-    });
-
-    // Get latest balance
+    // Get latest balance (external API call — outside lock)
     const balanceRes = await client.accountsBalanceGet({
       access_token: accessToken,
       options: { account_ids: account.plaidAccountId ? [account.plaidAccountId] : undefined },
     });
 
     const currentBalance: number | undefined = balanceRes.data.accounts[0]?.balances?.current ?? undefined;
-    if (currentBalance !== undefined) {
-      await prisma.treasuryAccount.update({
-        where: { id: accountId },
-        data: { balance: currentBalance },
-      });
-    }
 
-    return {
-      syncedCount: added.length + modified.length,
-      addedCount: added.length,
-      modifiedCount: modified.length,
-      balance: currentBalance ?? null,
-    };
+    return plaidLockManager.withLocks(
+      [{ entity: "TreasuryAccount", id: accountId }],
+      async (tx) => {
+        const acct = await tx.treasuryAccount.findFirst({
+          where: { id: accountId, companyId: ctx.companyId },
+        });
+        if (!acct) throw new Error("Account not found");
+
+        await tx.treasuryAccount.update({
+          where: { id: accountId },
+          data: { lastSyncedAt: new Date() },
+        });
+
+        if (currentBalance !== undefined) {
+          await tx.treasuryAccount.update({
+            where: { id: accountId },
+            data: { balance: currentBalance },
+          });
+        }
+
+        await recordAudit(tx, {
+          companyId: ctx.companyId, actorUserId: ctx.userId,
+          action: "PLAID_TRANSACTIONS_SYNCED", resourceType: "TreasuryAccount", resourceId: accountId,
+          metadata: { added: added.length, modified: modified.length, newBalance: currentBalance },
+        });
+
+        return {
+          syncedCount: added.length + modified.length,
+          addedCount: added.length,
+          modifiedCount: modified.length,
+          balance: currentBalance ?? null,
+        };
+      },
+    );
   }
 
   static async syncBalance(ctx: TenantContext, accountId: string) {
@@ -244,18 +258,29 @@ export class PlaidService {
       const fluctuation = (Math.random() - 0.5) * 1000;
       const newBalance = Math.max(0, Number(account.balance) + fluctuation);
       const rounded = Math.round(newBalance * 100) / 100;
-      await prisma.treasuryAccount.update({
-        where: { id: accountId },
-        data: { balance: rounded, lastSyncedAt: new Date() },
-      });
 
-      await recordAudit(prisma, {
-        companyId: ctx.companyId, actorUserId: ctx.userId,
-        action: "PLAID_BALANCE_SYNCED", resourceType: "TreasuryAccount", resourceId: accountId,
-        metadata: { previousBalance: account.balance.toString(), newBalance, mode: "mock" },
-      });
+      return plaidLockManager.withLocks(
+        [{ entity: "TreasuryAccount", id: accountId }],
+        async (tx) => {
+          const acct = await tx.treasuryAccount.findFirst({
+            where: { id: accountId, companyId: ctx.companyId },
+          });
+          if (!acct) throw new Error("Account not found");
 
-      return { previousBalance: account.balance.toString(), newBalance: String(rounded) };
+          await tx.treasuryAccount.update({
+            where: { id: accountId },
+            data: { balance: rounded, lastSyncedAt: new Date() },
+          });
+
+          await recordAudit(tx, {
+            companyId: ctx.companyId, actorUserId: ctx.userId,
+            action: "PLAID_BALANCE_SYNCED", resourceType: "TreasuryAccount", resourceId: accountId,
+            metadata: { previousBalance: acct.balance.toString(), newBalance: rounded, mode: "mock" },
+          });
+
+          return { previousBalance: acct.balance.toString(), newBalance: String(rounded) };
+        },
+      );
     }
 
     const client = await getPlaidClient();
@@ -267,22 +292,33 @@ export class PlaidService {
     });
 
     const newBalance: number | undefined = balanceRes.data.accounts[0]?.balances?.current ?? undefined;
-    const previousBalance = account.balance.toString();
 
-    if (newBalance !== undefined) {
-      await prisma.treasuryAccount.update({
-        where: { id: accountId },
-        data: { balance: newBalance, lastSyncedAt: new Date() },
-      });
+    return plaidLockManager.withLocks(
+      [{ entity: "TreasuryAccount", id: accountId }],
+      async (tx) => {
+        const acct = await tx.treasuryAccount.findFirst({
+          where: { id: accountId, companyId: ctx.companyId },
+        });
+        if (!acct) throw new Error("Account not found");
 
-      await recordAudit(prisma, {
-        companyId: ctx.companyId, actorUserId: ctx.userId,
-        action: "PLAID_BALANCE_SYNCED", resourceType: "TreasuryAccount", resourceId: accountId,
-        metadata: { previousBalance, newBalance },
-      });
-    }
+        const previousBalance = acct.balance.toString();
 
-    return { previousBalance, newBalance: String(newBalance ?? previousBalance) };
+        if (newBalance !== undefined) {
+          await tx.treasuryAccount.update({
+            where: { id: accountId },
+            data: { balance: newBalance, lastSyncedAt: new Date() },
+          });
+
+          await recordAudit(tx, {
+            companyId: ctx.companyId, actorUserId: ctx.userId,
+            action: "PLAID_BALANCE_SYNCED", resourceType: "TreasuryAccount", resourceId: accountId,
+            metadata: { previousBalance, newBalance },
+          });
+        }
+
+        return { previousBalance, newBalance: String(newBalance ?? previousBalance) };
+      },
+    );
   }
 
   static async getLinkedAccounts(ctx: TenantContext) {
@@ -304,6 +340,102 @@ export class PlaidService {
       currency: a.currency,
       accountNumber: a.accountNumber,
     }));
+  }
+
+  static async connectNewAccount(ctx: TenantContext, publicToken: string) {
+    const simulated = await isSimulated(ctx);
+    if (simulated) {
+      const mockAccessToken = encrypt(`sandbox-mock-access-${Date.now()}`);
+      const account = await prisma.treasuryAccount.create({
+        data: {
+          companyId: ctx.companyId,
+          name: "Simulated Bank Account",
+          currency: "USD",
+          balance: 500000,
+          plaidAccessToken: mockAccessToken,
+          plaidAccountId: `sandbox-plaid-${Date.now()}`,
+          plaidItemId: `sandbox-item-${Date.now()}`,
+          lastSyncedAt: new Date(),
+          accountNumber: "****1234",
+        },
+      });
+      await recordAudit(prisma, {
+        companyId: ctx.companyId, actorUserId: ctx.userId,
+        action: "PLAID_ACCOUNT_LINKED", resourceType: "TreasuryAccount", resourceId: account.id,
+        metadata: { mode: "sandbox-simulated", newAccount: true },
+      });
+      return { success: true, mode: "sandbox-simulated", accountId: account.id, accountName: account.name };
+    }
+
+    const config = getPlaidConfig();
+    if (!config) {
+      const mockAccessToken = encrypt(`mock-access-${Date.now()}`);
+      const account = await prisma.treasuryAccount.create({
+        data: {
+          companyId: ctx.companyId,
+          name: "Connected Bank Account",
+          currency: "USD",
+          balance: 250000,
+          plaidAccessToken: mockAccessToken,
+          plaidAccountId: `mock-plaid-account-${Date.now()}`,
+          plaidItemId: `mock-item-${Date.now()}`,
+          lastSyncedAt: new Date(),
+          accountNumber: "****5678",
+        },
+      });
+      await recordAudit(prisma, {
+        companyId: ctx.companyId, actorUserId: ctx.userId,
+        action: "PLAID_ACCOUNT_LINKED", resourceType: "TreasuryAccount", resourceId: account.id,
+        metadata: { mode: "mock", newAccount: true },
+      });
+      return { success: true, mode: "mock", accountId: account.id, accountName: account.name };
+    }
+
+    const client = await getPlaidClient();
+    if (!client) throw new Error("Plaid client unavailable");
+
+    const exchangeRes = await client.itemPublicTokenExchange({ public_token: publicToken });
+    const accessToken = exchangeRes.data.access_token;
+    const itemId = exchangeRes.data.item_id;
+
+    const accountsRes = await client.accountsGet({ access_token: accessToken });
+    const plaidAccount = accountsRes.data.accounts[0];
+    if (!plaidAccount) throw new Error("No accounts found from Plaid");
+
+    const currency = plaidAccount.balances?.iso_currency_code ?? "USD";
+    const balance = plaidAccount.balances?.current ?? 0;
+    const name = plaidAccount.official_name || plaidAccount.name || "Connected Bank Account";
+    const accountNumber = plaidAccount.mask ? `****${plaidAccount.mask}` : undefined;
+
+    const account = await prisma.treasuryAccount.create({
+      data: {
+        companyId: ctx.companyId,
+        name,
+        currency,
+        balance,
+        accountNumber,
+        plaidAccessToken: encrypt(accessToken),
+        plaidAccountId: plaidAccount.account_id,
+        plaidItemId: itemId,
+        lastSyncedAt: new Date(),
+      },
+    });
+
+    await recordAudit(prisma, {
+      companyId: ctx.companyId, actorUserId: ctx.userId,
+      action: "PLAID_ACCOUNT_LINKED", resourceType: "TreasuryAccount", resourceId: account.id,
+      metadata: { plaidAccountId: plaidAccount.account_id, itemId, newAccount: true },
+    });
+
+    await notificationService.broadcast({
+      companyId: ctx.companyId, eventType: "PLAID_ACCOUNT_LINKED",
+      title: "New bank account connected",
+      message: `${name} linked via Plaid`,
+      link: `/accounts/${account.id}`,
+      metadata: { plaidAccountId: plaidAccount.account_id },
+    });
+
+    return { success: true, accountId: account.id, accountName: name, balance: String(balance) };
   }
 
   static async unlinkAccount(ctx: TenantContext, accountId: string) {

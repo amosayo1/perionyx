@@ -218,15 +218,22 @@ export class ApprovalPolicyService {
       }
     }
 
-    // Update rule
-    const updatedRule = await prisma.approvalRule.update({
+    // Update rule with optimistic concurrency check
+    const updatedCount = await prisma.approvalRule.updateMany({
+      where: { id, version: currentRule.version },
+      data: { ...updatePayload, version: { increment: 1 } },
+    });
+    if (updatedCount.count === 0) {
+      throw new ConflictError("Concurrent modification detected — approval rule was updated by another request.");
+    }
+
+    const updatedRule = (await prisma.approvalRule.findUnique({
       where: { id },
-      data: updatePayload,
       include: {
         conditions: true,
         approvalSteps: true,
       },
-    });
+    }))!;
 
     // Audit log
     await prisma.auditLog.create({
@@ -346,13 +353,19 @@ export class ApprovalPolicyService {
       throw new ForbiddenError("Rule not found or access denied");
     }
 
-    const updated = await prisma.approvalRule.update({
-      where: { id: ruleId },
+    const updatedCount = await prisma.approvalRule.updateMany({
+      where: { id: ruleId, version: rule.version },
       data: {
         enabled,
         updatedByUserId: userId,
+        version: { increment: 1 },
       },
     });
+    if (updatedCount.count === 0) {
+      throw new ConflictError("Concurrent modification detected — approval rule was updated by another request.");
+    }
+
+    const updated = (await prisma.approvalRule.findUnique({ where: { id: ruleId } }))!;
 
     // Audit log
     await prisma.auditLog.create({

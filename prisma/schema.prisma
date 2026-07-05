@@ -182,6 +182,14 @@ model Company {
   reconciliationMatches   ReconciliationMatch[]
   autoMatchRules          AutoMatchRule[]
 
+  governanceFrameworks    GovernanceFramework[]
+  policyViolations        PolicyViolation[]
+  policyExceptions        PolicyException[]
+
+  workflowDefinitions    WorkflowDefinition[]
+  workflowInstances      WorkflowInstance[]
+  workflowEvents         WorkflowEvent[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -471,6 +479,7 @@ model ApprovalRule {
   companyId               String
   name                    String
   description             String?
+  version                 Int      @default(1)
   
   // Rule scope and priority
   priority                Int      @default(100) // Lower = higher priority
@@ -797,6 +806,7 @@ model ConnectorConfig {
   type       String
   config     Json
   active     Boolean @default(true)
+  version    Int     @default(1)
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
@@ -969,6 +979,7 @@ model AccountControl {
   companyId    String
   type         AccountControlType
   scope        AccountControlScope @default(PER_TRANSACTION)
+  version      Int                 @default(1)
   value        Decimal             @db.Decimal(38, 12)
   description  String?
   enabled      Boolean             @default(true)
@@ -1371,6 +1382,7 @@ model Policy {
   name          String
   description   String?
   type          PolicyType @default(APPROVAL)
+  version       Int      @default(1)
   enabled       Boolean  @default(true)
   priority      Int      @default(100)
 
@@ -1756,6 +1768,111 @@ model AiProviderHealth {
 }
 
 // ---------------------------------------------------------------------------
+// Governance — Enterprise Governance & Policy Engine (Phase 7A)
+// ---------------------------------------------------------------------------
+
+/// Groups policies into regulatory/compliance frameworks (SOX, PCI, etc.)
+model GovernanceFramework {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  description String?
+  category    String   @default("internal") /// "regulatory" | "internal" | "compliance"
+  status      String   @default("ACTIVE") /// ACTIVE | DRAFT | ARCHIVED
+  version     Int      @default(1)
+
+  policies    GovernanceFrameworkPolicy[]
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId, status])
+  @@map("governance_frameworks")
+}
+
+/// Links policies to governance frameworks
+model GovernanceFrameworkPolicy {
+  id           String @id @default(cuid())
+  frameworkId  String
+  policyId     String
+  mappingType  String @default("MANDATORY") /// MANDATORY | OPTIONAL | RECOMMENDED
+
+  framework GovernanceFramework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+
+  @@unique([frameworkId, policyId])
+  @@index([frameworkId])
+  @@map("governance_framework_policies")
+}
+
+/// Captures policy/rule violations with lifecycle tracking
+model PolicyViolation {
+  id            String   @id @default(cuid())
+  companyId     String
+
+  policyId      String?
+  sourceModule  String   /// "policy_engine" | "approval_rule" | "risk" | "compliance"
+  sourceId      String?  /// The evaluation/check/alert ID that generated this violation
+
+  severity      String   @default("MEDIUM") /// LOW | MEDIUM | HIGH | CRITICAL
+  status        String   @default("OPEN")   /// OPEN | ACKNOWLEDGED | INVESTIGATING | RESOLVED | DISMISSED
+  title         String
+  description   String?
+
+  entityType    String?  /// Transaction | Wallet | Connector | etc.
+  entityId      String?
+  action        String?  /// BLOCK | FLAG | REQUIRE_APPROVAL | NOTIFY
+  details       Json?
+
+  resolvedById  String?
+  resolvedAt    DateTime?
+  resolution    String?
+  exceptionId   String?  /// If resolved via a PolicyException
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([companyId, severity])
+  @@index([companyId, createdAt])
+  @@index([policyId])
+  @@map("policy_violations")
+}
+
+/// Temporary overrides to policies with justification and expiry
+model PolicyException {
+  id            String   @id @default(cuid())
+  companyId     String
+  version       Int      @default(1)
+
+  policyId      String?
+  ruleId        String?
+  grantedById   String?
+  grantedToId   String?
+
+  reason        String   /// Justification
+  scope         String   @default("GLOBAL") /// GLOBAL | TRANSACTION | WALLET | USER | ROLE
+  scopeId       String?
+  criteria      Json?    /// Optional constraints on the exception
+
+  expiresAt     DateTime?
+  status        String   @default("ACTIVE") /// ACTIVE | EXPIRED | REVOKED
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([policyId])
+  @@map("policy_exceptions")
+}
+
+// ---------------------------------------------------------------------------
 // Enterprise Time Machine — Object Versioning (Phase 19)
 // ---------------------------------------------------------------------------
 
@@ -1907,4 +2024,149 @@ model DemoRequest {
   @@index([status])
   @@index([createdAt])
   @@map("demo_requests")
+}
+
+// ---------------------------------------------------------------------------
+// Enterprise Workflow Engine (Phase 7B)
+// ---------------------------------------------------------------------------
+
+/// Blueprint/template for a workflow. Steps are stored as JSON.
+model WorkflowDefinition {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  description String?
+  category    String   @default("general") /// approval | decision | connector | notification | report | custom
+
+  /// JSON array of step definitions: [{id, type, label, config, dependsOn[], timeoutMinutes?, retryCount?, retryDelayMs?}]
+  steps       Json
+
+  inputSchema  Json?
+  outputSchema Json?
+
+  version  Int    @default(1)
+  status   String @default("ACTIVE") /// ACTIVE | DRAFT | ARCHIVED
+  isSystem Boolean @default(false)
+
+  company  Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  instances WorkflowInstance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId, status])
+  @@map("workflow_definitions")
+}
+
+/// A running execution of a workflow definition.
+model WorkflowInstance {
+  id            String   @id @default(cuid())
+  companyId     String
+  definitionId  String
+  definition    WorkflowDefinition @relation(fields: [definitionId], references: [id])
+
+  status        String   @default("PENDING") /// PENDING | VALIDATED | RUNNING | WAITING | PAUSED | COMPLETED | FAILED | CANCELLED | ARCHIVED
+
+  currentStepId   String?
+  currentStepType String?
+
+  input       Json?
+  output      Json?
+  variables   Json     @default("{}")
+  metadata    Json     @default("{}")
+
+  initiatedById String?
+  assignedToId  String?
+
+  startedAt    DateTime?
+  completedAt  DateTime?
+  failedAt     DateTime?
+  cancelledAt  DateTime?
+  archivedAt   DateTime?
+
+  lastError  String?
+  errorCount Int @default(0)
+  retryCount Int @default(0)
+
+  scheduledFor   DateTime?
+  cronExpression String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  steps  WorkflowStepInstance[]
+  events WorkflowEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId, status])
+  @@index([companyId, definitionId])
+  @@index([companyId, createdAt])
+  @@index([companyId, scheduledFor])
+  @@index([definitionId])
+  @@map("workflow_instances")
+}
+
+/// An individual step within a workflow execution.
+model WorkflowStepInstance {
+  id         String   @id @default(cuid())
+  instanceId String
+  instance   WorkflowInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  stepId   String /// Reference to the step definition ID
+  stepType String /// approval | decision | policy_evaluation | notification | delay | conditional | connector_execution | report_generation | human_task | ai_recommendation | custom
+  label    String
+
+  status String @default("PENDING") /// PENDING | READY | RUNNING | COMPLETED | FAILED | SKIPPED | WAITING_APPROVAL | WAITING_INPUT
+
+  config     Json?
+  input      Json?
+  output     Json?
+
+  error      String?
+  retryCount Int     @default(0)
+
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  dependsOn String[]
+
+  companyId String
+
+  events WorkflowEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([instanceId])
+  @@index([instanceId, status])
+  @@map("workflow_step_instances")
+}
+
+/// Execution history event for a workflow instance.
+model WorkflowEvent {
+  id         String   @id @default(cuid())
+  instanceId String
+  instance   WorkflowInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  stepInstanceId String?
+  stepInstance   WorkflowStepInstance? @relation(fields: [stepInstanceId], references: [id], onDelete: SetNull)
+
+  stepId    String?
+  eventType String /// CREATED | STARTED | STEP_STARTED | STEP_COMPLETED | STEP_FAILED | APPROVAL_REQUESTED | APPROVAL_GRANTED | APPROVAL_REJECTED | NOTIFICATION_SENT | RETRY_TRIGGERED | COMPLETED | CANCELLED | FAILED | TIMEOUT | ESCALATED | PAUSED | RESUMED | ARCHIVED
+  label     String
+  description String?
+  actorId   String?
+  metadata  Json?
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  timestamp DateTime @default(now())
+
+  @@index([instanceId])
+  @@index([instanceId, timestamp])
+  @@index([stepInstanceId])
+  @@map("workflow_events")
 }

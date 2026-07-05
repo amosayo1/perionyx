@@ -5,9 +5,12 @@ import { DecisionService } from "@/modules/decision-intelligence/decision.servic
 import { generateDecisionBriefing } from "@/modules/decision-intelligence/briefing";
 import { generateExecutiveBriefing } from "@/modules/copilot/executive-briefing";
 import { OperationsService } from "@/modules/operations/operations.service";
+import { GovernanceService } from "@/modules/governance";
+import { WorkflowEngine } from "@/modules/workflow/engine";
 import { aiProviderRegistry } from "@/modules/ai-provider";
 import type { Decision, DecisionPriority } from "@/modules/decision-intelligence/types";
 import type { Insight, Recommendation, ExecutiveSummary } from "@/modules/enterprise-intelligence/types";
+import type { GovernanceHealthScore, ViolationSummary } from "@/modules/governance/types";
 import { formatCurrency } from "@/lib/format";
 
 const _intelligenceService = new IntelligenceService();
@@ -65,12 +68,24 @@ export interface CommandCenterData {
     approvalValue: string;
     auditEvents: number;
     highSeverityAudit: number;
+    healthScore: GovernanceHealthScore | null;
+    violations: ViolationSummary | null;
+    activePolicies: number;
+    activeExceptions: number;
   };
   ai: {
     activeProviders: number;
     totalProviders: number;
     healthyProviders: number;
     recentUsage: number;
+  };
+  workflow: {
+    running: number;
+    waiting: number;
+    failed: number;
+    completed: number;
+    total: number;
+    successRate: number;
   };
   timeline: EnterpriseEvent[];
   briefing: {
@@ -213,8 +228,13 @@ export class CommandCenterService {
         approvalValue: formatCurrency(Number((pendingApprovalValue as { _sum: { primaryAmount: number | null } })?._sum?.primaryAmount ?? 0)),
         auditEvents: auditCount ?? 0,
         highSeverityAudit: highAudit ?? 0,
+        healthScore: await GovernanceService.getGovernanceHealthScore(ctx).catch(() => null),
+        violations: await GovernanceService.getViolationSummary(ctx).catch(() => null),
+        activePolicies: await prisma.policy.count({ where: { companyId: ctx.companyId, enabled: true } }).catch(() => 0),
+        activeExceptions: await prisma.policyException.count({ where: { companyId: ctx.companyId, status: "ACTIVE" } }).catch(() => 0),
       },
       ai: await this.getAiStatus(),
+      workflow: await this.getWorkflowStatus(ctx),
       timeline: await this.getTimeline(ctx),
       briefing: eiBriefing ? {
         title: eiBriefing.title,
@@ -277,6 +297,23 @@ export class CommandCenterService {
       };
     } catch {
       return { activeProviders: 0, totalProviders: 7, healthyProviders: 0, recentUsage: 0 };
+    }
+  }
+
+  private async getWorkflowStatus(ctx: TenantContext): Promise<{ running: number; waiting: number; failed: number; completed: number; total: number; successRate: number }> {
+    try {
+      const engine = new WorkflowEngine();
+      const metrics = await engine.getMetrics(ctx);
+      return {
+        running: metrics.runningInstances,
+        waiting: metrics.waitingInstances,
+        failed: metrics.failedInstances,
+        completed: metrics.completedInstances,
+        total: metrics.totalInstances,
+        successRate: metrics.successRate,
+      };
+    } catch {
+      return { running: 0, waiting: 0, failed: 0, completed: 0, total: 0, successRate: 100 };
     }
   }
 

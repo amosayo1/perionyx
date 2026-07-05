@@ -201,20 +201,19 @@ export default function AccountDetailPage() {
           const ac = new AbortController();
           void load(ac.signal);
         }}
+        connectButton={
+          !account.plaidAccountId ? (
+            <ConnectBankButton
+              accountId={account.id}
+              accountName={account.name}
+              onLinked={() => {
+                const ac = new AbortController();
+                void load(ac.signal);
+              }}
+            />
+          ) : undefined
+        }
       />
-
-      {!account.plaidAccountId && (
-        <div className="flex justify-center">
-          <ConnectBankButton
-            accountId={account.id}
-            accountName={account.name}
-            onLinked={() => {
-              const ac = new AbortController();
-              void load(ac.signal);
-            }}
-          />
-        </div>
-      )}
 
       <Card className="border-[rgba(212,175,55,0.12)] bg-perionyx-bg-panel shadow-soft">
         <CardHeader className="pb-3"><CardTitle>Controls</CardTitle><CardDescription>Active controls on this account.</CardDescription></CardHeader>

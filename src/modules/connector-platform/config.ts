@@ -3,6 +3,7 @@ import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
 import { connectorPlatformRegistry } from "./registry";
 import { connectorEventBus } from "./event-hooks";
+import { ConflictError } from "@/lib/errors/app-error";
 import type { IConnector } from "./interface";
 import type {
   ConnectorConfigRecord,
@@ -74,16 +75,25 @@ export async function updateConnectorConfig(
     active: boolean;
   }>,
 ): Promise<ConnectorConfigRecord | null> {
+  const existing = await prisma.connectorConfig.findUnique({
+    where: { id },
+    select: { version: true },
+  });
+  if (!existing) return null;
+
   const data: any = {};
   if (params.name !== undefined) data.name = params.name;
   if (params.config !== undefined) data.config = params.config as any;
   if (params.active !== undefined) data.active = params.active;
+  data.version = { increment: 1 };
 
-  const record = await prisma.connectorConfig.updateMany({
-    where: { id, companyId: ctx.companyId },
+  const result = await prisma.connectorConfig.updateMany({
+    where: { id, companyId: ctx.companyId, version: existing.version },
     data,
   });
-  if (!record.count) return null;
+  if (result.count === 0) {
+    throw new ConflictError("Concurrent modification detected — connector config was updated by another request.");
+  }
 
   return getConnectorConfig(ctx, id);
 }
@@ -135,7 +145,7 @@ export async function updateConnectorStatus(
 
   const existing = await prisma.connectorConfig.findFirst({
     where: { id, companyId: ctx.companyId },
-    select: { config: true },
+    select: { config: true, version: true },
   });
   if (!existing) return;
   const cfg = existing.config as Record<string, any>;
@@ -143,10 +153,13 @@ export async function updateConnectorStatus(
   if (errorMessage) cfg.errorMessage = errorMessage;
   if (status === "active") cfg.lastHealthCheckAt = new Date().toISOString();
 
-  await prisma.connectorConfig.update({
-    where: { id },
-    data: { config: cfg as any },
+  const result = await prisma.connectorConfig.updateMany({
+    where: { id, version: existing.version },
+    data: { config: cfg as any, version: { increment: 1 } },
   });
+  if (result.count === 0) {
+    throw new ConflictError("Concurrent modification detected — connector config was updated by another request.");
+  }
 }
 
 export function initializeConnectorInstance(config: ConnectorConfigRecord): IConnector {

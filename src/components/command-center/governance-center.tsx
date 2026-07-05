@@ -1,40 +1,37 @@
 "use client";
 
-import { WidgetCard } from "./widget-card";
+import { WidgetCard, KpiCard } from "./widget-card";
 import type { CommandCenterData } from "@/modules/command-center/command-center.service";
 
 export function GovernanceCenterWidget({ data }: { data: CommandCenterData["governance"] }) {
+  const health = data.healthScore;
+  const violations = data.violations;
+
   return (
     <WidgetCard
       title="Governance Center"
-      description={`${data.auditEvents} audit events`}
-      status={data.overdueApprovals > 0 ? "warning" : data.pendingApprovals > 10 ? "warning" : "healthy"}
+      description={`${health?.overall ?? "—"} health score`}
+      status={health?.level === "critical" ? "critical" : health?.level === "attention" ? "warning" : "healthy"}
     >
       <div className="space-y-2">
         <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-lg bg-black/20 border border-white/[0.06] p-3">
-            <p className="text-[10px] uppercase tracking-wider text-zinc-500">Pending Approvals</p>
-            <p className="text-lg font-bold text-white mt-0.5">{data.pendingApprovals}</p>
-          </div>
-          <div className="rounded-lg bg-black/20 border border-white/[0.06] p-3">
-            <p className="text-[10px] uppercase tracking-wider text-zinc-500">Approval Value</p>
-            <p className="text-lg font-bold text-white mt-0.5">{data.approvalValue}</p>
-          </div>
+          <KpiCard label="Health Score" value={health ? `${health.overall}/100` : "—"} />
+          <KpiCard label="Policy Violations" value={String(violations?.open ?? 0)} status={violations && violations.open > 0 ? "warning" : "healthy"} />
+          <KpiCard label="Pending Approvals" value={String(data.pendingApprovals)} />
+          <KpiCard label="Active Exceptions" value={String(data.activeExceptions)} />
         </div>
-        <div className="space-y-1">
-          <div className="flex items-center justify-between px-3 py-1.5 rounded bg-black/20 border border-white/[0.06]">
-            <span className="text-xs text-zinc-400">Overdue (&gt;24h)</span>
-            <span className={`text-sm font-semibold ${data.overdueApprovals > 0 ? "text-amber-400" : "text-white"}`}>{data.overdueApprovals}</span>
+        {violations && violations.critical > 0 && (
+          <div className="rounded-lg bg-red-950/40 border border-red-500/20 p-2.5">
+            <p className="text-[11px] font-semibold text-red-400">{violations.critical} Critical Violation{violations.critical > 1 ? "s" : ""}</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">Requires immediate attention</p>
           </div>
-          <div className="flex items-center justify-between px-3 py-1.5 rounded bg-black/20 border border-white/[0.06]">
-            <span className="text-xs text-zinc-400">High-Severity Audit</span>
-            <span className={`text-sm font-semibold ${data.highSeverityAudit > 0 ? "text-red-400" : "text-white"}`}>{data.highSeverityAudit}</span>
+        )}
+        {health && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-black/20 border border-white/[0.06]">
+            <span className="text-xs text-zinc-400 flex-1">Active Policies</span>
+            <span className="text-sm font-semibold text-white">{data.activePolicies}</span>
           </div>
-          <div className="flex items-center justify-between px-3 py-1.5 rounded bg-black/20 border border-white/[0.06]">
-            <span className="text-xs text-zinc-400">Total Audit Events</span>
-            <span className="text-sm font-semibold text-white">{data.auditEvents}</span>
-          </div>
-        </div>
+        )}
       </div>
     </WidgetCard>
   );

@@ -1,4 +1,5 @@
 import { prisma } from "@/server/db/prisma";
+import { ConflictError } from "@/lib/errors/app-error";
 
 export interface ErpConnectionState {
   realmId?: string;
@@ -34,10 +35,13 @@ export class ErpService {
     const cfg = (record.config as Record<string, any>) ?? {};
     cfg.erpConnection = { ...(cfg.erpConnection ?? {}), ...state };
 
-    await prisma.connectorConfig.update({
-      where: { id: connectorId },
-      data: { config: cfg as any },
+    const erpResult = await prisma.connectorConfig.updateMany({
+      where: { id: connectorId, version: (record as any).version },
+      data: { config: cfg as any, version: { increment: 1 } },
     });
+    if (erpResult.count === 0) {
+      throw new ConflictError("Concurrent modification detected — ERP connection state update conflicted.");
+    }
   }
 
   async deleteConnectionState(companyId: string, connectorId: string): Promise<void> {
@@ -49,10 +53,13 @@ export class ErpService {
     const cfg = (record.config as Record<string, any>) ?? {};
     delete cfg.erpConnection;
 
-    await prisma.connectorConfig.update({
-      where: { id: connectorId },
-      data: { config: cfg as any },
+    const erpResult = await prisma.connectorConfig.updateMany({
+      where: { id: connectorId, version: (record as any).version },
+      data: { config: cfg as any, version: { increment: 1 } },
     });
+    if (erpResult.count === 0) {
+      throw new ConflictError("Concurrent modification detected — ERP connection state delete conflicted.");
+    }
   }
 
   async listActiveConnections(companyId: string): Promise<{ connectorId: string; provider: string; state: ErpConnectionState }[]> {

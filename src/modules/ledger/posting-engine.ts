@@ -1,6 +1,13 @@
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prisma as defaultPrisma } from "@/server/db/prisma";
 import type { DbClient } from "@/lib/db/types";
+import { RowLockManager, FinancialTransactionManager } from "@/lib/financial-transaction";
+
+function applyLedgerSide(balance: Prisma.Decimal, side: string, amount: Prisma.Decimal): Prisma.Decimal {
+  return side === "CREDIT" ? balance.add(amount) : balance.sub(amount);
+}
+
+const postingLockManager = new RowLockManager(new FinancialTransactionManager());
 
 export interface LedgerPosting {
   walletId: string;
@@ -73,35 +80,70 @@ export class PostingEngine {
     }
 
     await this.prisma.$transaction(async (tx: any) => {
-      for (const posting of batch.postings) {
-        await tx.ledgerEntry.create({
-          data: {
-            companyId: batch.companyId,
-            transactionId: batch.transactionId,
-            walletId: posting.walletId,
-            side: posting.side,
-            amount: new Prisma.Decimal(posting.amount),
-            currency: batch.currency,
-            sequence: posting.sequence,
-          },
-        });
-
-        const sign = posting.side === "DEBIT" ? -1 : 1;
-        const adjustmentAmount = new Prisma.Decimal(posting.amount).mul(sign);
-
-        await tx.wallet.update({
-          where: { id: posting.walletId },
-          data: {
-            balance: {
-              increment: adjustmentAmount,
-            },
-            version: {
-              increment: 1,
-            },
-          },
-        });
-      }
+      await this.postLedgerLines(tx, batch.companyId, batch.transactionId, batch.currency, batch.postings);
     });
+  }
+
+  async postLedgerLines(
+    tx: Prisma.TransactionClient,
+    companyId: string,
+    transactionId: string,
+    currency: string,
+    lines: LedgerPosting[],
+  ): Promise<void> {
+    const sortedLines = [...lines].sort((a, b) => a.sequence - b.sequence);
+    const walletIds = [...new Set(sortedLines.map(p => p.walletId))].sort();
+
+    await postingLockManager.lockInTx(
+      walletIds.map(id => ({ entity: "Wallet", id })),
+      tx,
+    );
+
+    // Pre-load wallets with their versions inside the lock
+    const wallets = await Promise.all(
+      walletIds.map(id =>
+        tx.wallet.findUnique({ where: { id } }),
+      ),
+    );
+    const walletMap = new Map(wallets.filter((w): w is NonNullable<typeof w> => w !== null).map(w => [w.id, w]));
+
+    for (const line of sortedLines) {
+      const wallet = walletMap.get(line.walletId);
+      if (!wallet) throw new Error(`Wallet ${line.walletId} not found`);
+
+      if (wallet.currency !== currency) {
+        throw new Error(`Ledger line currency must match wallet currency ${wallet.currency}`);
+      }
+
+      const nextBalance = applyLedgerSide(wallet.balance, line.side, new Prisma.Decimal(line.amount));
+      if (wallet.kind === "STANDARD" && nextBalance.lessThan(0)) {
+        throw new Error("Insufficient balance for this operation.");
+      }
+
+      await tx.ledgerEntry.create({
+        data: {
+          companyId,
+          transactionId,
+          walletId: line.walletId,
+          side: line.side,
+          amount: new Prisma.Decimal(line.amount),
+          currency,
+          sequence: line.sequence,
+        },
+      });
+
+      const updated = await tx.wallet.updateMany({
+        where: { id: line.walletId, version: wallet.version },
+        data: {
+          balance: nextBalance,
+          version: { increment: 1 },
+        },
+      });
+
+      if (updated.count === 0) {
+        throw new Error(`Wallet ${line.walletId} version conflict — concurrent modification detected`);
+      }
+    }
   }
 
   async computeWalletBalance(walletId: string, companyId: string): Promise<Prisma.Decimal> {

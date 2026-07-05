@@ -21,9 +21,10 @@ import { Select } from "@/components/ui/select";
 import { TableScroll } from "@/components/ui/table-scroll";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { formatMoney } from "@/lib/format";
-import { Plus, Building2, Download, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Plus, Building2, Trash2, Link2 } from "lucide-react";
+import NextLink from "next/link";
 import { ExportButton } from "@/components/export/ExportButton";
+import { ConnectNewBankButton } from "@/components/plaid/ConnectNewBankButton";
 
 type Account = {
   id: string;
@@ -46,6 +47,7 @@ export default function AccountsPage() {
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<Set<string>>(new Set());
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -112,11 +114,12 @@ export default function AccountsPage() {
         <div className="flex items-center gap-2">
           <ExportButton type="accounts" />
           <Button asChild variant="outline" className="gap-2">
-            <Link href="/accounts/linked">
+            <NextLink href="/accounts/linked">
               <Building2 className="h-4 w-4" />
               Connected Banks
-            </Link>
+            </NextLink>
           </Button>
+          <ConnectNewBankButton />
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -194,7 +197,11 @@ export default function AccountsPage() {
                 <TableBody>
                   {accounts.map((a) => (
                     <TableRow key={a.id}>
-                      <TableCell className="font-medium text-perionyx-text-primary">{a.name}</TableCell>
+                      <TableCell className="font-medium text-perionyx-text-primary">
+                        <NextLink href={`/accounts/${a.id}`} className="hover:text-perionyx-gold transition-colors">
+                          {a.name}
+                        </NextLink>
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline">{a.currency}</Badge>
                       </TableCell>
@@ -217,9 +224,16 @@ export default function AccountsPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300" onClick={() => setConfirmDelete(a.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button size="sm" variant="ghost" className="text-perionyx-text-muted hover:text-perionyx-gold" asChild>
+                            <NextLink href={`/accounts/${a.id}`}>
+                              <Link2 className="h-4 w-4" />
+                            </NextLink>
+                          </Button>
+                          <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300" onClick={() => setConfirmDelete(a.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -187,16 +187,20 @@ export class PlaidBankingService {
   async updateConnectionStatus(companyId: string, connectorId: string, status: string) {
     const existing = await prisma.connectorConfig.findFirst({
       where: { id: connectorId, companyId },
-      select: { config: true },
+      select: { config: true, version: true },
     });
     if (!existing) return;
     const cfg = existing.config as Record<string, unknown>;
     cfg.healthStatus = status === "active" ? "GOOD" : status;
     cfg.lastHealthCheckAt = new Date().toISOString();
-    await prisma.connectorConfig.update({
-      where: { id: connectorId },
-      data: { config: cfg as any },
+    const pbResult = await prisma.connectorConfig.updateMany({
+      where: { id: connectorId, version: existing.version },
+      data: { config: cfg as any, version: { increment: 1 } },
     });
+    if (pbResult.count === 0) {
+      const { ConflictError } = await import("@/lib/errors/app-error");
+      throw new ConflictError("Concurrent modification detected — Plaid banking connection status update conflicted.");
+    }
 
     await recordAudit(prisma, {
       companyId,

@@ -2,13 +2,14 @@
 
 import { Prisma, TransactionStatus } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
-import { ValidationError, ForbiddenError, ConflictError, NotFoundError } from "@/lib/errors/app-error";
+import { ValidationError, ForbiddenError, ConflictError } from "@/lib/errors/app-error";
 import { rbacService, RBACService } from "@/modules/rbac/rbac.service";
 import { ApprovalAuthorityService } from "@/modules/rbac/approval-authority.service";
 import { RuleEvaluationEngine, type TransactionContext } from "@/modules/rbac/rule-evaluation.engine";
 import { recordAudit } from "@/modules/audit/audit.service";
 import type { LedgerLineDraft } from "@/modules/ledger/ledger.service";
-import { applyLedgerSide, assertBalancedLedger } from "@/modules/ledger/ledger.service";
+import { assertBalancedLedger } from "@/modules/ledger/ledger.service";
+import { postingEngine } from "@/modules/ledger/posting-engine";
 import { NotificationService } from "@/modules/notifications/notifications.service";
 
 const notificationService = new NotificationService();
@@ -494,63 +495,10 @@ export class ApprovalWorkflowEngine {
           assertBalancedLedger(lines);
         }
 
-        const sortedLines = [...lines].sort((a, b) => a.sequence - b.sequence);
+        const currency = lines[0]?.currency ?? "USD";
 
-        // Lock wallets in order
-        const walletIds = [...new Set(sortedLines.map((l) => l.walletId))].sort();
-        for (const walletId of walletIds) {
-          const wallet = await tx.wallet.findUnique({
-            where: { id: walletId },
-          });
-          if (!wallet) {
-            throw new NotFoundError("Wallet");
-          }
-          if (wallet.companyId !== companyId) {
-            throw new ValidationError("Wallet does not belong to this company");
-          }
-        }
-
-        // Create ledger entries and update balances
-        for (const line of sortedLines) {
-          const wallet = await tx.wallet.findUnique({
-            where: { id: line.walletId },
-          });
-          if (!wallet) throw new NotFoundError("Wallet");
-          if (wallet.currency !== line.currency) {
-            throw new ConflictError("Ledger line currency must match wallet currency");
-          }
-
-          await tx.ledgerEntry.create({
-            data: {
-              companyId,
-              transactionId,
-              walletId: line.walletId,
-              side: line.side,
-              amount: line.amount,
-              currency: line.currency,
-              sequence: line.sequence,
-            },
-          });
-
-          const nextBalance = applyLedgerSide(wallet.balance, line.side, line.amount);
-
-          // Enforce non-negative balance for STANDARD wallets
-          if (wallet.kind === "STANDARD" && nextBalance.lessThan(0)) {
-            throw new ConflictError("Insufficient balance for this operation.");
-          }
-
-          const updated = await tx.wallet.updateMany({
-            where: { id: line.walletId, version: wallet.version },
-            data: {
-              balance: nextBalance,
-              version: { increment: 1 },
-            },
-          });
-
-          if (updated.count === 0) {
-            throw new ConflictError("Wallet version conflict — concurrent modification detected");
-          }
-        }
+        // Use shared PostingEngine for ledger writes with row locks + version checks
+        await postingEngine.postLedgerLines(tx, companyId, transactionId, currency, lines);
 
         await tx.transaction.update({
           where: { id: transactionId },

@@ -4,6 +4,8 @@ import { engineRegistry, KnowledgeGraph, IntelligenceService } from "@/modules/e
 import type { IntelligenceEngineResult } from "@/modules/enterprise-intelligence/types";
 import { DecisionService } from "@/modules/decision-intelligence/decision.service";
 import { evaluatorRegistry } from "@/modules/decision-intelligence/engine";
+import { GovernanceService } from "@/modules/governance/governance.service";
+import { WorkflowEngine } from "@/modules/workflow/engine";
 import { observabilityService } from "@/modules/observability";
 import { logger } from "@/lib/logger";
 
@@ -234,6 +236,48 @@ export class OperationsService {
     }
   }
 
+  // ── Governance Monitoring ──────────────────────────────────────────────────
+
+  static async getGovernanceMetrics(ctx: TenantContext): Promise<{
+    healthScore: number;
+    healthLevel: string;
+    openViolations: number;
+    criticalViolations: number;
+    activeExceptions: number;
+    activeFrameworks: number;
+    evaluationsToday: number;
+  }> {
+    const metrics = await GovernanceService.getMetrics(ctx).catch(() => null);
+    if (!metrics) {
+      return { healthScore: 0, healthLevel: "unknown", openViolations: 0, criticalViolations: 0, activeExceptions: 0, activeFrameworks: 0, evaluationsToday: 0 };
+    }
+    return {
+      healthScore: metrics.healthScore.overall,
+      healthLevel: metrics.healthScore.level,
+      openViolations: metrics.violations.open,
+      criticalViolations: metrics.violations.critical,
+      activeExceptions: metrics.activeExceptions,
+      activeFrameworks: metrics.activeFrameworks,
+      evaluationsToday: metrics.evaluationsToday,
+    };
+  }
+
+  static async getGovernanceHealth(ctx: TenantContext): Promise<{
+    overall: number;
+    level: string;
+    categories: { policyCompliance: number; violationTrend: number; exceptionHealth: number; auditHealth: number; approvalHealth: number };
+  }> {
+    const score = await GovernanceService.getGovernanceHealthScore(ctx).catch(() => null);
+    if (!score) {
+      return { overall: 0, level: "unknown", categories: { policyCompliance: 0, violationTrend: 0, exceptionHealth: 0, auditHealth: 0, approvalHealth: 0 } };
+    }
+    return { overall: score.overall, level: score.level, categories: score.categories };
+  }
+
+  static async getGovernanceViolations(ctx: TenantContext, limit = 20) {
+    return GovernanceService.listViolations(ctx, { limit }).catch(() => []);
+  }
+
   // ── Platform Observability ────────────────────────────────────────────────
 
   static async getPlatformHealth(): Promise<{
@@ -309,6 +353,32 @@ export class OperationsService {
       averageScore: Math.round(avgScore * 100) / 100,
       topDecisions: prioritized.decisions.slice(0, 5).map((d) => `[P${d.priority}] ${d.title}`),
     };
+  }
+
+  // ── Workflow Monitoring ──────────────────────────────────────────────────
+
+  static async getWorkflowMetrics(ctx: TenantContext) {
+    const engine = new WorkflowEngine();
+    return engine.getMetrics(ctx).catch(() => ({
+      totalDefinitions: 0, activeDefinitions: 0, totalInstances: 0,
+      runningInstances: 0, waitingInstances: 0, failedInstances: 0,
+      completedInstances: 0, cancelledInstances: 0, averageDurationMs: 0, successRate: 100,
+    }));
+  }
+
+  static async getRunningWorkflows(ctx: TenantContext, limit = 20) {
+    const engine = new WorkflowEngine();
+    return engine.listInstances(ctx, { status: "RUNNING", limit }).catch(() => []);
+  }
+
+  static async getWaitingWorkflows(ctx: TenantContext, limit = 20) {
+    const engine = new WorkflowEngine();
+    return engine.listInstances(ctx, { status: "WAITING", limit }).catch(() => []);
+  }
+
+  static async getFailedWorkflows(ctx: TenantContext, limit = 20) {
+    const engine = new WorkflowEngine();
+    return engine.listInstances(ctx, { status: "FAILED", limit }).catch(() => []);
   }
 
   static async runFullDecisionEvaluation(ctx: TenantContext): Promise<{ success: boolean; evaluatorCount: number; runtimeMs: number }> {

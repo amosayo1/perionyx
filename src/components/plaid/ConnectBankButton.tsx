@@ -20,6 +20,18 @@ type Props = {
   onLinked: () => void;
 };
 
+function loadPlaidScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined") return reject(new Error("Not in browser"));
+    if ((window as any).Plaid) return resolve();
+    const script = document.createElement("script");
+    script.src = "https://cdn.plaid.com/link/v2/stable/link-initialize.js";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load Plaid script"));
+    document.head.appendChild(script);
+  });
+}
+
 export function ConnectBankButton({ accountId, accountName, onLinked }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,37 +41,37 @@ export function ConnectBankButton({ accountId, accountName, onLinked }: Props) {
   const handleConnect = useCallback(async () => {
     setLoading(true);
     try {
-      // Step 1: get link token
       const tokenRes = await fetch("/api/v1/plaid/link-token", {
         method: "POST", credentials: "include",
       });
       const { linkToken, isMock } = await tokenRes.json();
 
       if (isMock) {
-        // Demo mode: show mock dialog
         setSimulateMode(true);
         setSimulateName("");
         return;
       }
 
-      if (typeof window !== "undefined" && (window as any).Plaid) {
-        const handler = (window as any).Plaid.create({
-          token: linkToken,
-          onSuccess: async (publicToken: string) => {
-            await fetch("/api/v1/plaid/exchange", {
-              method: "POST", credentials: "include",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ publicToken, accountId }),
-            });
-            onLinked();
-          },
-        });
-        handler.open();
-      } else {
-        // Plaid CDN not loaded — fallback to mock
+      try {
+        await loadPlaidScript();
+      } catch {
         setSimulateMode(true);
         setSimulateName("");
+        return;
       }
+
+      const handler = (window as any).Plaid.create({
+        token: linkToken,
+        onSuccess: async (publicToken: string) => {
+          await fetch("/api/v1/plaid/exchange", {
+            method: "POST", credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ publicToken, accountId }),
+          });
+          onLinked();
+        },
+      });
+      handler.open();
     } finally {
       setLoading(false);
     }

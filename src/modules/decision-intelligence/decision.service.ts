@@ -7,6 +7,7 @@ import { ApprovalDecisionEvaluator } from "./evaluators/approval-evaluator";
 import { ReconciliationDecisionEvaluator } from "./evaluators/reconciliation-evaluator";
 import { OperationalDecisionEvaluator } from "./evaluators/operational-evaluator";
 import { RiskDecisionEvaluator } from "./evaluators/risk-evaluator";
+import { GovernanceDecisionEvaluator } from "./evaluators/governance-evaluator";
 import type {
   Decision, DecisionCategory, DecisionEvaluatorResult,
   DecisionPriority, DecisionWeightConfig, ScenarioComparison,
@@ -32,6 +33,7 @@ export class DecisionService {
       evaluatorRegistry.register(new ReconciliationDecisionEvaluator());
       evaluatorRegistry.register(new OperationalDecisionEvaluator());
       evaluatorRegistry.register(new RiskDecisionEvaluator());
+      evaluatorRegistry.register(new GovernanceDecisionEvaluator());
     }
 
     const entries = await Promise.all(

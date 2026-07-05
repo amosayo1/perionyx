@@ -123,10 +123,19 @@ export class TeamsConnector implements IConnector {
         ? new Date(Date.now() + data.expires_in * 1000).toISOString()
         : undefined;
 
-      await prisma.connectorConfig.update({
+      const teamsCurrent = await prisma.connectorConfig.findUnique({
         where: { id: this.config.id },
-        data: { config: { ...this.config.config, tokenExpiresAt: expiresAt } as any },
+        select: { version: true },
       });
+      if (!teamsCurrent) throw new Error("Connector config not found");
+      const teamsResult = await prisma.connectorConfig.updateMany({
+        where: { id: this.config.id, version: teamsCurrent.version },
+        data: { config: { ...this.config.config, tokenExpiresAt: expiresAt } as any, version: { increment: 1 } },
+      });
+      if (teamsResult.count === 0) {
+        const { ConflictError } = await import("@/lib/errors/app-error");
+        throw new ConflictError("Concurrent modification detected");
+      }
 
       return { ok: true, message: "Connected to Microsoft Teams" };
     } catch (err: any) {

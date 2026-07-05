@@ -98,10 +98,20 @@ export class SlackConnector implements IConnector {
       await storeConnectorSecret(this.config.id, "botToken", data.access_token);
 
       if (data.team_name) {
-        await prisma.connectorConfig.update({
+        const slackCurrent = await prisma.connectorConfig.findUnique({
           where: { id: this.config.id },
-          data: { config: { ...this.config.config, teamName: data.team_name, teamId: data.team_id, botUserId: data.bot_user_id } as any },
+          select: { version: true },
         });
+        if (slackCurrent) {
+          const slackResult = await prisma.connectorConfig.updateMany({
+            where: { id: this.config.id, version: slackCurrent.version },
+            data: { config: { ...this.config.config, teamName: data.team_name, teamId: data.team_id, botUserId: data.bot_user_id } as any, version: { increment: 1 } },
+          });
+          if (slackResult.count === 0) {
+            const { ConflictError } = await import("@/lib/errors/app-error");
+            throw new ConflictError("Concurrent modification detected");
+          }
+        }
       }
 
       return { ok: true, message: `Connected to Slack workspace: ${data.team_name ?? "unknown"}` };

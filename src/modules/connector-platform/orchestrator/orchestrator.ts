@@ -1,6 +1,7 @@
 import { prisma } from "@/server/db/prisma";
 import { recordAudit } from "@/modules/audit";
 import { incConnectorSync, incConnectorHealthCheck, incConnectorOAuthRefresh } from "@/modules/metrics/metrics";
+import { ConflictError } from "@/lib/errors/app-error";
 import { enqueue, scheduleCron, unscheduleCron } from "@/modules/queue/queue.service";
 import { connectorPlatformRegistry } from "../registry";
 import { connectorEventBus } from "../event-hooks";
@@ -111,10 +112,19 @@ export class ConnectorOrchestrator {
     try { incConnectorSync(connector.kind, result.success ? "completed" : "failed"); } catch { /* best-effort */ }
 
     if (result.success) {
-      await prisma.connectorConfig.updateMany({
-        where: { id: connectorId, companyId },
-        data: { config: { lastSyncAt: new Date().toISOString() } as any },
+      const syncCfg = await prisma.connectorConfig.findUnique({
+        where: { id: connectorId },
+        select: { version: true },
       });
+      if (syncCfg) {
+        const syncResult = await prisma.connectorConfig.updateMany({
+          where: { id: connectorId, companyId, version: syncCfg.version },
+          data: { config: { lastSyncAt: new Date().toISOString() } as any, version: { increment: 1 } },
+        });
+        if (syncResult.count === 0) {
+          throw new ConflictError("Concurrent modification detected — connector sync update conflicted.");
+        }
+      }
     } else {
       await this.broadcastNotification(companyId, {
         eventType: "CONNECTOR_FAILURE",
@@ -135,16 +145,26 @@ export class ConnectorOrchestrator {
 
     const health = await connector.healthCheck();
 
-    await prisma.connectorConfig.updateMany({
-      where: { id: connectorId, companyId },
-      data: {
-        config: {
-          healthStatus: health.status,
-          lastHealthCheckAt: new Date().toISOString(),
-          ...(health.status === "CRITICAL" ? { healthMessage: health.message } : {}),
-        } as any,
-      },
+    const hcCfg = await prisma.connectorConfig.findUnique({
+      where: { id: connectorId },
+      select: { version: true },
     });
+    if (hcCfg) {
+      const hcResult = await prisma.connectorConfig.updateMany({
+        where: { id: connectorId, companyId, version: hcCfg.version },
+        data: {
+          config: {
+            healthStatus: health.status,
+            lastHealthCheckAt: new Date().toISOString(),
+            ...(health.status === "CRITICAL" ? { healthMessage: health.message } : {}),
+          } as any,
+          version: { increment: 1 },
+        },
+      });
+      if (hcResult.count === 0) {
+        throw new ConflictError("Concurrent modification detected — connector health check update conflicted.");
+      }
+    }
 
     await connectorEventBus.publish({
       eventType: "connector:health-check",
@@ -205,16 +225,26 @@ export class ConnectorOrchestrator {
       try { incConnectorOAuthRefresh(connector.kind, result.ok ? "success" : "failed"); } catch { /* best-effort */ }
 
       if (result.ok) {
-        await prisma.connectorConfig.updateMany({
-          where: { id: connectorId, companyId },
-          data: {
-            config: {
-              ...cfg,
-              lastTokenRefreshAt: new Date().toISOString(),
-              tokenExpiresAt: result.expiresAt,
-            } as any,
-          },
+        const oauthCfg = await prisma.connectorConfig.findUnique({
+          where: { id: connectorId },
+          select: { version: true },
         });
+        if (oauthCfg) {
+          const oauthResult = await prisma.connectorConfig.updateMany({
+            where: { id: connectorId, companyId, version: oauthCfg.version },
+            data: {
+              config: {
+                ...cfg,
+                lastTokenRefreshAt: new Date().toISOString(),
+                tokenExpiresAt: result.expiresAt,
+              } as any,
+              version: { increment: 1 },
+            },
+          });
+          if (oauthResult.count === 0) {
+            throw new ConflictError("Concurrent modification detected — connector OAuth token update conflicted.");
+          }
+        }
       }
 
       return result.ok;

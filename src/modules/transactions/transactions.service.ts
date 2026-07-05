@@ -3,8 +3,8 @@ import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit/audit.service";
 import { AuditAction } from "@/domain/constants/audit-actions";
+import { postingEngine } from "@/modules/ledger/posting-engine";
 import {
-  applyLedgerSide,
   assertBalancedLedger,
   ledgerService,
   type LedgerLineDraft,
@@ -213,48 +213,6 @@ async function loadWalletForCompany(
   });
 }
 
-async function lockWalletsInOrder(
-  tx: Prisma.TransactionClient,
-  companyId: string,
-  walletIds: string[],
-) {
-  const uniqueSorted = [...new Set(walletIds)].sort((a, b) => a.localeCompare(b));
-  for (const walletId of uniqueSorted) {
-    await tx.$executeRaw(
-      Prisma.sql`SELECT id FROM "Wallet" WHERE id = ${walletId} AND "companyId" = ${companyId} FOR UPDATE`,
-    );
-  }
-}
-
-async function applyWalletBalanceUpdate(
-  tx: Prisma.TransactionClient,
-  companyId: string,
-  wallet: { id: string; kind: WalletKind },
-  nextBalance: Prisma.Decimal,
-) {
-  const current = await tx.wallet.findFirst({
-    where: { id: wallet.id, companyId },
-  });
-  if (!current) {
-    throw new NotFoundError("Wallet");
-  }
-  if (current.kind === "STANDARD" && nextBalance.lessThan(0)) {
-    throw new ConflictError("Insufficient balance for this operation.");
-  }
-  const updated = await tx.wallet.updateMany({
-    where: { id: wallet.id, companyId, version: current.version },
-    data: {
-      balance: nextBalance,
-      version: { increment: 1 },
-    },
-  });
-  if (updated.count !== 1) {
-    throw new ConflictError(
-      "Concurrent wallet modification detected; retry the request.",
-    );
-  }
-}
-
 async function persistLedger(
   tx: Prisma.TransactionClient,
   companyId: string,
@@ -267,34 +225,17 @@ async function persistLedger(
   } else {
     validateCrossCurrencyPostings(lines);
   }
-  const sortedLines = [...lines].sort((a, b) => a.sequence - b.sequence);
-  await lockWalletsInOrder(
-    tx,
-    companyId,
-    sortedLines.map((l) => l.walletId),
-  );
 
-  for (const line of sortedLines) {
-    const wallet = await loadWalletForCompany(tx, companyId, line.walletId);
-    if (!wallet) {
-      throw new NotFoundError("Wallet");
-    }
-    if (wallet.currency !== line.currency) {
-      throw new ConflictError("Ledger line currency must match wallet currency.");
-    }
-    await tx.ledgerEntry.create({
-      data: {
-        companyId,
-        transactionId,
-        walletId: line.walletId,
-        side: line.side,
-        amount: line.amount,
-        currency: line.currency,
-        sequence: line.sequence,
-      },
-    });
-    const nextBalance = applyLedgerSide(wallet.balance, line.side, line.amount);
-    await applyWalletBalanceUpdate(tx, companyId, wallet, nextBalance);
+  // Group lines by currency so each call to postLedgerLines uses the correct one
+  const byCurrency = new Map<string, LedgerLineDraft[]>();
+  for (const line of lines) {
+    const group = byCurrency.get(line.currency) ?? [];
+    group.push(line);
+    byCurrency.set(line.currency, group);
+  }
+
+  for (const [currency, currencyLines] of byCurrency) {
+    await postingEngine.postLedgerLines(tx, companyId, transactionId, currency, currencyLines);
   }
 }
 

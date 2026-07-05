@@ -5,6 +5,7 @@ import { recordAudit } from "@/modules/audit";
 import { notificationService, NotificationService } from "@/modules/notifications";
 import { ValidationError } from "@/lib/errors/app-error";
 import type { NormalizedLiquiditySummary, NormalizedErpPosition } from "@/modules/financial-mapping";
+import { FinancialTransactionManager, RowLockManager } from "@/lib/financial-transaction";
 
 export type TreasuryAccountSummary = {
   id: string;
@@ -38,6 +39,9 @@ export type InternalTransferSummary = {
   failureReason: string | null;
   createdAt: string;
 };
+
+const treasuryTxManager = new FinancialTransactionManager();
+const treasuryLockManager = new RowLockManager(treasuryTxManager);
 
 export class TreasuryService {
   static async listAccounts(ctx: TenantContext): Promise<TreasuryAccountSummary[]> {
@@ -174,24 +178,31 @@ export class TreasuryService {
   static async deposit(ctx: TenantContext, data: {
     accountId: string; amount: number; currency?: string; reference?: string; description?: string;
   }) {
-    const account = await prisma.treasuryAccount.findFirst({
-      where: { id: data.accountId, companyId: ctx.companyId },
-    });
-    if (!account) throw new ValidationError("Account not found");
     if (data.amount <= 0) throw new ValidationError("Amount must be positive");
 
-    const updated = await prisma.treasuryAccount.update({
-      where: { id: data.accountId },
-      data: { balance: { increment: data.amount } },
-    });
+    return treasuryLockManager.withLocks(
+      [{ entity: "TreasuryAccount", id: data.accountId }],
+      async (tx) => {
+        const account = await tx.treasuryAccount.findFirst({
+          where: { id: data.accountId, companyId: ctx.companyId },
+        });
+        if (!account) throw new ValidationError("Account not found");
 
-    await recordAudit(prisma, {
-      companyId: ctx.companyId, actorUserId: ctx.userId,
-      action: "TREASURY_DEPOSIT", resourceType: "TreasuryAccount", resourceId: data.accountId,
-      metadata: { amount: data.amount, currency: data.currency ?? account.currency, reference: data.reference },
-    });
+        const updated = await tx.treasuryAccount.update({
+          where: { id: data.accountId },
+          data: { balance: { increment: data.amount } },
+        });
 
-    return { id: data.accountId, balance: updated.balance.toString(), currency: updated.currency };
+        await recordAudit(tx, {
+          companyId: ctx.companyId, actorUserId: ctx.userId,
+          action: "TREASURY_DEPOSIT", resourceType: "TreasuryAccount", resourceId: data.accountId,
+          metadata: { amount: data.amount, currency: data.currency ?? account.currency, reference: data.reference },
+        });
+
+        return { id: data.accountId, balance: updated.balance.toString(), currency: updated.currency };
+      },
+      { behavior: "NOWAIT" },
+    );
   }
 
   static async transfer(ctx: TenantContext, data: {
@@ -201,65 +212,86 @@ export class TreasuryService {
     if (data.fromAccountId === data.toAccountId) {
       throw new ValidationError("Cannot transfer to the same account");
     }
-
-    const [fromAccount, toAccount] = await Promise.all([
-      prisma.treasuryAccount.findFirst({ where: { id: data.fromAccountId, companyId: ctx.companyId } }),
-      prisma.treasuryAccount.findFirst({ where: { id: data.toAccountId, companyId: ctx.companyId } }),
-    ]);
-
-    if (!fromAccount || !toAccount) throw new ValidationError("Account not found");
     if (data.amount <= 0) throw new ValidationError("Amount must be positive");
 
-    const currency = data.currency ?? fromAccount.currency;
+    const lockResult = await treasuryLockManager.withLocks<{
+      id: string;
+      fromAccountName: string;
+      toAccountName: string;
+      amount: string;
+      currency: string;
+      status: string;
+      reference: string | null;
+      createdAt: string;
+    }>(
+      [
+        { entity: "TreasuryAccount", id: data.fromAccountId },
+        { entity: "TreasuryAccount", id: data.toAccountId },
+      ],
+      async (tx) => {
+        const [fromAccount, toAccount] = await Promise.all([
+          tx.treasuryAccount.findFirst({ where: { id: data.fromAccountId, companyId: ctx.companyId } }),
+          tx.treasuryAccount.findFirst({ where: { id: data.toAccountId, companyId: ctx.companyId } }),
+        ]);
 
-    const transfer = await prisma.internalTransfer.create({
-      data: {
-        companyId: ctx.companyId,
-        fromAccountId: data.fromAccountId,
-        toAccountId: data.toAccountId,
-        amount: data.amount,
-        currency,
-        status: "COMPLETED",
-        reference: data.reference,
-        description: data.description,
+        if (!fromAccount || !toAccount) throw new ValidationError("Account not found");
+
+        const currency = data.currency ?? fromAccount.currency;
+
+        const transfer = await tx.internalTransfer.create({
+          data: {
+            companyId: ctx.companyId,
+            fromAccountId: data.fromAccountId,
+            toAccountId: data.toAccountId,
+            amount: data.amount,
+            currency,
+            status: "COMPLETED",
+            reference: data.reference,
+            description: data.description,
+          },
+        });
+
+        await tx.treasuryAccount.update({
+          where: { id: data.fromAccountId },
+          data: { balance: { decrement: data.amount } },
+        });
+
+        await tx.treasuryAccount.update({
+          where: { id: data.toAccountId },
+          data: { balance: { increment: data.amount } },
+        });
+
+        await recordAudit(tx, {
+          companyId: ctx.companyId, actorUserId: ctx.userId,
+          action: "INTERNAL_TRANSFER_COMPLETED", resourceType: "InternalTransfer", resourceId: transfer.id,
+          metadata: { fromAccountId: data.fromAccountId, toAccountId: data.toAccountId, amount: data.amount, currency },
+        });
+
+        return {
+          id: transfer.id,
+          fromAccountName: fromAccount.name,
+          toAccountName: toAccount.name,
+          amount: transfer.amount.toString(),
+          currency: transfer.currency,
+          status: transfer.status,
+          reference: transfer.reference,
+          failureReason: null,
+          createdAt: transfer.createdAt.toISOString(),
+        };
       },
-    });
+    );
 
-    await prisma.$transaction([
-      prisma.treasuryAccount.update({
-        where: { id: data.fromAccountId },
-        data: { balance: { decrement: data.amount } },
-      }),
-      prisma.treasuryAccount.update({
-        where: { id: data.toAccountId },
-        data: { balance: { increment: data.amount } },
-      }),
-    ]);
-
-    await recordAudit(prisma, {
-      companyId: ctx.companyId, actorUserId: ctx.userId,
-      action: "INTERNAL_TRANSFER_COMPLETED", resourceType: "InternalTransfer", resourceId: transfer.id,
-      metadata: { fromAccountId: data.fromAccountId, toAccountId: data.toAccountId, amount: data.amount, currency },
-    });
-
-    await notificationService.broadcast({
+    notificationService.broadcast({
       companyId: ctx.companyId, eventType: "TRANSFER_COMPLETED",
-      title: `Transfer completed: $${data.amount.toLocaleString()} ${currency}`,
-      message: `${fromAccount.name} → ${toAccount.name}`,
-      link: `/transactions?id=${transfer.id}`,
-      metadata: { amount: data.amount, currency, from: data.fromAccountId, to: data.toAccountId },
-    });
+      title: `Transfer completed: $${data.amount.toLocaleString()} ${lockResult.currency}`,
+      message: `${lockResult.fromAccountName} → ${lockResult.toAccountName}`,
+      link: `/transactions?id=${lockResult.id}`,
+      metadata: { amount: data.amount, currency: lockResult.currency, from: data.fromAccountId, to: data.toAccountId },
+    }).catch(() => {});
 
     return {
-      id: transfer.id,
-      fromAccountName: fromAccount.name,
-      toAccountName: toAccount.name,
-      amount: transfer.amount.toString(),
-      currency: transfer.currency,
-      status: transfer.status,
-      reference: transfer.reference,
+      ...lockResult,
       failureReason: null,
-      createdAt: transfer.createdAt.toISOString(),
     };
   }
 

@@ -29,7 +29,8 @@ export function BankConnectionCard({
   accountNumber,
   onSync,
   onUnlink,
-}: Props) {
+  connectButton,
+}: Props & { connectButton?: React.ReactNode }) {
   const [syncing, setSyncing] = useState<"balance" | "transactions" | null>(null);
 
   const handleSync = useCallback(async (type: "balance" | "transactions") => {
@@ -64,7 +65,7 @@ export function BankConnectionCard({
           </Badge>
         </div>
       </CardHeader>
-      {plaidAccountId && (
+      {plaidAccountId ? (
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1">
@@ -115,6 +116,13 @@ export function BankConnectionCard({
               Unlink
             </Button>
           </div>
+        </CardContent>
+      ) : (
+        <CardContent>
+          <p className="mb-4 text-sm text-perionyx-text-muted">
+            Link this account to a real bank via Plaid to sync balances and transactions automatically.
+          </p>
+          {connectButton}
         </CardContent>
       )}
     </Card>

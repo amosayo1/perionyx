@@ -100,10 +100,14 @@ export async function handlePlaidWebhookEvent(
           const cfg = config.config as Record<string, unknown>;
           cfg.healthStatus = "CRITICAL";
           cfg.errorMessage = `[${error.error_type}] ${error.error_code}: ${error.error_message}`;
-          await prisma.connectorConfig.update({
-            where: { id: connectorId },
-            data: { config: cfg as any, active: false },
+          const itemErrResult = await prisma.connectorConfig.updateMany({
+            where: { id: connectorId, version: (config as any).version },
+            data: { config: cfg as any, active: false, version: { increment: 1 } },
           });
+          if (itemErrResult.count === 0) {
+            const { ConflictError } = await import("@/lib/errors/app-error");
+            throw new ConflictError("Concurrent modification detected — Plaid webhook ITEM_ERROR update conflicted.");
+          }
         }
 
         const { notificationService } = await import("@/modules/notifications");
@@ -170,10 +174,14 @@ export async function handlePlaidWebhookEvent(
         const cfg = config.config as Record<string, unknown>;
         cfg.healthStatus = "CRITICAL";
         cfg.errorMessage = "User revoked Plaid access";
-        await prisma.connectorConfig.update({
-          where: { id: connectorId },
-          data: { config: cfg as any, active: false },
+        const loginRemResult = await prisma.connectorConfig.updateMany({
+          where: { id: connectorId, version: (config as any).version },
+          data: { config: cfg as any, active: false, version: { increment: 1 } },
         });
+        if (loginRemResult.count === 0) {
+          const { ConflictError } = await import("@/lib/errors/app-error");
+          throw new ConflictError("Concurrent modification detected — Plaid webhook ITEM_LOGIN_REMOVED update conflicted.");
+        }
       }
 
       const { updateConnectorStatus } = await import("../config");

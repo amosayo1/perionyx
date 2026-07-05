@@ -1,7 +1,8 @@
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
-import { ValidationError } from "@/lib/errors/app-error";
+import { ValidationError, ConflictError } from "@/lib/errors/app-error";
+import { GovernanceService } from "@/modules/governance/governance.service";
 
 export type PolicySummary = {
   id: string;
@@ -108,8 +109,8 @@ export class PolicyEngineService {
     });
     if (!policy) throw new ValidationError("Policy not found");
 
-    const updated = await prisma.policy.update({
-      where: { id: policyId },
+    const result = await prisma.policy.updateMany({
+      where: { id: policyId, version: policy.version },
       data: {
         ...(data.name !== undefined ? { name: data.name } : {}),
         ...(data.description !== undefined ? { description: data.description } : {}),
@@ -120,8 +121,14 @@ export class PolicyEngineService {
         ...(data.appliesToTransactionTypes !== undefined ? { appliesToTransactionTypes: data.appliesToTransactionTypes } : {}),
         ...(data.minAmount !== undefined ? { minAmount: data.minAmount } : {}),
         ...(data.maxAmount !== undefined ? { maxAmount: data.maxAmount } : {}),
+        version: { increment: 1 },
       },
     });
+    if (result.count === 0) {
+      throw new ConflictError("Concurrent modification detected — policy was updated by another request.");
+    }
+
+    const updated = (await prisma.policy.findUnique({ where: { id: policyId } }))!;
 
     await recordAudit(prisma, {
       companyId: ctx.companyId, actorUserId: ctx.userId,
@@ -165,10 +172,13 @@ export class PolicyEngineService {
       },
     });
 
-    await prisma.policy.update({
-      where: { id: policyId },
-      data: { lastEvaluatedAt: new Date() },
+    const evalResult = await prisma.policy.updateMany({
+      where: { id: policyId, version: policy.version },
+      data: { lastEvaluatedAt: new Date(), version: { increment: 1 } },
     });
+    if (evalResult.count === 0) {
+      throw new ConflictError("Concurrent modification detected — policy was updated by another request.");
+    }
 
     return {
       id: result.id, policyId: result.policyId, matched, action,
@@ -223,6 +233,7 @@ export class PolicyEngineService {
   static async evaluateTransaction(
     companyId: string,
     input: PolicyTestInput,
+    ctx?: TenantContext,
   ): Promise<{ action: string; policy: { id: string; name: string; actionConfig: Record<string, any> | null } } | null> {
     const policies = await prisma.policy.findMany({
       where: { companyId, enabled: true },
@@ -233,6 +244,19 @@ export class PolicyEngineService {
     for (const policy of policies) {
       const matched = PolicyEngineService.evaluateRules(policy, input);
       if (matched) {
+        if (ctx) {
+          await GovernanceService.recordViolation(ctx, {
+            policyId: policy.id,
+            sourceModule: "policy_engine",
+            sourceId: policy.id,
+            severity: policy.actionType === "BLOCK" ? "HIGH" : "MEDIUM",
+            title: `Policy triggered: ${policy.name}`,
+            description: `Transaction of ${input.amount} ${input.currency} (${input.transactionType}) matched policy "${policy.name}" with action ${policy.actionType}`,
+            entityType: "transaction",
+            action: policy.actionType,
+            details: { input, policyName: policy.name, actionType: policy.actionType },
+          });
+        }
         return {
           action: policy.actionType,
           policy: {

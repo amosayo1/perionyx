@@ -5,6 +5,7 @@ import { connectorPlatformRegistry } from "./registry";
 import { initializeConnectorInstance } from "./config";
 import { connectorEventBus } from "./event-hooks";
 import { connectorOrchestrator } from "./orchestrator";
+import { ConflictError } from "@/lib/errors/app-error";
 import type { IConnector } from "./interface";
 import type { ConnectorConfigRecord, ConnectorHealth } from "./types";
 
@@ -126,15 +127,25 @@ export class ConnectorLifecycle {
 
     const health = await connector.healthCheck();
 
-    await prisma.connectorConfig.updateMany({
-      where: { id: configId, companyId: ctx.companyId },
+    const current = await prisma.connectorConfig.findUnique({
+      where: { id: configId },
+      select: { version: true },
+    });
+    if (!current) return health;
+
+    const hcResult = await prisma.connectorConfig.updateMany({
+      where: { id: configId, companyId: ctx.companyId, version: current.version },
       data: {
         config: {
           healthStatus: health.status,
           lastHealthCheckAt: new Date().toISOString(),
         } as any,
+        version: { increment: 1 },
       },
     });
+    if (hcResult.count === 0) {
+      throw new ConflictError("Concurrent modification detected — connector health check update conflicted.");
+    }
 
     await connectorEventBus.publish({
       eventType: "connector:health-check",
@@ -157,10 +168,19 @@ export class ConnectorLifecycle {
     const health = await connector.connect();
 
     if (health.status === "GOOD" || health.status === "WARNING") {
-      await prisma.connectorConfig.updateMany({
-        where: { id: configId, companyId: ctx.companyId },
-        data: { active: true },
+      const cc = await prisma.connectorConfig.findUnique({
+        where: { id: configId },
+        select: { version: true },
       });
+      if (!cc) return health;
+
+      const connResult = await prisma.connectorConfig.updateMany({
+        where: { id: configId, companyId: ctx.companyId, version: cc.version },
+        data: { active: true, version: { increment: 1 } },
+      });
+      if (connResult.count === 0) {
+        throw new ConflictError("Concurrent modification detected — connector connect update conflicted.");
+      }
 
       await recordAudit(prisma, {
         companyId: ctx.companyId,
@@ -189,10 +209,19 @@ export class ConnectorLifecycle {
       await connector.disconnect();
     }
 
-    await prisma.connectorConfig.updateMany({
-      where: { id: configId, companyId: ctx.companyId },
-      data: { active: false },
+    const dc = await prisma.connectorConfig.findUnique({
+      where: { id: configId },
+      select: { version: true },
     });
+    if (!dc) return;
+
+    const discResult = await prisma.connectorConfig.updateMany({
+      where: { id: configId, companyId: ctx.companyId, version: dc.version },
+      data: { active: false, version: { increment: 1 } },
+    });
+    if (discResult.count === 0) {
+      throw new ConflictError("Concurrent modification detected — connector disconnect update conflicted.");
+    }
 
     connectorPlatformRegistry.unregisterInstance(configId);
 

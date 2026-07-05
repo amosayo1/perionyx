@@ -4,6 +4,7 @@ import { buildKnowledgeIndex } from "./knowledge-index";
 import { IntelligenceService } from "@/modules/enterprise-intelligence";
 import { DecisionService } from "@/modules/decision-intelligence/decision.service";
 import { generateDecisionBriefing } from "@/modules/decision-intelligence/briefing";
+import { GovernanceService } from "@/modules/governance/governance.service";
 
 export interface CopilotContext {
   dateTime: string;
@@ -30,6 +31,10 @@ export interface CopilotContext {
   enterpriseExecutiveSummary: string;
   decisionIntelligence: string;
   decisionBriefing: string;
+  governanceHealthScore: string;
+  governanceViolations: string;
+  governanceFrameworks: string;
+  governanceExceptions: string;
 }
 
 const _intelligenceService = new IntelligenceService();
@@ -74,13 +79,37 @@ export async function buildCopilotContext(ctx: TenantContext): Promise<CopilotCo
   const treasuryBal = treasury.reduce((s, a) => s + Number(a.balance), 0);
   const recentTxTotal = recentTx.reduce((s, t) => s + Number(t.primaryAmount), 0);
 
-  const [eiInsights, eiRecommendations, eiSummary, diDecisions, diBriefing] = await Promise.all([
+  const [eiInsights, eiRecommendations, eiSummary, diDecisions, diBriefing, govMetricsData, govViolationsData, govExceptionsData, govFrameworksData] = await Promise.all([
     _intelligenceService.getInsights(ctx).catch(() => []),
     _intelligenceService.getRecommendations(ctx).catch(() => []),
     _intelligenceService.getDailySummary(ctx).catch(() => null),
     _decisionService.getTopDecisions(ctx, 10).catch(() => []),
     generateDecisionBriefing(ctx, "daily").catch(() => null),
+    GovernanceService.getMetrics(ctx).catch(() => null),
+    GovernanceService.listViolations(ctx, { status: "OPEN", limit: 10 }).catch(() => []),
+    GovernanceService.listExceptions(ctx, { status: "ACTIVE" }).catch(() => []),
+    prisma.governanceFramework.findMany({ where: { companyId: ctx.companyId }, select: { name: true, status: true } }).catch(() => []),
   ]);
+
+  const govHealthScore = govMetricsData?.healthScore;
+  const governanceHealthScore = govHealthScore
+    ? `Health: ${govHealthScore.overall}/100 (${govHealthScore.level}). ` +
+      `Policy compliance: ${govHealthScore.categories.policyCompliance}%, ` +
+      `Violation trend: ${govHealthScore.categories.violationTrend}%, ` +
+      `Exceptions: ${govHealthScore.categories.exceptionHealth}%`
+    : "  (unavailable)";
+
+  const governanceViolations = Array.isArray(govViolationsData)
+    ? govViolationsData.map((v: any) => `  [${v.severity}] ${v.title} (module: ${v.sourceModule})`).join("\n") || "  (none)"
+    : "  (none)";
+
+  const governanceFrameworks = Array.isArray(govFrameworksData)
+    ? govFrameworksData.map((f: any) => `  ${f.name} [${f.status}]`).join("\n") || "  (none)"
+    : "  (none)";
+
+  const governanceExceptions = Array.isArray(govExceptionsData)
+    ? govExceptionsData.map((e: any) => `  ${e.reason} (scope: ${e.scope})`).join("\n") || "  (none)"
+    : "  (none)";
 
   const enterpriseInsights = eiInsights
     .map((i) => `  [${i.severity}] ${i.title}: ${i.description} (conf: ${i.confidence}%)`)
@@ -116,6 +145,7 @@ export async function buildCopilotContext(ctx: TenantContext): Promise<CopilotCo
       `Users: ${userCount}.`,
       `Reconciliation runs: ${reconciliation.length} recent. Calendar events upcoming: ${calendar.length}. Unread notifications: ${notifications}.`,
       `Enterprise Intelligence: ${eiInsights.length} insights, ${eiRecommendations.length} recommendations.`,
+      `Governance: ${govMetricsData?.violations.open ?? 0} violations, ${govMetricsData?.activeFrameworks ?? 0} frameworks, ${govMetricsData?.activeExceptions ?? 0} exceptions.`,
     ].join(" "),
     userId: ctx.userId,
     companyId: ctx.companyId,
@@ -142,5 +172,9 @@ export async function buildCopilotContext(ctx: TenantContext): Promise<CopilotCo
     enterpriseExecutiveSummary,
     decisionIntelligence,
     decisionBriefing,
+    governanceHealthScore,
+    governanceViolations,
+    governanceFrameworks,
+    governanceExceptions,
   };
 }

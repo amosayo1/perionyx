@@ -1,5 +1,33 @@
 # Development Guide
 
+## Engineering Governance
+
+Perionyx development is governed by a set of foundational documents. Every contributor must read and follow these before making changes:
+
+### Architecture Governance (`docs/architecture/`)
+
+| Document | Purpose |
+|----------|---------|
+| **Perionyx Engineering Constitution** (`perionyx-engineering-constitution.md`) | Immutable engineering principles — read this first |
+| **Enterprise Readiness Checklist** (`enterprise-readiness-checklist.md`) | Quality gate with 100+ pass/fail criteria for every feature |
+| **AI Engineering Playbook** (`ai-engineering-playbook.md`) | Mandatory rules for all AI-assisted implementation |
+| **Transaction Strategy** (`transaction-strategy.md`) | ACID, isolation levels, locking, retry, ledger guarantees |
+| **Self-Review Framework** (`self-review-framework.md`) | Mandatory AI self-review before completing any implementation |
+
+### Security Governance (`docs/security/`)
+
+| Document | Purpose |
+|----------|---------|
+| **Secure Development Lifecycle** (`secure-development-lifecycle.md`) | Threat modeling, RBAC, secrets, OWASP, incident response, compliance |
+
+### Operations Governance (`docs/operations/`)
+
+| Document | Purpose |
+|----------|---------|
+| **Release Checklist** (`release-checklist.md`) | Mandatory 16-section gate for every production release |
+
+---
+
 ## Getting Started
 
 ```bash

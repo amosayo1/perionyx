@@ -13,6 +13,7 @@ import { handleNotificationConnectorDelivery } from "@/modules/connector-platfor
 import { handleAiProviderHealthCheck } from "@/modules/ai-provider/jobs/provider-health.job";
 import { initializeConnectorPlatform } from "@/modules/connector-platform/bootstrap";
 import { initializeAiProviders } from "@/modules/ai-provider/bootstrap";
+import { handleWorkflowExecution, handleWorkflowScheduler, handleWorkflowTimeoutCheck, registerWorkflowCronJobs } from "@/modules/workflow";
 
 export function registerAllJobs(): void {
   initializeConnectorPlatform();
@@ -38,4 +39,16 @@ export function registerAllJobs(): void {
   scheduleCron("ai-provider-health-cron", "*/5 * * * *", async () => {
     await handleAiProviderHealthCheck();
   });
+
+  registerHandler("workflow-execute", async (job) => {
+    await handleWorkflowExecution(job);
+  });
+  registerHandler("workflow-scheduler", async () => {
+    await handleWorkflowScheduler();
+  });
+  registerHandler("workflow-timeout-check", async () => {
+    await handleWorkflowTimeoutCheck();
+  });
+  scheduleCron("workflow-scheduler", "*/5 * * * *");
+  scheduleCron("workflow-timeout-check", "0 */6 * * *");
 }

@@ -10,6 +10,22 @@ All contributors must maintain a professional, respectful, and inclusive environ
 
 ---
 
+## 1. Engineering Governance Framework
+
+Before contributing, read the following governance documents in order:
+
+1. **Engineering Constitution** (`docs/architecture/perionyx-engineering-constitution.md`) — Immutable principles
+2. **Enterprise Readiness Checklist** (`docs/architecture/enterprise-readiness-checklist.md`) — Quality gate
+3. **AI Engineering Playbook** (`docs/architecture/ai-engineering-playbook.md`) — Implementation rules
+4. **Transaction Strategy** (`docs/architecture/transaction-strategy.md`) — ACID, locking, retry
+5. **Self-Review Framework** (`docs/architecture/self-review-framework.md`) — Mandatory self-review
+6. **Secure Development Lifecycle** (`docs/security/secure-development-lifecycle.md`) — Security standards
+7. **Release Checklist** (`docs/operations/release-checklist.md`) — Release gate
+
+All contributions must satisfy the applicable criteria in these documents.
+
+---
+
 ## 2. Architecture Review Process
 
 ### 2.1 When an Architecture Review is Required
@@ -26,12 +42,17 @@ All contributors must maintain a professional, respectful, and inclusive environ
 
 Before requesting an architecture review, ensure:
 
-- [ ] The change is consistent with the Product Constitution
+- [ ] The change is consistent with the Engineering Constitution (`docs/architecture/perionyx-engineering-constitution.md`)
+- [ ] The change satisfies the Enterprise Readiness Checklist (`docs/architecture/enterprise-readiness-checklist.md`)
+- [ ] The AI Self-Review Framework has been completed (if AI-assisted — `docs/architecture/self-review-framework.md`)
+- [ ] The AI Engineering Playbook rules are followed (`docs/architecture/ai-engineering-playbook.md`)
+- [ ] The Transaction Strategy is followed (`docs/architecture/transaction-strategy.md`)
+- [ ] The Secure Development Lifecycle is followed (`docs/security/secure-development-lifecycle.md`)
 - [ ] The change is consistent with existing module structure
 - [ ] Tenant isolation is maintained
 - [ ] Error handling is explicit
 - [ ] Audit logging is included (if financial state changes)
-- [ ] The change is documented (ARCHITECTURE.md update or ADR)
+- [ ] The change is documented (architecture doc update or ADR)
 - [ ] TypeScript build passes with zero errors
 
 ### 2.3 Review Cadence
@@ -99,7 +120,9 @@ docs(api): document enterprise search endpoint
 
 - Review the existing module structure to find where your code belongs
 - Check if similar functionality already exists
-- Verify the architecture is consistent with the Product Constitution
+- Verify the architecture is consistent with the Engineering Constitution (`docs/architecture/perionyx-engineering-constitution.md`)
+- Review the Enterprise Readiness Checklist (`docs/architecture/enterprise-readiness-checklist.md`) for applicable criteria
+- Complete the AI Self-Review Framework (if AI-assisted — `docs/architecture/self-review-framework.md`)
 - Create or reference the relevant ADR
 
 ### 4.2 While Writing Code
@@ -144,17 +167,25 @@ docs(api): document enterprise search endpoint
 
 A contribution is complete when:
 
-1. Service module implements the business logic
-2. API routes expose the functionality (if applicable)
-3. UI components render the feature (if applicable)
-4. TypeScript build produces zero errors
-5. Error paths are handled and logged
-6. Empty states, loading states, and error states are implemented
-7. RBAC is respected
-8. Tenant isolation is maintained
-9. Documentation is updated
-10. Code review is complete
-11. Sandbox works with the changes (if applicable)
+1. Engineering Constitution principles are satisfied (`docs/architecture/perionyx-engineering-constitution.md`)
+2. Enterprise Readiness Checklist passes with ≥ 90% (zero critical failures in sections 3–6)
+3. AI Self-Review Framework is completed and all applicable sections pass (if AI-assisted)
+4. AI Engineering Playbook rules are followed (no forbidden practices)
+5. Transaction Strategy guarantees are met (locking, version checks, audit, idempotency)
+6. Secure Development Lifecycle requirements are satisfied (threat modeling, security review)
+7. Release Checklist criteria are verified (for release-scope contributions)
+8. Service module implements the business logic
+9. API routes expose the functionality (if applicable)
+10. UI components render the feature (if applicable)
+11. TypeScript build produces zero errors
+12. Production build produces zero errors and zero warnings
+13. Error paths are handled and logged
+14. Empty states, loading states, and error states are implemented
+15. RBAC is respected
+16. Tenant isolation is maintained
+17. Documentation is updated
+18. Code review is complete
+19. Sandbox works with the changes (if applicable)
 
 ---
 

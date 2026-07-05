@@ -8,6 +8,7 @@ import { TreasuryIntelligenceEngine } from "./engines/treasury-engine";
 import { RiskIntelligenceEngine } from "./engines/risk-engine";
 import { OperationalIntelligenceEngine } from "./engines/operational-engine";
 import { ExecutiveIntelligenceEngine } from "./engines/executive-engine";
+import { GovernanceIntelligenceEngine } from "./engines/governance-engine";
 import { enterpriseEventBus, type EnterpriseEventType } from "./event-bus";
 import { connectorEventBus } from "@/modules/connector-platform/event-hooks";
 import type { TenantContext } from "@/server/context/tenant-context";
@@ -25,6 +26,7 @@ export class IntelligenceService {
     engineRegistry.register(new RiskIntelligenceEngine());
     engineRegistry.register(new OperationalIntelligenceEngine());
     engineRegistry.register(new ExecutiveIntelligenceEngine());
+    engineRegistry.register(new GovernanceIntelligenceEngine());
   }
 
   // ── Engine Evaluation ──────────────────────────────────────────────────
@@ -135,6 +137,9 @@ export class IntelligenceService {
       this.indexModule("Users", () => prisma.companyMembership.count({ where: { companyId: ctx.companyId } }), "Platform users"),
       this.indexModule("Insights", async () => (await this.getInsights(ctx)).length, "Active intelligence insights"),
       this.indexModule("Recommendations", async () => (await this.getRecommendations(ctx)).length, "Active recommendations"),
+      this.indexModule("Governance Violations", () => prisma.policyViolation.count({ where: { companyId: ctx.companyId } }), "Policy violations"),
+      this.indexModule("Governance Frameworks", () => prisma.governanceFramework.count({ where: { companyId: ctx.companyId } }), "Governance frameworks"),
+      this.indexModule("Policy Exceptions", () => prisma.policyException.count({ where: { companyId: ctx.companyId } }), "Policy exceptions"),
     ]);
     return modules;
   }

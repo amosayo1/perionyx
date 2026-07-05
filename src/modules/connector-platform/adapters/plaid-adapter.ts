@@ -92,10 +92,17 @@ export class PlaidConnector implements IConnector {
 
       const { PrismaClient } = await import("@prisma/client");
       const { prisma } = await import("@/server/db/prisma");
-      await prisma.connectorConfig.update({
+      const { ConflictError } = await import("@/lib/errors/app-error");
+      const plaidCurrent = await prisma.connectorConfig.findUnique({
         where: { id: this.config.id },
-        data: { config: configData as any },
+        select: { version: true },
       });
+      if (!plaidCurrent) throw new Error("Connector config not found");
+      const plaidResult = await prisma.connectorConfig.updateMany({
+        where: { id: this.config.id, version: plaidCurrent.version },
+        data: { config: configData as any, version: { increment: 1 } },
+      });
+      if (plaidResult.count === 0) throw new ConflictError("Concurrent modification detected");
 
       const companyId = this.config.companyId;
       for (const plaidAccount of accountsRes.data.accounts) {
