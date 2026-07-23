@@ -1,6 +1,13 @@
 [build]
-  command = "next build"
+  command = "pnpm install --frozen-lockfile && pnpm build"
   publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NODE_OPTIONS = "--max-old-space-size=8192"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[headers]]
   for = "/*"

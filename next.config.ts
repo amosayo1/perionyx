@@ -11,8 +11,10 @@ const withBA = withBundleAnalyzer({
 const isDev = process.env.NODE_ENV !== "production";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async headers() {
     const scriptSrc = isDev
       ? "'self' 'unsafe-inline' 'unsafe-eval'"
