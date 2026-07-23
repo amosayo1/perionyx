@@ -1,9 +1,1 @@
-allowBuilds:
-  '@parcel/watcher': true
-  '@sentry/cli': true
-  '@swc/core': true
-  esbuild: true
-  prisma: true
-  puppeteer: set this to true or false
-  sharp: set this to true or false
-onlyBuiltDependencies: '[puppeteer]'
+{}
