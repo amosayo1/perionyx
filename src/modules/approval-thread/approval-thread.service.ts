@@ -74,25 +74,27 @@ async function notifyParticipants(
 
 export class ApprovalThreadService {
   static async getOrCreate(ctx: TenantContext, transactionId: string) {
-    let thread = await prisma.approvalThread.findUnique({
+    const existing = await prisma.approvalThread.findUnique({
       where: { transactionId },
     });
-    if (!thread) {
-      thread = await prisma.approvalThread.create({
-        data: {
-          transactionId,
-          companyId: ctx.companyId,
-        },
-      });
-      await recordAudit(prisma, {
+    if (existing) return existing;
+
+    const thread = await prisma.approvalThread.create({
+      data: {
+        transactionId,
         companyId: ctx.companyId,
-        actorUserId: ctx.userId,
-        action: "APPROVAL_THREAD_CREATED",
-        resourceType: "ApprovalThread",
-        resourceId: thread.id,
-        metadata: { transactionId },
-      });
-    }
+      },
+    });
+
+    await recordAudit(prisma, {
+      companyId: ctx.companyId,
+      actorUserId: ctx.userId,
+      action: "APPROVAL_THREAD_CREATED",
+      resourceType: "ApprovalThread",
+      resourceId: thread.id,
+      metadata: { transactionId },
+    });
+
     return thread;
   }
 
@@ -104,32 +106,36 @@ export class ApprovalThreadService {
     const thread = await this.getOrCreate(ctx, transactionId);
     const mentions = parseMentions(body);
 
-    const comment = await prisma.approvalComment.create({
-      data: {
-        threadId: thread.id,
+    const [comment] = await prisma.$transaction(async (tx) => {
+      const c = await tx.approvalComment.create({
+        data: {
+          threadId: thread.id,
+          companyId: ctx.companyId,
+          authorUserId: ctx.userId,
+          body,
+          mentions,
+        },
+        include: {
+          author: { select: { id: true, name: true, email: true } },
+        },
+      });
+
+      await tx.approvalParticipant.upsert({
+        where: { threadId_userId: { threadId: thread.id, userId: ctx.userId } },
+        create: { threadId: thread.id, companyId: ctx.companyId, userId: ctx.userId },
+        update: {},
+      });
+
+      await recordAudit(tx, {
         companyId: ctx.companyId,
-        authorUserId: ctx.userId,
-        body,
-        mentions,
-      },
-      include: {
-        author: { select: { id: true, name: true, email: true } },
-      },
-    });
+        actorUserId: ctx.userId,
+        action: "APPROVAL_COMMENT_ADDED",
+        resourceType: "ApprovalComment",
+        resourceId: c.id,
+        metadata: { threadId: thread.id, transactionId, mentions, bodyLength: body.length },
+      });
 
-    await prisma.approvalParticipant.upsert({
-      where: { threadId_userId: { threadId: thread.id, userId: ctx.userId } },
-      create: { threadId: thread.id, companyId: ctx.companyId, userId: ctx.userId },
-      update: {},
-    });
-
-    await recordAudit(prisma, {
-      companyId: ctx.companyId,
-      actorUserId: ctx.userId,
-      action: "APPROVAL_COMMENT_ADDED",
-      resourceType: "ApprovalComment",
-      resourceId: comment.id,
-      metadata: { threadId: thread.id, transactionId, mentions, bodyLength: body.length },
+      return [c];
     });
 
     if (mentions.length > 0) {

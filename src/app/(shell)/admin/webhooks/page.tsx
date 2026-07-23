@@ -98,12 +98,12 @@ export default function WebhooksPage() {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-end gap-4">
             <div className="space-y-2">
-              <Label>Name</Label>
-              <Input placeholder="My Webhook" value={name} onChange={(e) => setName(e.target.value)} className="w-48" />
+              <Label htmlFor="admin-webhook-name">Name</Label>
+              <Input id="admin-webhook-name" placeholder="My Webhook" value={name} onChange={(e) => setName(e.target.value)} className="w-48" />
             </div>
             <div className="flex-1 space-y-2">
-              <Label>URL</Label>
-              <Input placeholder="https://example.com/webhook" value={url} onChange={(e) => setUrl(e.target.value)} />
+              <Label htmlFor="admin-webhook-url">URL</Label>
+              <Input id="admin-webhook-url" placeholder="https://example.com/webhook" value={url} onChange={(e) => setUrl(e.target.value)} />
             </div>
           </div>
           <div className="space-y-2">

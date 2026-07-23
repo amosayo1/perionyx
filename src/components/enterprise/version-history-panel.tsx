@@ -102,7 +102,7 @@ export function VersionHistoryPanel({ entityType, entityId, className, maxHeight
   if (error) {
     return (
       <div className={cn("rounded-lg border border-red-500/20 bg-red-500/5 p-4", className)}>
-        <p className="text-xs text-red-400">Failed to load version history: {error}</p>
+        <p className="text-xs text-red-400" role="alert">Failed to load version history: {error}</p>
       </div>
     );
   }

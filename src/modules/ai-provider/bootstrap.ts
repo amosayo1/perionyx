@@ -49,7 +49,7 @@ export async function initializeAiProviders(): Promise<void> {
   await cohere.initialize();
 
   // Set active provider based on availability priority
-  const priority: string[] = ["openai", "azure-openai", "anthropic", "gemini", "mistral", "grok", "cohere"];
+  const priority: string[] = ["gemini", "openai", "azure-openai", "anthropic", "mistral", "grok", "cohere"];
   for (const kind of priority) {
     const provider = aiProviderRegistry.get(kind as any);
     if (provider?.isAvailable()) {
@@ -59,7 +59,7 @@ export async function initializeAiProviders(): Promise<void> {
     }
   }
 
-  const active = aiProviderRegistry.getActiveKind();
+  const active = await aiProviderRegistry.getActiveKind();
   if (!active) {
     logger.warn("[AI] No AI providers configured — Copilot will use offline mode");
   }

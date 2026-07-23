@@ -1,0 +1,17 @@
+export * from "./types";
+export { AssetRegistryService } from "./domain/asset-registry/asset-registry-service";
+export { AcquisitionService } from "./domain/acquisition/acquisition-service";
+export { CapitalizationService } from "./domain/capitalization/capitalization-service";
+export { DepreciationService } from "./domain/depreciation/depreciation-service";
+export { ImpairmentService } from "./domain/impairment/impairment-service";
+export { TransfersService } from "./domain/transfers/transfers-service";
+export { MaintenanceService } from "./domain/maintenance/maintenance-service";
+export { DisposalsService } from "./domain/disposals/disposals-service";
+export { RevaluationService } from "./domain/revaluation/revaluation-service";
+export { LeaseAccountingReadinessService } from "./domain/lease-accounting-readiness/lease-accounting-readiness-service";
+export { AnalyticsService } from "./domain/analytics/analytics-service";
+export { RecommendationsService } from "./domain/recommendations/recommendations-service";
+export { AlertsService } from "./domain/alerts/alerts-service";
+export { ExecutiveInsightsService } from "./domain/executive-insights/executive-insights-service";
+export { RepositoriesService } from "./domain/repositories/repositories-service";
+export { FixedAssetsService, faService } from "./services/fixed-assets-service";

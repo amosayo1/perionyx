@@ -105,8 +105,8 @@ export default function RiskAlertsPage() {
       <Card className="border-[rgba(212,175,55,0.12)] bg-perionyx-bg-panel shadow-soft">
         <CardContent className="grid gap-4 p-4 sm:grid-cols-3">
           <div className="space-y-2">
-            <Label>Status</Label>
-            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <Label htmlFor="alert-status">Status</Label>
+            <Select id="alert-status" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="ALL">All statuses</option>
               <option value="OPEN">Open</option>
               <option value="ACKNOWLEDGED">Acknowledged</option>
@@ -114,8 +114,8 @@ export default function RiskAlertsPage() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Severity</Label>
-            <Select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
+            <Label htmlFor="alert-severity">Severity</Label>
+            <Select id="alert-severity" value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
               <option value="ALL">All severities</option>
               <option value="LOW">Low</option>
               <option value="MEDIUM">Medium</option>
@@ -124,8 +124,8 @@ export default function RiskAlertsPage() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Category</Label>
-            <Select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+            <Label htmlFor="alert-category">Category</Label>
+            <Select id="alert-category" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
               <option value="ALL">All categories</option>
               {categories.map((c) => (
                 <option key={c} value={c}>{c}</option>

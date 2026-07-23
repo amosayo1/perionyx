@@ -128,3 +128,19 @@ export async function getWorkflowInstanceEvents(instanceId: string, limit = 100)
   const ctx = await getContext();
   return engine.getInstanceEvents(ctx, instanceId, limit);
 }
+
+import { WorkflowVersionSnapshotService } from "@/modules/workflow/version-snapshot.service";
+
+export async function getWorkflowVersionHistory(definitionId: string) {
+  const ctx = await getContext();
+  return WorkflowVersionSnapshotService.getVersionHistory(ctx, definitionId);
+}
+
+export async function getWorkflowVersionDiff(
+  definitionId: string,
+  fromVersion: number,
+  toVersion: number,
+) {
+  const ctx = await getContext();
+  return WorkflowVersionSnapshotService.getDiff(ctx, definitionId, fromVersion, toVersion);
+}

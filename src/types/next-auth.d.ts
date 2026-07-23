@@ -11,6 +11,7 @@ declare module "next-auth" {
       activeCompanyId: string | null;
       companyRole: string | null;
       isSandbox: boolean;
+      tokenVersion?: number;
     } & DefaultSession["user"];
   }
 }
@@ -20,5 +21,6 @@ declare module "next-auth/jwt" {
     activeCompanyId?: string | null;
     companyRole?: string | null;
     isSandbox?: boolean;
+    tokenVersion?: number;
   }
 }

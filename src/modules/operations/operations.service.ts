@@ -120,7 +120,8 @@ export class OperationsService {
         failed: 0,
         scheduled: q.deferred,
       }));
-    } catch {
+    } catch (err) {
+      logger.error(err, "[Operations] Queue status fetch failed:");
       return [];
     }
   }

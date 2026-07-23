@@ -179,6 +179,13 @@ export async function updateCompany(
     entityType?: string | null;
     incorporationDate?: string | null;
     address?: string | null;
+    industry?: string | null;
+    baseCurrency?: string | null;
+    fiscalYearStart?: string | null;
+    timezone?: string | null;
+    logoUrl?: string | null;
+    brandColor?: string | null;
+    brandName?: string | null;
   },
 ) {
   const row = await getCompanyMembershipForUser(companyId, userId);
@@ -194,6 +201,13 @@ export async function updateCompany(
         entityType: data.entityType ?? undefined,
         incorporationDate: data.incorporationDate ? new Date(data.incorporationDate) : undefined,
         address: data.address ?? undefined,
+        industry: data.industry ?? undefined,
+        baseCurrency: data.baseCurrency ?? undefined,
+        fiscalYearStart: data.fiscalYearStart ?? undefined,
+        timezone: data.timezone ?? undefined,
+        logoUrl: data.logoUrl ?? undefined,
+        brandColor: data.brandColor ?? undefined,
+        brandName: data.brandName ?? undefined,
       },
     });
 

@@ -96,8 +96,8 @@ export default function TestPolicyPage() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Amount</Label>
-              <Input
+              <Label htmlFor="policy-test-amount">Amount</Label>
+              <Input id="policy-test-amount"
                 type="number"
                 step="0.01"
                 placeholder="1000.00"
@@ -106,8 +106,8 @@ export default function TestPolicyPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Transaction Type</Label>
-              <Select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
+              <Label htmlFor="policy-test-transaction-type">Transaction Type</Label>
+              <Select id="policy-test-transaction-type" value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
                 <option value="PAYMENT">Payment</option>
                 <option value="WITHDRAWAL">Withdrawal</option>
                 <option value="DEPOSIT">Deposit</option>
@@ -116,8 +116,8 @@ export default function TestPolicyPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Currency</Label>
-              <Select value={currency} onChange={(e) => setCurrency(e.target.value)}>
+              <Label htmlFor="policy-test-currency">Currency</Label>
+              <Select id="policy-test-currency" value={currency} onChange={(e) => setCurrency(e.target.value)}>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>

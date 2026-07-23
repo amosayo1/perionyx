@@ -13,7 +13,7 @@ export default async function SignInPage(props: Props) {
         <div className="max-w-md">
           <div className="mb-10">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#d4af37] overflow-hidden shadow-lg shadow-[#d4af37]/20">
-              <img src="/logo.PNG" alt="Perionyx" className="h-full w-full object-cover" />
+              <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
             </div>
           </div>
 

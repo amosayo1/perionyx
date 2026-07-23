@@ -7,7 +7,7 @@ import {
 } from "@/modules/companies";
 import { prisma } from "@/server/db/prisma";
 import { requireSession } from "@/server/auth/require-session";
-import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
+import { cacheHeaders, handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 
 const createCompanyBodySchema = z.object({
   name: z.string().min(1).max(255),
@@ -35,7 +35,7 @@ export async function GET() {
           updatedAt: m.company.updatedAt.toISOString(),
         },
       })),
-    });
+    }, { headers: { ...cacheHeaders(60) } });
   } catch (error) {
     return handleRouteError(error);
   }

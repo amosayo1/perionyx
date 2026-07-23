@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { signIn } from "@/server/auth/auth";
 import { ensureSandboxTenant } from "@/modules/sandbox/sandbox-seed";
-import { SANDBOX_EMAIL, SANDBOX_PASSWORD } from "@/modules/sandbox/sandbox-context";
+import { SANDBOX_EMAIL, deriveSandboxPassword } from "@/modules/sandbox/sandbox-context";
 import { rateLimit, rateLimitKey } from "@/server/security/rate-limit";
 import { logger } from "@/lib/logger";
 
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     const result = await signIn("credentials", {
       email: SANDBOX_EMAIL,
-      password: SANDBOX_PASSWORD,
+      password: deriveSandboxPassword(),
       redirect: false,
     });
 

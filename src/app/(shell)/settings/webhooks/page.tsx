@@ -113,16 +113,16 @@ export default function WebhooksPage() {
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Name</Label>
-                <Input placeholder="Slack notifications" value={createName} onChange={(e) => setCreateName(e.target.value)} />
+                <Label htmlFor="settings-webhook-name">Name</Label>
+                <Input id="settings-webhook-name" placeholder="Slack notifications" value={createName} onChange={(e) => setCreateName(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>URL</Label>
-                <Input placeholder="https://hooks.slack.com/..." value={createUrl} onChange={(e) => setCreateUrl(e.target.value)} />
+                <Label htmlFor="settings-webhook-url">URL</Label>
+                <Input id="settings-webhook-url" placeholder="https://hooks.slack.com/..." value={createUrl} onChange={(e) => setCreateUrl(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Events</Label>
-                <Select
+                <Label htmlFor="settings-webhook-events">Events</Label>
+                <Select id="settings-webhook-events"
                   multiple
                   value={createEvents}
                   onChange={(e) => {

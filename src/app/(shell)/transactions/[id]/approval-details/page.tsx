@@ -135,7 +135,7 @@ export default function TransactionDetailPage() {
   if (error || !data) {
     return (
       <div className="mx-auto max-w-4xl space-y-4 py-8">
-        <p className="text-red-400">{error || 'Failed to load transaction'}</p>
+        <p role="alert" className="text-red-400">{error || 'Failed to load transaction'}</p>
       </div>
     );
   }

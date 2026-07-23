@@ -5,8 +5,9 @@ import { requireSession } from "@/server/auth/require-session";
 import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
 import { ForbiddenError } from "@/lib/errors/app-error";
-import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
+import { cacheHeaders, handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { prisma } from "@/server/db/prisma";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -48,7 +49,7 @@ export async function GET(_request: Request, context: RouteContext) {
         createdAt: row.company.createdAt.toISOString(),
         updatedAt: row.company.updatedAt.toISOString(),
       },
-    });
+    }, { headers: { ...cacheHeaders(60) } });
   } catch (error) {
     return handleRouteError(error);
   }
@@ -94,6 +95,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.settings');
     if (ctx.role !== "OWNER") {
       throw new ForbiddenError("Only company owners can delete the company.");
     }

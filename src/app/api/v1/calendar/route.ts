@@ -1,20 +1,22 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
-import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
+import { cacheHeaders, handleRouteError, parseJsonBody } from "@/server/http/handle-route";
 import { CalendarService } from "@/modules/calendar";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function GET(request: Request) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'treasury.read');
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type") ?? undefined;
     const status = searchParams.get("status") ?? undefined;
     const from = searchParams.get("from") ?? undefined;
     const to = searchParams.get("to") ?? undefined;
     const result = await CalendarService.listEvents(ctx, { type, status, from, to });
-    return NextResponse.json(result);
+    return NextResponse.json(result, { headers: { ...cacheHeaders(30) } });
   } catch (error) {
     return handleRouteError(error);
   }

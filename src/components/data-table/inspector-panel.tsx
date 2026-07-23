@@ -64,7 +64,7 @@ export function InspectorPanel({
               )}
             </div>
             <SheetClose asChild>
-              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" aria-label="Close">
                 <X className="h-4 w-4 text-zinc-400" />
               </Button>
             </SheetClose>

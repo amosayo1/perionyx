@@ -2,9 +2,10 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import {
-  CalendarClock, Plus, ArrowRight, Search, Clock, Play, Webhook,
+  CalendarClock, Plus, ArrowRight, Clock, Play, Webhook,
   Zap, RefreshCw, CheckCircle2, ShieldCheck, Trash2, Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -13,7 +14,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SchedulerForm, type SchedulerFormData } from "./scheduler-form";
+import { SearchInput } from "@/components/ui/search-input";
+import { PaginationBar } from "@/components/ui/pagination-bar";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+
+const SchedulerForm = dynamic(() => import("./scheduler-form").then(m => ({ default: m.SchedulerForm })), { ssr: false });
+import type { SchedulerFormData } from "./scheduler-form";
 
 interface Props {
   schedules: AutomationSchedule[];
@@ -139,8 +145,11 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
   const [schedules, setSchedules] = useState(initialSchedules);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editSchedule, setEditSchedule] = useState<AutomationSchedule | null>(null);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; onConfirm: () => void; title: string; message: string; destructive?: boolean }>({ open: false, onConfirm: () => {}, title: "", message: "" });
+  const pageSize = 20;
 
   const triggerTypes = Array.from(new Set(schedules.map((s) => s.triggerType)));
 
@@ -149,6 +158,10 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
     if (search && !s.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const safePage = Math.min(page, Math.max(0, totalPages - 1));
+  const paged = filtered.slice(safePage * pageSize, (safePage + 1) * pageSize);
 
   const handleSave = useCallback(async (data: SchedulerFormData) => {
     const isEdit = !!editSchedule;
@@ -188,7 +201,6 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
   }, [editSchedule, router]);
 
   const handleDelete = useCallback(async (schedule: AutomationSchedule) => {
-    if (!confirm(`Delete schedule "${schedule.name}"? This cannot be undone.`)) return;
 
     const promise = fetch(`/api/automation-studio/schedules/${schedule.id}`, {
       method: "DELETE",
@@ -208,6 +220,19 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
       },
     });
   }, [router]);
+
+  const confirmDelete = useCallback((schedule: AutomationSchedule) => {
+    setConfirmState({
+      open: true,
+      destructive: true,
+      title: "Delete Schedule",
+      message: `Delete schedule "${schedule.name}"? This cannot be undone.`,
+      onConfirm: () => {
+        setConfirmState((prev) => ({ ...prev, open: false }));
+        handleDelete(schedule);
+      },
+    });
+  }, [handleDelete]);
 
   const openCreate = () => {
     setEditSchedule(null);
@@ -243,16 +268,11 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
       </div>
 
       <div className="flex items-center gap-3" role="search" aria-label="Search schedules">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" aria-hidden="true" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search schedules..."
-            className="h-9 pl-8 text-xs"
-            aria-label="Search schedules"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search schedules..."
+        />
         <div className="flex flex-wrap gap-1" role="tablist" aria-label="Filter by trigger type">
           <button
             onClick={() => setTypeFilter(null)}
@@ -308,15 +328,23 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
         </Card>
       ) : (
         <div className="space-y-3" role="list" aria-label="Schedules">
-          {filtered.map((schedule) => (
+          {paged.map((schedule) => (
             <ScheduleCard
               key={schedule.id}
               schedule={schedule}
               onEdit={() => openEdit(schedule)}
-              onDelete={() => handleDelete(schedule)}
+              onDelete={() => confirmDelete(schedule)}
             />
           ))}
         </div>
+      )}
+      {filtered.length > pageSize && (
+        <PaginationBar
+          page={safePage}
+          pageSize={pageSize}
+          totalItems={filtered.length}
+          onPageChange={setPage}
+        />
       )}
 
       <SchedulerForm
@@ -324,6 +352,16 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
         onOpenChange={(open) => { if (!open) setEditSchedule(null); setDialogOpen(open); }}
         onSave={handleSave}
         editSchedule={editSchedule}
+      />
+
+      <ConfirmDialog
+        open={confirmState.open}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState((prev) => ({ ...prev, open: false }))}
+        title={confirmState.title}
+        message={confirmState.message}
+        destructive={confirmState.destructive}
+        confirmLabel="Delete"
       />
     </div>
   );

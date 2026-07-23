@@ -6,6 +6,15 @@ import { RateLimiterRedis } from "rate-limiter-flexible";
 // ---------------------------------------------------------------------------
 type RateLimitEntry = { count: number; resetAt: number };
 const memStore = new Map<string, RateLimitEntry>();
+const MEM_STORE_MAX = 100_000;
+
+// Periodic cleanup every 60 seconds — evict expired entries
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of memStore) {
+    if (now > entry.resetAt) memStore.delete(key);
+  }
+}, 60_000).unref();
 
 function memRateLimit(
   key: string,
@@ -15,6 +24,16 @@ function memRateLimit(
   const now = Date.now();
   const entry = memStore.get(key);
   if (!entry || now > entry.resetAt) {
+    if (memStore.size >= MEM_STORE_MAX) {
+      // Evict oldest 10% of entries when at capacity
+      const evictCount = Math.floor(MEM_STORE_MAX * 0.1);
+      let evicted = 0;
+      for (const [k] of memStore) {
+        if (evicted >= evictCount) break;
+        memStore.delete(k);
+        evicted++;
+      }
+    }
     memStore.set(key, { count: 1, resetAt: now + windowMs });
     return { ok: true, remaining: maxRequests - 1, resetAt: now + windowMs };
   }
@@ -59,7 +78,8 @@ function getRedis(): Redis | null {
     });
     redisAvailable = true;
     return redis;
-  } catch {
+  } catch (err) {
+    console.error("Redis connection failed:", err);
     redisAvailable = false;
     return null;
   }
@@ -113,6 +133,7 @@ export async function rateLimit(
         resetAt: Date.now() + rateLimitErr.msBeforeNext,
       };
     }
+    console.error("Rate limit check failed:", err);
     return { ok: false, remaining: 0, resetAt: Date.now() + 60000 };
   }
 }

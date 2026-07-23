@@ -100,12 +100,12 @@ export default function NewPolicyPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Name</Label>
-            <Input placeholder="High-value transaction limit" value={name} onChange={(e) => setName(e.target.value)} />
+            <Label htmlFor="policy-name">Name</Label>
+            <Input id="policy-name" placeholder="High-value transaction limit" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Description (optional)</Label>
-            <Input
+            <Label htmlFor="policy-description">Description (optional)</Label>
+            <Input id="policy-description"
               placeholder="Blocks transactions over $10,000"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -113,8 +113,8 @@ export default function NewPolicyPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label>Type</Label>
-              <Select value={type} onChange={(e) => setType(e.target.value)}>
+              <Label htmlFor="policy-type">Type</Label>
+              <Select id="policy-type" value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="TRANSACTION">Transaction</option>
                 <option value="WITHDRAWAL">Withdrawal</option>
                 <option value="DEPOSIT">Deposit</option>
@@ -122,12 +122,12 @@ export default function NewPolicyPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Priority</Label>
-              <Input type="number" value={priority} onChange={(e) => setPriority(e.target.value)} />
+              <Label htmlFor="policy-priority">Priority</Label>
+              <Input id="policy-priority" type="number" value={priority} onChange={(e) => setPriority(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Action</Label>
-              <Select value={action} onChange={(e) => setAction(e.target.value)}>
+              <Label htmlFor="policy-action">Action</Label>
+              <Select id="policy-action" value={action} onChange={(e) => setAction(e.target.value)}>
                 <option value="ALLOW">Allow</option>
                 <option value="BLOCK">Block</option>
                 <option value="FLAG">Flag</option>

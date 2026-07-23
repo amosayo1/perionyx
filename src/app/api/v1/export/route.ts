@@ -3,6 +3,7 @@ import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError } from "@/server/http/handle-route";
 import { ExportService } from "@/modules/export";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 const EXPORTERS: Record<string, (companyId: string) => Promise<string>> = {
   accounts: (cid) => ExportService.accountsCSV(cid),
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'analytics.export');
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
 

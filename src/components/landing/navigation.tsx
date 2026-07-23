@@ -106,7 +106,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16 mt-3 rounded-xl border border-white/[0.06] bg-black/70 backdrop-blur-xl px-6 shadow-lg shadow-black/30">
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <div className="w-8 h-8 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/30 flex items-center justify-center overflow-hidden">
-              <img src="/logo.PNG" alt="Perionyx" className="h-full w-full object-cover" />
+              <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
             </div>
             <span className="text-sm font-bold text-white tracking-tight">PERIONYX</span>
           </Link>

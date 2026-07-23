@@ -186,7 +186,7 @@ export function DataTable<T>({
   if (error) {
     return (
       <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
-        <p className="text-sm text-red-400">{error}</p>
+        <p className="text-sm text-red-400" role="alert">{error}</p>
       </div>
     );
   }
@@ -310,8 +310,8 @@ export function DataTable<T>({
                         }}
                       >
                         {hasRenderExpanded && (
-                          <TableCell className="w-8" onClick={(e) => { e.stopPropagation(); toggleExpand(id); }}>
-                            <Button variant="ghost" size="icon" className="h-6 w-6">
+                           <TableCell className="w-8" onClick={(e) => { e.stopPropagation(); toggleExpand(id); }}>
+                            <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="Toggle row details">
                               {isExpanded ? (
                                 <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
                               ) : (
@@ -346,7 +346,7 @@ export function DataTable<T>({
                           <TableCell className="w-12" onClick={(e) => e.stopPropagation()}>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100">
+                                <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" aria-label="Row actions">
                                   <MoreHorizontal className="h-4 w-4 text-zinc-400" />
                                 </Button>
                               </DropdownMenuTrigger>

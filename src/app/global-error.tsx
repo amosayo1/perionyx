@@ -1,0 +1,34 @@
+"use client";
+
+import { AlertTriangle, RefreshCw } from "lucide-react";
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <html lang="en">
+      <body className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-4">
+        <div className="mx-auto max-w-md text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 border border-red-500/20 mb-6">
+            <AlertTriangle className="h-8 w-8 text-red-400" />
+          </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-white">Something went wrong</h1>
+          <p className="mt-2 text-sm text-zinc-500 leading-relaxed">
+            A critical error occurred. Please try again.
+          </p>
+          <button
+            onClick={reset}
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#d4af37]/10 px-4 py-2.5 text-sm font-medium text-[#d4af37] border border-[#d4af37]/20 transition-all hover:bg-[#d4af37]/20"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Try again
+          </button>
+        </div>
+      </body>
+    </html>
+  );
+}

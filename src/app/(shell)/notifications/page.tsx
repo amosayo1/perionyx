@@ -71,21 +71,26 @@ export default function NotificationsPage() {
   const loaderRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async (signal?: AbortSignal, cursorVal?: string | null, unreadOnly?: boolean) => {
-    const params = new URLSearchParams({ limit: "20" });
-    if (cursorVal) params.set("cursor", cursorVal);
-    if (unreadOnly) params.set("unreadOnly", "true");
-    const res = await fetch(`/api/v1/notifications?${params}`, { credentials: "include", signal });
-    if (signal?.aborted) return null;
-    return (await res.json()) as { items: NotificationRow[]; nextCursor?: string };
+    try {
+      const params = new URLSearchParams({ limit: "20" });
+      if (cursorVal) params.set("cursor", cursorVal);
+      if (unreadOnly) params.set("unreadOnly", "true");
+      const res = await fetch(`/api/v1/notifications?${params}`, { credentials: "include", signal });
+      if (signal?.aborted) return null;
+      if (!res.ok) return { items: [], nextCursor: undefined };
+      return (await res.json()) as { items: NotificationRow[]; nextCursor?: string };
+    } catch {
+      return { items: [], nextCursor: undefined };
+    }
   }, []);
 
   const fetchInitial = useCallback(async (signal?: AbortSignal, unreadOnly = false) => {
     setLoading(true);
     const result = await load(signal, undefined, unreadOnly);
-    if (result && !signal?.aborted) {
-      setItems(result.items);
-      setCursor(result.nextCursor ?? null);
-      setHasMore(!!result.nextCursor);
+    if (!signal?.aborted) {
+      setItems(result?.items ?? []);
+      setCursor(result?.nextCursor ?? null);
+      setHasMore(!!result?.nextCursor);
       setLoading(false);
     }
   }, [load]);
@@ -105,10 +110,10 @@ export default function NotificationsPage() {
           setLoadingMore(true);
           const ac = new AbortController();
           void load(ac.signal, cursor, unreadFilter).then((result) => {
-            if (result && !ac.signal.aborted) {
-              setItems((prev) => [...prev, ...result.items]);
-              setCursor(result.nextCursor ?? null);
-              setHasMore(!!result.nextCursor);
+            if (!ac.signal.aborted) {
+              setItems((prev) => [...prev, ...(result?.items ?? [])]);
+              setCursor(result?.nextCursor ?? null);
+              setHasMore(!!result?.nextCursor);
               setLoadingMore(false);
             }
           });

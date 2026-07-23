@@ -31,17 +31,35 @@ export class ConnectorRunService {
       orderBy: { name: "asc" },
     });
 
-    return Promise.all(connectors.map(async (c) => ({
+    const connectorIds = connectors.map((c) => c.id);
+    if (connectorIds.length === 0) return [];
+
+    const [runCounts, topRuns] = await Promise.all([
+      prisma.connectorRun.groupBy({
+        by: ["connectorId"],
+        where: { connectorId: { in: connectorIds } },
+        _count: { id: true },
+      }),
+      prisma.$queryRaw<Array<{ connectorId: string; status: string; createdAt: Date }>>`
+        SELECT DISTINCT ON (connector_id) connector_id, status, created_at
+        FROM connector_runs
+        WHERE connector_id = ANY (${connectorIds})
+        ORDER BY connector_id, created_at DESC
+      `,
+    ]);
+
+    const countByConnector = new Map(runCounts.map((r) => [r.connectorId, r._count.id]));
+    const lastRunByConnector = new Map(topRuns.map((r) => [r.connectorId, r]));
+
+    return connectors.map((c) => ({
       id: c.id, name: c.name, type: c.type, active: c.active,
       config: c.config as Record<string, any>,
-      lastRun: await prisma.connectorRun.findFirst({
-        where: { connectorId: c.id },
-        orderBy: { createdAt: "desc" },
-        select: { status: true, createdAt: true },
-      }),
-      runCount: await prisma.connectorRun.count({ where: { connectorId: c.id } }),
+      lastRun: lastRunByConnector.has(c.id)
+        ? { status: lastRunByConnector.get(c.id)!.status, createdAt: lastRunByConnector.get(c.id)!.createdAt.toISOString() }
+        : null,
+      runCount: countByConnector.get(c.id) ?? 0,
       createdAt: c.createdAt.toISOString(),
-    })));
+    }));
   }
 
   static async getConnector(ctx: TenantContext, connectorId: string) {
@@ -192,23 +210,22 @@ export class ConnectorRunService {
   }
 
   static async getConnectorHealth(ctx: TenantContext) {
-    const totalConnectors = await prisma.connectorConfig.count({
-      where: { companyId: ctx.companyId, active: true },
-    });
-
-    const recentRuns = await prisma.connectorRun.count({
-      where: { companyId: ctx.companyId, createdAt: { gte: new Date(Date.now() - 86400000) } },
-    });
-
-    const failedRuns = await prisma.connectorRun.count({
-      where: { companyId: ctx.companyId, status: "FAILED", createdAt: { gte: new Date(Date.now() - 86400000) } },
-    });
-
-    const lastRun = await prisma.connectorRun.findFirst({
-      where: { companyId: ctx.companyId },
-      orderBy: { createdAt: "desc" },
-      include: { connector: { select: { name: true } } },
-    });
+    const [totalConnectors, recentRuns, failedRuns, lastRun] = await Promise.all([
+      prisma.connectorConfig.count({
+        where: { companyId: ctx.companyId, active: true },
+      }),
+      prisma.connectorRun.count({
+        where: { companyId: ctx.companyId, createdAt: { gte: new Date(Date.now() - 86400000) } },
+      }),
+      prisma.connectorRun.count({
+        where: { companyId: ctx.companyId, status: "FAILED", createdAt: { gte: new Date(Date.now() - 86400000) } },
+      }),
+      prisma.connectorRun.findFirst({
+        where: { companyId: ctx.companyId },
+        orderBy: { createdAt: "desc" },
+        include: { connector: { select: { name: true } } },
+      }),
+    ]);
 
     return {
       totalConnectors,

@@ -31,7 +31,7 @@ export const sessionTokenName = useSecureCookie
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
+  session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
   secret: authSecret,
   cookies: {
     sessionToken: {
@@ -83,21 +83,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const company = await prisma.company.findUnique({ where: { id: membership.companyId }, select: { sandbox: true } });
             token.isSandbox = company?.sandbox ?? false;
           }
-          return token;
-        }
-        const membership = await prisma.companyMembership.findFirst({
-          where: { userId },
-          orderBy: { createdAt: "desc" },
-        });
-        token.activeCompanyId = membership?.companyId ?? null;
-        token.companyRole = membership?.role ?? null;
-        if (membership) {
-          const company = await prisma.company.findUnique({ where: { id: membership.companyId }, select: { sandbox: true } });
-          token.isSandbox = company?.sandbox ?? false;
+        } else {
+          const membership = await prisma.companyMembership.findFirst({
+            where: { userId },
+            orderBy: { createdAt: "desc" },
+          });
+          token.activeCompanyId = membership?.companyId ?? null;
+          token.companyRole = membership?.role ?? null;
+          if (membership) {
+            const company = await prisma.company.findUnique({ where: { id: membership.companyId }, select: { sandbox: true } });
+            token.isSandbox = company?.sandbox ?? false;
+          }
         }
         return token;
       }
 
+      // On initial sign-in, query DB for membership — cached in JWT for subsequent requests
       if (user) {
         const membership = await prisma.companyMembership.findFirst({
           where: { userId },
@@ -109,6 +110,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const company = await prisma.company.findUnique({ where: { id: membership.companyId }, select: { sandbox: true } });
           token.isSandbox = company?.sandbox ?? false;
         }
+        // Fetch tokenVersion for session invalidation support
+        const dbUser = await prisma.user.findUnique({ where: { id: userId }, select: { tokenVersion: true } });
+        token.tokenVersion = dbUser?.tokenVersion ?? 1;
       }
       return token;
     },
@@ -121,6 +125,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           (token.companyRole as string | null | undefined) ?? null;
         session.user.isSandbox =
           (token.isSandbox as boolean | undefined) ?? false;
+        session.user.tokenVersion =
+          (token.tokenVersion as number | undefined) ?? 1;
       }
       return session;
     },

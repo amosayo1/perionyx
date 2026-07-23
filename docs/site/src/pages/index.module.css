@@ -1,0 +1,69 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0d1117 0%, #1a1a2e 40%, #16213e 100%) !important;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.versionBadge {
+  margin-top: 24px;
+}
+
+.sectionGrid {
+  padding: 3rem 0;
+  background: var(--ifm-background-color);
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--ifm-font-color-base);
+}
+
+.cardCol {
+  margin-bottom: 24px;
+}
+
+.cardLink {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.card {
+  padding: 1.5rem;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  height: 100%;
+  background: var(--ifm-background-surface-color, rgba(255,255,255,0.03));
+}
+
+.card:hover {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--gold, #d4af37);
+}
+
+.cardDescription {
+  font-size: 0.9rem;
+  color: var(--ifm-font-color-base);
+  opacity: 0.7;
+  margin: 0;
+}

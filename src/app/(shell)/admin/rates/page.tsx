@@ -103,20 +103,20 @@ export default function ExchangeRatesPage() {
           <form onSubmit={(e) => void handleConvert(e)} className="mt-5 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-2">
-                <Label className="text-xs text-perionyx-text-subtle">Amount</Label>
-                <Input type="number" step="any" value={convertAmount} onChange={(e) => setConvertAmount(e.target.value)}
+                <Label htmlFor="rate-convert-amount" className="text-xs text-perionyx-text-subtle">Amount</Label>
+                <Input id="rate-convert-amount" type="number" step="any" value={convertAmount} onChange={(e) => setConvertAmount(e.target.value)}
                   className="h-9 rounded-lg border-perionyx-border bg-perionyx-bg-surface px-3 text-sm" required />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs text-perionyx-text-subtle">From</Label>
-                <Select value={convertFrom} onChange={(e) => setConvertFrom(e.target.value)}
+                <Label htmlFor="rate-convert-from" className="text-xs text-perionyx-text-subtle">From</Label>
+                <Select id="rate-convert-from" value={convertFrom} onChange={(e) => setConvertFrom(e.target.value)}
                   className="h-9 rounded-lg border-perionyx-border bg-perionyx-bg-surface text-sm">
                   {available.map((c) => <option key={c} value={c}>{c}</option>)}
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs text-perionyx-text-subtle">To</Label>
-                <Select value={convertTo} onChange={(e) => setConvertTo(e.target.value)}
+                <Label htmlFor="rate-convert-to" className="text-xs text-perionyx-text-subtle">To</Label>
+                <Select id="rate-convert-to" value={convertTo} onChange={(e) => setConvertTo(e.target.value)}
                   className="h-9 rounded-lg border-perionyx-border bg-perionyx-bg-surface text-sm">
                   {available.map((c) => <option key={c} value={c}>{c}</option>)}
                 </Select>
@@ -137,22 +137,22 @@ export default function ExchangeRatesPage() {
           <form onSubmit={(e) => void handleAddRate(e)} className="mt-5 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-2">
-                <Label className="text-xs text-perionyx-text-subtle">From</Label>
-                <Select value={baseCurrency} onChange={(e) => setBaseCurrency(e.target.value)}
+                <Label htmlFor="rate-set-from" className="text-xs text-perionyx-text-subtle">From</Label>
+                <Select id="rate-set-from" value={baseCurrency} onChange={(e) => setBaseCurrency(e.target.value)}
                   className="h-9 rounded-lg border-perionyx-border bg-perionyx-bg-surface text-sm">
                   {available.map((c) => <option key={c} value={c}>{c}</option>)}
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs text-perionyx-text-subtle">To</Label>
-                <Select value={quoteCurrency} onChange={(e) => setQuoteCurrency(e.target.value)}
+                <Label htmlFor="rate-set-to" className="text-xs text-perionyx-text-subtle">To</Label>
+                <Select id="rate-set-to" value={quoteCurrency} onChange={(e) => setQuoteCurrency(e.target.value)}
                   className="h-9 rounded-lg border-perionyx-border bg-perionyx-bg-surface text-sm">
                   {available.map((c) => <option key={c} value={c}>{c}</option>)}
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs text-perionyx-text-subtle">Rate</Label>
-                <Input type="number" step="any" min="0" value={newRate} onChange={(e) => setNewRate(e.target.value)}
+                <Label htmlFor="rate-set-rate" className="text-xs text-perionyx-text-subtle">Rate</Label>
+                <Input id="rate-set-rate" type="number" step="any" min="0" value={newRate} onChange={(e) => setNewRate(e.target.value)}
                   className="h-9 rounded-lg border-perionyx-border bg-perionyx-bg-surface px-3 text-sm" required placeholder="0.92" />
               </div>
             </div>

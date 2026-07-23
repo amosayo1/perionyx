@@ -80,12 +80,12 @@ export default function ConnectorsPage() {
         <CardContent>
           <div className="flex flex-wrap items-end gap-4">
             <div className="space-y-2">
-              <Label>Name</Label>
-              <Input placeholder="My Connector" value={name} onChange={(e) => setName(e.target.value)} className="w-48" />
+              <Label htmlFor="connector-name">Name</Label>
+              <Input id="connector-name" placeholder="My Connector" value={name} onChange={(e) => setName(e.target.value)} className="w-48" />
             </div>
             <div className="space-y-2">
-              <Label>Type</Label>
-              <Select value={type} onChange={(e) => setType(e.target.value)} className="w-36">
+              <Label htmlFor="connector-type">Type</Label>
+              <Select id="connector-type" value={type} onChange={(e) => setType(e.target.value)} className="w-36">
                 <option value="mock">Mock</option>
                 <option value="ach">ACH</option>
                 <option value="wire">Wire</option>

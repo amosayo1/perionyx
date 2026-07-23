@@ -5,8 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { formatDateTime } from "@/lib/format";
 import { SeverityBadge } from "@/components/investigation/SeverityBadge";
 import { JsonPanel } from "@/components/investigation/JsonPanel";
-import { DataTable, FilterBuilder, InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table";
-import type { Column, FilterDef, FilterValue, Density } from "@/components/data-table";
+import { EnterpriseTable } from "@/components/enterprise/table";
+import { FilterBuilder } from "@/components/data-table/filter-builder";
+import { InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table/inspector-panel";
+import type { Column, FilterDef, FilterValue, Density } from "@/components/enterprise/table";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ScrollText, ExternalLink } from "lucide-react";
 
@@ -132,13 +134,14 @@ export default function AuditLogsPage() {
     {
       id: "createdAt",
       header: "When",
-      accessor: (a) => <span className="whitespace-nowrap text-xs text-zinc-500">{formatDateTime(a.createdAt)}</span>,
-      className: "hidden sm:table-cell",
+      cellConfig: { type: "date", dateStyle: "medium", timeStyle: "short" },
+      accessor: (a) => a.createdAt,
     },
     {
       id: "severity",
       header: "Severity",
-      accessor: (a) => <SeverityBadge severity={a.severity} />,
+      cellConfig: { type: "status" },
+      accessor: (a) => a.severity,
     },
     {
       id: "action",
@@ -149,7 +152,6 @@ export default function AuditLogsPage() {
       id: "actorUserId",
       header: "Actor",
       accessor: (a) => <span className="max-w-[180px] truncate font-mono text-xs text-zinc-500">{a.actorUserId ?? "—"}</span>,
-      className: "hidden md:table-cell",
     },
     {
       id: "resource",
@@ -189,7 +191,7 @@ export default function AuditLogsPage() {
         </CardContent>
       </Card>
 
-      <DataTable
+      <EnterpriseTable
         data={filtered}
         columns={columns}
         keyExtractor={(a) => a.id}
@@ -202,8 +204,10 @@ export default function AuditLogsPage() {
         onDensityChange={setDensity}
         hiddenColumns={hiddenColumns}
         onHiddenColumnsChange={setHiddenColumns}
-        onCopyId={(id) => navigator.clipboard.writeText(id)}
-        exportFilename={`audit-logs-${new Date().toISOString().split("T")[0]}.csv`}
+        exportable
+        exportFormats={["csv", "xls"]}
+        exportFilename={`audit-logs-${new Date().toISOString().split("T")[0]}`}
+        pageSize={50}
       />
 
       {/* Inspector Panel */}

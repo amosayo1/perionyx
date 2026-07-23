@@ -1,0 +1,105 @@
+{
+  "nodes": [
+    {
+      "id": "security-posture",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 300,
+      "height": 200,
+      "text": "## Security Posture\n\nOWASP Score: 6.0/10\n295 findings (23 Critical)\n15 audit documents delivered."
+    },
+    {
+      "id": "authentication",
+      "type": "text",
+      "x": -500,
+      "y": -50,
+      "width": 200,
+      "height": 120,
+      "text": "## Authentication\n\nJWT, NextAuth,\nSession Validation."
+    },
+    {
+      "id": "authorization",
+      "type": "text",
+      "x": -450,
+      "y": -280,
+      "width": 200,
+      "height": 120,
+      "text": "## Authorization\n\nRBAC, ABAC,\nPermissions."
+    },
+    {
+      "id": "csrf",
+      "type": "text",
+      "x": 0,
+      "y": -350,
+      "width": 200,
+      "height": 120,
+      "text": "## CSRF Protection\n\nOrigin Check,\nReferer Fallback."
+    },
+    {
+      "id": "tenant-isolation",
+      "type": "text",
+      "x": 400,
+      "y": -300,
+      "width": 200,
+      "height": 120,
+      "text": "## Tenant Isolation\n\ncompanyId,\nRow-Level Security."
+    },
+    {
+      "id": "encryption",
+      "type": "text",
+      "x": 550,
+      "y": -50,
+      "width": 200,
+      "height": 120,
+      "text": "## Encryption\n\nAES-256-GCM,\nKey Rotation."
+    },
+    {
+      "id": "audit-logging",
+      "type": "text",
+      "x": 500,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "text": "## Audit Logging\n\nTamper-Evident\nChains."
+    },
+    {
+      "id": "rate-limiting",
+      "type": "text",
+      "x": 0,
+      "y": 380,
+      "width": 200,
+      "height": 120,
+      "text": "## Rate Limiting\n\n4 Tiers,\nEdge + Server."
+    },
+    {
+      "id": "p0-remediation",
+      "type": "text",
+      "x": -400,
+      "y": 350,
+      "width": 200,
+      "height": 120,
+      "text": "## P0 Remediation\n\n**5/5 Complete**\nCritical fixes shipped."
+    },
+    {
+      "id": "p1-remaining",
+      "type": "text",
+      "x": -500,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "text": "## P1 Remaining\n\n**12 Findings Open**\nHigh priority."
+    }
+  ],
+  "edges": [
+    { "id": "e-sp-auth", "fromNode": "security-posture", "fromSide": "left", "toNode": "authentication", "toSide": "right" },
+    { "id": "e-sp-authz", "fromNode": "security-posture", "fromSide": "left", "toNode": "authorization", "toSide": "right" },
+    { "id": "e-sp-csrf", "fromNode": "security-posture", "fromSide": "top", "toNode": "csrf", "toSide": "bottom" },
+    { "id": "e-sp-tenant", "fromNode": "security-posture", "fromSide": "top", "toNode": "tenant-isolation", "toSide": "bottom" },
+    { "id": "e-sp-encrypt", "fromNode": "security-posture", "fromSide": "right", "toNode": "encryption", "toSide": "left" },
+    { "id": "e-sp-audit", "fromNode": "security-posture", "fromSide": "right", "toNode": "audit-logging", "toSide": "left" },
+    { "id": "e-sp-rate", "fromNode": "security-posture", "fromSide": "bottom", "toNode": "rate-limiting", "toSide": "top" },
+    { "id": "e-sp-p0", "fromNode": "security-posture", "fromSide": "bottom", "toNode": "p0-remediation", "toSide": "top" },
+    { "id": "e-sp-p1", "fromNode": "security-posture", "fromSide": "left", "toNode": "p1-remaining", "toSide": "right" }
+  ]
+}

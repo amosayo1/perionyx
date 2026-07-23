@@ -4,6 +4,7 @@ import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { getVersions, recordVersion, SUPPORTED_ENTITY_TYPES } from "@/modules/version-history/version-history";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 const querySchema = z.object({
   entityType: z.string().min(1, "entityType is required"),
@@ -22,6 +23,7 @@ export async function GET(request: Request) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'analytics.read');
     const url = new URL(request.url);
 
     const parsed = querySchema.safeParse({

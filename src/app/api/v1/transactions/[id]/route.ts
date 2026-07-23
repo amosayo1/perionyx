@@ -5,6 +5,7 @@ import { handleRouteError } from "@/server/http/handle-route";
 import { NotFoundError } from "@/lib/errors/app-error";
 import { prisma } from "@/server/db/prisma";
 import { decimalToString } from "@/server/http/money";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -12,6 +13,7 @@ export async function GET(_request: Request, context: RouteContext) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'treasury.read');
     const { id } = await context.params;
     const transaction = await prisma.transaction.findFirst({
       where: { id, companyId: ctx.companyId },

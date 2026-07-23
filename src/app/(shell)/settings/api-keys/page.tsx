@@ -114,8 +114,8 @@ export default function ApiKeysPage() {
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Key name</Label>
-                <Input placeholder="CI/CD Pipeline" value={createName} onChange={(e) => setCreateName(e.target.value)} />
+                <Label htmlFor="apikey-name">Key name</Label>
+                <Input id="apikey-name" placeholder="CI/CD Pipeline" value={createName} onChange={(e) => setCreateName(e.target.value)} />
               </div>
             </div>
             <DialogFooter>

@@ -67,18 +67,20 @@ export class TickService {
     let count = 0;
     for (const approval of stale) {
       try {
-        await prisma.transactionApproval.update({
-          where: { id: approval.id },
-          data: { status: "ESCALATED", updatedAt: new Date() },
-        });
+        await prisma.$transaction(async (tx) => {
+          await tx.transactionApproval.update({
+            where: { id: approval.id },
+            data: { status: "ESCALATED", updatedAt: new Date() },
+          });
 
-        await notificationService.broadcast({
-          companyId: approval.companyId,
-          eventType: "APPROVAL_REQUIRED",
-          title: `Approval escalated: ${approval.transaction.reference ?? "Transaction"}`,
-          message: `Pending for > 24h, escalated to level ${approval.level + 1}`,
-          link: `/transactions?id=${approval.transactionId}`,
-          metadata: { approvalId: approval.id, level: approval.level },
+          await notificationService.broadcast({
+            companyId: approval.companyId,
+            eventType: "APPROVAL_REQUIRED",
+            title: `Approval escalated: ${approval.transaction.reference ?? "Transaction"}`,
+            message: `Pending for > 24h, escalated to level ${approval.level + 1}`,
+            link: `/transactions?id=${approval.transactionId}`,
+            metadata: { approvalId: approval.id, level: approval.level },
+          });
         });
 
         count++;
@@ -102,23 +104,24 @@ export class TickService {
     let count = 0;
     for (const approval of expired) {
       try {
-        await prisma.transactionApproval.update({
-          where: { id: approval.id },
-          data: { status: "REJECTED", rejectionReason: "Auto-rejected after 72h timeout", updatedAt: new Date() },
-        });
+        await prisma.$transaction(async (tx) => {
+          await tx.transactionApproval.update({
+            where: { id: approval.id },
+            data: { status: "REJECTED", rejectionReason: "Auto-rejected after 72h timeout", updatedAt: new Date() },
+          });
 
-        // Cancel the transaction too
-        await prisma.transaction.update({
-          where: { id: approval.transactionId },
-          data: { status: "CANCELLED" },
-        });
+          await tx.transaction.update({
+            where: { id: approval.transactionId },
+            data: { status: "CANCELLED" },
+          });
 
-        await notificationService.broadcast({
-          companyId: approval.companyId,
-          eventType: "APPROVAL_REJECTED",
-          title: `Approval auto-rejected: ${approval.transaction.reference ?? "Transaction"}`,
-          message: "No action taken within 72 hours",
-          link: `/transactions?id=${approval.transactionId}`,
+          await notificationService.broadcast({
+            companyId: approval.companyId,
+            eventType: "APPROVAL_REJECTED",
+            title: `Approval auto-rejected: ${approval.transaction.reference ?? "Transaction"}`,
+            message: "No action taken within 72 hours",
+            link: `/transactions?id=${approval.transactionId}`,
+          });
         });
 
         count++;

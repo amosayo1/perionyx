@@ -6,6 +6,7 @@ import { getWalletForTenant } from "@/modules/wallets";
 import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { serializeWalletJson } from "@/server/http/wallet-response";
 import { prisma } from "@/server/db/prisma";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 type RouteContext = { params: Promise<{ walletId: string }> };
 
@@ -22,6 +23,7 @@ export async function GET(_request: Request, context: RouteContext) {
       session?.user?.activeCompanyId,
       session?.user?.companyRole,
     );
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'wallets.read');
     const { walletId } = await context.params;
     const wallet = await getWalletForTenant(ctx, walletId);
     return NextResponse.json(serializeWalletJson(wallet));

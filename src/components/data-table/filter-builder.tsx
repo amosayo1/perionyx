@@ -86,6 +86,7 @@ function ValueInput({
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        aria-label="Filter date value"
         className="h-8 w-[140px] text-xs"
       />
     );
@@ -96,6 +97,7 @@ function ValueInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder ?? "Value..."}
+      aria-label="Filter value"
       className="h-8 w-[160px] text-xs"
     />
   );
@@ -188,11 +190,12 @@ export function FilterBuilder({ defs, values, onChange }: Props) {
                   type="date"
                   value={fv.value2 ?? ""}
                   onChange={(e) => updateFilter(i, { value2: e.target.value })}
+                  aria-label="Filter end date value"
                   className="h-8 w-[140px] text-xs"
                 />
               </>
             )}
-            <Button variant="ghost" size="icon" onClick={() => removeFilter(i)} className="h-7 w-7">
+            <Button variant="ghost" size="icon" onClick={() => removeFilter(i)} className="h-7 w-7" aria-label="Remove filter">
               <X className="h-3.5 w-3.5 text-zinc-500" />
             </Button>
           </div>

@@ -1,5 +1,9 @@
 # Perionyx
 
+> **Platform Status**: Perionyx Platform Core v1.0 — Production Architecture Complete ✅
+>
+> Banking Complete · Treasury Complete · Infrastructure Complete · Ready for Enterprise Module Expansion
+
 **Enterprise Treasury Operating System** — multi-tenant treasury and financial operations infrastructure with ledger-backed wallets, bank connectivity, policy engine, risk monitoring, and notifications.
 
 ## Quick Start (Docker)

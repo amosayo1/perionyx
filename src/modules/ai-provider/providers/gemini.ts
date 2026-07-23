@@ -12,6 +12,7 @@ import { withRetry } from "../retry";
 import { logger } from "@/lib/logger";
 
 const GEMINI_API = "https://generativelanguage.googleapis.com/v1";
+const VERTEX_API = "https://us-central1-aiplatform.googleapis.com/v1";
 
 export class GeminiProvider implements IAiProvider {
   readonly kind: AiProviderKind = "gemini";
@@ -21,14 +22,21 @@ export class GeminiProvider implements IAiProvider {
   private baseUrl: string = GEMINI_API;
   private models: ModelConfig[] = [];
   private available = false;
+  private isVertexKey = false;
 
   async initialize(): Promise<void> {
     this.apiKey = process.env.GEMINI_API_KEY ?? "";
-    this.baseUrl = (process.env.GEMINI_BASE_URL || GEMINI_API).replace(/\/$/, "");
     this.available = this.apiKey.length > 0;
+    this.isVertexKey = this.apiKey.startsWith("AIza") === false && this.apiKey.length > 0;
+
+    if (this.isVertexKey) {
+      this.baseUrl = (process.env.GEMINI_BASE_URL || VERTEX_API).replace(/\/$/, "");
+    } else {
+      this.baseUrl = (process.env.GEMINI_BASE_URL || GEMINI_API).replace(/\/$/, "");
+    }
 
     if (this.available) {
-      logger.info("[Gemini] Provider initialized");
+      logger.info(`[Gemini] Provider initialized (${this.isVertexKey ? "Vertex AI" : "Gemini API"})`);
     } else {
       logger.warn("[Gemini] No API key configured — provider unavailable");
     }
@@ -36,7 +44,18 @@ export class GeminiProvider implements IAiProvider {
 
   private getChatUrl(model: string, stream = false): string {
     const action = stream ? "streamGenerateContent" : "generateContent";
+    if (this.isVertexKey) {
+      return `${this.baseUrl}/projects/-/locations/us-central1/publishers/google/models/${model}:${action}`;
+    }
     return `${this.baseUrl}/models/${model}:${action}?key=${this.apiKey}`;
+  }
+
+  private getHeaders(): Record<string, string> {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (this.isVertexKey) {
+      headers["Authorization"] = `Bearer ${this.apiKey}`;
+    }
+    return headers;
   }
 
   async chat(request: CompletionRequest): Promise<CompletionResponse> {
@@ -45,7 +64,7 @@ export class GeminiProvider implements IAiProvider {
     const response = await withRetry(async () => {
       const res = await fetch(this.getChatUrl(request.model), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getHeaders(),
         body: JSON.stringify(this.buildBody(request)),
         signal: request.signal,
       });
@@ -72,7 +91,7 @@ export class GeminiProvider implements IAiProvider {
     try {
       const res = await fetch(this.getChatUrl(request.model, true), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getHeaders(),
         body: JSON.stringify(this.buildBody(request)),
         signal: request.signal,
       });
@@ -160,7 +179,11 @@ export class GeminiProvider implements IAiProvider {
     const startTime = Date.now();
 
     try {
-      const res = await fetch(`${this.baseUrl}/models?key=${this.apiKey}`, {
+      const url = this.isVertexKey
+        ? `${this.baseUrl}/projects/-/locations/us-central1/publishers/google/models`
+        : `${this.baseUrl}/models?key=${this.apiKey}`;
+      const res = await fetch(url, {
+        headers: this.isVertexKey ? { Authorization: `Bearer ${this.apiKey}` } : {},
         signal: AbortSignal.timeout(10000),
       });
 

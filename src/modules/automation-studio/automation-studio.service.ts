@@ -4,17 +4,21 @@ import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit, type DbClient } from "@/modules/audit";
 import { WorkflowEngine } from "@/modules/workflow/engine";
 import type { WorkflowStatus } from "@/modules/workflow/types";
+import { logger } from "@/lib/logger";
 import { GovernanceService } from "@/modules/governance/governance.service";
 import { IntelligenceService } from "@/modules/enterprise-intelligence/intelligence.service";
 import { DecisionService } from "@/modules/decision-intelligence/decision.service";
 import { connectorOrchestrator } from "@/modules/connector-platform/orchestrator/orchestrator";
 import { OperationsService } from "@/modules/operations/operations.service";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
+import { invalidateWorkflow, invalidateAutomation, invalidateApproval, invalidateDashboard, invalidateAnalytics } from "@/server/cache/invalidation";
 import { TemplateLibrary } from "./template-library";
 import { AutomationRegistry } from "./automation-registry";
 import { BusinessRulesBuilder, businessRulesBuilder } from "./business-rules-builder";
 import { ApprovalMatrixEvaluator, approvalMatrixEvaluator } from "./approval-matrix-evaluator";
 import { AutomationScheduler, automationScheduler } from "./automation-scheduler";
 import { WorkflowAnalyticsService } from "./workflow-analytics.service";
+import { automationStudioPersistence } from "./persistence/persistence.service";
 import type { ScheduledExecutionPayload } from "./automation-scheduler";
 import type {
   AutomationTemplate,
@@ -57,6 +61,7 @@ export class AutomationStudioService {
   private approvalEvaluator: ApprovalMatrixEvaluator;
   private scheduler: AutomationScheduler;
   private workflowAnalytics: WorkflowAnalyticsService;
+  private persistence: typeof automationStudioPersistence;
 
   constructor() {
     this.workflowEngine = WorkflowEngine.getInstance();
@@ -68,6 +73,91 @@ export class AutomationStudioService {
     this.approvalEvaluator = new ApprovalMatrixEvaluator();
     this.scheduler = new AutomationScheduler();
     this.workflowAnalytics = new WorkflowAnalyticsService();
+    this.persistence = automationStudioPersistence;
+
+    this.workflowEngine.setApprovalConfigEnricher(async (ctx, stepDef, instanceInput) => {
+      const context: Record<string, unknown> = {
+        ...(stepDef.config ?? {}),
+        ...(instanceInput ?? {}),
+      };
+      const config = this.approvalEvaluator.resolveApprovalConfig(context, ctx.companyId, {
+        amount: context.amount as number | undefined,
+        department: context.department as string | undefined,
+      });
+      if (!config) return null;
+      return this.approvalEvaluator.toStepConfig(config);
+    });
+
+    this.workflowEngine.setApprovalHistoryRecorder(async (
+      instanceId, stepId, approverId, approverRole, action, comment, delegatedTo,
+    ) => {
+      this.approvalEvaluator.recordHistory({
+        id: crypto.randomUUID(),
+        ruleId: "",
+        instanceId,
+        stepId,
+        approverId,
+        approverRole,
+        action,
+        comment: comment ?? null,
+        delegatedTo: delegatedTo ?? null,
+        actedAt: new Date().toISOString(),
+      });
+    });
+
+    this.setSchedulerDefaultHandler(async (payload) => {
+      let definitionId: string | null = null;
+
+      if (payload.templateId) {
+        const template = this.templateLibrary.getById(payload.templateId);
+        if (!template) {
+          logger.error({ payload }, "[AutomationStudioService] Template not found for schedule trigger");
+          return;
+        }
+
+        const definitionInput = this.templateLibrary.toWorkflowDefinitionInput(payload.templateId, payload.companyId);
+        if (!definitionInput) {
+          logger.error({ payload }, "[AutomationStudioService] Failed to convert template to definition");
+          return;
+        }
+
+        const systemCtx: TenantContext = {
+          userId: "system",
+          companyId: payload.companyId,
+          role: "ADMIN",
+        };
+
+        const definition = await this.workflowEngine.createDefinition(systemCtx, {
+          name: `${definitionInput.name as string} (Scheduled)`,
+          description: definitionInput.description as string | undefined,
+          category: definitionInput.category as string | undefined,
+          steps: definitionInput.steps as any,
+          inputSchema: definitionInput.inputSchema as Record<string, unknown> | undefined,
+          outputSchema: definitionInput.outputSchema as Record<string, unknown> | undefined,
+          isSystem: true,
+        });
+        definitionId = definition.id;
+      } else if (payload.blueprintId) {
+        definitionId = payload.blueprintId;
+      } else {
+        logger.warn({ payload }, "[AutomationStudioService] Schedule has neither templateId nor blueprintId");
+        return;
+      }
+
+      const systemCtx: TenantContext = {
+        userId: "system",
+        companyId: payload.companyId,
+        role: "ADMIN",
+      };
+
+      const instance = await this.workflowEngine.createInstance(
+        systemCtx,
+        definitionId,
+        payload.input ?? undefined,
+      );
+
+      await this.workflowEngine.startInstance(systemCtx, instance.id);
+    });
   }
 
   // ── Templates ─────────────────────────────────────────────────────────
@@ -91,10 +181,17 @@ export class AutomationStudioService {
     return this.templateLibrary.getCategories();
   }
 
+  async ensureBuiltinTemplates(ctx: TenantContext): Promise<void> {
+    await this.persistence.seedBuiltinTemplates(ctx.companyId);
+  }
+
+  async listPersistedTemplates(ctx: TenantContext, category?: string) {
+    return this.persistence.listTemplates(ctx.companyId, category);
+  }
+
   // ── Blueprints (Designer) ─────────────────────────────────────────────
 
   async createBlueprint(ctx: TenantContext, data: CreateBlueprintInput): Promise<WorkflowBlueprint> {
-    const now = new Date().toISOString();
     const stepsJson = JSON.parse(JSON.stringify(data.steps)) as Prisma.InputJsonValue;
     const record = await prisma.workflowDefinition.create({
       data: {
@@ -119,6 +216,9 @@ export class AutomationStudioService {
       resourceId: record.id,
       metadata: { name: data.name, category: data.category, stepCount: data.steps.length },
     });
+
+    void invalidateWorkflow(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
 
     return this.toBlueprint(record);
   }
@@ -153,6 +253,9 @@ export class AutomationStudioService {
       metadata: { version: record.version },
     });
 
+    void invalidateWorkflow(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
+
     return this.toBlueprint(record);
   }
 
@@ -175,6 +278,9 @@ export class AutomationStudioService {
       resourceId: id,
     });
 
+    void invalidateWorkflow(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
+
     return this.toBlueprint(record);
   }
 
@@ -196,6 +302,9 @@ export class AutomationStudioService {
       resourceType: "WorkflowDefinition",
       resourceId: id,
     });
+
+    void invalidateWorkflow(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
 
     return true;
   }
@@ -302,72 +411,163 @@ export class AutomationStudioService {
   // ── Schedules ─────────────────────────────────────────────────────────
 
   async createSchedule(ctx: TenantContext, data: CreateScheduleInput): Promise<AutomationSchedule> {
-    const schedule = automationScheduler.createSchedule(data);
-    automationScheduler.setCompanyId(schedule.id, ctx.companyId);
+    const now = new Date();
 
-    schedule.companyId = ctx.companyId;
-    schedule.createdBy = ctx.userId;
-
-    this.registry.registerSchedule(schedule);
-
-    await recordAudit(prisma as unknown as DbClient, {
-      companyId: ctx.companyId,
-      actorUserId: ctx.userId,
-      action: "AUTOMATION_SCHEDULE_CREATED",
-      resourceType: "AutomationSchedule",
-      resourceId: schedule.id,
-      metadata: { name: data.name, triggerType: data.triggerType },
+    const record = await this.persistence.createSchedule(ctx, {
+      name: data.name,
+      triggerType: data.triggerType,
+      cronExpression: data.cronExpression ?? null,
+      startAt: data.startAt ?? null,
+      eventSource: data.eventSource ?? null,
+      eventType: data.eventType ?? null,
+      templateId: data.templateId ?? null,
+      blueprintId: data.blueprintId ?? null,
+      input: (data.input ?? null) as Prisma.InputJsonValue,
+      enabled: data.enabled ?? true,
     });
+
+    const schedule: AutomationSchedule = {
+      id: record.id,
+      companyId: ctx.companyId,
+      templateId: record.templateId,
+      blueprintId: record.blueprintId,
+      name: record.name,
+      triggerType: record.triggerType as AutomationSchedule["triggerType"],
+      cronExpression: record.cronExpression,
+      startAt: record.startAt?.toISOString() ?? null,
+      eventSource: record.eventSource,
+      eventType: record.eventType,
+      input: record.input as Record<string, unknown> | null,
+      enabled: record.enabled,
+      lastRunAt: record.lastRunAt?.toISOString() ?? null,
+      nextRunAt: record.nextRunAt?.toISOString() ?? null,
+      createdBy: ctx.userId,
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
+
+    automationScheduler.registerSchedule(schedule);
+
+    void invalidateAutomation(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
 
     return schedule;
   }
 
   async updateSchedule(ctx: TenantContext, id: string, data: UpdateScheduleInput): Promise<AutomationSchedule | null> {
-    const existing = this.registry.getSchedule(id);
+    const existing = await this.persistence.getSchedule(id);
     if (!existing || existing.companyId !== ctx.companyId) return null;
 
-    const updated = automationScheduler.updateSchedule(id, data);
-    if (updated) {
-      this.registry.registerSchedule(updated);
+    const updateData: Record<string, unknown> = {};
+    if (data.triggerType !== undefined) updateData.triggerType = data.triggerType;
+    if (data.cronExpression !== undefined) updateData.cronExpression = data.cronExpression;
+    if (data.startAt !== undefined) updateData.startAt = data.startAt;
+    if (data.eventSource !== undefined) updateData.eventSource = data.eventSource;
+    if (data.eventType !== undefined) updateData.eventType = data.eventType;
+    if (data.input !== undefined) updateData.input = data.input as Prisma.InputJsonValue;
+    if (data.enabled !== undefined) updateData.enabled = data.enabled;
 
-      await recordAudit(prisma as unknown as DbClient, {
-        companyId: ctx.companyId,
-        actorUserId: ctx.userId,
-        action: "AUTOMATION_SCHEDULE_UPDATED",
-        resourceType: "AutomationSchedule",
-        resourceId: id,
-      });
-    }
+    const record = await this.persistence.updateSchedule(ctx, id, updateData);
+    if (!record) return null;
 
-    return updated;
+    const schedule: AutomationSchedule = {
+      id: record.id,
+      companyId: record.companyId,
+      templateId: record.templateId,
+      blueprintId: record.blueprintId,
+      name: record.name,
+      triggerType: record.triggerType as AutomationSchedule["triggerType"],
+      cronExpression: record.cronExpression,
+      startAt: record.startAt?.toISOString() ?? null,
+      eventSource: record.eventSource,
+      eventType: record.eventType,
+      input: record.input as Record<string, unknown> | null,
+      enabled: record.enabled,
+      lastRunAt: record.lastRunAt?.toISOString() ?? null,
+      nextRunAt: record.nextRunAt?.toISOString() ?? null,
+      createdBy: record.createdByUserId ?? "",
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
+
+    automationScheduler.registerSchedule(schedule);
+
+    void invalidateAutomation(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
+
+    return schedule;
   }
 
   async deleteSchedule(ctx: TenantContext, id: string): Promise<boolean> {
-    const existing = this.registry.getSchedule(id);
+    const existing = await this.persistence.getSchedule(id);
     if (!existing || existing.companyId !== ctx.companyId) return false;
 
-    automationScheduler.deleteSchedule(id);
-    this.registry.unregisterSchedule(id);
+    const deleted = await this.persistence.deleteSchedule(ctx, id);
+    if (deleted) {
+      automationScheduler.deleteSchedule(id);
+    }
 
-    await recordAudit(prisma as unknown as DbClient, {
-      companyId: ctx.companyId,
-      actorUserId: ctx.userId,
-      action: "AUTOMATION_SCHEDULE_DELETED",
-      resourceType: "AutomationSchedule",
-      resourceId: id,
-    });
+    if (deleted) {
+      void invalidateAutomation(ctx.companyId);
+      void invalidateDashboard(ctx.companyId);
+    }
 
-    return true;
+    return deleted;
   }
 
-  listSchedules(ctx: TenantContext, templateId?: string): AutomationSchedule[] {
-    return automationScheduler.listSchedules(ctx.companyId, templateId);
+  async listSchedules(ctx: TenantContext, templateId?: string): Promise<AutomationSchedule[]> {
+    const records = await this.persistence.listSchedules(ctx.companyId, templateId);
+    return Array.from(records).map((r) => ({
+      id: r.id,
+      companyId: r.companyId,
+      templateId: r.templateId,
+      blueprintId: r.blueprintId,
+      name: r.name,
+      triggerType: r.triggerType as AutomationSchedule["triggerType"],
+      cronExpression: r.cronExpression,
+      startAt: r.startAt?.toISOString() ?? null,
+      eventSource: r.eventSource,
+      eventType: r.eventType,
+      input: r.input as Record<string, unknown> | null,
+      enabled: r.enabled,
+      lastRunAt: r.lastRunAt?.toISOString() ?? null,
+      nextRunAt: r.nextRunAt?.toISOString() ?? null,
+      createdBy: r.createdByUserId ?? "",
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    }));
   }
 
   async triggerSchedule(ctx: TenantContext, id: string): Promise<string | null> {
-    const schedule = this.registry.getSchedule(id);
-    if (!schedule || schedule.companyId !== ctx.companyId) return null;
-    return automationScheduler.triggerImmediate(schedule);
+    const record = await this.persistence.getSchedule(id);
+    if (!record || record.companyId !== ctx.companyId) return null;
+
+    const schedule: AutomationSchedule = {
+      id: record.id,
+      companyId: record.companyId,
+      templateId: record.templateId,
+      blueprintId: record.blueprintId,
+      name: record.name,
+      triggerType: record.triggerType as AutomationSchedule["triggerType"],
+      cronExpression: record.cronExpression,
+      startAt: record.startAt?.toISOString() ?? null,
+      eventSource: record.eventSource,
+      eventType: record.eventType,
+      input: record.input as Record<string, unknown> | null,
+      enabled: record.enabled,
+      lastRunAt: record.lastRunAt?.toISOString() ?? null,
+      nextRunAt: record.nextRunAt?.toISOString() ?? null,
+      createdBy: record.createdByUserId ?? "",
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
+
+    const jobId = await automationScheduler.triggerImmediate(schedule);
+    if (jobId) {
+      await this.persistence.updateScheduleRunTimes(record.id, new Date());
+    }
+
+    return jobId;
   }
 
   async triggerEvent(
@@ -381,114 +581,90 @@ export class AutomationStudioService {
   // ── Approval Matrix ───────────────────────────────────────────────────
 
   async getApprovalMatrixRules(ctx: TenantContext): Promise<ApprovalMatrixRule[]> {
-    return approvalMatrixEvaluator.listRules(ctx.companyId);
+    const records = await this.persistence.listApprovalMatrixRules(ctx.companyId);
+    return records.map(this.recordToApprovalMatrixRule);
   }
 
   async getApprovalMatrixRule(ctx: TenantContext, id: string): Promise<ApprovalMatrixRule | null> {
-    const rule = approvalMatrixEvaluator.getRule(id);
-    return rule?.companyId === ctx.companyId ? rule : null;
+    const record = await this.persistence.getApprovalMatrixRule(id);
+    if (!record || record.companyId !== ctx.companyId) return null;
+    return this.recordToApprovalMatrixRule(record);
   }
 
   async createApprovalMatrixRule(ctx: TenantContext, data: CreateApprovalMatrixRuleInput): Promise<ApprovalMatrixRule> {
-    const now = new Date().toISOString();
-    const rule: ApprovalMatrixRule = {
-      id: crypto.randomUUID(),
-      companyId: ctx.companyId,
+    const record = await this.persistence.createApprovalMatrixRule(ctx, {
       name: data.name,
-      description: data.description ?? "",
+      description: data.description,
       priority: data.priority,
-      conditions: data.conditions,
+      conditions: JSON.parse(JSON.stringify(data.conditions)) as Prisma.InputJsonValue,
       requiredApprovers: data.requiredApprovers,
       approverRoles: data.approverRoles,
-      approvalMode: data.approvalMode ?? "sequential",
+      approvalMode: data.approvalMode,
       timeoutMinutes: data.timeoutMinutes,
-      escalationEnabled: data.escalationEnabled ?? false,
+      escalationEnabled: data.escalationEnabled,
       escalationDelayMinutes: data.escalationDelayMinutes ?? null,
-      escalationRoles: data.escalationRoles ?? null,
-      delegationEnabled: data.delegationEnabled ?? false,
-      delegationRoles: data.delegationRoles ?? null,
+      escalationRoles: data.escalationRoles,
+      delegationEnabled: data.delegationEnabled,
+      delegationRoles: data.delegationRoles,
       departmentScope: data.departmentScope ?? null,
       thresholdField: data.thresholdField ?? null,
       thresholdOperator: data.thresholdOperator ?? null,
       thresholdValue: data.thresholdValue ?? null,
-      isActive: data.isActive ?? true,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    approvalMatrixEvaluator.registerRule(rule);
-    this.registry.registerApprovalRule(rule);
-
-    await recordAudit(prisma as unknown as DbClient, {
-      companyId: ctx.companyId,
-      actorUserId: ctx.userId,
-      action: "AUTOMATION_APPROVAL_RULE_CREATED",
-      resourceType: "ApprovalMatrixRule",
-      resourceId: rule.id,
-      metadata: { name: data.name, priority: data.priority },
+      isActive: data.isActive,
     });
+
+    const rule = this.recordToApprovalMatrixRule(record);
+    approvalMatrixEvaluator.registerRule(rule);
+
+    void invalidateApproval(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
 
     return rule;
   }
 
   async updateApprovalMatrixRule(ctx: TenantContext, id: string, data: Partial<CreateApprovalMatrixRuleInput>): Promise<ApprovalMatrixRule | null> {
-    const existing = approvalMatrixEvaluator.getRule(id);
-    if (!existing || existing.companyId !== ctx.companyId) return null;
+    const updateData: Record<string, unknown> = {};
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.priority !== undefined) updateData.priority = data.priority;
+    if (data.conditions !== undefined) updateData.conditions = JSON.parse(JSON.stringify(data.conditions)) as Prisma.InputJsonValue;
+    if (data.requiredApprovers !== undefined) updateData.requiredApprovers = data.requiredApprovers;
+    if (data.approverRoles !== undefined) updateData.approverRoles = data.approverRoles;
+    if (data.approvalMode !== undefined) updateData.approvalMode = data.approvalMode;
+    if (data.timeoutMinutes !== undefined) updateData.timeoutMinutes = data.timeoutMinutes;
+    if (data.escalationEnabled !== undefined) updateData.escalationEnabled = data.escalationEnabled;
+    if (data.escalationDelayMinutes !== undefined) updateData.escalationDelayMinutes = data.escalationDelayMinutes;
+    if (data.escalationRoles !== undefined) updateData.escalationRoles = data.escalationRoles;
+    if (data.delegationEnabled !== undefined) updateData.delegationEnabled = data.delegationEnabled;
+    if (data.delegationRoles !== undefined) updateData.delegationRoles = data.delegationRoles;
+    if (data.departmentScope !== undefined) updateData.departmentScope = data.departmentScope;
+    if (data.thresholdField !== undefined) updateData.thresholdField = data.thresholdField;
+    if (data.thresholdOperator !== undefined) updateData.thresholdOperator = data.thresholdOperator;
+    if (data.thresholdValue !== undefined) updateData.thresholdValue = data.thresholdValue;
+    if (data.isActive !== undefined) updateData.isActive = data.isActive;
 
-    const now = new Date().toISOString();
-    const rule: ApprovalMatrixRule = {
-      ...existing,
-      ...(data.name !== undefined && { name: data.name }),
-      ...(data.description !== undefined && { description: data.description }),
-      ...(data.priority !== undefined && { priority: data.priority }),
-      ...(data.conditions !== undefined && { conditions: data.conditions }),
-      ...(data.requiredApprovers !== undefined && { requiredApprovers: data.requiredApprovers }),
-      ...(data.approverRoles !== undefined && { approverRoles: data.approverRoles }),
-      ...(data.approvalMode !== undefined && { approvalMode: data.approvalMode }),
-      ...(data.timeoutMinutes !== undefined && { timeoutMinutes: data.timeoutMinutes }),
-      ...(data.escalationEnabled !== undefined && { escalationEnabled: data.escalationEnabled }),
-      ...(data.escalationDelayMinutes !== undefined && { escalationDelayMinutes: data.escalationDelayMinutes }),
-      ...(data.escalationRoles !== undefined && { escalationRoles: data.escalationRoles }),
-      ...(data.delegationEnabled !== undefined && { delegationEnabled: data.delegationEnabled }),
-      ...(data.delegationRoles !== undefined && { delegationRoles: data.delegationRoles }),
-      ...(data.departmentScope !== undefined && { departmentScope: data.departmentScope }),
-      ...(data.thresholdField !== undefined && { thresholdField: data.thresholdField }),
-      ...(data.thresholdOperator !== undefined && { thresholdOperator: data.thresholdOperator }),
-      ...(data.thresholdValue !== undefined && { thresholdValue: data.thresholdValue }),
-      ...(data.isActive !== undefined && { isActive: data.isActive }),
-      updatedAt: now,
-    };
+    const record = await this.persistence.updateApprovalMatrixRule(ctx, id, updateData);
+    if (!record) return null;
 
+    const rule = this.recordToApprovalMatrixRule(record);
     approvalMatrixEvaluator.registerRule(rule);
-    this.registry.registerApprovalRule(rule);
 
-    await recordAudit(prisma as unknown as DbClient, {
-      companyId: ctx.companyId,
-      actorUserId: ctx.userId,
-      action: "AUTOMATION_APPROVAL_RULE_UPDATED",
-      resourceType: "ApprovalMatrixRule",
-      resourceId: id,
-    });
+    void invalidateApproval(ctx.companyId);
+    void invalidateDashboard(ctx.companyId);
 
     return rule;
   }
 
   async deleteApprovalMatrixRule(ctx: TenantContext, id: string): Promise<boolean> {
-    const existing = approvalMatrixEvaluator.getRule(id);
-    if (!existing || existing.companyId !== ctx.companyId) return false;
-
-    approvalMatrixEvaluator.unregisterRule(id);
-    this.registry.unregisterApprovalRule(id);
-
-    await recordAudit(prisma as unknown as DbClient, {
-      companyId: ctx.companyId,
-      actorUserId: ctx.userId,
-      action: "AUTOMATION_APPROVAL_RULE_DELETED",
-      resourceType: "ApprovalMatrixRule",
-      resourceId: id,
-    });
-
-    return true;
+    const deleted = await this.persistence.deleteApprovalMatrixRule(ctx, id);
+    if (deleted) {
+      approvalMatrixEvaluator.unregisterRule(id);
+    }
+    if (deleted) {
+      void invalidateApproval(ctx.companyId);
+      void invalidateDashboard(ctx.companyId);
+    }
+    return deleted;
   }
 
   resolveApprovalConfig(
@@ -513,7 +689,31 @@ export class AutomationStudioService {
     ctx: TenantContext,
     data: CreateBusinessRuleDefinitionInput,
   ): Promise<BusinessRuleDefinition> {
-    const rule = businessRulesBuilder.registerRule(ctx.companyId, data);
+    const record = await this.persistence.createBusinessRuleDefinition(ctx, {
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      priority: data.priority,
+      when: data.when as unknown as Prisma.InputJsonValue,
+      then: data.then as unknown as Prisma.InputJsonValue,
+      isActive: data.isActive,
+    });
+
+    const rule: BusinessRuleDefinition = {
+      id: record.id,
+      companyId: record.companyId,
+      name: record.name,
+      description: record.description,
+      category: record.category,
+      priority: record.priority,
+      when: record.when as unknown as ConditionGroup,
+      then: record.then as unknown as RuleAction[],
+      isActive: record.isActive,
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
+
+    businessRulesBuilder.registerRule(ctx.companyId, data);
 
     await recordAudit(prisma as unknown as DbClient, {
       companyId: ctx.companyId,
@@ -527,25 +727,78 @@ export class AutomationStudioService {
     return rule;
   }
 
-  getBusinessRuleDefinition(id: string): BusinessRuleDefinition | undefined {
-    return businessRulesBuilder.getRule(id);
+  async getBusinessRuleDefinition(id: string): Promise<BusinessRuleDefinition | undefined> {
+    const record = await this.persistence.getBusinessRuleDefinition(id);
+    if (!record) return undefined;
+    return {
+      id: record.id,
+      companyId: record.companyId,
+      name: record.name,
+      description: record.description,
+      category: record.category,
+      priority: record.priority,
+      when: record.when as unknown as ConditionGroup,
+      then: record.then as unknown as RuleAction[],
+      isActive: record.isActive,
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
   }
 
-  listBusinessRuleDefinitions(ctx: TenantContext, category?: string): BusinessRuleDefinition[] {
-    return businessRulesBuilder.listRules(ctx.companyId, category);
+  async listBusinessRuleDefinitions(ctx: TenantContext, category?: string): Promise<BusinessRuleDefinition[]> {
+    const records = await this.persistence.listBusinessRuleDefinitions(ctx.companyId, category);
+    return records.map((r) => ({
+      id: r.id,
+      companyId: r.companyId,
+      name: r.name,
+      description: r.description,
+      category: r.category,
+      priority: r.priority,
+      when: r.when as unknown as ConditionGroup,
+      then: r.then as unknown as RuleAction[],
+      isActive: r.isActive,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    }));
   }
 
-  updateBusinessRuleDefinition(
+  async updateBusinessRuleDefinition(
     id: string,
     data: Partial<Omit<BusinessRuleDefinition, "id" | "companyId" | "createdAt">>,
-  ): BusinessRuleDefinition | null {
-    return businessRulesBuilder.updateRule(id, data);
+  ): Promise<BusinessRuleDefinition | null> {
+    const updateData: Record<string, unknown> = {};
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.category !== undefined) updateData.category = data.category;
+    if (data.priority !== undefined) updateData.priority = data.priority;
+    if (data.when !== undefined) updateData.when = JSON.parse(JSON.stringify(data.when)) as Prisma.InputJsonValue;
+    if (data.then !== undefined) updateData.then = JSON.parse(JSON.stringify(data.then)) as Prisma.InputJsonValue;
+    if (data.isActive !== undefined) updateData.isActive = data.isActive;
+
+    const record = await this.persistence.updateBusinessRuleDefinition({} as TenantContext, id, updateData);
+    if (!record) return null;
+
+    return {
+      id: record.id,
+      companyId: record.companyId,
+      name: record.name,
+      description: record.description,
+      category: record.category,
+      priority: record.priority,
+      when: record.when as unknown as ConditionGroup,
+      then: record.then as unknown as RuleAction[],
+      isActive: record.isActive,
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
   }
 
-  deleteBusinessRuleDefinition(ctx: TenantContext, id: string): boolean {
-    const rule = businessRulesBuilder.getRule(id);
-    if (!rule || rule.companyId !== ctx.companyId) return false;
-    return businessRulesBuilder.unregisterRule(id);
+  async deleteBusinessRuleDefinition(ctx: TenantContext, id: string): Promise<boolean> {
+    const deleted = await this.persistence.deleteBusinessRuleDefinition(ctx, id);
+    if (deleted) {
+      businessRulesBuilder.unregisterRule(id);
+    }
+    return deleted;
   }
 
   evaluateBusinessRule(
@@ -682,6 +935,11 @@ export class AutomationStudioService {
   // ── Analytics ─────────────────────────────────────────────────────────
 
   async getAnalytics(ctx: TenantContext): Promise<AutomationAnalytics> {
+    const cacheKey = tenantKey(ctx.companyId, CacheDomains.DASHBOARD, "automation", "analytics");
+    return getCached(cacheKey, () => this._getAnalytics(ctx), CacheTier.SHORT);
+  }
+
+  private async _getAnalytics(ctx: TenantContext): Promise<AutomationAnalytics> {
     const now = new Date();
     const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     const weekStart = new Date(todayStart.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -718,8 +976,8 @@ export class AutomationStudioService {
     });
 
     const activeBlueprints = blueprints.filter((b) => b.status === "ACTIVE").length;
-    const schedules = automationScheduler.listSchedules(ctx.companyId);
-    const activeSchedules = schedules.filter((s) => s.enabled).length;
+    const scheduleRecords = await this.persistence.listSchedules(ctx.companyId);
+    const activeSchedules = scheduleRecords.filter((s) => s.enabled).length;
 
     const definitionsWithStats = new Map<string, { name: string; count: number; completed: number }>();
     for (const inst of allInstances) {
@@ -844,7 +1102,103 @@ export class AutomationStudioService {
     );
   }
 
+  // ── Readiness Reports ─────────────────────────────────────────────────
+
+  async saveReadinessReport(ctx: TenantContext, report: {
+    overallScore: number;
+    passedChecks: number;
+    warnedChecks: number;
+    failedChecks: number;
+    checks: unknown[];
+    suggestions: string[];
+  }) {
+    return this.persistence.saveReadinessReport(ctx.companyId, {
+      ...report,
+      checks: JSON.parse(JSON.stringify(report.checks)) as Prisma.InputJsonValue,
+    });
+  }
+
+  async getLatestReadinessReport(ctx: TenantContext) {
+    return this.persistence.getLatestReadinessReport(ctx.companyId);
+  }
+
+  async listReadinessReports(ctx: TenantContext) {
+    return this.persistence.listReadinessReports(ctx.companyId);
+  }
+
+  // ── User Preferences ──────────────────────────────────────────────────
+
+  async getPreference(ctx: TenantContext, key: string) {
+    return this.persistence.getPreference(ctx.companyId, ctx.userId, key);
+  }
+
+  async setPreference(ctx: TenantContext, key: string, value: unknown) {
+    return this.persistence.setPreference(ctx.companyId, ctx.userId, key, value as Prisma.InputJsonValue);
+  }
+
+  async listPreferences(ctx: TenantContext) {
+    return this.persistence.listPreferences(ctx.companyId, ctx.userId);
+  }
+
+  async deletePreference(ctx: TenantContext, key: string) {
+    return this.persistence.deletePreference(ctx.companyId, ctx.userId, key);
+  }
+
   // ── Private ───────────────────────────────────────────────────────────
+
+  private recordToApprovalMatrixRule(record: {
+    id: string;
+    companyId: string;
+    name: string;
+    description: string;
+    priority: number;
+    conditions: unknown;
+    requiredApprovers: number;
+    approverRoles: string[];
+    approvalMode: string;
+    timeoutMinutes: number;
+    escalationEnabled: boolean;
+    escalationDelayMinutes: number | null;
+    escalationRoles: string[];
+    delegationEnabled: boolean;
+    delegationRoles: string[];
+    departmentScope: string | null;
+    thresholdField: string | null;
+    thresholdOperator: string | null;
+    thresholdValue: number | { toNumber(): number } | null;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  }): ApprovalMatrixRule {
+    return {
+      id: record.id,
+      companyId: record.companyId,
+      name: record.name,
+      description: record.description,
+      priority: record.priority,
+      conditions: record.conditions as ApprovalMatrixRule["conditions"],
+      requiredApprovers: record.requiredApprovers,
+      approverRoles: record.approverRoles,
+      approvalMode: record.approvalMode as ApprovalMatrixRule["approvalMode"],
+      timeoutMinutes: record.timeoutMinutes,
+      escalationEnabled: record.escalationEnabled,
+      escalationDelayMinutes: record.escalationDelayMinutes,
+      escalationRoles: record.escalationRoles.length > 0 ? record.escalationRoles : null,
+      delegationEnabled: record.delegationEnabled,
+      delegationRoles: record.delegationRoles.length > 0 ? record.delegationRoles : null,
+      departmentScope: record.departmentScope,
+      thresholdField: record.thresholdField,
+      thresholdOperator: record.thresholdOperator as ApprovalMatrixRule["thresholdOperator"],
+      thresholdValue: typeof record.thresholdValue === "number"
+        ? record.thresholdValue
+        : record.thresholdValue != null
+          ? Number(String(record.thresholdValue))
+          : null,
+      isActive: record.isActive,
+      createdAt: record.createdAt.toISOString(),
+      updatedAt: record.updatedAt.toISOString(),
+    };
+  }
 
   private toBlueprint(record: {
     id: string;

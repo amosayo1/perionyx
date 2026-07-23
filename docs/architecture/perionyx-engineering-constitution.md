@@ -255,19 +255,23 @@ Transactions hold Prisma connections from the pool for their duration. Code insi
 
 ## 11. Performance Principles
 
-### 11.1 Measure Before Optimizing
+### 11.1 Performance Constitution
+
+The [Performance Constitution](./performance-constitution.md) is a supplementary document that defines detailed performance principles across frontend, backend, database, workflow engine, connector platform, AI platform, and UI responsiveness. All principles in the Performance Constitution apply with equal force to the principles in this section. Where both documents address the same concern, the stricter principle governs.
+
+### 11.2 Measure Before Optimizing
 
 No performance optimization may be deployed without measurement. Use the existing observability infrastructure to establish a baseline before and after optimization. Performance improvements must be verified, not assumed.
 
-### 11.2 Batch Where Possible
+### 11.3 Batch Where Possible
 
 Financial operations that affect multiple records must use batch operations (`updateMany`, `createMany`, `findMany`) rather than looping individual queries. Each round-trip to the database adds latency and increases contention.
 
-### 11.3 Lock Contention Budget
+### 11.4 Lock Contention Budget
 
 Every concurrently accessed resource has a lock contention budget. If lock contention exceeds acceptable thresholds (measured by lock wait timeouts or deadlock frequency), the architecture must be redesigned to reduce contention — not by removing locks, but by narrowing their scope or sharding the resource.
 
-### 11.4 Query Efficiency
+### 11.5 Query Efficiency
 
 All database queries must use indexes. Full table scans on financial tables are unacceptable. The query planner must be verified for every new query pattern before deployment.
 
@@ -351,6 +355,8 @@ A feature is done when:
 8. Migration is forward-only and reversible.
 9. Production build succeeds.
 10. Code has been reviewed by at least one other engineer.
+11. Performance Impact Assessment (Section 19) has been completed and documented in the implementation report.
+12. Enterprise Value Assessment (Section 20) has been completed and documented in the implementation report.
 
 ---
 
@@ -421,10 +427,237 @@ Large architectural changes (database-per-tenant, microservices, event sourcing)
 
 ---
 
+## 19. Performance Impact Assessment
+
+Before implementing ANY feature, bug fix, refactor, integration, or architectural change, the AI **must** complete the following assessment and include it in the implementation report.
+
+This assessment is **mandatory** for every implementation. The AI must refuse to skip this section.
+
+### Required Questions
+
+#### Database
+
+1. **Does this increase database queries?** Compare the query count before and after the change. If it increases, explain why and how the increase is justified.
+
+2. **Does this introduce N+1 queries?** Check every loop that executes database queries. If any Prisma query is inside a loop over results from another query, N+1 is present and must be eliminated.
+
+3. **Have indexes been reviewed?** List every new query pattern and the index that covers it. If a query pattern lacks a covering index, specify the index to be added before implementation.
+
+4. **Will this affect query performance?** Estimate the impact on existing queries. Will the change add columns to a SELECT, add joins, or add WHERE conditions? If performance impact exceeds 10%, note the mitigation.
+
+5. **Can this query be optimized?** Can the query use a covering index? Can it use a partial index? Can it use a materialized view? Can it be rewritten to use batch operations?
+
+6. **Can this query be paginated?** If the query returns an unbounded number of results, pagination must be implemented. If pagination is not appropriate, justify why.
+
+7. **Should historical data be archived instead?** If the query touches tables exceeding 10 million rows or data older than 90 days, consider whether archiving historical data is more appropriate than querying the live table.
+
+#### Backend
+
+8. **Can this operation be asynchronous?** If the operation takes longer than 500ms, it must be moved to a background queue. The API must return immediately with a job identifier.
+
+9. **Can PgBoss be used?** If the operation can be deferred, PgBoss must be used for queueing. Explain how the job is registered, enqueued, and processed.
+
+10. **Can work be parallelized?** If the operation involves multiple independent subtasks, can they be executed concurrently with `Promise.all`? If not, explain the sequential dependency.
+
+11. **Can this operation be cached?** If the operation produces the same result for multiple requests or users, caching must be implemented. Specify the cache key, TTL, and invalidation strategy.
+
+12. **Will this increase API latency?** Estimate the p95 latency impact. If the increase exceeds 100ms, explain the mitigation strategy (caching, batching, async processing).
+
+#### Frontend
+
+13. **Is optimistic UI appropriate?** Would immediate feedback improve the user experience? If the mutation succeeds 95%+ of the time and the failure can be gracefully rolled back, optimistic UI must be used.
+
+14. **Will this increase render time?** Will the change add components, computations, or data fetching to the render path? If render time increases, specify the optimization (memoization, virtualization, lazy loading).
+
+15. **Can components be lazy-loaded?** Are any new components heavy (charting libraries, rich text editors, file viewers)? If so, they must be dynamically imported with `next/dynamic`.
+
+16. **Will this increase bundle size?** Estimate the JavaScript bundle size impact. If the increase exceeds 10kB (gzipped), justify the cost.
+
+17. **Are unnecessary re-renders introduced?** Will the change add new state or props that cause re-renders of expensive component trees? If so, specify how re-renders are minimized (React.memo, useMemo, useCallback, state colocation).
+
+#### Scalability
+
+18. **Expected behaviour with:**
+    - **10 users**: Will the system perform as expected?
+    - **100 users**: At what point does the system start to degrade?
+    - **1,000 users**: Which component becomes the bottleneck first?
+    - **10,000 users**: What architectural change is required to support this scale?
+    - **100,000 users**: What fundamental redesign is required?
+
+19. **Will horizontal scaling be required?** At what user count does the architecture need additional instances? Is the application layer stateless enough to scale horizontally?
+
+20. **Are there bottlenecks?** Identify the weakest link in the request path. Is it the database query? An external API call? A computation? A lock? Document the expected bottleneck and its capacity.
+
+#### Monitoring
+
+21. **Which metrics should Operations Dashboard monitor?** Specify the metric name, source, and alert threshold for each new metric introduced by the change.
+
+#### Risk
+
+22. **Performance Risk Level**
+    - **Low**: No measurable performance impact. Existing infrastructure handles the load.
+    - **Medium**: Measurable impact under 20%. Mitigation is planned and documented.
+    - **High**: Significant impact requiring infrastructure changes, caching strategy, or architectural redesign before deployment.
+
+#### Recommendation
+
+23. **Recommended optimizations before implementation:** Specify the concrete optimization steps that must be completed before the change is deployed to production. Each optimization must be verifiable and testable.
+
+---
+
+## 20. Enterprise Value Assessment (Mandatory)
+
+Before implementing ANY feature, enhancement, integration, refactor, architectural change, bug fix, or new module, the AI **must** complete this assessment and include it in the implementation report.
+
+This assessment is **mandatory** for every implementation. The AI must refuse to skip this section.
+
+### 1. Stakeholder Impact
+
+Identify every enterprise role that benefits. Mark all that apply and explain how each selected role benefits.
+
+```
+□ CEO
+□ CFO
+□ Treasurer
+□ Controller
+□ Accountant
+□ Auditor
+□ Finance Analyst
+□ Finance Manager
+□ Risk Manager
+□ Compliance Officer
+□ Operations Manager
+□ IT Administrator
+□ System Administrator
+□ Executive Leadership
+□ External Auditor
+□ Vendor
+□ Customer
+```
+
+### 2. Business Problem
+
+Clearly describe:
+- What business problem does this solve?
+- Why is this problem important?
+- What happens if this feature does not exist?
+- Which current manual process is eliminated or improved?
+
+### 3. Business Outcome
+
+State the measurable outcome expected. Examples:
+- Faster month-end close
+- Faster approvals
+- Reduced reconciliation time
+- Reduced fraud risk
+- Better liquidity visibility
+- Better compliance
+- Reduced operational cost
+- Improved audit readiness
+- Improved executive decision-making
+
+### 4. Success Criteria
+
+How will the customer know this feature succeeded? Provide measurable indicators. Examples:
+- Processing time reduced
+- Approval time reduced
+- Manual work reduced
+- Fewer support tickets
+- Fewer reconciliation exceptions
+- Higher automation rate
+- Increased workflow completion
+- Improved user adoption
+
+### 5. Metrics
+
+Estimate measurable improvements where appropriate. Include:
+- **Time Saved** — hours per week/month per role
+- **Errors Prevented** — types and estimated frequency
+- **Risk Reduced** — specific risk scenarios mitigated
+- **Compliance Improved** — frameworks or controls strengthened
+- **Visibility Improved** — data or insights previously unavailable
+- **Automation Increased** — percentage of previously manual steps now automated
+- **Operational Cost Reduced** — estimated savings
+- **User Productivity Improved** — tasks per hour or throughput increase
+- **Decision Speed Improved** — time from data to decision reduction
+
+### 6. ROI Assessment
+
+Estimate business value. Describe:
+- Expected operational savings (hours × blended hourly rate)
+- Efficiency gains (faster processes, fewer handoffs)
+- Risk reduction (potential loss scenarios avoided)
+- Potential financial impact (direct and indirect)
+- Long-term strategic value (platform differentiation, customer retention)
+
+### 7. Enterprise Readiness
+
+Does this feature improve any of the following? Mark all that apply and explain:
+
+```
+□ Scalability
+□ Security
+□ Performance
+□ Maintainability
+□ Auditability
+□ Governance
+□ Multi-tenancy
+□ Disaster Recovery
+□ Monitoring
+□ Automation
+□ User Experience
+```
+
+### 8. Strategic Alignment
+
+Explain how this feature supports the Perionyx vision of becoming an enterprise Financial Operations Platform. Describe how it strengthens:
+- Treasury
+- Governance
+- AI
+- Automation
+- Intelligence
+- ERP Integration
+- Banking Integration
+- Reporting
+- Enterprise Collaboration
+
+### 9. Complexity Assessment
+
+Estimate each dimension:
+
+| Dimension | Rating | Notes |
+|---|---|---|
+| Implementation Complexity | Low / Medium / High | |
+| Business Value | Low / Medium / High | |
+| Technical Risk | Low / Medium / High | |
+| Operational Risk | Low / Medium / High | |
+
+### 10. CFO Investment Justification
+
+**If I were a CFO paying $50,000–$250,000 per year for Perionyx, would I believe this feature justifies part of that investment?**
+
+Answer this question directly. Provide:
+- The specific operational savings or risk reduction that maps to dollar value
+- How this feature compares to alternatives (spreadsheets, legacy systems, manual processes)
+- Why a CFO would approve or reject continued investment in this platform based on this feature
+
+### 11. Recommendation
+
+Conclude with one of:
+- **Highly Recommended** — clear ROI, strategic alignment, low risk
+- **Recommended** — positive value, acceptable risk
+- **Nice to Have** — marginal value, defer if resources are constrained
+- **Defer** — value unclear, revisit with more data
+- **Reject** — negative ROI, misaligned with strategy, or superseded
+
+Provide full justification.
+
+---
+
 ## Ratification
 
 This constitution is ratified by the engineering organization and governs all code in the Perionyx repository. Amendments require review by the architecture review board and a 2/3 majority of the engineering team.
 
 ---
 
-*Last amended: 2026-07-05*
+*Last amended: 2026-07-06*

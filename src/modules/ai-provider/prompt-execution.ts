@@ -37,7 +37,7 @@ export class PromptExecutionService {
     messages: ChatMessage[],
     options?: PromptExecutionOptions,
   ): Promise<CompletionResponse> {
-    const provider = aiProviderRegistry.getActive();
+    const provider = await aiProviderRegistry.getActive();
     const rateLimitKey = options?.companyId ?? "default";
 
     const allMessages: ChatMessage[] = [
@@ -110,7 +110,7 @@ export class PromptExecutionService {
     onError: (error: Error) => void,
     options?: PromptExecutionOptions,
   ): Promise<void> {
-    const provider = aiProviderRegistry.getActive();
+    const provider = await aiProviderRegistry.getActive();
     const allMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
       ...messages,

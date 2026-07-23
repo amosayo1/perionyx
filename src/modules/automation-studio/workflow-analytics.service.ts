@@ -2,6 +2,7 @@ import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { WorkflowEngine } from "@/modules/workflow/engine";
 import { OperationsService } from "@/modules/operations/operations.service";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import type {
   WorkflowAnalytics,
   StepDurationSummary,
@@ -20,6 +21,11 @@ export class WorkflowAnalyticsService {
   }
 
   async getAnalytics(ctx: TenantContext, options?: AnalyticsQueryOptions): Promise<WorkflowAnalytics> {
+    const cacheKey = tenantKey(ctx.companyId, CacheDomains.ANALYTICS, "workflow");
+    return getCached(cacheKey, () => this._getAnalytics(ctx, options), CacheTier.SHORT);
+  }
+
+  private async _getAnalytics(ctx: TenantContext, options?: AnalyticsQueryOptions): Promise<WorkflowAnalytics> {
     const now = new Date();
     const limit = options?.limit ?? 5000;
     const dateFrom = options?.dateFrom ? new Date(options.dateFrom) : undefined;

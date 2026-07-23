@@ -200,7 +200,7 @@ export interface ApprovalMatrixRule {
   departmentScope: string | null;
   thresholdField: string | null;
   thresholdOperator: ConditionOperator | null;
-  thresholdValue: number | null;
+  thresholdValue: number | null; // stored as Prisma.Decimal in DB
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

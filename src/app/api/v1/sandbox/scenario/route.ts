@@ -10,6 +10,13 @@ import { handleRouteError } from "@/server/http/handle-route";
  */
 export async function GET() {
   try {
+    const session = await auth();
+    requireTenantContext(
+      session?.user?.id,
+      session?.user?.activeCompanyId,
+      session?.user?.companyRole,
+    );
+
     const scenarios = SCENARIOS.map((s) => ({
       id: s.id,
       title: s.title,

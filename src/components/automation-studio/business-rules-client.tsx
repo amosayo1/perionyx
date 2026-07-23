@@ -2,9 +2,10 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import {
-  FileCheck, Plus, ArrowRight, Search, Trash2, Pencil,
+  FileCheck, Plus, ArrowRight, Trash2, Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { BusinessRule, BusinessRuleType } from "@/modules/automation-studio/types";
@@ -12,7 +13,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BusinessRulesForm, type BusinessRuleFormData } from "./business-rules-form";
+import { SearchInput } from "@/components/ui/search-input";
+import { PaginationBar } from "@/components/ui/pagination-bar";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+
+const BusinessRulesForm = dynamic(() => import("./business-rules-form").then(m => ({ default: m.BusinessRulesForm })), { ssr: false });
+import type { BusinessRuleFormData } from "./business-rules-form";
 
 interface Props {
   rules: BusinessRule[];
@@ -79,9 +85,12 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
   const [rules, setRules] = useState(initialRules);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editRule, setEditRule] = useState<BusinessRule | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; onConfirm: () => void; title: string; message: string; destructive?: boolean }>({ open: false, onConfirm: () => {}, title: "", message: "" });
+  const pageSize = 20;
 
   const types = Array.from(new Set(rules.map((r) => r.ruleType)));
 
@@ -95,6 +104,10 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
       return false;
     return true;
   });
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const safePage = Math.min(page, Math.max(0, totalPages - 1));
+  const paged = filtered.slice(safePage * pageSize, (safePage + 1) * pageSize);
 
   const handleSave = useCallback(async (data: BusinessRuleFormData) => {
     const isEdit = !!editRule;
@@ -134,7 +147,6 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
   }, [editRule, router]);
 
   const handleDelete = useCallback(async (rule: BusinessRule) => {
-    if (!confirm(`Delete business rule "${rule.name}"? This cannot be undone.`)) return;
     setDeleting(rule.id);
 
     const promise = fetch(`/api/automation-studio/business-rules/${rule.id}`, {
@@ -156,6 +168,19 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
     });
     try { await promise; } finally { setDeleting(null); }
   }, [router]);
+
+  const confirmDelete = useCallback((rule: BusinessRule) => {
+    setConfirmState({
+      open: true,
+      destructive: true,
+      title: "Delete Business Rule",
+      message: `Delete business rule "${rule.name}"? This cannot be undone.`,
+      onConfirm: () => {
+        setConfirmState((prev) => ({ ...prev, open: false }));
+        handleDelete(rule);
+      },
+    });
+  }, [handleDelete]);
 
   const openCreate = () => {
     setEditRule(null);
@@ -191,16 +216,11 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
       </div>
 
       <div className="flex items-center gap-3" role="search" aria-label="Search business rules">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" aria-hidden="true" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search rules..."
-            className="h-9 pl-8 text-xs"
-            aria-label="Search rules"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search rules..."
+        />
         <div className="flex gap-1" role="tablist" aria-label="Filter by rule type">
           <button
             onClick={() => setTypeFilter(null)}
@@ -256,15 +276,23 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
         </Card>
       ) : (
         <div className="space-y-3" role="list" aria-label="Business rules">
-          {filtered.map((rule) => (
+          {paged.map((rule) => (
             <RuleCard
               key={rule.id}
               rule={rule}
               onEdit={() => openEdit(rule)}
-              onDelete={() => handleDelete(rule)}
+              onDelete={() => confirmDelete(rule)}
             />
           ))}
         </div>
+      )}
+      {filtered.length > pageSize && (
+        <PaginationBar
+          page={safePage}
+          pageSize={pageSize}
+          totalItems={filtered.length}
+          onPageChange={setPage}
+        />
       )}
 
       <BusinessRulesForm
@@ -272,6 +300,16 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
         onOpenChange={(open) => { if (!open) setEditRule(null); setDialogOpen(open); }}
         onSave={handleSave}
         editRule={editRule}
+      />
+
+      <ConfirmDialog
+        open={confirmState.open}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState((prev) => ({ ...prev, open: false }))}
+        title={confirmState.title}
+        message={confirmState.message}
+        destructive={confirmState.destructive}
+        confirmLabel="Delete"
       />
     </div>
   );

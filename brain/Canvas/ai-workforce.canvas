@@ -1,0 +1,115 @@
+{
+  "nodes": [
+    {
+      "id": "ai-platform",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 300,
+      "height": 200,
+      "text": "## AI Platform\n\nIntelligent automation layer.\n11 services, 560+ type lines.\nAgent lifecycle management."
+    },
+    {
+      "id": "agent-registry",
+      "type": "text",
+      "x": -500,
+      "y": -50,
+      "width": 200,
+      "height": 120,
+      "text": "## Agent Registry\n\nRegistration, discovery,\ncapability matching,\n12 methods."
+    },
+    {
+      "id": "agent-runtime",
+      "type": "text",
+      "x": -450,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "text": "## Agent Runtime\n\nLifecycle, sessions,\ntasks, executions,\n12 methods."
+    },
+    {
+      "id": "context-engine",
+      "type": "text",
+      "x": 0,
+      "y": -350,
+      "width": 200,
+      "height": 120,
+      "text": "## Context Engine\n\nTrusted context from\n9 sources,\n10 methods."
+    },
+    {
+      "id": "memory-system",
+      "type": "text",
+      "x": 400,
+      "y": -300,
+      "width": 200,
+      "height": 120,
+      "text": "## Memory System\n\n5 memory types,\npersistence,\nretrieval,\n11 methods."
+    },
+    {
+      "id": "evidence-engine",
+      "type": "text",
+      "x": 550,
+      "y": -50,
+      "width": 200,
+      "height": 120,
+      "text": "## Evidence Engine\n\nSource tracking,\nverification,\n8 methods."
+    },
+    {
+      "id": "decision-engine",
+      "type": "text",
+      "x": 500,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "text": "## Decision Engine\n\nStructured decisions,\napproval routing,\n11 methods."
+    },
+    {
+      "id": "approval-integration",
+      "type": "text",
+      "x": 350,
+      "y": 400,
+      "width": 200,
+      "height": 120,
+      "text": "## Approval Integration\n\nExisting approval\nframework bridge,\n8 methods."
+    },
+    {
+      "id": "collaboration",
+      "type": "text",
+      "x": 0,
+      "y": 450,
+      "width": 200,
+      "height": 120,
+      "text": "## Collaboration Framework\n\nAgent delegation,\ntraceability,\n10 methods."
+    },
+    {
+      "id": "human-interaction",
+      "type": "text",
+      "x": -400,
+      "y": 400,
+      "width": 200,
+      "height": 120,
+      "text": "## Human Interaction\n\nQuestions, clarification,\nfeedback loops,\n10 methods."
+    },
+    {
+      "id": "governance",
+      "type": "text",
+      "x": -500,
+      "y": -250,
+      "width": 200,
+      "height": 120,
+      "text": "## Governance\n\nPermissions, rate limits,\nsafety checks,\n11 methods."
+    }
+  ],
+  "edges": [
+    { "id": "e-ai-registry", "fromNode": "ai-platform", "fromSide": "left", "toNode": "agent-registry", "toSide": "right" },
+    { "id": "e-ai-runtime", "fromNode": "ai-platform", "fromSide": "left", "toNode": "agent-runtime", "toSide": "right" },
+    { "id": "e-ai-context", "fromNode": "ai-platform", "fromSide": "top", "toNode": "context-engine", "toSide": "bottom" },
+    { "id": "e-ai-memory", "fromNode": "ai-platform", "fromSide": "top", "toNode": "memory-system", "toSide": "bottom" },
+    { "id": "e-ai-evidence", "fromNode": "ai-platform", "fromSide": "right", "toNode": "evidence-engine", "toSide": "left" },
+    { "id": "e-ai-decision", "fromNode": "ai-platform", "fromSide": "right", "toNode": "decision-engine", "toSide": "left" },
+    { "id": "e-ai-approval", "fromNode": "ai-platform", "fromSide": "bottom", "toNode": "approval-integration", "toSide": "top" },
+    { "id": "e-ai-collab", "fromNode": "ai-platform", "fromSide": "bottom", "toNode": "collaboration", "toSide": "top" },
+    { "id": "e-ai-human", "fromNode": "ai-platform", "fromSide": "bottom", "toNode": "human-interaction", "toSide": "top" },
+    { "id": "e-ai-governance", "fromNode": "ai-platform", "fromSide": "left", "toNode": "governance", "toSide": "right" }
+  ]
+}

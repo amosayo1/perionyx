@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatDateTime } from "@/lib/format";
 import { cancelWorkflowInstance, pauseWorkflowInstance, resumeWorkflowInstance } from "./actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Props {
   metrics: WorkflowMetricsSummary | null;
@@ -29,15 +30,28 @@ type TabType = "running" | "waiting" | "failed" | "completed";
 function InstanceRow({ instance }: { instance: WorkflowInstanceSummary }) {
   const cfg = STATUS_CONFIG[instance.status];
   const [isPending, setIsPending] = useState(false);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; onConfirm: () => void; title: string; message: string; destructive?: boolean }>({ open: false, onConfirm: () => {}, title: "", message: "" });
 
-  const handleCancel = async () => {
-    if (!confirm("Cancel this workflow execution?")) return;
+  const handleCancelConfirmed = async () => {
     setIsPending(true);
     try {
       await cancelWorkflowInstance(instance.id, "Cancelled by operator");
     } finally {
       setIsPending(false);
     }
+  };
+
+  const handleCancel = () => {
+    setConfirmState({
+      open: true,
+      destructive: true,
+      title: "Cancel Workflow",
+      message: "Cancel this workflow execution?",
+      onConfirm: () => {
+        setConfirmState((prev) => ({ ...prev, open: false }));
+        handleCancelConfirmed();
+      },
+    });
   };
 
   const handlePause = async () => {
@@ -50,43 +64,55 @@ function InstanceRow({ instance }: { instance: WorkflowInstanceSummary }) {
   };
 
   return (
-    <Link
-      href={`/automation-studio/workflows/${instance.id}`}
-      className="flex items-center gap-4 px-6 py-3.5 transition-colors hover:bg-white/[0.03]"
-    >
-      <div className={`h-2.5 w-2.5 rounded-full ${cfg.dot} shrink-0`} />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-white truncate">{instance.definitionName}</p>
-          <Badge variant={instance.status === "COMPLETED" ? "success" : instance.status === "FAILED" ? "danger" : instance.status === "RUNNING" ? "default" : "secondary"} className={cfg.color}>
-            {cfg.label}
-          </Badge>
+    <>
+      <Link
+        href={`/automation-studio/workflows/${instance.id}`}
+        className="flex items-center gap-4 px-6 py-3.5 transition-colors hover:bg-white/[0.03]"
+      >
+        <div className={`h-2.5 w-2.5 rounded-full ${cfg.dot} shrink-0`} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium text-white truncate">{instance.definitionName}</p>
+            <Badge variant={instance.status === "COMPLETED" ? "success" : instance.status === "FAILED" ? "danger" : instance.status === "RUNNING" ? "default" : "secondary"} className={cfg.color}>
+              {cfg.label}
+            </Badge>
+          </div>
+          <p className="text-xs text-zinc-500 mt-0.5">
+            {instance.currentStep ? STEP_TYPE_LABELS[instance.currentStep] ?? instance.currentStep : "—"}
+            {instance.startedAt && ` · Started ${formatDateTime(instance.startedAt)}`}
+            {instance.lastError && ` · Error: ${instance.lastError}`}
+          </p>
         </div>
-        <p className="text-xs text-zinc-500 mt-0.5">
-          {instance.currentStep ? STEP_TYPE_LABELS[instance.currentStep] ?? instance.currentStep : "—"}
-          {instance.startedAt && ` · Started ${formatDateTime(instance.startedAt)}`}
-          {instance.lastError && ` · Error: ${instance.lastError}`}
-        </p>
-      </div>
-      {instance.status === "RUNNING" && (
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100" onClick={(e) => e.preventDefault()}>
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-amber-400" onClick={handlePause} disabled={isPending}>
-            <PauseCircle className="h-3.5 w-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-400" onClick={handleCancel} disabled={isPending}>
-            <XCircle className="h-3.5 w-3.5" />
-          </Button>
-        </div>
-      )}
-      {instance.status === "WAITING" && (
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100" onClick={(e) => e.preventDefault()}>
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-400" onClick={handleCancel} disabled={isPending}>
-            <XCircle className="h-3.5 w-3.5" />
-          </Button>
-        </div>
-      )}
-      <ArrowRight className="h-4 w-4 text-zinc-600 shrink-0" />
-    </Link>
+        {instance.status === "RUNNING" && (
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100" onClick={(e) => e.preventDefault()}>
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-amber-400" onClick={handlePause} disabled={isPending} aria-label="Pause">
+              <PauseCircle className="h-3.5 w-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-red-400" onClick={handleCancel} disabled={isPending} aria-label="Cancel">
+              <XCircle className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        )}
+        {instance.status === "WAITING" && (
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100" onClick={(e) => e.preventDefault()}>
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-red-400" onClick={handleCancel} disabled={isPending} aria-label="Cancel">
+              <XCircle className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        )}
+        <ArrowRight className="h-4 w-4 text-zinc-600 shrink-0" />
+      </Link>
+
+      <ConfirmDialog
+        open={confirmState.open}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState((prev) => ({ ...prev, open: false }))}
+        title={confirmState.title}
+        message={confirmState.message}
+        destructive={confirmState.destructive}
+        confirmLabel="Cancel"
+      />
+    </>
   );
 }
 

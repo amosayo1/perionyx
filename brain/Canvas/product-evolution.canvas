@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "phase-1-6",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Foundation (Phase 1-6)\n\nCore platform build-out.\nPrisma schema, API routes,\nauth, multi-tenancy,\nNext.js app shell."
+    },
+    {
+      "id": "phase-7",
+      "type": "text",
+      "x": 300,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Automation Studio (Phase 7)\n\nWorkflow engine,\napproval matrix,\nbusiness rules,\nscheduler, templates."
+    },
+    {
+      "id": "phase-8",
+      "type": "text",
+      "x": 600,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Enterprise UX (Phase 8)\n\nDesign system,\ntables, forms,\nanalytics,\nmotion, mobile."
+    },
+    {
+      "id": "phase-9",
+      "type": "text",
+      "x": 900,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Financial Modules (Phase 9)\n\nTreasury, accounting,\nreconciliation,\ncompliance scoring."
+    },
+    {
+      "id": "phase-11",
+      "type": "text",
+      "x": 1200,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Installation & IAM (Phase 11)\n\nEnterprise installer,\nDocker/K8s deployment,\nidentity & access\nmanagement."
+    },
+    {
+      "id": "phase-13",
+      "type": "text",
+      "x": 1500,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Agent Framework (Phase 13)\n\n14 Prisma models,\n11 services,\n8 API groups,\n12 UI components."
+    },
+    {
+      "id": "phase-16",
+      "type": "text",
+      "x": 1800,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Security Audit (Phase 16)\n\n23 audit agents,\n295 findings,\nOWASP assessment,\n15 deliverable docs."
+    },
+    {
+      "id": "phase-17",
+      "type": "text",
+      "x": 2100,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## Security Remediation (Phase 17)\n\nP0 fixes complete,\nP1 in progress,\nCSRF hardening,\nMFA roadmap."
+    }
+  ],
+  "edges": [
+    { "id": "e-1-2", "fromNode": "phase-1-6", "fromSide": "right", "toNode": "phase-7", "toSide": "left" },
+    { "id": "e-2-3", "fromNode": "phase-7", "fromSide": "right", "toNode": "phase-8", "toSide": "left" },
+    { "id": "e-3-4", "fromNode": "phase-8", "fromSide": "right", "toNode": "phase-9", "toSide": "left" },
+    { "id": "e-4-5", "fromNode": "phase-9", "fromSide": "right", "toNode": "phase-11", "toSide": "left" },
+    { "id": "e-5-6", "fromNode": "phase-11", "fromSide": "right", "toNode": "phase-13", "toSide": "left" },
+    { "id": "e-6-7", "fromNode": "phase-13", "fromSide": "right", "toNode": "phase-16", "toSide": "left" },
+    { "id": "e-7-8", "fromNode": "phase-16", "fromSide": "right", "toNode": "phase-17", "toSide": "left" }
+  ]
+}

@@ -216,7 +216,7 @@ export class LedgerService {
     });
 
     if (!clearingWallet) {
-      throw new ValidationError(`No clearing wallet found for ${currency} in company ${companyId}`);
+      throw new ValidationError(`No clearing wallet found for ${currency}`);
     }
 
     const decimalAmount = new Prisma.Decimal(amount);
@@ -299,7 +299,7 @@ export class LedgerService {
     });
 
     if (!clearingWallet) {
-      throw new ValidationError(`No clearing wallet found for ${currency} in company ${companyId}`);
+      throw new ValidationError(`No clearing wallet found for ${currency}`);
     }
 
     const decimalAmount = new Prisma.Decimal(amount);
@@ -358,7 +358,7 @@ export class LedgerService {
     });
 
     if (!wallet) {
-      throw new ValidationError(`Wallet ${walletId} not found`);
+      throw new ValidationError("Wallet not found");
     }
 
     const derivedBalance = await this.postingEngine.computeWalletBalance(walletId, companyId);

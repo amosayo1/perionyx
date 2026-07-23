@@ -5,6 +5,7 @@ import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError } from "@/server/http/handle-route";
 import { getProviderConfigs, createProviderConfig } from "@/modules/identity/config";
 import { identityProviderRegistry } from "@/modules/identity/registry";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 const createSchema = z.object({
   kind: z.enum(["local", "entra-id", "google-workspace", "okta", "saml", "oidc"]),
@@ -17,6 +18,7 @@ export async function GET() {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.security');
 
     const configs = await getProviderConfigs(ctx.companyId);
     const kinds = identityProviderRegistry.getRegisteredKinds();

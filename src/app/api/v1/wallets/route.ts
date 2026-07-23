@@ -3,8 +3,9 @@ import { z } from "zod";
 import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
 import { createWallet, listWallets } from "@/modules/wallets";
-import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
+import { cacheHeaders, handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { serializeWalletJson } from "@/server/http/wallet-response";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function GET() {
   try {
@@ -14,8 +15,9 @@ export async function GET() {
       session?.user?.activeCompanyId,
       session?.user?.companyRole,
     );
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'wallets.read');
     const wallets = await listWallets(ctx);
-    return NextResponse.json(wallets.map(serializeWalletJson));
+    return NextResponse.json(wallets.map(serializeWalletJson), { headers: { ...cacheHeaders(30) } });
   } catch (error) {
     return handleRouteError(error);
   }

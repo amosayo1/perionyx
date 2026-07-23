@@ -54,7 +54,7 @@ export function DemoLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/30 flex items-center justify-center overflow-hidden">
-                <img src="/logo.PNG" alt="Perionyx" className="h-full w-full object-cover" />
+                <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
               </div>
               <span className="text-xs font-semibold text-white tracking-tight">PERIONYX Demo</span>
             </div>

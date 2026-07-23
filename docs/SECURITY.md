@@ -24,10 +24,24 @@ Perionyx handles enterprise financial data — company money, bank accounts, tra
 ### 2.2 Session Management
 
 - JWT tokens signed with `AUTH_SECRET`
-- Token expiration: 30 days (configurable)
+- Token expiration: 24 hours (configurable via `session.maxAge` in `auth.ts`)
 - Session tokens stored in HTTP-only cookies
 - Secure cookies in production (`__Secure-` prefix)
 - SameSite=Lax for CSRF protection
+- **Session versioning** via `User.tokenVersion` — password changes, resets, and account disables immediately invalidate all active JWTs
+
+### 2.3 Session Invalidation (Phase 15.1A)
+
+When a security event occurs, `User.tokenVersion` is incremented. The proxy compares the JWT's `tokenVersion` claim against the database value on every request. A mismatch results in immediate session revocation.
+
+| Event | TokenVersion Incremented | Sessions Revoked |
+|-------|------------------------|------------------|
+| Password change | Yes | All |
+| Password reset | Yes | All |
+| Account disable | Yes | All |
+| Account lockout (5 failed attempts) | No | No (existing sessions continue for up to 24h) |
+
+This provides **immediate invalidation** of stateless JWT sessions without requiring refresh tokens or server-side session storage.
 
 ### 2.3 Password Security
 

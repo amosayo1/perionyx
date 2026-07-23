@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: perionyx-app-pdb
+  namespace: perionyx
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: perionyx
+      component: app

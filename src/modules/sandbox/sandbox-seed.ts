@@ -2,7 +2,7 @@ import { prisma } from "@/server/db/prisma";
 import { createPasswordUser } from "@/modules/users/users.service";
 import { createCompanyWithOwner } from "@/modules/companies/companies.service";
 import { rbacService } from "@/modules/rbac/rbac.service";
-import { SANDBOX_EMAIL, SANDBOX_PASSWORD, SANDBOX_COMPANY_SLUG, SANDBOX_COMPANY_NAME, clearSandboxCache } from "./sandbox-context";
+import { SANDBOX_EMAIL, deriveSandboxPassword, SANDBOX_COMPANY_SLUG, SANDBOX_COMPANY_NAME, clearSandboxCache } from "./sandbox-context";
 import { generateEnterpriseData } from "./sandbox-enterprise-seed";
 
 const SANDBOX_PERMISSIONS = [
@@ -24,7 +24,7 @@ const SANDBOX_PERMISSIONS = [
 export async function ensureSandboxTenant(): Promise<{ userId: string; companyId: string }> {
   let user = await prisma.user.findUnique({ where: { email: SANDBOX_EMAIL } });
   if (!user) {
-    user = await createPasswordUser({ email: SANDBOX_EMAIL, password: SANDBOX_PASSWORD, name: "Karim Al-Mansoori" });
+    user = await createPasswordUser({ email: SANDBOX_EMAIL, password: deriveSandboxPassword(), name: "Karim Al-Mansoori" });
   }
 
   let company = await prisma.company.findUnique({ where: { slug: SANDBOX_COMPANY_SLUG } });

@@ -631,8 +631,12 @@ export class QuickBooksConnector implements IConnector {
     tokenExpiresAt: Date | null;
     realmId: string;
   }): Promise<string | null> {
-    const accessToken = decrypt(connection.accessToken);
-    if (!accessToken) return null;
+    let accessToken: string | null = null;
+    try {
+      accessToken = decrypt(connection.accessToken);
+    } catch {
+      return null;
+    }
 
     const isExpired =
       connection.tokenExpiresAt && new Date() >= new Date(connection.tokenExpiresAt);
@@ -641,7 +645,11 @@ export class QuickBooksConnector implements IConnector {
       await this.refreshAccessToken();
       const updated = await this.getConnection();
       if (!updated) return null;
-      return decrypt(updated.accessToken) || null;
+      try {
+        return decrypt(updated.accessToken);
+      } catch {
+        return null;
+      }
     }
 
     return accessToken;

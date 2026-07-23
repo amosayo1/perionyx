@@ -5,6 +5,7 @@ import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { NotFoundError } from "@/lib/errors/app-error";
 import { prisma } from "@/server/db/prisma";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 type RouteContext = { params: Promise<{ accountId: string }> };
 
@@ -19,6 +20,7 @@ export async function GET(_request: Request, context: RouteContext) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'treasury.read');
     const { accountId } = await context.params;
     const account = await prisma.treasuryAccount.findFirst({
       where: { id: accountId, companyId: ctx.companyId },

@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { formatDateTime, formatMoney } from "@/lib/format";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { JsonPanel } from "@/components/investigation/JsonPanel";
-import { DataTable, FilterBuilder, InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table";
-import type { Column, FilterDef, FilterValue, Density } from "@/components/data-table";
+import { EnterpriseTable } from "@/components/enterprise/table";
+import { FilterBuilder } from "@/components/data-table/filter-builder";
+import { InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table/inspector-panel";
+import type { Column, FilterDef, FilterValue, Density } from "@/components/enterprise/table";
 import { ExternalLink, BookOpen } from "lucide-react";
 import Link from "next/link";
 
@@ -211,19 +213,15 @@ export default function LedgerPage() {
     {
       id: "amount",
       header: "Amount",
-      className: "text-right",
-      headerClassName: "text-right",
-      accessor: (r) => (
-        <span className="tabular-nums font-medium text-white">{formatMoney(r.amount, r.currency)}</span>
-      ),
+      cellConfig: { type: "currency", currency: "USD", negativeRed: true },
+      accessor: (r) => r.amount,
+      sortKey: "amount",
     },
     {
       id: "createdAt",
       header: "When",
-      accessor: (r) => (
-        <span className="whitespace-nowrap text-xs text-zinc-500">{formatDateTime(r.createdAt)}</span>
-      ),
-      className: "hidden sm:table-cell",
+      cellConfig: { type: "date", dateStyle: "medium", timeStyle: "short" },
+      accessor: (r) => r.createdAt,
     },
   ], []);
 
@@ -250,7 +248,7 @@ export default function LedgerPage() {
         </CardContent>
       </Card>
 
-      <DataTable
+      <EnterpriseTable
         data={filtered}
         columns={columns}
         keyExtractor={(r) => r.id}
@@ -263,8 +261,10 @@ export default function LedgerPage() {
         onDensityChange={setDensity}
         hiddenColumns={hiddenColumns}
         onHiddenColumnsChange={setHiddenColumns}
-        onCopyId={(id) => navigator.clipboard.writeText(id)}
-        exportFilename={`ledger-${new Date().toISOString().split("T")[0]}.csv`}
+        exportable
+        exportFormats={["csv", "xls"]}
+        exportFilename={`ledger-${new Date().toISOString().split("T")[0]}`}
+        pageSize={50}
       />
 
       {/* Inspector Panel */}
@@ -282,7 +282,7 @@ export default function LedgerPage() {
               content: detailLoading ? (
                 <p className="text-sm text-zinc-600">Loading...</p>
               ) : detailError ? (
-                <p className="text-sm text-red-400">{detailError}</p>
+                <p role="alert" className="text-sm text-red-400">{detailError}</p>
               ) : detail ? (
                 <div className="space-y-1">
                   <InspectorSection title="Transaction">

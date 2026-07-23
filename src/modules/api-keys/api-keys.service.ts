@@ -11,7 +11,7 @@ function hashKey(key: string): string {
 }
 
 function isEncrypted(value: string): boolean {
-  return value.includes(":") && value.split(":").length === 3;
+  return value.includes(":") && value.split(":").length >= 2;
 }
 
 function generateApiKey(): { key: string; prefix: string; lastChars: string } {

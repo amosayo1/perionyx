@@ -83,7 +83,7 @@ export default function ApprovalAnalyticsDashboard() {
   if (error || !data) {
     return (
       <div className="mx-auto max-w-7xl space-y-8 py-8">
-        <p className="text-red-400">{error || 'Failed to load analytics'}</p>
+        <p role="alert" className="text-red-400">{error || 'Failed to load analytics'}</p>
       </div>
     );
   }

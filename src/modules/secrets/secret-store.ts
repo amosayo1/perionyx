@@ -11,7 +11,7 @@ export interface SecretStore {
 const FILE = path.resolve(process.cwd(), '.perionyx_secrets.json');
 
 function isEncrypted(value: string): boolean {
-  return value.includes(':') && value.split(':').length === 3;
+  return value.includes(':') && value.split(':').length >= 2;
 }
 
 export class FileSecretStore implements SecretStore {
@@ -21,7 +21,9 @@ export class FileSecretStore implements SecretStore {
       const json = JSON.parse(txt || '{}');
       const stored = json[key];
       if (stored == null) return null;
-      if (isEncrypted(stored)) return decrypt(stored);
+      if (isEncrypted(stored)) {
+        try { return decrypt(stored); } catch { return null; }
+      }
       return stored;
     } catch {
       return null;

@@ -144,7 +144,7 @@ export function IntelligenceDashboard() {
 
                 {error && (
                   <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-3">
-                    <p className="text-xs text-red-400">{error}</p>
+                    <p role="alert" className="text-xs text-red-400">{error}</p>
                   </div>
                 )}
 

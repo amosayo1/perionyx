@@ -9,8 +9,6 @@ import { RiskIntelligenceEngine } from "./engines/risk-engine";
 import { OperationalIntelligenceEngine } from "./engines/operational-engine";
 import { ExecutiveIntelligenceEngine } from "./engines/executive-engine";
 import { GovernanceIntelligenceEngine } from "./engines/governance-engine";
-import { enterpriseEventBus, type EnterpriseEventType } from "./event-bus";
-import { connectorEventBus } from "@/modules/connector-platform/event-hooks";
 import type { TenantContext } from "@/server/context/tenant-context";
 import type { IntelligenceCategory, IntelligenceEngineResult, Insight, Recommendation, ExecutiveSummary, KnowledgeDocument, ContextDocument } from "./types";
 
@@ -18,7 +16,6 @@ export class IntelligenceService {
   private insightEngine = new InsightEngine();
   private recommendationEngine = new RecommendationEngine();
   private knowledgeGraph = new KnowledgeGraph();
-  private eventBridgeInitialized = false;
 
   constructor() {
     engineRegistry.register(new LiquidityIntelligenceEngine());
@@ -181,49 +178,7 @@ export class IntelligenceService {
   // ── Event Bridge (Connector → Enterprise) ─────────────────────────────
 
   initEventBridge(): void {
-    if (this.eventBridgeInitialized) return;
-    this.eventBridgeInitialized = true;
-
-    const eventMap: Record<string, EnterpriseEventType> = {
-      "disconnected": "connector:disconnected",
-      "sync-failed": "connector:sync-failed",
-      "health-check": "connector:health-critical",
-    };
-
-    connectorEventBus.subscribe("connector:disconnected", async (payload) => {
-      const et = eventMap["disconnected"];
-      await enterpriseEventBus.publish({
-        eventType: et,
-        companyId: payload.companyId,
-        source: "connector-platform",
-        timestamp: new Date().toISOString(),
-        metadata: { connectorId: payload.connectorId, ...payload.metadata },
-      });
-    });
-
-    connectorEventBus.subscribe("connector:sync-failed", async (payload) => {
-      const et = eventMap["sync-failed"];
-      await enterpriseEventBus.publish({
-        eventType: et,
-        companyId: payload.companyId,
-        source: "connector-platform:orchestrator",
-        timestamp: new Date().toISOString(),
-        metadata: { connectorId: payload.connectorId, ...payload.metadata },
-      });
-    });
-
-    connectorEventBus.subscribe("connector:health-check", async (payload) => {
-      const meta = payload.metadata as { status?: string } | undefined;
-      if (meta?.status === "critical") {
-        await enterpriseEventBus.publish({
-          eventType: "connector:health-critical",
-          companyId: payload.companyId,
-          source: "connector-platform:orchestrator",
-          timestamp: new Date().toISOString(),
-          metadata: { connectorId: payload.connectorId, ...payload.metadata },
-        });
-      }
-    });
+    // Event bus removed — no subscribers existed
   }
 
   // ── Private ────────────────────────────────────────────────────────────

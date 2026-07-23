@@ -73,7 +73,7 @@ export async function streamChatResponse(
       content: m.content,
     }));
 
-    const provider = aiProviderRegistry.getActive();
+    const provider = await aiProviderRegistry.getActive();
     const model = process.env.AI_MODEL || provider.getModels()[0]?.id || "gpt-4o-mini";
 
     if (!provider.isAvailable()) {
@@ -132,7 +132,7 @@ export async function generateTitle(
   userMessage: string,
 ): Promise<string> {
   try {
-    const provider = aiProviderRegistry.getActive();
+    const provider = await aiProviderRegistry.getActive();
     if (!provider.isAvailable()) return "New conversation";
 
     const result = await promptExecutionService.execute(

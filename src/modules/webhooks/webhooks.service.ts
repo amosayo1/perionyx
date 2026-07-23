@@ -2,6 +2,29 @@ import crypto from "crypto";
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 
+const BLOCKED_URL_SCHEMES = ["file:", "ftp:", "data:", "javascript:", "vbscript:"];
+const BLOCKED_HOSTNAMES = [
+  "localhost", "127.0.0.1", "0.0.0.0", "::1", "metadata.google.internal",
+  "169.254.169.254", "instance-data", "100.100.100.200",
+];
+const FETCH_TIMEOUT_MS = 10_000;
+const MAX_DELIVERY_ATTEMPTS = 5;
+
+function isUrlSafe(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    if (BLOCKED_URL_SCHEMES.includes(parsed.protocol)) return false;
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+    if (BLOCKED_HOSTNAMES.includes(parsed.hostname)) return false;
+    if (/^10\.\d+\.\d+\.\d+$/.test(parsed.hostname)) return false;
+    if (/^172\.(1[6-9]|2\d|3[01])\.\d+\.\d+$/.test(parsed.hostname)) return false;
+    if (/^192\.168\.\d+\.\d+$/.test(parsed.hostname)) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export class WebhookService {
   /**
    * Deliver an event to all active webhooks subscribed to it.
@@ -12,6 +35,21 @@ export class WebhookService {
     });
 
     for (const webhook of webhooks) {
+      if (!isUrlSafe(webhook.url)) {
+        await prisma.webhookDelivery.create({
+          data: {
+            webhookId: webhook.id,
+            companyId,
+            event,
+            payload: payload as any,
+            status: "FAILED",
+            lastError: "Blocked: URL failed safety validation",
+            attempts: 1,
+          },
+        });
+        continue;
+      }
+
       const body = JSON.stringify({
         event,
         companyId,
@@ -24,6 +62,9 @@ export class WebhookService {
         : null;
 
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
         const res = await fetch(webhook.url, {
           method: "POST",
           headers: {
@@ -32,7 +73,10 @@ export class WebhookService {
             "X-Perionyx-Event": event,
           },
           body,
+          signal: controller.signal,
         });
+
+        clearTimeout(timeout);
 
         await prisma.webhookDelivery.create({
           data: {
@@ -41,7 +85,7 @@ export class WebhookService {
             event,
             payload: payload as any,
             status: res.ok ? "DELIVERED" : "FAILED",
-            lastError: res.ok ? null : `HTTP ${res.status}: ${res.statusText}`,
+            lastError: res.ok ? null : `HTTP ${res.status}`,
             nextAttemptAt: res.ok ? null : new Date(Date.now() + 60000),
             attempts: 1,
           },
@@ -54,7 +98,7 @@ export class WebhookService {
             event,
             payload: payload as any,
             status: "FAILED",
-            lastError: err?.message ?? "Network error",
+            lastError: err?.name === "AbortError" ? "Request timed out" : "Network error",
             nextAttemptAt: new Date(Date.now() + 60000),
             attempts: 1,
           },
@@ -77,6 +121,9 @@ export class WebhookService {
   static async create(ctx: TenantContext, data: {
     name: string; url: string; events: string[]; secret?: string;
   }) {
+    if (!isUrlSafe(data.url)) {
+      throw new Error("Invalid webhook URL: must be HTTPS and target a public endpoint");
+    }
     const wh = await prisma.webhook.create({
       data: {
         companyId: ctx.companyId,
@@ -94,6 +141,9 @@ export class WebhookService {
   }) {
     const existing = await prisma.webhook.findFirst({ where: { id: webhookId, companyId: ctx.companyId } });
     if (!existing) throw new Error("Webhook not found");
+    if (data.url && !isUrlSafe(data.url)) {
+      throw new Error("Invalid webhook URL: must be HTTPS and target a public endpoint");
+    }
     return prisma.webhook.update({
       where: { id: webhookId },
       data: {
@@ -131,6 +181,7 @@ export class WebhookService {
     });
     if (!d || d.status !== "FAILED") throw new Error("Delivery not found or not failed");
     if (!d.webhook.active) throw new Error("Webhook is inactive");
+    if (d.attempts >= MAX_DELIVERY_ATTEMPTS) throw new Error("Maximum retry attempts reached");
 
     const body = JSON.stringify({
       event: d.event,
@@ -143,6 +194,9 @@ export class WebhookService {
       : null;
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
       const res = await fetch(d.webhook.url, {
         method: "POST",
         headers: {
@@ -151,7 +205,10 @@ export class WebhookService {
           "X-Perionyx-Event": d.event,
         },
         body,
+        signal: controller.signal,
       });
+
+      clearTimeout(timeout);
 
       await prisma.webhookDelivery.update({
         where: { id: deliveryId },
@@ -167,7 +224,7 @@ export class WebhookService {
         where: { id: deliveryId },
         data: {
           status: "FAILED",
-          lastError: err?.message ?? "Network error",
+          lastError: err?.name === "AbortError" ? "Request timed out" : "Network error",
           attempts: { increment: 1 },
           nextAttemptAt: new Date(Date.now() + 120000),
         },

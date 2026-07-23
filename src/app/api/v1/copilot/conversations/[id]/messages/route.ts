@@ -4,12 +4,14 @@ import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
 import { getConversation, addUserMessage, addAssistantMessage, updateConversationTitle } from "@/modules/copilot/conversation.service";
 import { streamChatResponse, generateTitle } from "@/modules/copilot/ai.service";
 import type { PersonaRole } from "@/modules/copilot/command-center";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'analytics.read');
 
     const conversation = await getConversation(ctx, id);
     if (!conversation) {

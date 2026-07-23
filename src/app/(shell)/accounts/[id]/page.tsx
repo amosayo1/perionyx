@@ -143,12 +143,12 @@ export default function AccountDetailPage() {
             <DialogHeader><DialogTitle>Deposit to {account.name}</DialogTitle><DialogDescription>Add funds to this account.</DialogDescription></DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Amount</Label>
-                <Input type="number" min="0" step="0.01" placeholder="10000.00" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
+                <Label htmlFor="deposit-amount">Amount</Label>
+                <Input id="deposit-amount" type="number" min="0" step="0.01" placeholder="10000.00" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Reference (optional)</Label>
-                <Input placeholder="Initial deposit" value={depositRef} onChange={(e) => setDepositRef(e.target.value)} />
+                <Label htmlFor="deposit-reference">Reference (optional)</Label>
+                <Input id="deposit-reference" placeholder="Initial deposit" value={depositRef} onChange={(e) => setDepositRef(e.target.value)} />
               </div>
             </div>
             <DialogFooter>

@@ -90,10 +90,13 @@ export class ApprovalMatrixEvaluator {
         rule.thresholdValue !== null &&
         rule.thresholdOperator
       ) {
+        const thresholdNum = typeof rule.thresholdValue === "number"
+          ? rule.thresholdValue
+          : Number(String(rule.thresholdValue));
         const expr = conditionToExpression(
           rule.thresholdField,
           rule.thresholdOperator,
-          rule.thresholdValue,
+          thresholdNum,
         );
         if (!conditionEvaluator.evaluateCondition(expr, { [rule.thresholdField]: amount })) {
           return false;

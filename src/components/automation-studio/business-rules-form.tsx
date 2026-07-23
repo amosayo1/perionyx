@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { FileCheck, Plus, X } from "lucide-react";
+import { FileCheck, Plus, X, Settings2, Tag, Gauge, Power } from "lucide-react";
 import type { BusinessRule, BusinessRuleType } from "@/modules/automation-studio/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { EnterpriseForm } from "@/components/enterprise/forms/enterprise-form";
+import { EnterpriseSection } from "@/components/enterprise/forms/enterprise-section";
+import { EnterpriseField } from "@/components/enterprise/forms/enterprise-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface Props {
   open: boolean;
@@ -28,11 +29,11 @@ export interface BusinessRuleFormData {
   isActive: boolean;
 }
 
-const RULE_TYPES: { value: BusinessRuleType; label: string }[] = [
-  { value: "policy", label: "Policy" },
-  { value: "threshold", label: "Threshold" },
-  { value: "validation", label: "Validation" },
-  { value: "routing", label: "Routing" },
+const RULE_TYPES: { value: BusinessRuleType; label: string; hint: string }[] = [
+  { value: "policy", label: "Policy", hint: "Enforce organizational policies and standards" },
+  { value: "threshold", label: "Threshold", hint: "Trigger actions when values cross limits" },
+  { value: "validation", label: "Validation", hint: "Validate data against business constraints" },
+  { value: "routing", label: "Routing", hint: "Route transactions based on attributes" },
 ];
 
 const CATEGORIES = [
@@ -52,11 +53,6 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
   const [isActive, setIsActive] = useState(editRule?.isActive ?? true);
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave({ name, description, category, ruleType, config, priority, isActive });
-  };
 
   const addConfigEntry = () => {
     if (!newKey.trim()) return;
@@ -82,9 +78,21 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
             Define business logic for automation workflows
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
+        <EnterpriseForm
+          onSubmit={() => onSave({ name, description, category, ruleType, config, priority, isActive })}
+          submitLabel={editRule ? "Update Rule" : "Create Rule"}
+          submitIcon={<FileCheck className="h-4 w-4" />}
+          cancelLabel="Cancel"
+          onCancel={() => onOpenChange(false)}
+        >
+          <EnterpriseField
+            label="Rule Name"
+            htmlFor="name"
+            required
+            helpText="A descriptive name that helps identify this rule in reports and logs"
+            hint='Use a consistent naming convention. Example: "High-Value Transfer Policy"'
+            hintType="best-practice"
+          >
             <Input
               id="name"
               value={name}
@@ -92,10 +100,15 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
               placeholder="e.g., High-Value Transfer Policy"
               required
             />
-          </div>
+          </EnterpriseField>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+          <EnterpriseField
+            label="Description"
+            htmlFor="description"
+            helpText="Explain what this rule does and when it should apply"
+            hint="Be specific about the business context and expected behavior"
+            hintType="tip"
+          >
             <Textarea
               id="description"
               value={description}
@@ -103,11 +116,14 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
               placeholder="Describe what this rule does"
               rows={2}
             />
-          </div>
+          </EnterpriseField>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="ruleType">Rule Type</Label>
+            <EnterpriseField
+              label="Rule Type"
+              htmlFor="ruleType"
+              helpText="Determines how this rule is evaluated"
+            >
               <div className="flex gap-2">
                 {RULE_TYPES.map((rt) => (
                   <button
@@ -119,14 +135,19 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
                         ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30"
                         : "bg-zinc-900/40 text-zinc-500 border border-white/[0.06] hover:text-zinc-300"
                     }`}
+                    title={rt.hint}
                   >
                     {rt.label}
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
+            </EnterpriseField>
+
+            <EnterpriseField
+              label="Category"
+              htmlFor="category"
+              helpText="Group related rules for easier management"
+            >
               <div className="flex flex-wrap gap-1.5">
                 {CATEGORIES.map((cat) => (
                   <button
@@ -143,37 +164,71 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
                   </button>
                 ))}
               </div>
-            </div>
+            </EnterpriseField>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="priority">Priority ({priority})</Label>
-            <input
-              id="priority"
-              type="range"
-              min={1}
-              max={100}
-              value={priority}
-              onChange={(e) => setPriority(Number(e.target.value))}
-              className="w-full accent-[#d4af37]"
-            />
-            <div className="flex justify-between text-[10px] text-zinc-600">
-              <span>Low (1)</span>
-              <span>High (100)</span>
+          <EnterpriseField
+            label="Priority"
+            htmlFor="priority"
+            helpText="Higher priority rules are evaluated first"
+            hint="Set higher priority for compliance and financial rules"
+            hintType="best-practice"
+          >
+            <div className="space-y-2">
+              <input
+                id="priority"
+                type="range"
+                min={1}
+                max={100}
+                value={priority}
+                onChange={(e) => setPriority(Number(e.target.value))}
+                className="w-full accent-[#d4af37]"
+              />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 text-[11px]">
+                  <span className="flex items-center gap-1.5 rounded-md bg-zinc-800/60 px-2 py-0.5 text-zinc-400">
+                    <Gauge className="h-3 w-3" />
+                    Priority: <span className="text-white font-semibold">{priority}</span>
+                  </span>
+                  <span className="text-zinc-600">
+                    {priority >= 80 ? "Critical" : priority >= 50 ? "Normal" : "Low"}
+                  </span>
+                </div>
+                <span className="text-[10px] text-zinc-600">Low (1) — High (100)</span>
+              </div>
             </div>
-          </div>
+          </EnterpriseField>
 
-          <div className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-zinc-900/30 px-4 py-3">
-            <div>
-              <p className="text-sm font-medium text-white">Active</p>
-              <p className="text-xs text-zinc-500">Enable this rule for evaluation</p>
+          <EnterpriseField
+            label="Active"
+            htmlFor="isActive"
+            description="Enable this rule for evaluation in workflows"
+            helpText="Inactive rules are preserved but not evaluated"
+          >
+            <div className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-zinc-900/30 px-4 py-3">
+              <div className="flex items-center gap-3">
+                <Power className={cn("h-4 w-4", isActive ? "text-emerald-400" : "text-zinc-600")} />
+                <div>
+                  <p className="text-sm font-medium text-white">{isActive ? "Active" : "Inactive"}</p>
+                  <p className="text-xs text-zinc-500">
+                    {isActive ? "Rule is being evaluated" : "Rule is disabled"}
+                  </p>
+                </div>
+              </div>
+              <Switch checked={isActive} onCheckedChange={setIsActive} />
             </div>
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
-          </div>
+          </EnterpriseField>
 
-          <div className="space-y-2">
-            <Label>Configuration (key-value pairs)</Label>
-            <div className="space-y-1.5">
+          <EnterpriseSection
+            config={{
+              id: "config",
+              title: "Configuration Parameters",
+              description: "Additional key-value settings for this rule",
+              collapsible: true,
+              icon: <Settings2 className="h-4 w-4" />,
+            }}
+          >
+            <div className="space-y-2">
               {Object.entries(config).map(([key, value]) => (
                 <div key={key} className="flex items-center gap-2">
                   <code className="flex-1 rounded border border-white/[0.06] bg-zinc-900/40 px-2.5 py-1.5 text-xs text-zinc-300">
@@ -183,6 +238,7 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
                     type="button"
                     onClick={() => removeConfigEntry(key)}
                     className="rounded p-1 text-zinc-600 hover:text-red-400"
+                    aria-label="Remove entry"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -194,32 +250,30 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
                 value={newKey}
                 onChange={(e) => setNewKey(e.target.value)}
                 placeholder="Key"
+                aria-label="Config key"
                 className="h-8 text-xs flex-1"
               />
               <Input
                 value={newValue}
                 onChange={(e) => setNewValue(e.target.value)}
                 placeholder="Value"
+                aria-label="Config value"
                 className="h-8 text-xs flex-1"
               />
-              <Button type="button" size="sm" variant="outline" onClick={addConfigEntry} className="h-8 shrink-0 gap-1">
+              <button
+                type="button"
+                onClick={addConfigEntry}
+                className="inline-flex items-center gap-1 rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1.5 text-[11px] font-medium text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors h-8 shrink-0"
+              >
                 <Plus className="h-3 w-3" />
                 Add
-              </Button>
+              </button>
             </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" className="gap-2">
-              <FileCheck className="h-4 w-4" />
-              {editRule ? "Update Rule" : "Create Rule"}
-            </Button>
-          </div>
-        </form>
+          </EnterpriseSection>
+        </EnterpriseForm>
       </DialogContent>
     </Dialog>
   );
 }
+
+

@@ -5,17 +5,19 @@ import type { PolicyRegistryEntry, PolicyMappingType } from "./types";
 import { NotFoundError, ConflictError } from "@/lib/errors/app-error";
 
 export class PolicyRegistry {
-  static async listPolicies(ctx: TenantContext): Promise<PolicyRegistryEntry[]> {
+  static async listPolicies(ctx: TenantContext, opts?: { limit?: number; offset?: number }): Promise<PolicyRegistryEntry[]> {
     const policies = await prisma.policy.findMany({
       where: { companyId: ctx.companyId },
-      include: {
-        testResults: false,
-        rules: false,
-      },
+      take: opts?.limit ?? 100,
+      skip: opts?.offset ?? 0,
+      orderBy: { updatedAt: "desc" },
     });
 
+    if (policies.length === 0) return [];
+
+    const policyIds = policies.map((p) => p.id);
     const frameworkPolicies = await prisma.governanceFrameworkPolicy.findMany({
-      where: { framework: { companyId: ctx.companyId } },
+      where: { policyId: { in: policyIds }, framework: { companyId: ctx.companyId } },
       include: { framework: { select: { name: true } } },
     });
 
@@ -35,16 +37,11 @@ export class PolicyRegistry {
     }));
   }
 
-  static async getFrameworks(ctx: TenantContext) {
+  static async getFrameworks(ctx: TenantContext, opts?: { limit?: number; offset?: number }) {
     return prisma.governanceFramework.findMany({
       where: { companyId: ctx.companyId },
-      include: {
-        policies: {
-          include: {
-            framework: false,
-          },
-        },
-      },
+      take: opts?.limit ?? 50,
+      skip: opts?.offset ?? 0,
       orderBy: { name: "asc" },
     });
   }

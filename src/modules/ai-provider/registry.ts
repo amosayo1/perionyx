@@ -1,9 +1,19 @@
 import type { IAiProvider } from "./interface";
 import type { AiProviderKind, ActiveProvider, ProviderHealth } from "./types";
 
+let providersInitialized = false;
+
 class AiProviderRegistry {
   private providers = new Map<AiProviderKind, IAiProvider>();
   private activeProvider: AiProviderKind | null = null;
+
+  private async ensureInitialized(): Promise<void> {
+    if (!providersInitialized) {
+      providersInitialized = true;
+      const { initializeAiProviders } = await import("./bootstrap");
+      await initializeAiProviders();
+    }
+  }
 
   register(kind: AiProviderKind, provider: IAiProvider): void {
     this.providers.set(kind, provider);
@@ -28,7 +38,8 @@ class AiProviderRegistry {
     this.activeProvider = kind;
   }
 
-  getActive(): IAiProvider {
+  async getActive(): Promise<IAiProvider> {
+    await this.ensureInitialized();
     if (!this.activeProvider) {
       const first = this.providers.values().next();
       if (!first.value) throw new Error("No AI providers registered");
@@ -39,11 +50,13 @@ class AiProviderRegistry {
     return provider;
   }
 
-  getActiveKind(): AiProviderKind | null {
+  async getActiveKind(): Promise<AiProviderKind | null> {
+    await this.ensureInitialized();
     return this.activeProvider;
   }
 
   async getActiveProviders(): Promise<ActiveProvider[]> {
+    await this.ensureInitialized();
     const results: ActiveProvider[] = [];
     for (const [kind, provider] of this.providers) {
       const health = await provider.healthCheck();

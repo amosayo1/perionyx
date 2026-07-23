@@ -1,0 +1,81 @@
+{
+  "nodes": [
+    {
+      "id": "center",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 200,
+      "text": "## Perionyx Platform\n\nEnterprise financial intelligence platform.\n67 modules. 338 data models.\nBuilt for CFOs, Treasurers, Controllers."
+    },
+    {
+      "id": "financial-engine",
+      "type": "text",
+      "x": -600,
+      "y": -200,
+      "width": 200,
+      "height": 150,
+      "text": "## Financial Engine\n\n- [[Ledger]]\n- [[Treasury]]\n- [[Transactions]]\n- [[FX]]"
+    },
+    {
+      "id": "workflow-engine",
+      "type": "text",
+      "x": 0,
+      "y": -450,
+      "width": 200,
+      "height": 150,
+      "text": "## Workflow Engine\n\n- [[Approvals]]\n- [[Business Rules]]\n- [[Scheduler]]"
+    },
+    {
+      "id": "ai-platform",
+      "type": "text",
+      "x": 600,
+      "y": -200,
+      "width": 200,
+      "height": 150,
+      "text": "## AI Platform\n\n- [[Agents]]\n- [[Intelligence]]\n- [[Decision Engine]]"
+    },
+    {
+      "id": "enterprise-ux",
+      "type": "text",
+      "x": 0,
+      "y": 400,
+      "width": 200,
+      "height": 150,
+      "text": "## Enterprise UX\n\n- [[Forms]]\n- [[Tables]]\n- [[Analytics]]\n- [[Mobile]]"
+    },
+    {
+      "id": "security-layer",
+      "type": "text",
+      "x": -500,
+      "y": 350,
+      "width": 200,
+      "height": 150,
+      "text": "## Security Layer\n\n- [[Auth]]\n- [[CSRF]]\n- [[Audit]]\n- [[Encryption]]"
+    },
+    {
+      "id": "infrastructure",
+      "type": "text",
+      "x": 500,
+      "y": 350,
+      "width": 200,
+      "height": 150,
+      "text": "## Infrastructure\n\n- [[Cache]]\n- [[Queue]]\n- [[Locks]]\n- [[Observability]]"
+    }
+  ],
+  "edges": [
+    { "id": "e-center-financial", "fromNode": "center", "fromSide": "left", "toNode": "financial-engine", "toSide": "right" },
+    { "id": "e-center-workflow", "fromNode": "center", "fromSide": "top", "toNode": "workflow-engine", "toSide": "bottom" },
+    { "id": "e-center-ai", "fromNode": "center", "fromSide": "right", "toNode": "ai-platform", "toSide": "left" },
+    { "id": "e-center-ux", "fromNode": "center", "fromSide": "bottom", "toNode": "enterprise-ux", "toSide": "top" },
+    { "id": "e-center-security", "fromNode": "center", "fromSide": "bottom", "toNode": "security-layer", "toSide": "right" },
+    { "id": "e-center-infra", "fromNode": "center", "fromSide": "bottom", "toNode": "infrastructure", "toSide": "left" },
+    { "id": "e-financial-workflow", "fromNode": "financial-engine", "fromSide": "top", "toNode": "workflow-engine", "toSide": "left" },
+    { "id": "e-workflow-ai", "fromNode": "workflow-engine", "fromSide": "right", "toNode": "ai-platform", "toSide": "top" },
+    { "id": "e-ai-ux", "fromNode": "ai-platform", "fromSide": "bottom", "toNode": "enterprise-ux", "toSide": "right" },
+    { "id": "e-security-infra", "fromNode": "security-layer", "fromSide": "right", "toNode": "infrastructure", "toSide": "left" },
+    { "id": "e-security-financial", "fromNode": "security-layer", "fromSide": "top", "toNode": "financial-engine", "toSide": "bottom" },
+    { "id": "e-infra-workflow", "fromNode": "infrastructure", "fromSide": "top", "toNode": "workflow-engine", "toSide": "right" }
+  ]
+}

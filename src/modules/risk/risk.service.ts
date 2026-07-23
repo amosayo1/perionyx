@@ -1,5 +1,6 @@
 import { prisma as defaultPrisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import { recordAudit } from "@/modules/audit";
 import type { NotificationService as NotificationServiceType } from "@/modules/notifications";
 import { NotificationService as DefaultNotificationService } from "@/modules/notifications";
@@ -257,16 +258,22 @@ export class RiskService {
   }
 
   async getRiskSummary(ctx: TenantContext) {
-    const openAlerts = await this.prisma.riskAlert.count({ where: { companyId: ctx.companyId, status: { in: ["OPEN", "ACKNOWLEDGED"] } } });
-    const criticalAlerts = await this.prisma.riskAlert.count({ where: { companyId: ctx.companyId, severity: "CRITICAL", status: { in: ["OPEN", "ACKNOWLEDGED"] } } });
-    const highAlerts = await this.prisma.riskAlert.count({ where: { companyId: ctx.companyId, severity: "HIGH", status: { in: ["OPEN", "ACKNOWLEDGED"] } } });
-    const openIncidents = await this.prisma.riskIncident.count({ where: { companyId: ctx.companyId, status: { in: ["OPEN", "ACKNOWLEDGED", "INVESTIGATING"] } } });
+    const cacheKey = tenantKey(ctx.companyId, CacheDomains.DASHBOARD, "risk");
+    return getCached(cacheKey, () => this._getRiskSummary(ctx), CacheTier.SHORT);
+  }
 
-    const categories = await this.prisma.riskAlert.groupBy({
-      by: ["category"],
-      where: { companyId: ctx.companyId, status: { in: ["OPEN", "ACKNOWLEDGED"] } },
-      _count: true,
-    });
+  private async _getRiskSummary(ctx: TenantContext) {
+    const [openAlerts, criticalAlerts, highAlerts, openIncidents, categories] = await Promise.all([
+      this.prisma.riskAlert.count({ where: { companyId: ctx.companyId, status: { in: ["OPEN", "ACKNOWLEDGED"] } } }),
+      this.prisma.riskAlert.count({ where: { companyId: ctx.companyId, severity: "CRITICAL", status: { in: ["OPEN", "ACKNOWLEDGED"] } } }),
+      this.prisma.riskAlert.count({ where: { companyId: ctx.companyId, severity: "HIGH", status: { in: ["OPEN", "ACKNOWLEDGED"] } } }),
+      this.prisma.riskIncident.count({ where: { companyId: ctx.companyId, status: { in: ["OPEN", "ACKNOWLEDGED", "INVESTIGATING"] } } }),
+      this.prisma.riskAlert.groupBy({
+        by: ["category"],
+        where: { companyId: ctx.companyId, status: { in: ["OPEN", "ACKNOWLEDGED"] } },
+        _count: true,
+      }),
+    ]);
 
     return {
       openAlerts, criticalAlerts, highAlerts, openIncidents,

@@ -31,9 +31,11 @@ export class RBACService {
     });
   }
 
-  async getAllRoles(companyId: string) {
+  async getAllRoles(companyId: string, opts?: { limit?: number; offset?: number }) {
     return this.prisma.role.findMany({
       where: { companyId },
+      take: opts?.limit ?? 100,
+      skip: opts?.offset ?? 0,
       include: {
         permissions: { include: { permission: true } },
         approvalAuthorities: true,
@@ -106,20 +108,23 @@ export class RBACService {
   }
 
   async getUserPermissions(userId: string, companyId: string) {
-    const roles = await this.prisma.userRole.findMany({
-      where: { userId, companyId },
-      include: { role: { include: { permissions: { include: { permission: true } } } } },
+    const rolePermissions = await this.prisma.rolePermission.findMany({
+      where: {
+        role: {
+          userRoles: { some: { userId, companyId } },
+          companyId,
+        },
+      },
+      include: { permission: true },
     });
 
     const perms = new Set<string>();
-    for (const ur of roles) {
-      for (const rp of ur.role.permissions) {
-        if (!rp.permission) continue;
-        const name = rp.permission.name;
-        const scope = rp.scopeType === 'GLOBAL' ? name : `${name}@${rp.scopeType}:${rp.scopeId ?? 'ANY'}`;
-        perms.add(scope);
-        perms.add(name);
-      }
+    for (const rp of rolePermissions) {
+      if (!rp.permission) continue;
+      const name = rp.permission.name;
+      const scope = rp.scopeType === 'GLOBAL' ? name : `${name}@${rp.scopeType}:${rp.scopeId ?? 'ANY'}`;
+      perms.add(scope);
+      perms.add(name);
     }
 
     return Array.from(perms);
@@ -131,33 +136,30 @@ export class RBACService {
     permissionName: string,
     scope?: PermissionScope,
   ) {
-    const roles = await this.prisma.userRole.findMany({
-      where: { userId, companyId },
-      include: { role: { include: { permissions: { include: { permission: true } } } } },
+    const matchingScope = scope ?? { type: 'GLOBAL' as PermissionScopeType, id: null };
+    const scopeId = matchingScope.id ?? null;
+
+    const count = await this.prisma.rolePermission.count({
+      where: {
+        permission: { name: permissionName },
+        role: {
+          userRoles: { some: { userId, companyId } },
+          companyId,
+        },
+        OR: [
+          { scopeType: 'GLOBAL' },
+          { scopeType: 'COMPANY' },
+          ...(matchingScope.type === 'WALLET'
+            ? [{ scopeType: 'WALLET' as PermissionScopeType, scopeId }]
+            : []),
+          ...(matchingScope.type === 'TRANSACTION_TYPE'
+            ? [{ scopeType: 'TRANSACTION_TYPE' as PermissionScopeType, scopeId }]
+            : []),
+        ],
+      },
     });
 
-    const normalizedScope = scope ?? { type: 'GLOBAL' as PermissionScopeType, id: null };
-
-    for (const ur of roles) {
-      for (const rp of ur.role.permissions) {
-        if (!rp.permission) continue;
-        if (rp.permission.name !== permissionName) continue;
-
-        if (rp.scopeType === 'GLOBAL') return true;
-        if (rp.scopeType === 'COMPANY') return true;
-        if (normalizedScope.type === rp.scopeType && (rp.scopeId === null || rp.scopeId === normalizedScope.id)) {
-          return true;
-        }
-        if (rp.scopeType === 'WALLET' && normalizedScope.type === 'WALLET' && rp.scopeId === normalizedScope.id) {
-          return true;
-        }
-        if (rp.scopeType === 'TRANSACTION_TYPE' && normalizedScope.type === 'TRANSACTION_TYPE' && rp.scopeId === normalizedScope.id) {
-          return true;
-        }
-      }
-    }
-
-    return false;
+    return count > 0;
   }
 
   async ensurePermission(
@@ -189,7 +191,7 @@ export class RBACService {
       if (membership?.role === "OWNER") return true;
     }
 
-    throw new ForbiddenError(`Missing permission: ${permissionName}`);
+    throw new ForbiddenError("You do not have permission to perform this action.");
   }
 }
 

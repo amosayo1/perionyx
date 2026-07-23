@@ -4,11 +4,13 @@ import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError } from "@/server/http/handle-route";
 import { generateAndPersistBriefing, getLatestBriefings } from "@/modules/briefings/briefings.service";
 import { captureAllSnapshots, getLatestSnapshot } from "@/modules/intelligence/snapshot.service";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function GET() {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'analytics.read');
 
     const briefings = await getLatestBriefings(ctx.companyId, { limit: 1 });
     const briefing = briefings[0] ?? null;

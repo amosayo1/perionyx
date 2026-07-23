@@ -14,6 +14,7 @@ import { handleAiProviderHealthCheck } from "@/modules/ai-provider/jobs/provider
 import { initializeConnectorPlatform } from "@/modules/connector-platform/bootstrap";
 import { initializeAiProviders } from "@/modules/ai-provider/bootstrap";
 import { handleWorkflowExecution, handleWorkflowScheduler, handleWorkflowTimeoutCheck, registerWorkflowCronJobs } from "@/modules/workflow";
+import { handleNotificationDelivery } from "./notification-delivery.job";
 
 export function registerAllJobs(): void {
   initializeConnectorPlatform();
@@ -24,6 +25,7 @@ export function registerAllJobs(): void {
     await handleWebhookRetry();
   });
   registerHandler("report-generate", handleReportGenerate);
+  registerHandler("notification-delivery", handleNotificationDelivery);
   registerHandler("briefing-generate", handleBriefingGenerate);
   registerHandler("briefing-daily-cron", handleBriefingDailyCron);
   registerHandler("intelligence-snapshot", handleIntelligenceSnapshot);
@@ -36,9 +38,6 @@ export function registerAllJobs(): void {
   registerHandler("connector-health", handleConnectorHealthCheck);
   registerHandler("notification-connector-deliver", handleNotificationConnectorDelivery);
   registerHandler("ai-provider-health", handleAiProviderHealthCheck);
-  scheduleCron("ai-provider-health-cron", "*/5 * * * *", async () => {
-    await handleAiProviderHealthCheck();
-  });
 
   registerHandler("workflow-execute", async (job) => {
     await handleWorkflowExecution(job);

@@ -2,6 +2,7 @@ import { PgBoss, fromPrisma } from "pg-boss";
 import type { SendOptions } from "pg-boss";
 import { prisma } from "@/server/db/prisma";
 import { logger } from "@/lib/logger";
+import type { ProgressUpdate } from "./job-types";
 
 type JobHandler = (job: { id: string; data: any }) => Promise<void>;
 
@@ -43,34 +44,41 @@ export async function startQueueWorker(): Promise<void> {
   if (started) return;
   started = true;
 
-  await ensureSchema();
+  try {
+    await ensureSchema();
 
-  const instance = await getBoss();
+    const instance = await getBoss();
 
-  const maintenanceOptions = {
-    retryLimit: DEFAULT_RETRY_LIMIT,
-    retryDelay: DEFAULT_RETRY_DELAY,
-    retryBackoff: true,
-    deleteAfterSeconds: 86400 * 7,
-    expireInSeconds: 900,
-  };
+    const maintenanceOptions = {
+      retryLimit: DEFAULT_RETRY_LIMIT,
+      retryDelay: DEFAULT_RETRY_DELAY,
+      retryBackoff: true,
+      deleteAfterSeconds: 86400 * 7,
+      expireInSeconds: 900,
+    };
 
-  await instance.start();
+    await instance.start();
 
-  for (const [name, handler] of handlers) {
-    await instance.createQueue(name, maintenanceOptions);
-    await instance.work(name, { batchSize: 5 }, async (jobs) => {
-      for (const job of jobs) {
-        try {
-          await handler({ id: job.id, data: job.data });
-          await instance.complete(name, job.id);
-        } catch (err) {
-          await instance.fail(name, job.id, err instanceof Error ? err : new Error(String(err)));
+    for (const [name, handler] of handlers) {
+      await instance.createQueue(name, maintenanceOptions);
+      await instance.work(name, { batchSize: 5 }, async (jobs) => {
+        for (const job of jobs) {
+          try {
+            await handler({ id: job.id, data: job.data });
+            await instance.complete(name, job.id);
+          } catch (err) {
+            const error = err instanceof Error ? err : new Error(String(err));
+            logger.error({ jobId: job.id, queueName: name, error: error.message }, "[Queue] Job failed");
+            await instance.fail(name, job.id, error);
+          }
         }
-      }
-    });
+      });
+    }
+    logger.info({ queueCount: handlers.size }, "[Queue] Worker started");
+  } catch (err) {
+    logger.warn(err, "[Queue] Failed to start queue worker — database may not be available");
+    started = false;
   }
-  logger.info({ queueCount: handlers.size }, "[Queue] Worker started");
 }
 
 export async function stopQueueWorker(): Promise<void> {
@@ -120,8 +128,12 @@ export async function scheduleCron(
   data?: any,
   options?: SendOptions,
 ): Promise<void> {
-  const instance = await getBoss();
-  await instance.schedule(name, cron, data, options);
+  try {
+    const instance = await getBoss();
+    await instance.schedule(name, cron, data, options);
+  } catch (err) {
+    logger.warn(err, "[Queue] Failed to schedule cron %s — database may not be available", name);
+  }
 }
 
 export async function unscheduleCron(name: string): Promise<void> {
@@ -133,12 +145,23 @@ export async function unscheduleCron(name: string): Promise<void> {
   }
 }
 
+export async function cancelJob(name: string, jobId: string): Promise<boolean> {
+  try {
+    const instance = await getBoss();
+    await instance.cancel(name, jobId);
+    return true;
+  } catch (err) {
+    logger.error(err, "[Queue] Failed to cancel job %s in %s", jobId, name);
+    return false;
+  }
+}
+
 export async function getQueueStats() {
   if (!boss) return null;
   try {
     const queues = await boss.getQueues();
     const stats = await Promise.all(
-      queues.slice(0, 20).map(async (q) => {
+      queues.slice(0, 50).map(async (q) => {
         const allStats = await boss!.getQueueStats(q.name);
         const s = allStats[0];
         if (!s) {
@@ -167,3 +190,29 @@ export function registerHandler(name: string, handler: JobHandler): void {
 export function isQueueRunning(): boolean {
   return started;
 }
+
+export async function getJobStatus(name: string, jobId: string) {
+  if (!boss) return null;
+  try {
+    const job = await boss.getJobById(name, jobId);
+    if (!job) return null;
+    return {
+      id: job.id,
+      name: job.name,
+      state: job.state,
+      data: job.data,
+      output: job.output,
+      createdOn: job.createdOn?.toISOString() ?? null,
+      startedOn: job.startedOn?.toISOString() ?? null,
+      completedOn: job.completedOn?.toISOString() ?? null,
+      retryCount: job.retryCount,
+      maxRetries: job.retryLimit,
+      error: null,
+    };
+  } catch (err) {
+    logger.error(err, "[Queue] Failed to get job status %s/%s", name, jobId);
+    return null;
+  }
+}
+
+export { fromPrisma };

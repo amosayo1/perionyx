@@ -9,7 +9,7 @@ export function OnboardingHeader() {
     <header className="flex items-center justify-between border-b border-perionyx-border bg-perionyx-bg-primary px-6 py-3">
       <div className="flex items-center gap-3">
         <div className="flex h-7 w-7 items-center justify-center rounded bg-perionyx-gold overflow-hidden">
-          <img src="/logo.PNG" alt="Perionyx" className="h-full w-full object-cover" />
+          <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
         </div>
         <span className="text-sm font-medium text-perionyx-text-primary">Perionyx</span>
       </div>

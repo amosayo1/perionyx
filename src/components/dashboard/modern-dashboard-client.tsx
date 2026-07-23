@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import Link from "next/link";
 import {
   LayoutDashboard, Wallet, Landmark, Activity, ArrowRight,
@@ -42,7 +42,7 @@ const TABS = [
   { id: "activity", label: "Activity", icon: Activity },
 ];
 
-function StatCard({ label, value, trend, icon: Icon, color, subtitle }: { label: string; value: string; trend?: "up" | "down" | null; icon: any; color: string; subtitle?: string }) {
+const StatCard = memo(function StatCard({ label, value, trend, icon: Icon, color, subtitle }: { label: string; value: string; trend?: "up" | "down" | null; icon: any; color: string; subtitle?: string }) {
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-zinc-900/60 via-zinc-900/30 to-black/40 p-5 transition-all duration-300 hover:border-white/[0.12] hover:shadow-xl hover:shadow-black/30 hover:-translate-y-0.5">
       <div className={`absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full opacity-[0.04] blur-3xl ${color}`} />
@@ -66,7 +66,7 @@ function StatCard({ label, value, trend, icon: Icon, color, subtitle }: { label:
       </div>
     </div>
   );
-}
+});
 
 function EmptyStateSection({ title, description }: { title: string; description: string }) {
   return (

@@ -12,6 +12,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 const ICON_MAP: Record<string, any> = {
   FileText, Banknote, TrendingUp, RefreshCw, Building2, Droplets, ShieldAlert, UserPlus,
@@ -53,7 +54,7 @@ export default function TemplatesPage() {
       });
       router.push(`/automation-studio/designer/${result.id}`);
     } catch (e: any) {
-      alert(e.message ?? "Failed to create workflow from template");
+      toast.error(e.message ?? "Failed to create workflow from template");
     } finally {
       setIsCreating(null);
     }
@@ -66,7 +67,7 @@ export default function TemplatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push("/automation-studio")}>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push("/automation-studio")} aria-label="Go back">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>

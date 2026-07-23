@@ -62,13 +62,13 @@ export function ApprovalBottlenecksWidget({ bottlenecks, isLoading = false }: Ap
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {bottlenecks.map((bottleneck) => {
+          {bottlenecks.map((bottleneck, idx) => {
             const isUrgent = bottleneck.oldestPendingHours > urgentThreshold;
             const progress = (bottleneck.approvalsReceived / bottleneck.approvalsNeeded) * 100;
 
             return (
               <div
-                key={bottleneck.id}
+                key={bottleneck.id ?? idx}
                 className={`p-4 rounded-lg border transition-all ${
                   isUrgent
                     ? 'border-red-600/30 bg-[rgba(139,0,0,0.1)]'

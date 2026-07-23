@@ -4,6 +4,7 @@ import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
 import { notificationService, NotificationService } from "@/modules/notifications";
 import { ValidationError } from "@/lib/errors/app-error";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import type { NormalizedLiquiditySummary, NormalizedErpPosition } from "@/modules/financial-mapping";
 import { FinancialTransactionManager, RowLockManager } from "@/lib/financial-transaction";
 
@@ -341,6 +342,11 @@ export class TreasuryService {
   }
 
   static async getLiquiditySummary(ctx: TenantContext): Promise<NormalizedLiquiditySummary[]> {
+    const cacheKey = tenantKey(ctx.companyId, CacheDomains.TREASURY, "liquidity");
+    return getCached(cacheKey, () => this._getLiquiditySummary(ctx), CacheTier.SHORT);
+  }
+
+  private static async _getLiquiditySummary(ctx: TenantContext): Promise<NormalizedLiquiditySummary[]> {
     const internalAccounts = await prisma.treasuryAccount.findMany({
       where: { companyId: ctx.companyId, isActive: true },
     });

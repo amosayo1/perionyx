@@ -1,10 +1,9 @@
 allowBuilds:
+  '@parcel/watcher': true
   '@sentry/cli': true
+  '@swc/core': true
   esbuild: true
   prisma: true
-onlyBuiltDependencies:
-  - '@prisma/engines'
-  - esbuild
-  - prisma
-  - sharp
-  - unrs-resolver
+  puppeteer: set this to true or false
+  sharp: set this to true or false
+onlyBuiltDependencies: '[puppeteer]'

@@ -1,4 +1,4 @@
-export { isSandboxCompany, clearSandboxCache, SANDBOX_EMAIL, SANDBOX_PASSWORD, SANDBOX_COMPANY_SLUG, SANDBOX_COMPANY_NAME } from "./sandbox-context";
+export { isSandboxCompany, clearSandboxCache, SANDBOX_EMAIL, deriveSandboxPassword, SANDBOX_COMPANY_SLUG, SANDBOX_COMPANY_NAME } from "./sandbox-context";
 export { ensureSandboxTenant } from "./sandbox-seed";
 export { generateEnterpriseData } from "./sandbox-enterprise-seed";
 export { requireNonSandbox } from "./sandbox-guard";

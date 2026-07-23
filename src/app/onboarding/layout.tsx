@@ -1,6 +1,6 @@
 import { auth } from "@/server/auth/auth";
-import { readJsonIfOk, serverFetch } from "@/lib/server-fetch";
 import { redirect } from "next/navigation";
+import { prisma } from "@/server/db/prisma";
 import { OnboardingHeader } from "./onboarding-header";
 
 export default async function OnboardingLayout({ children }: { children: React.ReactNode }) {
@@ -10,9 +10,9 @@ export default async function OnboardingLayout({ children }: { children: React.R
     redirect("/sign-in");
   }
 
-  const res = await serverFetch("/api/v1/companies");
-  const body = await readJsonIfOk<{ items: unknown[] }>(res);
-  const membershipCount = body?.items?.length ?? 0;
+  const membershipCount = await prisma.companyMembership.count({
+    where: { userId: session.user.id },
+  });
 
   if (membershipCount > 0) {
     redirect("/dashboard");

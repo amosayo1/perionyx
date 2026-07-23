@@ -32,6 +32,7 @@ export function register() {
             scheduleCron("snapshot-cron", "0 */3 * * *", {}, {}),
             scheduleCron("alert-engine-cron", "*/30 * * * *", {}, {}),
             scheduleCron("anomaly-detection-cron", "0 */4 * * *", {}, {}),
+            scheduleCron("ai-provider-health", "*/5 * * * *", {}, {}),
           ]),
         ),
       );

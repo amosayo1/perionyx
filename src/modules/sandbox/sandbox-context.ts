@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { prisma } from "@/server/db/prisma";
 
 const sandboxCache = new Map<string, boolean>();
@@ -21,6 +22,21 @@ export function clearSandboxCache(companyId: string): void {
 }
 
 export const SANDBOX_EMAIL = "sandbox-guest@perionyx.dev";
-export const SANDBOX_PASSWORD = "sandbox-guest-pw";
+
+/**
+ * Derive a deterministic sandbox password from server secret + email.
+ * Both creation and login use the same derivation, so no plaintext is stored or exported.
+ */
+export function deriveSandboxPassword(): string {
+  const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "sandbox-fallback";
+  const hmac = crypto.createHmac("sha256", secret).update(SANDBOX_EMAIL).digest("hex");
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
+  let password = "Sb-";
+  for (let i = 0; i < 21; i++) {
+    password += chars[parseInt(hmac.slice(i * 2, i * 2 + 2), 16) % chars.length];
+  }
+  return password;
+}
+
 export const SANDBOX_COMPANY_SLUG = "atlas-manufacturing-group";
 export const SANDBOX_COMPANY_NAME = "Atlas Manufacturing Group";

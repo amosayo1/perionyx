@@ -4,6 +4,7 @@ import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError } from "@/server/http/handle-route";
 import { resetSandbox } from "@/modules/sandbox/sandbox-reset";
 import { rateLimit, rateLimitKey } from "@/server/security/rate-limit";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function POST(request: Request) {
   try {
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
 
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.settings');
 
     const result = await resetSandbox(ctx.companyId);
 

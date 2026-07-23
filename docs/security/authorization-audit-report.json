@@ -1,0 +1,1582 @@
+[
+  {
+    "path": "/api/health",
+    "method": "GET",
+    "classification": "PUBLIC",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/metrics",
+    "method": "GET",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "admin.metrics"
+  },
+  {
+    "path": "/api/demo/bootstrap",
+    "method": "POST",
+    "classification": "PUBLIC",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/installer",
+    "method": "POST",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/auth/[...nextauth]",
+    "method": "GET,POST",
+    "classification": "PUBLIC",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/auth/register",
+    "method": "POST",
+    "classification": "PUBLIC",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": true,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/auth/sandbox-login",
+    "method": "POST",
+    "classification": "PUBLIC",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/push/register",
+    "method": "POST",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "notifications.push"
+  },
+  {
+    "path": "/api/push/send",
+    "method": "POST",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "notifications.push"
+  },
+  {
+    "path": "/api/push/unregister",
+    "method": "POST",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "notifications.push"
+  },
+  {
+    "path": "/api/v1/tick",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/v1/plaid/accounts",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "plaid.accounts.read"
+  },
+  {
+    "path": "/api/v1/plaid/sync",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "plaid.sync"
+  },
+  {
+    "path": "/api/v1/plaid/connect-new",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "plaid.connect"
+  },
+  {
+    "path": "/api/v1/plaid/unlink",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "plaid.unlink"
+  },
+  {
+    "path": "/api/v1/plaid/exchange",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "plaid.connect"
+  },
+  {
+    "path": "/api/v1/plaid/link-token",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "plaid.connect"
+  },
+  {
+    "path": "/api/v1/admin/ai-providers",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.ai_providers"
+  },
+  {
+    "path": "/api/v1/admin/deliveries",
+    "method": "GET",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "webhooks.manage"
+  },
+  {
+    "path": "/api/v1/admin/deliveries/[id]/retry",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "webhooks.manage"
+  },
+  {
+    "path": "/api/v1/admin/invites",
+    "method": "GET,POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "admin.manage_users"
+  },
+  {
+    "path": "/api/v1/admin/webhooks",
+    "method": "GET,POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "webhooks.manage"
+  },
+  {
+    "path": "/api/v1/admin/approval-analytics",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.approval_analytics"
+  },
+  {
+    "path": "/api/v1/admin/approval-authorities",
+    "method": "GET,POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_authorities"
+  },
+  {
+    "path": "/api/v1/admin/approval-rules/[id]/audit",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_authorities"
+  },
+  {
+    "path": "/api/v1/admin/approval-rules/[id]",
+    "method": "GET,PUT,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_authorities"
+  },
+  {
+    "path": "/api/v1/admin/approval-rules/[id]/toggle",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_authorities"
+  },
+  {
+    "path": "/api/v1/admin/approval-rules",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_authorities"
+  },
+  {
+    "path": "/api/v1/admin/approval-rules/test",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "admin.manage_authorities"
+  },
+  {
+    "path": "/api/v1/admin/connectors",
+    "method": "GET,POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "connectors.manage"
+  },
+  {
+    "path": "/api/v1/admin/identity",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "admin.manage_identity"
+  },
+  {
+    "path": "/api/v1/admin/identity/[id]",
+    "method": "GET,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_identity"
+  },
+  {
+    "path": "/api/v1/admin/identity/[id]/sync",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_identity"
+  },
+  {
+    "path": "/api/v1/admin/identity/[id]/test",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_identity"
+  },
+  {
+    "path": "/api/v1/admin/licenses",
+    "method": "GET,POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "admin.manage_licenses"
+  },
+  {
+    "path": "/api/v1/admin/licenses/[licenseId]",
+    "method": "PATCH",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_licenses"
+  },
+  {
+    "path": "/api/v1/admin/pending-approvals",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.approve"
+  },
+  {
+    "path": "/api/v1/admin/permissions",
+    "method": "GET",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/v1/admin/roles",
+    "method": "GET,POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "admin.manage_roles"
+  },
+  {
+    "path": "/api/v1/admin/settlements/[id]/retry",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.manage"
+  },
+  {
+    "path": "/api/v1/admin/users",
+    "method": "GET",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_users"
+  },
+  {
+    "path": "/api/v1/admin/users/[userId]/assign-role",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_users"
+  },
+  {
+    "path": "/api/v1/api-keys",
+    "method": "GET,POST,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "api_keys.manage"
+  },
+  {
+    "path": "/api/v1/api-keys/[keyId]/rotate",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "api_keys.manage"
+  },
+  {
+    "path": "/api/v1/audit-logs",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "audit_logs.read"
+  },
+  {
+    "path": "/api/v1/cache/admin",
+    "method": "GET,POST",
+    "classification": "NEITHER",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/v1/calendar",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "calendar.manage"
+  },
+  {
+    "path": "/api/v1/calendar/generate",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "calendar.manage"
+  },
+  {
+    "path": "/api/v1/calendar/[eventId]/complete",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "calendar.manage"
+  },
+  {
+    "path": "/api/v1/companies",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": true,
+    "suggestedPermission": "companies.create"
+  },
+  {
+    "path": "/api/v1/companies/[id]",
+    "method": "GET,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "companies.manage"
+  },
+  {
+    "path": "/api/v1/connectors/health",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.health"
+  },
+  {
+    "path": "/api/v1/connectors/list",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.list"
+  },
+  {
+    "path": "/api/v1/connectors/events",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.manage"
+  },
+  {
+    "path": "/api/v1/connectors/[connectorId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.list"
+  },
+  {
+    "path": "/api/v1/connectors/runs",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.manage"
+  },
+  {
+    "path": "/api/v1/connectors/runs/[runId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.list"
+  },
+  {
+    "path": "/api/v1/connectors/runs/[runId]/complete",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.manage"
+  },
+  {
+    "path": "/api/v1/connectors/runs/[runId]/fail",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "connectors.manage"
+  },
+  {
+    "path": "/api/v1/copilot/conversations",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "copilot.conversations"
+  },
+  {
+    "path": "/api/v1/copilot/conversations/[id]",
+    "method": "GET,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "copilot.conversations"
+  },
+  {
+    "path": "/api/v1/copilot/conversations/[id]/messages",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "copilot.conversations"
+  },
+  {
+    "path": "/api/v1/copilot/investigate",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "copilot.investigate"
+  },
+  {
+    "path": "/api/v1/currencies/convert",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "currencies.convert"
+  },
+  {
+    "path": "/api/v1/currencies/rates",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "currencies.manage"
+  },
+  {
+    "path": "/api/v1/demo-requests",
+    "method": "POST",
+    "classification": "PUBLIC",
+    "hasAuth": false,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": true,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/v1/enterprise/health",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "enterprise.health"
+  },
+  {
+    "path": "/api/v1/enterprise/search",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "enterprise.search"
+  },
+  {
+    "path": "/api/v1/enterprise/versions",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "enterprise.versions"
+  },
+  {
+    "path": "/api/v1/enterprise/versions/diff",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "enterprise.versions"
+  },
+  {
+    "path": "/api/v1/export",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "export.data"
+  },
+  {
+    "path": "/api/v1/fx/rates",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "fx.rates"
+  },
+  {
+    "path": "/api/v1/fx/status",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "fx.status"
+  },
+  {
+    "path": "/api/v1/fx/sync",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.manage_roles"
+  },
+  {
+    "path": "/api/v1/iam/audit-events",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "iam.audit"
+  },
+  {
+    "path": "/api/v1/iam/roles",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "iam.roles.manage"
+  },
+  {
+    "path": "/api/v1/iam/roles/[roleId]",
+    "method": "GET,PUT,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "iam.roles.manage"
+  },
+  {
+    "path": "/api/v1/integrations/connectors",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "integrations.connectors.manage"
+  },
+  {
+    "path": "/api/v1/integrations/connectors/[id]",
+    "method": "GET,PATCH,DELETE,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "integrations.connectors.manage"
+  },
+  {
+    "path": "/api/v1/integrations/connectors/[id]/sync",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "integrations.connectors.manage"
+  },
+  {
+    "path": "/api/v1/integrations/connectors/[id]/health",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "integrations.connectors.list"
+  },
+  {
+    "path": "/api/v1/integrations/discover",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "integrations.discover"
+  },
+  {
+    "path": "/api/v1/integrations/events",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "integrations.events"
+  },
+  {
+    "path": "/api/v1/invites/[token]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/v1/invites/[token]/accept",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/v1/ledger",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "ledger.read"
+  },
+  {
+    "path": "/api/v1/ledger/[transactionId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "ledger.read"
+  },
+  {
+    "path": "/api/v1/notifications",
+    "method": "GET,PATCH",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "notifications.read"
+  },
+  {
+    "path": "/api/v1/notifications/channels",
+    "method": "GET,POST,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "notifications.channels.manage"
+  },
+  {
+    "path": "/api/v1/notifications/preferences",
+    "method": "GET,POST,PATCH",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "notifications.preferences"
+  },
+  {
+    "path": "/api/v1/policies",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "policies.manage"
+  },
+  {
+    "path": "/api/v1/policies/[policyId]",
+    "method": "GET,PUT,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "policies.manage"
+  },
+  {
+    "path": "/api/v1/policies/test",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "policies.test"
+  },
+  {
+    "path": "/api/v1/policies/[policyId]/test",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "policies.test"
+  },
+  {
+    "path": "/api/v1/policies/test-results",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "policies.test"
+  },
+  {
+    "path": "/api/v1/queue/jobs",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/v1/queue/stats",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/v1/rbac/my-permissions",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/v1/realtime/stats",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/v1/realtime/health",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": false,
+    "hasValidation": false,
+    "suggestedPermission": "admin.system"
+  },
+  {
+    "path": "/api/v1/realtime/subscribe",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": null
+  },
+  {
+    "path": "/api/v1/reconciliation/exceptions",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "reconciliation.manage"
+  },
+  {
+    "path": "/api/v1/reconciliation/health",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "reconciliation.read"
+  },
+  {
+    "path": "/api/v1/reconciliation/reports",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "reconciliation.read"
+  },
+  {
+    "path": "/api/v1/reconciliation/reports/[reportId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "reconciliation.read"
+  },
+  {
+    "path": "/api/v1/reconciliation/runs",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "reconciliation.manage"
+  },
+  {
+    "path": "/api/v1/reconciliation/runs/[runId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "reconciliation.read"
+  },
+  {
+    "path": "/api/v1/reports/generate",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "reports.generate"
+  },
+  {
+    "path": "/api/v1/risk/summary",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.read"
+  },
+  {
+    "path": "/api/v1/risk/incidents",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.incidents.read"
+  },
+  {
+    "path": "/api/v1/risk/incidents/[incidentId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.incidents.read"
+  },
+  {
+    "path": "/api/v1/risk/alerts",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.alerts.read"
+  },
+  {
+    "path": "/api/v1/risk/alerts/[alertId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.alerts.read"
+  },
+  {
+    "path": "/api/v1/risk/alerts/generate",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.alerts.manage"
+  },
+  {
+    "path": "/api/v1/risk/alerts/[alertId]/acknowledge",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.alerts.manage"
+  },
+  {
+    "path": "/api/v1/risk/alerts/[alertId]/resolve",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "risk.alerts.manage"
+  },
+  {
+    "path": "/api/v1/sandbox/scenario",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "sandbox.manage"
+  },
+  {
+    "path": "/api/v1/sandbox/reset",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "sandbox.manage"
+  },
+  {
+    "path": "/api/v1/sandbox/intelligence",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "sandbox.manage"
+  },
+  {
+    "path": "/api/v1/transactions",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.read"
+  },
+  {
+    "path": "/api/v1/transactions/[id]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.read"
+  },
+  {
+    "path": "/api/v1/transactions/transfer",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "transactions.transfer"
+  },
+  {
+    "path": "/api/v1/transactions/credit",
+    "method": "POST",
+    "classification": "AUTH_PERM",
+    "hasAuth": true,
+    "hasPermissionCheck": true,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "transactions.credit"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/approve",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.approve"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/reject",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.approve"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/approvals/approve",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.approve"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/approvals/reject",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "transactions.approve"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/request-approval",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.approve"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/matching-rules",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "transactions.read"
+  },
+  {
+    "path": "/api/v1/transactions/[id]/thread",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "transactions.thread"
+  },
+  {
+    "path": "/api/v1/treasury/accounts",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "treasury.accounts.manage"
+  },
+  {
+    "path": "/api/v1/treasury/accounts/[accountId]",
+    "method": "GET,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "treasury.accounts.manage"
+  },
+  {
+    "path": "/api/v1/treasury/accounts/[accountId]/history",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "treasury.accounts.read"
+  },
+  {
+    "path": "/api/v1/treasury/accounts/[accountId]/controls",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "treasury.accounts.manage"
+  },
+  {
+    "path": "/api/v1/treasury/accounts/[accountId]/deposit",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "treasury.transactions"
+  },
+  {
+    "path": "/api/v1/treasury/external/accounts",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "treasury.accounts.read"
+  },
+  {
+    "path": "/api/v1/treasury/transfers",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "treasury.transactions"
+  },
+  {
+    "path": "/api/v1/wallets",
+    "method": "GET,POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "wallets.manage"
+  },
+  {
+    "path": "/api/v1/wallets/[walletId]",
+    "method": "GET,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "wallets.manage"
+  },
+  {
+    "path": "/api/v1/webhooks",
+    "method": "GET,POST,PATCH,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "webhooks.manage"
+  },
+  {
+    "path": "/api/v1/webhooks/[webhookId]",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "webhooks.manage"
+  },
+  {
+    "path": "/api/v1/webhooks/retry",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "webhooks.manage"
+  },
+  {
+    "path": "/api/automation-studio/ai",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.ai"
+  },
+  {
+    "path": "/api/automation-studio/approval-matrix",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.approval_matrix"
+  },
+  {
+    "path": "/api/automation-studio/approval-matrix/[id]",
+    "method": "PUT,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.approval_matrix"
+  },
+  {
+    "path": "/api/automation-studio/business-rules",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.business_rules"
+  },
+  {
+    "path": "/api/automation-studio/business-rules/[id]",
+    "method": "PUT,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.business_rules"
+  },
+  {
+    "path": "/api/automation-studio/schedules",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.schedules"
+  },
+  {
+    "path": "/api/automation-studio/schedules/[id]",
+    "method": "PUT,DELETE",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": true,
+    "suggestedPermission": "automation_studio.schedules"
+  },
+  {
+    "path": "/api/automation-studio/setup",
+    "method": "POST",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "automation_studio.setup"
+  },
+  {
+    "path": "/api/intelligence/summary",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/brief",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/recommendations",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/signals",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/health",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/attention",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/insights",
+    "method": "GET",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.read"
+  },
+  {
+    "path": "/api/intelligence/insights/[id]",
+    "method": "PATCH",
+    "classification": "AUTH_ONLY",
+    "hasAuth": true,
+    "hasPermissionCheck": false,
+    "hasTenantIsolation": true,
+    "hasValidation": false,
+    "suggestedPermission": "intelligence.manage"
+  }
+]

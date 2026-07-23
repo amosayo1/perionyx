@@ -5,6 +5,7 @@ import { AuditAction } from "@/domain/constants/audit-actions";
 import { ValidationError } from "@/lib/errors/app-error";
 import { createFxProvider } from "./fx.provider";
 import { logger } from "@/lib/logger";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import type { FxSyncResult, FxSyncStatus } from "./fx.types";
 
 const SUPPORTED_CURRENCIES = [
@@ -124,6 +125,11 @@ export class FxService {
   }
 
   static async getLatestRates(companyId: string) {
+    const cacheKey = tenantKey(companyId, CacheDomains.METADATA, "fx", "rates");
+    return getCached(cacheKey, () => this._getLatestRates(companyId), CacheTier.LONG);
+  }
+
+  static async _getLatestRates(companyId: string) {
     const rows = await prisma.exchangeRate.findMany({
       where: { companyId, validTo: null },
       orderBy: [{ baseCurrency: "asc" }, { quoteCurrency: "asc" }],

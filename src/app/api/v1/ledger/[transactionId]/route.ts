@@ -4,6 +4,7 @@ import { requireTenantContext } from "@/server/context/tenant-context";
 import { getLedgerForTransactionForTenant } from "@/modules/ledger";
 import { decimalToString } from "@/server/http/money";
 import { handleRouteError } from "@/server/http/handle-route";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 type RouteContext = { params: Promise<{ transactionId: string }> };
 
@@ -15,6 +16,7 @@ export async function GET(_request: Request, context: RouteContext) {
       session?.user?.activeCompanyId,
       session?.user?.companyRole,
     );
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'treasury.read');
     const { transactionId } = await context.params;
     const { transaction, entries } = await getLedgerForTransactionForTenant(
       ctx,

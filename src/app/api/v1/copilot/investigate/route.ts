@@ -4,11 +4,13 @@ import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
 import { traceTransactionLifecycle } from "@/modules/copilot/timeline-engine";
 import { prisma } from "@/server/db/prisma";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function POST(request: Request) {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'analytics.read');
     const body = await parseJsonBody<{ transactionId: string }>(request);
 
     if (!body.transactionId?.trim()) {

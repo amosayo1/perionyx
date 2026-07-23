@@ -1,4 +1,5 @@
 export { WorkflowEngine } from "./engine";
+export type { ApprovalConfigEnricher, ApprovalHistoryRecorder } from "./engine";
 export { WorkflowStateMachine } from "./state-machine";
 export { stepRegistry } from "./step-registry";
 export { ApprovalStepExecutor } from "./steps/approval-step";

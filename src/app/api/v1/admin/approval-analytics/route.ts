@@ -3,6 +3,7 @@ import { auth } from '@/server/auth/auth';
 import { requireTenantContext } from '@/server/context/tenant-context';
 import { ApprovalAnalyticsService } from '@/modules/rbac/approval-analytics.service';
 import { handleRouteError } from '@/server/http/handle-route';
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 /**
  * GET /api/v1/admin/approval-analytics

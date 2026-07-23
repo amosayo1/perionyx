@@ -1,7 +1,10 @@
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
-import { ConflictError } from "@/lib/errors/app-error";
+import { ConflictError, ForbiddenError } from "@/lib/errors/app-error";
+import { emitRealtimeEvent } from "@/server/realtime";
+import { RealtimeEvents, RealtimeChannels } from "@/server/realtime";
+import { WorkflowVersionSnapshotService } from "./version-snapshot.service";
 import { WorkflowStateMachine } from "./state-machine";
 import { stepRegistry } from "./step-registry";
 import { ApprovalStepExecutor } from "./steps/approval-step";
@@ -19,6 +22,26 @@ import type {
   WorkflowEventType, StepResult,
 } from "./types";
 
+export interface ApprovalConfigEnricher {
+  (
+    ctx: TenantContext,
+    stepDef: StepDefinition,
+    instanceInput?: Record<string, unknown>,
+  ): Promise<Record<string, unknown> | null>;
+}
+
+export interface ApprovalHistoryRecorder {
+  (
+    instanceId: string,
+    stepId: string,
+    approverId: string,
+    approverRole: string,
+    action: "approved" | "rejected" | "delegated" | "escalated" | "timed_out",
+    comment?: string | null,
+    delegatedTo?: string | null,
+  ): Promise<void>;
+}
+
 export class WorkflowEngine {
   private static sharedInstance: WorkflowEngine | null = null;
 
@@ -29,7 +52,17 @@ export class WorkflowEngine {
     return WorkflowEngine.sharedInstance;
   }
 
+  private approvalConfigEnricher: ApprovalConfigEnricher | null = null;
+  private approvalHistoryRecorder: ApprovalHistoryRecorder | null = null;
   private stepInitialized = false;
+
+  setApprovalConfigEnricher(enricher: ApprovalConfigEnricher): void {
+    this.approvalConfigEnricher = enricher;
+  }
+
+  setApprovalHistoryRecorder(recorder: ApprovalHistoryRecorder): void {
+    this.approvalHistoryRecorder = recorder;
+  }
 
   private ensureSteps(): void {
     if (this.stepInitialized) return;
@@ -123,6 +156,8 @@ export class WorkflowEngine {
     });
     if (!def) throw new Error("Workflow definition not found");
 
+    await WorkflowVersionSnapshotService.captureSnapshot(ctx, definitionId);
+
     const result = await prisma.workflowDefinition.updateMany({
       where: { id: definitionId, version: def.version },
       data: {
@@ -169,6 +204,22 @@ export class WorkflowEngine {
     if (def.status !== "ACTIVE") throw new Error("Workflow definition is not active");
 
     const steps = def.steps as any as StepDefinition[];
+
+    const enrichedSteps = await Promise.all(
+      steps.map(async (step) => {
+        if (step.type === "approval" && this.approvalConfigEnricher) {
+          const enrichedConfig = await this.approvalConfigEnricher(ctx, step, input);
+          if (enrichedConfig) {
+            return {
+              ...step,
+              config: { ...step.config, ...enrichedConfig },
+            };
+          }
+        }
+        return step;
+      }),
+    );
+
     const instance = await prisma.workflowInstance.create({
       data: {
         companyId: ctx.companyId,
@@ -184,7 +235,7 @@ export class WorkflowEngine {
       },
     });
 
-    const stepInstances = steps.map((step) => ({
+    const stepInstances = enrichedSteps.map((step) => ({
       instanceId: instance.id,
       companyId: ctx.companyId,
       stepId: step.id,
@@ -195,8 +246,8 @@ export class WorkflowEngine {
       dependsOn: step.dependsOn ?? [],
     }));
 
-    for (const si of stepInstances) {
-      await prisma.workflowStepInstance.create({ data: si as any });
+    if (stepInstances.length > 0) {
+      await prisma.workflowStepInstance.createMany({ data: stepInstances as any });
     }
 
     await this.recordEvent(instance.id, null, "CREATED", "Workflow created", ctx.userId, { definitionName: def.name });
@@ -598,6 +649,40 @@ export class WorkflowEngine {
         timestamp: new Date(),
       },
     });
+
+    // Emit real-time event for connected clients
+    const eventMap: Record<string, string> = {
+      CREATED: RealtimeEvents.WORKFLOW_CREATED,
+      STARTED: RealtimeEvents.WORKFLOW_STARTED,
+      COMPLETED: RealtimeEvents.WORKFLOW_COMPLETED,
+      FAILED: RealtimeEvents.WORKFLOW_FAILED,
+      CANCELLED: RealtimeEvents.WORKFLOW_CANCELLED,
+      PAUSED: RealtimeEvents.WORKFLOW_PAUSED,
+      RESUMED: RealtimeEvents.WORKFLOW_RESUMED,
+      STEP_STARTED: RealtimeEvents.WORKFLOW_STEP_STARTED,
+      STEP_COMPLETED: RealtimeEvents.WORKFLOW_STEP_COMPLETED,
+      STEP_FAILED: RealtimeEvents.WORKFLOW_STEP_FAILED,
+      APPROVAL_REQUESTED: RealtimeEvents.APPROVAL_REQUESTED,
+      APPROVAL_GRANTED: RealtimeEvents.APPROVAL_GRANTED,
+      APPROVAL_REJECTED: RealtimeEvents.APPROVAL_REJECTED,
+    };
+
+    const realtimeEvent = eventMap[eventType];
+    if (realtimeEvent) {
+      const channel =
+        eventType.startsWith("APPROVAL")
+          ? RealtimeChannels.APPROVAL
+          : RealtimeChannels.WORKFLOW;
+
+      emitRealtimeEvent(instance.companyId, channel, realtimeEvent, {
+        instanceId,
+        stepId,
+        eventType,
+        label,
+        metadata: metadata ?? null,
+        timestamp: new Date().toISOString(),
+      });
+    }
   }
 
   private getReadySteps(steps: StepDefinition[], completedStepIds: string[]): StepDefinition[] {
@@ -626,12 +711,48 @@ export class WorkflowEngine {
     const step = instance.steps.find((s) => s.stepId === stepId);
     if (!step) throw new Error("Step not found");
 
+    // ── P0-2: Authorization check ────────────────────────────────────────
+    // Only steps in WAITING_APPROVAL can be responded to.
+    if (step.status !== "WAITING_APPROVAL") {
+      throw new ForbiddenError(
+        `Step "${stepId}" is not currently awaiting approval.`,
+      );
+    }
+
+    // If the step specifies required approver roles, the caller must hold
+    // one of those roles.  An empty requiredApprovers list means no role
+    // restriction (backward-compatible with pre-fix workflows).
+    const stepConfig = (step.config as Record<string, unknown>) ?? {};
+    const requiredRoles: string[] =
+      (stepConfig.requiredApprovers as string[]) ?? [];
+
+    if (
+      requiredRoles.length > 0 &&
+      !requiredRoles.includes(ctx.role)
+    ) {
+      throw new ForbiddenError(
+        "You are not authorized to approve this step.",
+      );
+    }
+
     if (approved) {
       await prisma.workflowStepInstance.update({
         where: { id: step.id },
         data: { status: "COMPLETED", completedAt: new Date(), output: { approved: true, approvedBy: ctx.userId, response } as any },
       });
       await this.recordEvent(instanceId, stepId, "APPROVAL_GRANTED", `Approval granted by ${ctx.userId}`, ctx.userId);
+
+      if (this.approvalHistoryRecorder) {
+        await this.approvalHistoryRecorder(
+          instanceId,
+          stepId,
+          ctx.userId,
+          ctx.role ?? "unknown",
+          "approved",
+          response ?? null,
+          null,
+        );
+      }
 
       const completedSteps = instance.steps.filter((s) => s.status === "COMPLETED" || s.status === "SKIPPED");
       const allSteps = await prisma.workflowStepInstance.findMany({
@@ -666,6 +787,18 @@ export class WorkflowEngine {
         data: { status: "FAILED", failedAt: new Date(), lastError: response ?? "Rejected" },
       });
       await this.recordEvent(instanceId, stepId, "APPROVAL_REJECTED", `Approval rejected by ${ctx.userId}: ${response ?? "No reason"}`, ctx.userId);
+
+      if (this.approvalHistoryRecorder) {
+        await this.approvalHistoryRecorder(
+          instanceId,
+          stepId,
+          ctx.userId,
+          ctx.role ?? "unknown",
+          "rejected",
+          response ?? null,
+          null,
+        );
+      }
     }
 
     return { instanceId, stepId, approved };

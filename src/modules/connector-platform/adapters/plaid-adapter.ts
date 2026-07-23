@@ -462,6 +462,6 @@ export class PlaidConnector implements IConnector {
     const cfg = this.config.config as Record<string, unknown> | undefined;
     const encrypted = cfg?.accessToken as string | undefined;
     if (!encrypted) return null;
-    return decrypt(encrypted);
+    try { return decrypt(encrypted); } catch { return null; }
   }
 }

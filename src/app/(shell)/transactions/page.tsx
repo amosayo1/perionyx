@@ -21,8 +21,10 @@ import { Select } from "@/components/ui/select";
 import { getErrorMessage } from "@/lib/client-api";
 import { formatDateTime, formatMoney } from "@/lib/format";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { DataTable, FilterBuilder, InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table";
-import type { Column, FilterDef, FilterValue, Density } from "@/components/data-table";
+import { EnterpriseTable } from "@/components/enterprise/table";
+import { FilterBuilder } from "@/components/data-table/filter-builder";
+import { InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table/inspector-panel";
+import type { Column, FilterDef, FilterValue, Density } from "@/components/enterprise/table";
 
 type Wallet = { id: string; name: string; currency: string; kind?: string };
 
@@ -311,8 +313,8 @@ export default function TransactionsPage() {
       id: "createdAt",
       header: "When",
       sortKey: "createdAt",
-      accessor: (t) => <span className="whitespace-nowrap text-zinc-400">{formatDateTime(t.createdAt)}</span>,
-      className: "hidden sm:table-cell",
+      cellConfig: { type: "date", dateStyle: "medium", timeStyle: "short" },
+      accessor: (t) => t.createdAt,
     },
     {
       id: "id",
@@ -350,11 +352,8 @@ export default function TransactionsPage() {
       id: "amount",
       header: "Amount",
       sortKey: "amount",
-      className: "text-right",
-      headerClassName: "text-right",
-      accessor: (t) => (
-        <span className="tabular-nums font-medium text-white">{formatMoney(t.amount, t.currency)}</span>
-      ),
+      cellConfig: { type: "currency", currency: "USD", negativeRed: true },
+      accessor: (t) => t.amount,
     },
   ], []);
 
@@ -467,7 +466,7 @@ export default function TransactionsPage() {
       </Card>
 
       {/* Data table */}
-      <DataTable
+      <EnterpriseTable
         data={filtered}
         columns={columns}
         keyExtractor={(t) => t.id}
@@ -485,8 +484,10 @@ export default function TransactionsPage() {
         onHiddenColumnsChange={setHiddenColumns}
         selectedIds={selectedIds}
         onSelectedIdsChange={setSelectedIds}
-        onCopyId={(id) => navigator.clipboard.writeText(id)}
-        exportFilename={`transactions-${new Date().toISOString().split("T")[0]}.csv`}
+        exportable
+        exportFormats={["csv", "xls"]}
+        exportFilename={`transactions-${new Date().toISOString().split("T")[0]}`}
+        pageSize={50}
       />
 
       {/* Inspector panel */}

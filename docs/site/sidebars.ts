@@ -1,0 +1,175 @@
+import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+
+const sidebars: SidebarsConfig = {
+  mainSidebar: [
+    'intro',
+    {
+      type: 'category',
+      label: 'Executive Overview',
+      items: ['executive-overview/index'],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Architecture',
+      items: [
+        'architecture/system-overview',
+        'architecture/technology-stack',
+        'architecture/domain-architecture',
+        'architecture/financial-engine',
+        'architecture/treasury-platform',
+        'architecture/reporting-platform',
+        'architecture/integration-platform',
+        'architecture/intelligence-platform',
+        'architecture/workflow-orchestration',
+        'architecture/experience-platform',
+        'architecture/security-architecture',
+        'architecture/multi-tenancy',
+        'architecture/database-architecture',
+        'architecture/queue-system',
+        'architecture/api-architecture',
+        'architecture/deployment',
+        'architecture/scalability-performance',
+        'architecture/architecture-diagrams',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Financial Platform',
+      items: [
+        'financial-platform/chart-of-accounts',
+        'financial-platform/ledger-core',
+        'financial-platform/double-entry',
+        'financial-platform/journal-entries',
+        'financial-platform/period-closing',
+        'financial-platform/bank-reconciliation',
+        'financial-platform/accounting-periods',
+        'financial-platform/transaction-strategy',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Treasury',
+      items: [
+        'treasury/cash-management',
+        'treasury/liquidity-forecasting',
+        'treasury/fx-management',
+        'treasury/investment-portfolio',
+        'treasury/counterparty-risk',
+        'treasury/cash-policies',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Reporting',
+      items: [
+        'reporting/financial-statements',
+        'reporting/executive-dashboard',
+        'reporting/audit-reports',
+        'reporting/analytics-engine',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Integrations',
+      items: [
+        'integrations/connector-platform',
+        'integrations/plaid-integration',
+        'integrations/webhook-system',
+        'integrations/data-lineage',
+        'integrations/erp-connectivity',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Intelligence',
+      items: [
+        'intelligence/intelligence-engines',
+        'intelligence/kpi-framework',
+        'intelligence/anomaly-detection',
+        'intelligence/forecasting-models',
+        'intelligence/scorecards',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Workflow Engine',
+      items: [
+        'workflow-engine/workflow-engine',
+        'workflow-engine/step-executors',
+        'workflow-engine/approval-matrix',
+        'workflow-engine/scheduling',
+        'workflow-engine/automation-studio',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Security',
+      items: [
+        'security/authentication',
+        'security/authorization',
+        'security/encryption',
+        'security/audit-logging',
+        'security/rate-limiting',
+        'security/secrets-management',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Multi-tenancy',
+      items: [
+        'multi-tenancy/tenant-isolation',
+        'multi-tenancy/company-model',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'AI Governance',
+      items: [
+        'ai-governance/trust-model',
+        'ai-governance/evidence-requirements',
+        'ai-governance/principles',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Engineering Standards',
+      items: [
+        'engineering-standards/engineering-constitution',
+        'engineering-standards/performance-constitution',
+        'engineering-standards/self-review-framework',
+        'engineering-standards/enterprise-readiness',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'ADRs',
+      items: [
+        'adrs/adr-list',
+      ],
+      collapsed: false,
+    },
+    {
+      type: 'category',
+      label: 'Roadmap',
+      items: [
+        'roadmap/completed-phases',
+        'roadmap/future-roadmap',
+      ],
+      collapsed: false,
+    },
+  ],
+};
+
+export default sidebars;

@@ -60,7 +60,7 @@ function SignUpForm({ inviteToken }: { inviteToken?: string }) {
     <>
       <div className="mb-10">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-perionyx-gold overflow-hidden">
-          <img src="/logo.PNG" alt="Perionyx" className="h-full w-full object-cover" />
+          <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
         </div>
       </div>
 

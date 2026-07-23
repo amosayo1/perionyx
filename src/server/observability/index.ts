@@ -1,0 +1,11 @@
+export { MetricsRegistry, metrics } from "./metrics";
+export type { TraceSpan } from "./tracing";
+export { Tracer, createTracer, getRecentTraces } from "./tracing";
+export type { HealthStatus, HealthCheckResult, HealthReport, HealthChecker } from "./health";
+export { healthRegistry, registerHealthCheck, getHealthReport } from "./health";
+export { registerCacheHealth, registerMemoryHealth, registerUptimeHealth, registerPersistenceHealth } from "./health-checks";
+export { metricsExporter } from "./metrics-exporter";
+export { OTelTracer, createTracer as createOTelTracer, getActiveTraces, getCompletedTraces, getTraceById, initializeOtel, exportTraces, exportOtelMetrics } from "./otel";
+export type { OTelSpan, OTelTrace } from "./otel";
+export { traceQuery, getQueryTraces, getSlowQueries, getQueryStats, withQueryTracing, resetQueryTraces } from "./database-tracing";
+export type { QueryTrace } from "./database-tracing";

@@ -8,7 +8,6 @@ import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http
 import { serializeTransactionWithLedger } from "@/server/http/transaction-response";
 import { WebhookService } from "@/modules/integrations/webhook.service";
 import { rateLimit, rateLimitKey } from "@/server/security/rate-limit";
-import { validateOrigin } from "@/server/security/csrf";
 import { authenticateRequest } from "@/server/security/authenticate-request";
 
 export async function POST(request: Request) {
@@ -21,14 +20,6 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: { code: "TOO_MANY_REQUESTS", message: "Too many credit requests. Try again later." } },
         { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
-      );
-    }
-
-    const originCheck = validateOrigin(request);
-    if (!originCheck.ok) {
-      return NextResponse.json(
-        { error: { code: "FORBIDDEN", message: originCheck.reason } },
-        { status: 403 },
       );
     }
 

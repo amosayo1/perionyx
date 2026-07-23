@@ -32,11 +32,19 @@ describe("Rate limiting", () => {
 });
 
 describe("CSRF origin validation", () => {
-  it("allows requests with no origin header", async () => {
+  it("allows requests with no origin header when rejectMissingOrigin=false", async () => {
     const { validateOrigin } = await import("@/server/security/csrf");
     const req = new Request("http://localhost:3000/api/test", { method: "POST" });
-    const result = validateOrigin(req);
+    const result = validateOrigin(req, false);
     expect(result.ok).toBe(true);
+  });
+
+  it("rejects requests with no origin AND no referer when rejectMissingOrigin=true", async () => {
+    const { validateOrigin } = await import("@/server/security/csrf");
+    const req = new Request("http://localhost:3000/api/test", { method: "POST" });
+    const result = validateOrigin(req, true);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toContain("Missing Origin and Referer");
   });
 
   it("allows requests from localhost origin", async () => {
@@ -44,6 +52,16 @@ describe("CSRF origin validation", () => {
     const req = new Request("http://localhost:3000/api/test", {
       method: "POST",
       headers: { origin: "http://localhost:3000" },
+    });
+    const result = validateOrigin(req);
+    expect(result.ok).toBe(true);
+  });
+
+  it("allows requests from production origin", async () => {
+    const { validateOrigin } = await import("@/server/security/csrf");
+    const req = new Request("http://localhost:3000/api/test", {
+      method: "POST",
+      headers: { origin: "https://app.perionyx.com" },
     });
     const result = validateOrigin(req);
     expect(result.ok).toBe(true);
@@ -58,6 +76,44 @@ describe("CSRF origin validation", () => {
     const result = validateOrigin(req);
     expect(result.ok).toBe(false);
     expect(result.reason).toContain("not allowed");
+  });
+
+  it("falls back to Referer when Origin is absent", async () => {
+    const { validateOrigin } = await import("@/server/security/csrf");
+    const req = new Request("http://localhost:3000/api/test", {
+      method: "POST",
+      headers: { referer: "http://localhost:3000/dashboard" },
+    });
+    const result = validateOrigin(req, true);
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects requests with Referer from unknown origin when rejectMissingOrigin=true", async () => {
+    const { validateOrigin } = await import("@/server/security/csrf");
+    const req = new Request("http://localhost:3000/api/test", {
+      method: "POST",
+      headers: { referer: "https://evil.com/page" },
+    });
+    const result = validateOrigin(req, true);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toContain("not allowed");
+  });
+
+  it("allows requests with no origin when rejectMissingOrigin=false (API key fallback)", async () => {
+    const { validateOrigin } = await import("@/server/security/csrf");
+    const req = new Request("http://localhost:3000/api/test", { method: "POST" });
+    const result = validateOrigin(req, false);
+    expect(result.ok).toBe(true);
+  });
+
+  it("blocks subdomain origin attacks", async () => {
+    const { validateOrigin } = await import("@/server/security/csrf");
+    const req = new Request("http://localhost:3000/api/test", {
+      method: "POST",
+      headers: { origin: "https://app.perionyx.com.evil.com" },
+    });
+    const result = validateOrigin(req);
+    expect(result.ok).toBe(false);
   });
 });
 

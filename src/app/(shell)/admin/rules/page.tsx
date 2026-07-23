@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ConditionBuilder } from '@/components/rule-condition-builder';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 type ApprovalRule = {
   id: string;
@@ -66,6 +67,8 @@ export default function ApprovalRulesPage() {
   const [testType, setTestType] = useState('WALLET_CREDIT');
   const [testResults, setTestResults] = useState<any>(null);
   const [testLoading, setTestLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; onConfirm: () => void; title: string; message: string; destructive?: boolean }>({ open: false, onConfirm: () => {}, title: "", message: "" });
 
   useEffect(() => {
     fetchRules();
@@ -119,9 +122,10 @@ export default function ApprovalRulesPage() {
 
   const handleSubmit = async () => {
     if (!formData.name.trim() || formData.approvalSteps.length === 0) {
-      alert('Please provide a name and at least one approval step');
+      setFormError('Please provide a name and at least one approval step');
       return;
     }
+    setFormError(null);
 
     setSubmitting(true);
     try {
@@ -148,8 +152,6 @@ export default function ApprovalRulesPage() {
   };
 
   const handleDeleteRule = async (ruleId: string) => {
-    if (!confirm('Delete this rule?')) return;
-
     try {
       const res = await fetch(`/api/v1/admin/approval-rules/${ruleId}`, { method: 'DELETE' });
       if (res.ok) {
@@ -158,6 +160,19 @@ export default function ApprovalRulesPage() {
     } catch (err) {
       console.error('Failed to delete rule:', err);
     }
+  };
+
+  const confirmDeleteRule = (ruleId: string) => {
+    setConfirmState({
+      open: true,
+      destructive: true,
+      title: 'Delete Rule',
+      message: 'Delete this rule?',
+      onConfirm: () => {
+        setConfirmState((prev) => ({ ...prev, open: false }));
+        handleDeleteRule(ruleId);
+      },
+    });
   };
 
   const handleToggleRule = async (ruleId: string, enabled: boolean) => {
@@ -272,6 +287,7 @@ export default function ApprovalRulesPage() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Transfers above $10k"
+                    aria-label="Rule name"
                     className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary placeholder-perionyx-text-muted"
                   />
                 </div>
@@ -282,6 +298,7 @@ export default function ApprovalRulesPage() {
                     type="number"
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) })}
+                    aria-label="Priority"
                     className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary"
                   />
 
@@ -294,6 +311,7 @@ export default function ApprovalRulesPage() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Rule description and business context"
+                  aria-label="Description"
                   className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary placeholder-perionyx-text-muted"
                   rows={3}
                 />
@@ -310,6 +328,7 @@ export default function ApprovalRulesPage() {
                     type="number"
                     value={formData.minAmount}
                     onChange={(e) => setFormData({ ...formData, minAmount: parseFloat(e.target.value) })}
+                    aria-label="Minimum amount"
                     className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary"
                   />
                 </div>
@@ -321,6 +340,7 @@ export default function ApprovalRulesPage() {
                     value={formData.maxAmount ?? ''}
                     onChange={(e) => setFormData({ ...formData, maxAmount: e.target.value ? parseFloat(e.target.value) : undefined })}
                     placeholder="No limit"
+                    aria-label="Maximum amount"
                     className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary placeholder-perionyx-text-muted"
                   />
                 </div>
@@ -352,6 +372,7 @@ export default function ApprovalRulesPage() {
                     value={newStep.roleRequired}
                     onChange={(e) => setNewStep({ ...newStep, roleRequired: e.target.value })}
                     placeholder="Role (e.g. treasury_admin)"
+                    aria-label="Approval step role"
                     className="rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-3 py-2 text-sm text-perionyx-text-primary placeholder-perionyx-text-muted"
                   />
                   <input
@@ -360,6 +381,7 @@ export default function ApprovalRulesPage() {
                     value={newStep.approvalCount}
                     onChange={(e) => setNewStep({ ...newStep, approvalCount: parseInt(e.target.value) })}
                     placeholder="Approvers needed"
+                    aria-label="Number of approvers required"
                     className="rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-3 py-2 text-sm text-perionyx-text-primary"
                   />
                 </div>
@@ -413,11 +435,14 @@ export default function ApprovalRulesPage() {
               </label>
             </div>
 
+            {formError && (
+              <p role="alert" className="text-sm text-red-400">{formError}</p>
+            )}
             <div className="flex gap-2">
               <Button onClick={handleSubmit} disabled={submitting} variant="default">
                 {submitting ? 'Saving…' : 'Save Rule'}
               </Button>
-              <Button onClick={() => { setShowForm(false); setEditingRuleId(null); resetForm(); }} variant="outline">
+              <Button onClick={() => { setShowForm(false); setEditingRuleId(null); resetForm(); setFormError(null); }} variant="outline">
                 Cancel
               </Button>
             </div>
@@ -453,7 +478,7 @@ export default function ApprovalRulesPage() {
                     >
                       {rule.enabled ? 'Disable' : 'Enable'}
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleDeleteRule(rule.id)} className="text-red-400">
+                    <Button size="sm" variant="outline" onClick={() => confirmDeleteRule(rule.id)} className="text-red-400">
                       Delete
                     </Button>
                   </div>
@@ -519,6 +544,7 @@ export default function ApprovalRulesPage() {
                 value={testAmount}
                 onChange={(e) => setTestAmount(parseFloat(e.target.value))}
                 placeholder="e.g. 50000"
+                aria-label="Test transaction amount"
                 className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary placeholder-perionyx-text-muted"
               />
             </div>
@@ -528,6 +554,7 @@ export default function ApprovalRulesPage() {
               <select
                 value={testType}
                 onChange={(e) => setTestType(e.target.value)}
+                aria-label="Test transaction type"
                 className="mt-2 w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-2 text-perionyx-text-primary"
               >
                 <option value="WALLET_CREDIT">WALLET_CREDIT</option>
@@ -571,6 +598,16 @@ export default function ApprovalRulesPage() {
           )}
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={confirmState.open}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState((prev) => ({ ...prev, open: false }))}
+        title={confirmState.title}
+        message={confirmState.message}
+        destructive={confirmState.destructive}
+        confirmLabel="Delete"
+      />
     </div>
   );
 }

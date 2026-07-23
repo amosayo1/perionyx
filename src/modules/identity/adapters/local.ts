@@ -1,5 +1,6 @@
 import { prisma } from "@/server/db/prisma";
 import { verifyCredentials } from "@/modules/users/users.service";
+import { mfaService } from "@/server/iam/mfa";
 import type { IIdentityProvider } from "../provider";
 import type {
   AuthRequest,
@@ -14,7 +15,7 @@ const capabilities: IdentityProviderCapabilities = {
   authentication: true,
   provisioning: false,
   directorySync: false,
-  mfa: false,
+  mfa: true,
   sso: false,
 };
 
@@ -37,13 +38,20 @@ export class LocalIdentityProvider implements IIdentityProvider {
     if ("locked" in result) {
       throw new Error("Account locked");
     }
+
+    // Check if MFA is enabled for this user
+    const user = await prisma.user.findUnique({
+      where: { id: result.id },
+      select: { mfaEnabled: true },
+    });
+
     return {
       userId: result.id,
       email: result.email,
       name: result.name,
       providerKind: "local",
       providerId: result.id,
-      mfaRequired: false,
+      mfaRequired: user?.mfaEnabled ?? false,
     };
   }
 

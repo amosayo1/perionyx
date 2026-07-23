@@ -47,7 +47,8 @@ async function getPlaidClient() {
 
 function getAccessToken(account: { plaidAccessToken: string | null }): string | null {
   if (!account.plaidAccessToken) return null;
-  const decrypted = decrypt(account.plaidAccessToken);
+  let decrypted: string | null = null;
+  try { decrypted = decrypt(account.plaidAccessToken); } catch { return null; }
   return decrypted ?? account.plaidAccessToken;
 }
 

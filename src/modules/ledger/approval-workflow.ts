@@ -268,7 +268,7 @@ export class ApprovalWorkflowEngine {
 
     if (!hasAuthority) {
       throw new ForbiddenError(
-        `User lacks approval authority for transactions of type ${transaction.type} with amount ${transaction.primaryAmount}`
+        "You do not have sufficient approval authority for this transaction."
       );
     }
 
@@ -285,7 +285,7 @@ export class ApprovalWorkflowEngine {
 
     if (!approval) {
       throw new ForbiddenError(
-        `No pending approval found for user with role ${userRole}`
+        "No pending approval found for your role."
       );
     }
 
@@ -347,7 +347,7 @@ export class ApprovalWorkflowEngine {
 
     if (!hasAuthority) {
       throw new ForbiddenError(
-        `User lacks authority to reject transactions of type ${transaction.type} with amount ${transaction.primaryAmount}`
+        "You do not have sufficient authority to reject this transaction."
       );
     }
 
@@ -361,7 +361,7 @@ export class ApprovalWorkflowEngine {
 
     if (!approval) {
       throw new ForbiddenError(
-        `Cannot reject: no pending approval for user role ${userRole}`
+        "No pending approval found for your role."
       );
     }
 

@@ -1,5 +1,3 @@
-'use client';
-
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react';
 

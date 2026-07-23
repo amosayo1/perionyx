@@ -2,12 +2,13 @@
 
 import { useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { DataTable, InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table";
+import { EnterpriseTable } from "@/components/enterprise/table";
+import { InspectorPanel, InspectorRow, InspectorSection } from "@/components/data-table/inspector-panel";
 import { IncidentSeverityBadge } from "./incident-severity-badge";
 import { IncidentStatusBadge } from "./incident-status-badge";
 import { IncidentSlaCard } from "./incident-sla-card";
 import { IncidentLinkedRecords } from "./incident-linked-records";
-import type { Column, Density } from "@/components/data-table/types";
+import type { Column, Density } from "@/components/enterprise/table/types";
 import type { Incident, IncidentSeverity, IncidentStatus, IncidentCategory } from "./types";
 import { incidents } from "./data";
 import { ExternalLink, Timer, Clock, AlertTriangle } from "lucide-react";
@@ -218,7 +219,7 @@ export function IncidentTable() {
 
   return (
     <div className="space-y-4">
-      <DataTable
+      <EnterpriseTable
         data={filteredData}
         columns={columns}
         keyExtractor={(row) => row.id}
@@ -229,7 +230,8 @@ export function IncidentTable() {
         hiddenColumns={hiddenColumns}
         onHiddenColumnsChange={setHiddenColumns}
         onRowClick={handleRowClick}
-        exportFilename="incidents.csv"
+        exportable
+        exportFilename="incidents"
         contextMenuItems={(row) => [
           {
             label: "View Detail",
@@ -237,7 +239,6 @@ export function IncidentTable() {
             onClick: () => handleViewDetail(row),
           },
         ]}
-        onCopyId={(id) => navigator.clipboard.writeText(id)}
         renderExpanded={(row) => (
           <div className="grid grid-cols-2 gap-6 py-2">
             <div>

@@ -9,35 +9,10 @@ import {
   DialogOverlay,
   DialogPortal,
 } from "@/components/ui/dialog";
-import {
-  LayoutDashboard,
-  ArrowLeftRight,
-  CheckSquare,
-  BookOpen,
-  Shield,
-  Wallet,
-  Users,
-  Settings,
-  Search,
-  Clock,
-  FileText,
-  ExternalLink,
-  Key,
-  Bell,
-  Monitor,
-  AlertTriangle,
-  BarChart3,
-  Activity,
-  GitBranch,
-  Terminal,
-  MessageSquareText,
-  Sparkles,
-  RefreshCw,
-  Cable,
-  Globe,
-  ScrollText,
-} from "lucide-react";
+import { Search, ExternalLink, ScrollText, Cable, Globe, ArrowLeftRight, Shield, AlertTriangle, Wallet, BookOpen, Clock, Terminal, Bell, Users } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useSession } from "next-auth/react";
+import { ALL_NAV, NAV_SECTIONS, filterNavByRole } from "@/components/navigation/nav-config";
 
 interface PageItem {
   id: string;
@@ -48,37 +23,24 @@ interface PageItem {
   category: string;
 }
 
-const pages: PageItem[] = [
-  { id: "dashboard", label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-4 w-4" />, keywords: ["home", "overview", "main"], category: "Core" },
-  { id: "copilot", label: "PERIONYX Intelligence", href: "/copilot", icon: <MessageSquareText className="h-4 w-4" />, keywords: ["copilot", "ai", "assistant", "intelligence"], category: "Core" },
-  { id: "wallets", label: "Wallets", href: "/wallets", icon: <Wallet className="h-4 w-4" />, keywords: ["accounts", "balances", "funds"], category: "Treasury" },
-  { id: "accounts", label: "Accounts", href: "/accounts", icon: <Globe className="h-4 w-4" />, keywords: ["treasury", "bank"], category: "Treasury" },
-  { id: "ledger", label: "Ledger", href: "/ledger", icon: <BookOpen className="h-4 w-4" />, keywords: ["entries", "postings", "journal"], category: "Treasury" },
-  { id: "reconciliation", label: "Reconciliation", href: "/reconciliation", icon: <RefreshCw className="h-4 w-4" />, keywords: ["match", "settle", "exception"], category: "Treasury" },
-  { id: "transactions", label: "Transactions", href: "/transactions", icon: <ArrowLeftRight className="h-4 w-4" />, keywords: ["payments", "transfers", "tx"], category: "Payments" },
-  { id: "approvals", label: "Approvals", href: "/approvals", icon: <CheckSquare className="h-4 w-4" />, keywords: ["pending", "approve", "reject"], category: "Payments" },
-  { id: "risk", label: "Risk Alerts", href: "/risk", icon: <Shield className="h-4 w-4" />, keywords: ["security", "threats", "alerts"], category: "Risk" },
-  { id: "incidents", label: "Incidents", href: "/operations/incidents", icon: <AlertTriangle className="h-4 w-4" />, keywords: ["incident", "sla", "breach"], category: "Risk" },
-  { id: "risk-intelligence", label: "Risk Intelligence", href: "/risk-intelligence", icon: <Shield className="h-4 w-4" />, keywords: ["heatmap", "vendor risk"], category: "Risk" },
-  { id: "audit", label: "Audit Log", href: "/audit-logs", icon: <ScrollText className="h-4 w-4" />, keywords: ["history", "trail"], category: "Risk" },
-  { id: "operations", label: "Operations Center", href: "/operations", icon: <Monitor className="h-4 w-4" />, keywords: ["ops", "control"], category: "Operations" },
-  { id: "platform", label: "Platform Health", href: "/platform", icon: <Activity className="h-4 w-4" />, keywords: ["services", "queues", "sla"], category: "Operations" },
-  { id: "calendar", label: "Calendar", href: "/calendar", icon: <Clock className="h-4 w-4" />, keywords: ["events", "schedule"], category: "Operations" },
-  { id: "notifications", label: "Notifications", href: "/notifications", icon: <Bell className="h-4 w-4" />, keywords: ["alerts", "bell"], category: "Operations" },
-  { id: "connectors", label: "Connectors", href: "/connectors", icon: <Cable className="h-4 w-4" />, keywords: ["integrations", "sync"], category: "Operations" },
-  { id: "policies", label: "Policies", href: "/policies", icon: <Shield className="h-4 w-4" />, keywords: ["rules", "controls"], category: "Governance" },
-  { id: "users", label: "Users", href: "/admin/users", icon: <Users className="h-4 w-4" />, keywords: ["members", "team"], category: "Governance" },
-  { id: "insights", label: "Executive Insights", href: "/insights", icon: <BarChart3 className="h-4 w-4" />, keywords: ["executive", "kpi"], category: "Analytics" },
-  { id: "reports", label: "Reports", href: "/reports", icon: <FileText className="h-4 w-4" />, keywords: ["export", "templates"], category: "Analytics" },
-  { id: "developer", label: "Developer Portal", href: "/developer", icon: <Terminal className="h-4 w-4" />, keywords: ["api", "sdk"], category: "Developer" },
-  { id: "api-keys", label: "API Keys", href: "/settings/api-keys", icon: <Key className="h-4 w-4" />, keywords: ["api", "tokens"], category: "Developer" },
-  { id: "integrations", label: "Integration Hub", href: "/integrations", icon: <GitBranch className="h-4 w-4" />, keywords: ["banking", "erp"], category: "Developer" },
-  { id: "settings", label: "Settings", href: "/settings", icon: <Settings className="h-4 w-4" />, keywords: ["preferences", "config"], category: "Settings" },
-  { id: "investigation", label: "Investigation Workspace", href: "/investigation", icon: <Search className="h-4 w-4" />, keywords: ["trace", "lifecycle", "forensics", "investigate", "timeline"], category: "Intelligence" },
-  { id: "executive-briefing", label: "Executive Briefing", href: "/copilot", icon: <Sparkles className="h-4 w-4" />, keywords: ["briefing", "board"], category: "Intelligence" },
-  { id: "treasury-summary", label: "Treasury Summary", href: "/copilot", icon: <BarChart3 className="h-4 w-4" />, keywords: ["treasury", "daily"], category: "Intelligence" },
-  { id: "risk-review", label: "Risk Review", href: "/copilot", icon: <Shield className="h-4 w-4" />, keywords: ["risk", "vendor"], category: "Intelligence" },
-];
+const SECTION_CATEGORY: Record<string, string> = Object.fromEntries(
+  NAV_SECTIONS.map((s) => [s.title, s.title]),
+);
+const HREF_CATEGORY: Record<string, string> = Object.fromEntries(
+  NAV_SECTIONS.flatMap((s) => s.items.map((item) => [item.href, s.title])),
+);
+
+function buildPages(userRole?: string | null): PageItem[] {
+  const filtered = userRole ? filterNavByRole(ALL_NAV, userRole) : ALL_NAV;
+  return filtered.map((item) => ({
+    id: item.href.replace(/\//g, "-").replace(/^-/, ""),
+    label: item.label,
+    href: item.href,
+    icon: <item.icon className="h-4 w-4" />,
+    keywords: item.keywords ? item.keywords.split(" ") : [item.label.toLowerCase()],
+    category: HREF_CATEGORY[item.href] ?? "Other",
+  }));
+}
 
 interface SearchResult {
   id: string;
@@ -91,11 +53,14 @@ interface SearchResult {
 
 export function CommandPalette() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebounce(query, 200);
+
+  const pages = useMemo(() => buildPages(session?.user?.companyRole), [session?.user?.companyRole]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -148,7 +113,7 @@ export function CommandPalette() {
     if (!query) return pages;
     const q = query.toLowerCase();
     return pages.filter((p) => p.label.toLowerCase().includes(q) || p.keywords.some((kw) => kw.includes(q)));
-  }, [query]);
+  }, [query, pages]);
 
   const groupedResults = useMemo(() => {
     const results: { heading: string; items: SearchResult[] }[] = [];

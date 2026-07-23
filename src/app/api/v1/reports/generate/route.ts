@@ -6,6 +6,7 @@ import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http
 import { enqueue } from "@/modules/queue/queue.service";
 import { rateLimit, rateLimitKey } from "@/server/security/rate-limit";
 import { generateReport } from "@/modules/queue/jobs/report-generate.job";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 const generateSchema = z.object({
   dataset: z.enum(["transactions", "ledger", "approvals", "risk", "audit"]),
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'reporting.create');
 
     const raw = await parseJsonBody<unknown>(request);
     const body = generateSchema.parse(raw);

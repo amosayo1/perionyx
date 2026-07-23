@@ -9,6 +9,7 @@ export async function GET() {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.roles');
 
     let permissions = await rbacService.getUserPermissions(ctx.userId, ctx.companyId);
 

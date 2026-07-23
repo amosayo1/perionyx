@@ -13,7 +13,16 @@ import { rateLimit, rateLimitKey } from "@/server/security/rate-limit";
 import { logger } from "@/lib/logger";
 
 const DEMO_EMAIL = "demo@perionyx.dev";
-const DEMO_PASSWORD = "demo1234";
+
+function generateSecurePassword(): string {
+  const bytes = crypto.randomBytes(24);
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
+  let password = "";
+  for (let i = 0; i < 24; i++) {
+    password += chars[bytes[i] % chars.length];
+  }
+  return password;
+}
 
 async function seedDemoData(userId: string, companyId: string) {
   // Create wallets
@@ -459,8 +468,10 @@ export async function POST(request: Request) {
     }
 
     let user = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
+    let generatedPassword: string | null = null;
     if (!user) {
-      user = await createPasswordUser({ email: DEMO_EMAIL, password: DEMO_PASSWORD, name: "Demo User" });
+      generatedPassword = generateSecurePassword();
+      user = await createPasswordUser({ email: DEMO_EMAIL, password: generatedPassword, name: "Demo User" });
     }
 
     let company = await prisma.company.findUnique({ where: { slug: "demo-company" } });
@@ -477,6 +488,7 @@ export async function POST(request: Request) {
       success: true,
       user: { id: user.id, email: user.email, name: user.name },
       company: { id: company.id, name: company.name, slug: company.slug },
+      ...(generatedPassword ? { password: generatedPassword } : {}),
     });
   } catch (error) {
     logger.error(error, "Demo bootstrap failed");

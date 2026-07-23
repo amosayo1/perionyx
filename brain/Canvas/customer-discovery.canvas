@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "target-users",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 300,
+      "height": 200,
+      "text": "## Target Users\n\nEnterprise finance teams.\nEvery UI decision justified\nby CFO/Treasurer/Controller needs."
+    },
+    {
+      "id": "cfo",
+      "type": "text",
+      "x": -500,
+      "y": -50,
+      "width": 200,
+      "height": 120,
+      "text": "## CFO\n\nFinancial visibility,\naudit readiness."
+    },
+    {
+      "id": "treasurer",
+      "type": "text",
+      "x": -450,
+      "y": -280,
+      "width": 200,
+      "height": 120,
+      "text": "## Treasurer\n\nPrecision,\nstatus-at-a-glance."
+    },
+    {
+      "id": "controller",
+      "type": "text",
+      "x": 0,
+      "y": -350,
+      "width": 200,
+      "height": 120,
+      "text": "## Controller\n\nAudit trails,\napproval chains."
+    },
+    {
+      "id": "finance-manager",
+      "type": "text",
+      "x": 400,
+      "y": -300,
+      "width": 200,
+      "height": 120,
+      "text": "## Finance Manager\n\nWorkflow state,\nteam activity."
+    },
+    {
+      "id": "auditor",
+      "type": "text",
+      "x": 550,
+      "y": -50,
+      "width": 200,
+      "height": 120,
+      "text": "## Auditor\n\nChronological integrity,\nexports."
+    },
+    {
+      "id": "analyst",
+      "type": "text",
+      "x": 500,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "text": "## Finance Analyst\n\nData analysis,\nreporting."
+    },
+    {
+      "id": "ap-ar",
+      "type": "text",
+      "x": 0,
+      "y": 380,
+      "width": 200,
+      "height": 120,
+      "text": "## AP/AR Specialist\n\nPayment processing,\nreconciliation."
+    }
+  ],
+  "edges": [
+    { "id": "e-tu-cfo", "fromNode": "target-users", "fromSide": "left", "toNode": "cfo", "toSide": "right" },
+    { "id": "e-tu-treas", "fromNode": "target-users", "fromSide": "left", "toNode": "treasurer", "toSide": "right" },
+    { "id": "e-tu-ctrl", "fromNode": "target-users", "fromSide": "top", "toNode": "controller", "toSide": "bottom" },
+    { "id": "e-tu-fm", "fromNode": "target-users", "fromSide": "top", "toNode": "finance-manager", "toSide": "bottom" },
+    { "id": "e-tu-aud", "fromNode": "target-users", "fromSide": "right", "toNode": "auditor", "toSide": "left" },
+    { "id": "e-tu-analyst", "fromNode": "target-users", "fromSide": "right", "toNode": "analyst", "toSide": "left" },
+    { "id": "e-tu-apar", "fromNode": "target-users", "fromSide": "bottom", "toNode": "ap-ar", "toSide": "top" }
+  ]
+}

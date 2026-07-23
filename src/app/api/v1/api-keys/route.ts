@@ -3,11 +3,13 @@ import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
 import { ApiKeyService } from "@/modules/api-keys";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function GET() {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.api_keys');
     const keys = await ApiKeyService.list(ctx);
     return NextResponse.json({ items: keys });
   } catch (error) {

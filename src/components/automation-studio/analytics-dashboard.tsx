@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import {
   Activity, Clock, AlertTriangle, CheckCircle2, TrendingUp,
   BarChart3, Timer, Gauge, ListTree, ArrowRight,
@@ -9,12 +10,13 @@ import type { WorkflowAnalytics } from "@/modules/automation-studio/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AnimatedMetric } from "@/components/enterprise/motion/animated-metric";
 
 interface Props {
   analytics: WorkflowAnalytics | null;
 }
 
-function StatCard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color: string }) {
+const AnimatedStatCard = memo(function AnimatedStatCard({ label, value, icon: Icon, color }: { label: string; value: number; icon: any; color: string }) {
   return (
     <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-white/[0.1]">
       <div className="flex items-center gap-3">
@@ -22,13 +24,12 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: s
           <Icon className={`h-5 w-5 ${color}`} />
         </div>
         <div>
-          <p className="text-xs text-zinc-500">{label}</p>
-          <p className="text-2xl font-bold text-white">{value}</p>
+          <AnimatedMetric label={label} value={value} />
         </div>
       </div>
     </div>
   );
-}
+});
 
 function formatDuration(ms: number): string {
   if (ms >= 86400000) return `${Math.round(ms / 86400000)}d`;
@@ -92,12 +93,12 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
-        <StatCard label="Running" value={analytics.running} icon={Activity} color="text-emerald-400" />
-        <StatCard label="Completed" value={analytics.completed} icon={CheckCircle2} color="text-[#d4af37]" />
-        <StatCard label="Failed" value={analytics.failed} icon={AlertTriangle} color="text-red-400" />
-        <StatCard label="Waiting" value={analytics.waiting} icon={Clock} color="text-amber-400" />
-        <StatCard label="Success Rate" value={`${analytics.successRate}%`} icon={TrendingUp} color="text-emerald-400" />
-        <StatCard label="Avg Duration" value={formatDuration(analytics.averageExecutionTimeMs)} icon={Timer} color="text-[#d4af37]" />
+        <AnimatedStatCard label="Running" value={analytics.running} icon={Activity} color="text-emerald-400" />
+        <AnimatedStatCard label="Completed" value={analytics.completed} icon={CheckCircle2} color="text-[#d4af37]" />
+        <AnimatedStatCard label="Failed" value={analytics.failed} icon={AlertTriangle} color="text-red-400" />
+        <AnimatedStatCard label="Waiting" value={analytics.waiting} icon={Clock} color="text-amber-400" />
+        <AnimatedStatCard label="Success Rate" value={analytics.successRate} icon={TrendingUp} color="text-emerald-400" />
+        <AnimatedStatCard label="Avg Duration" value={Math.round(analytics.averageExecutionTimeMs / 1000)} icon={Timer} color="text-[#d4af37]" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -115,7 +116,7 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
                   const maxRef = Math.max(...analytics.stepDuration.map((s) => s.maxDurationMs), 1);
                   const width = Math.round((step.maxDurationMs / maxRef) * 100);
                   return (
-                    <div key={step.stepType}>
+                    <Link key={step.stepType} href={`/automation-studio/analytics/step-types/${step.stepType}`} className="block transition-opacity hover:opacity-80">
                       <div className="mb-1 flex items-center justify-between text-xs">
                         <span className="font-medium text-white capitalize">
                           {step.stepType.replace(/_/g, " ")}
@@ -134,7 +135,7 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
                         <span>min {formatDuration(step.minDurationMs)}</span>
                         <span>max {formatDuration(step.maxDurationMs)}</span>
                       </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -207,7 +208,11 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
             ) : (
               <div className="space-y-2">
                 {analytics.stepFailureRate.slice(0, 8).map((s) => (
-                  <div key={s.stepType} className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-zinc-900/30 px-4 py-2.5">
+                  <Link
+                    key={s.stepType}
+                    href={`/automation-studio/analytics/step-types/${s.stepType}?focus=failures`}
+                    className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-zinc-900/30 px-4 py-2.5 transition-colors hover:border-white/[0.12] hover:bg-zinc-900/50"
+                  >
                     <div className="flex items-center gap-3">
                       <p className="text-sm font-medium text-white capitalize">{s.stepType.replace(/_/g, " ")}</p>
                       <span className="text-xs text-zinc-600">
@@ -217,7 +222,7 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
                     <Badge variant={s.failureRate > 10 ? "danger" : s.failureRate > 0 ? "warning" : "success"}>
                       {s.failureRate}% fail
                     </Badge>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}
@@ -296,13 +301,17 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
             ) : (
               <div className="space-y-1 divide-y divide-white/[0.06]">
                 {analytics.mostUsedWorkflows.map((w) => (
-                  <div key={w.definitionId} className="flex items-center justify-between py-2.5">
+                  <Link
+                    key={w.definitionId}
+                    href={`/automation-studio/analytics/definitions/${w.definitionId}`}
+                    className="flex items-center justify-between py-2.5 transition-colors hover:opacity-80"
+                  >
                     <p className="text-sm text-white truncate">{w.name}</p>
                     <div className="flex items-center gap-2">
                       <Gauge className="h-3.5 w-3.5 text-zinc-600" />
                       <span className="text-sm font-medium text-[#d4af37]">{w.executionCount}</span>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

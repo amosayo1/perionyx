@@ -1,5 +1,6 @@
 import { prisma } from "@/server/db/prisma";
 import { Prisma } from "@prisma/client";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 
 export interface ApprovalMetrics {
   totalPending: number;
@@ -40,6 +41,11 @@ export class ApprovalAnalyticsService {
    * Get overall approval metrics for a company.
    */
   static async getMetrics(companyId: string): Promise<ApprovalMetrics> {
+    const cacheKey = tenantKey(companyId, CacheDomains.ANALYTICS, "approval");
+    return getCached(cacheKey, () => this._getMetrics(companyId), CacheTier.MEDIUM);
+  }
+
+  private static async _getMetrics(companyId: string): Promise<ApprovalMetrics> {
     const [pending, approved, rejected, escalated] = await Promise.all([
       prisma.transactionApproval.count({
         where: { companyId, status: "PENDING" },

@@ -4,6 +4,7 @@ import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit/audit.service";
 import { AuditAction } from "@/domain/constants/audit-actions";
 import { ValidationError } from "@/lib/errors/app-error";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 
 const FALLBACK_RATES: Record<string, Record<string, number>> = {
   USD: { EUR: 0.92, GBP: 0.79, JPY: 149.5, CAD: 1.36, CHF: 0.88, AUD: 1.53, MXN: 17.2, BRL: 4.98, NGN: 1540, AED: 3.67, ZAR: 18.5 },
@@ -138,6 +139,11 @@ export class CurrencyService {
   }
 
   static async listRates(ctx: TenantContext) {
+    const cacheKey = tenantKey(ctx.companyId, CacheDomains.METADATA, "currency", "rates");
+    return getCached(cacheKey, () => this._listRates(ctx), CacheTier.LONG);
+  }
+
+  private static async _listRates(ctx: TenantContext) {
     const rows = await prisma.exchangeRate.findMany({
       where: { companyId: ctx.companyId },
       orderBy: [{ baseCurrency: "asc" }, { quoteCurrency: "asc" }],

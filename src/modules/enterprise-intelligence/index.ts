@@ -4,7 +4,7 @@ export { InsightEngine } from "./insight-engine";
 export { RecommendationEngine } from "./recommendation-engine";
 export { KnowledgeGraph } from "./knowledge-graph";
 export { SimpleMovingAverageModel, type ForecastingModel, type ForecastResult, type ForecastPoint, type ForecastHorizon, type ForecastMetric } from "./forecasting";
-export { enterpriseEventBus, type EnterpriseEventType, type EnterpriseEventPayload } from "./event-bus";
+
 export { LiquidityIntelligenceEngine } from "./engines/liquidity-engine";
 export { TreasuryIntelligenceEngine } from "./engines/treasury-engine";
 export { RiskIntelligenceEngine } from "./engines/risk-engine";

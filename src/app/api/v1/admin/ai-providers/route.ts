@@ -5,11 +5,13 @@ import { aiProviderRegistry } from "@/modules/ai-provider/registry";
 import { modelRegistry } from "@/modules/ai-provider/model-registry";
 import { providerHealthMonitor } from "@/modules/ai-provider/health";
 import { getUsageSummary } from "@/modules/ai-provider/usage";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function GET() {
   try {
     const session = await auth();
     const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.settings');
 
     if (ctx.role !== "OWNER" && ctx.role !== "ADMIN") {
       return new Response(JSON.stringify({ error: { code: "FORBIDDEN", message: "Admin access required" } }), {
@@ -34,7 +36,7 @@ export async function GET() {
         models: allModels,
         healthHistory,
         usage,
-        activeProviderKind: aiProviderRegistry.getActiveKind(),
+        activeProviderKind: await aiProviderRegistry.getActiveKind(),
       }),
       {
         status: 200,

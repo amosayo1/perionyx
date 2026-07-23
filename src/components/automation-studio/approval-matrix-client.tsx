@@ -2,9 +2,10 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import {
-  ShieldCheck, Plus, ArrowRight, Search, Trash2, Pencil,
+  ShieldCheck, Plus, ArrowRight, Trash2, Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { ApprovalMatrixRule } from "@/modules/automation-studio/types";
@@ -12,7 +13,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ApprovalMatrixForm, type ApprovalMatrixFormData } from "./approval-matrix-form";
+import { SearchInput } from "@/components/ui/search-input";
+import { PaginationBar } from "@/components/ui/pagination-bar";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+
+const ApprovalMatrixForm = dynamic(() => import("./approval-matrix-form").then(m => ({ default: m.ApprovalMatrixForm })), { ssr: false });
+import type { ApprovalMatrixFormData } from "./approval-matrix-form";
 
 interface Props {
   rules: ApprovalMatrixRule[];
@@ -103,8 +109,11 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
   const router = useRouter();
   const [rules, setRules] = useState(initialRules);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editRule, setEditRule] = useState<ApprovalMatrixRule | null>(null);
+  const [confirmState, setConfirmState] = useState<{ open: boolean; onConfirm: () => void; title: string; message: string; destructive?: boolean }>({ open: false, onConfirm: () => {}, title: "", message: "" });
+  const pageSize = 20;
 
   const filtered = rules.filter(
     (r) =>
@@ -112,6 +121,10 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
       r.description.toLowerCase().includes(search.toLowerCase()) ||
       r.approverRoles.some((role) => role.toLowerCase().includes(search.toLowerCase())),
   );
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const safePage = Math.min(page, Math.max(0, totalPages - 1));
+  const paged = filtered.slice(safePage * pageSize, (safePage + 1) * pageSize);
 
   const handleSave = useCallback(async (data: ApprovalMatrixFormData) => {
     const isEdit = !!editRule;
@@ -151,7 +164,6 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
   }, [editRule, router]);
 
   const handleDelete = useCallback(async (rule: ApprovalMatrixRule) => {
-    if (!confirm(`Delete approval rule "${rule.name}"? This cannot be undone.`)) return;
 
     const promise = fetch(`/api/automation-studio/approval-matrix/${rule.id}`, {
       method: "DELETE",
@@ -171,6 +183,19 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
       },
     });
   }, [router]);
+
+  const confirmDelete = useCallback((rule: ApprovalMatrixRule) => {
+    setConfirmState({
+      open: true,
+      destructive: true,
+      title: "Delete Approval Rule",
+      message: `Delete approval rule "${rule.name}"? This cannot be undone.`,
+      onConfirm: () => {
+        setConfirmState((prev) => ({ ...prev, open: false }));
+        handleDelete(rule);
+      },
+    });
+  }, [handleDelete]);
 
   const openCreate = () => {
     setEditRule(null);
@@ -206,16 +231,11 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
       </div>
 
       <div role="search" aria-label="Search approval rules">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" aria-hidden="true" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search rules by name, role..."
-            className="h-9 pl-8 text-xs"
-            aria-label="Search approval rules"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search rules by name, role..."
+        />
       </div>
 
       {filtered.length === 0 ? (
@@ -242,15 +262,23 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
         </Card>
       ) : (
         <div className="space-y-3" role="list" aria-label="Approval matrix rules">
-          {filtered.map((rule) => (
+          {paged.map((rule) => (
             <RuleCard
               key={rule.id}
               rule={rule}
               onEdit={() => openEdit(rule)}
-              onDelete={() => handleDelete(rule)}
+              onDelete={() => confirmDelete(rule)}
             />
           ))}
         </div>
+      )}
+      {filtered.length > pageSize && (
+        <PaginationBar
+          page={safePage}
+          pageSize={pageSize}
+          totalItems={filtered.length}
+          onPageChange={setPage}
+        />
       )}
 
       <ApprovalMatrixForm
@@ -258,6 +286,16 @@ export function ApprovalMatrixClient({ rules: initialRules }: Props) {
         onOpenChange={(open) => { if (!open) setEditRule(null); setDialogOpen(open); }}
         onSave={handleSave}
         editRule={editRule}
+      />
+
+      <ConfirmDialog
+        open={confirmState.open}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState((prev) => ({ ...prev, open: false }))}
+        title={confirmState.title}
+        message={confirmState.message}
+        destructive={confirmState.destructive}
+        confirmLabel="Delete"
       />
     </div>
   );

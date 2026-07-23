@@ -5,6 +5,7 @@ import { RuleEvaluationEngine } from '@/modules/rbac/rule-evaluation.engine';
 import { ApprovalWorkflowEngine } from '@/modules/ledger/approval-workflow';
 import { handleRouteError } from '@/server/http/handle-route';
 import { prisma } from '@/server/db/prisma';
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 /**
  * GET /api/v1/transactions/[id]/matching-rules

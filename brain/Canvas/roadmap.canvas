@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "v1-0",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## v1.0 — Core Platform\n\nComplete. 67 modules, 338 models."
+    },
+    {
+      "id": "v1-1",
+      "type": "text",
+      "x": 350,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## v1.1 — Security Hardening\n\nPhase 17. P0 complete. P1 next."
+    },
+    {
+      "id": "v1-2",
+      "type": "text",
+      "x": 700,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## v1.2 — Production Readiness\n\nRedis, Read Replicas, ETag, Compression."
+    },
+    {
+      "id": "v1-3",
+      "type": "text",
+      "x": 1050,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## v1.3 — Enterprise Features\n\nPhase 9C-9F. Investments, Risk, Compliance, AI."
+    },
+    {
+      "id": "v2-0",
+      "type": "text",
+      "x": 1400,
+      "y": 0,
+      "width": 250,
+      "height": 150,
+      "text": "## v2.0 — AI Workforce\n\nPhase 14+. Autonomous finance agents."
+    }
+  ],
+  "edges": [
+    { "id": "e-v1-v11", "fromNode": "v1-0", "fromSide": "right", "toNode": "v1-1", "toSide": "left" },
+    { "id": "e-v11-v12", "fromNode": "v1-1", "fromSide": "right", "toNode": "v1-2", "toSide": "left" },
+    { "id": "e-v12-v13", "fromNode": "v1-2", "fromSide": "right", "toNode": "v1-3", "toSide": "left" },
+    { "id": "e-v13-v2", "fromNode": "v1-3", "fromSide": "right", "toNode": "v2-0", "toSide": "left" }
+  ]
+}

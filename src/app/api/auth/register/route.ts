@@ -6,7 +6,6 @@ import { createPasswordUser } from "@/modules/users";
 import { handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { sessionTokenName } from "@/server/auth/auth";
 import { rateLimit, rateLimitKey } from "@/server/security/rate-limit";
-import { validateOrigin } from "@/server/security/csrf";
 import { acceptInvite, getInviteByToken } from "@/modules/invites/invites.service";
 import { prisma } from "@/server/db/prisma";
 import { ForbiddenError } from "@/lib/errors/app-error";
@@ -35,20 +34,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const originCheck = validateOrigin(request);
-    if (!originCheck.ok) {
-      return NextResponse.json(
-        { error: { code: "FORBIDDEN", message: originCheck.reason } },
-        { status: 403 },
-      );
-    }
-
     const raw = await parseJsonBody<unknown>(request);
 
-    // Check if any company exists — if yes, registration is invite-only
+    // Check if any company exists — if yes, registration is invite-only (skip in development)
     const companyCount = await prisma.company.count();
     const body = registerSchema.parse(raw);
-    if (companyCount > 0 && !body.inviteToken) {
+    if (companyCount > 0 && !body.inviteToken && process.env.NODE_ENV === "production") {
       return NextResponse.json(
         { error: { code: "INVITE_REQUIRED", message: "Registration is invite-only. Please use an invitation link to sign up." } },
         { status: 403 },
@@ -85,7 +76,7 @@ export async function POST(request: Request) {
       if (!secret) {
         throw new Error("Missing AUTH_SECRET or NEXTAUTH_SECRET");
       }
-      const maxAge = 30 * 24 * 60 * 60; // 30 days, matches NextAuth session.maxAge
+      const maxAge = 24 * 60 * 60; // 24 hours, matches auth.ts session.maxAge
       const token: JWT = {
         sub: user.id,
         email: user.email,

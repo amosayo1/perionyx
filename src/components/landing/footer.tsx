@@ -53,7 +53,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/30 flex items-center justify-center overflow-hidden">
-                <img src="/logo.PNG" alt="Perionyx" className="h-full w-full object-cover" />
+                <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
               </div>
               <span className="text-sm font-bold text-white tracking-tight">PERIONYX</span>
             </Link>

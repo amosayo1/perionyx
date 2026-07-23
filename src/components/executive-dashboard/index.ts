@@ -1,0 +1,14 @@
+export { ExecutiveCommandCenter } from "./executive-command-center";
+export { DashboardCard } from "./dashboard-card";
+export { SparklineChart, TrendLineChart, BarChart, DonutChart, HealthScorecard } from "./charts";
+export { Zone1ExecutiveGreeting } from "./zone-1-executive-greeting";
+export { Zone2ExecutiveKpis } from "./zone-2-executive-kpis";
+export { Zone3TimelinePreview } from "./zone-3-timeline-preview";
+export { Zone4AiBrief } from "./zone-4-ai-brief";
+export { Zone5EnterpriseHealth } from "./zone-5-enterprise-health";
+export { Zone6TreasuryCommand } from "./zone-6-treasury-command";
+export { Zone7StrategicAnalytics } from "./zone-7-strategic-analytics";
+export { Zone8OperationalIntelligence } from "./zone-8-operational-intelligence";
+export { Zone9Recommendations } from "./zone-9-recommendations";
+export { Zone10QuickActions } from "./zone-10-quick-actions";
+export type { KpiData, HealthScore, TimelineEvent, Recommendation, DashboardCardProps } from "./types";

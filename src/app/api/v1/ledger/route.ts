@@ -5,6 +5,7 @@ import { listLedgerEntriesForTenant } from "@/modules/ledger";
 import { decimalToString } from "@/server/http/money";
 import { handleRouteError } from "@/server/http/handle-route";
 import { parseCursorPagination } from "@/server/http/pagination";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export async function GET(request: Request) {
   try {
@@ -14,6 +15,7 @@ export async function GET(request: Request) {
       session?.user?.activeCompanyId,
       session?.user?.companyRole,
     );
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'treasury.read');
     const { searchParams } = new URL(request.url);
     const { take, cursor } = parseCursorPagination(searchParams);
     const walletId = searchParams.get("walletId") ?? undefined;

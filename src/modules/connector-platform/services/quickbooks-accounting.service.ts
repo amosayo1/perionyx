@@ -115,6 +115,20 @@ export class QuickBooksAccountingService {
     let created = 0;
     let updated = 0;
 
+    const externalIds = accounts.map((a) => a.externalId);
+
+    if (externalIds.length > 0) {
+      const existing = await prisma.chartOfAccount.findMany({
+        where: { companyId, externalId: { in: externalIds } },
+        select: { externalId: true },
+      });
+      const existingSet = new Set(existing.map((e) => e.externalId));
+      for (const account of accounts) {
+        if (existingSet.has(account.externalId)) updated++;
+        else created++;
+      }
+    }
+
     await prisma.$transaction(
       accounts.map((account) =>
         prisma.chartOfAccount.upsert({
@@ -146,15 +160,6 @@ export class QuickBooksAccountingService {
       ),
     );
 
-    for (const account of accounts) {
-      const existing = await prisma.chartOfAccount.findUnique({
-        where: { companyId_externalId: { companyId, externalId: account.externalId } },
-        select: { id: true },
-      });
-      if (existing) updated++;
-      else created++;
-    }
-
     return { processed: accounts.length, created, updated, failed: 0 };
   }
 
@@ -163,32 +168,26 @@ export class QuickBooksAccountingService {
     companyId: string,
     vendors: NormalizedVendor[],
   ): Promise<SyncCounts> {
+    if (vendors.length === 0) return { processed: 0, created: 0, updated: 0, failed: 0 };
+
+    const externalIds = vendors.map((v) => v.externalId);
+    const existing = await prisma.accountingVendor.findMany({
+      where: { companyId, externalId: { in: externalIds } },
+      select: { externalId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.externalId));
     let created = 0;
     let updated = 0;
+    for (const v of vendors) {
+      if (existingSet.has(v.externalId)) updated++;
+      else created++;
+    }
 
-    for (const vendor of vendors) {
-      const existing = await prisma.accountingVendor.findUnique({
-        where: { companyId_externalId: { companyId, externalId: vendor.externalId } },
-      });
-
-      if (existing) {
-        await prisma.accountingVendor.update({
-          where: { id: existing.id },
-          data: {
-            displayName: vendor.displayName,
-            companyName: vendor.companyName,
-            email: vendor.email,
-            phone: vendor.phone,
-            address: vendor.address as any,
-            active: vendor.active,
-            balance: new Prisma.Decimal(vendor.balance),
-            currency: vendor.currency,
-          },
-        });
-        updated++;
-      } else {
-        await prisma.accountingVendor.create({
-          data: {
+    await prisma.$transaction(
+      vendors.map((vendor) =>
+        prisma.accountingVendor.upsert({
+          where: { companyId_externalId: { companyId, externalId: vendor.externalId } },
+          create: {
             companyId,
             accountingConnectionId,
             externalId: vendor.externalId,
@@ -201,10 +200,19 @@ export class QuickBooksAccountingService {
             balance: new Prisma.Decimal(vendor.balance),
             currency: vendor.currency,
           },
-        });
-        created++;
-      }
-    }
+          update: {
+            displayName: vendor.displayName,
+            companyName: vendor.companyName,
+            email: vendor.email,
+            phone: vendor.phone,
+            address: vendor.address as any,
+            active: vendor.active,
+            balance: new Prisma.Decimal(vendor.balance),
+            currency: vendor.currency,
+          },
+        }),
+      ),
+    );
 
     return { processed: vendors.length, created, updated, failed: 0 };
   }
@@ -214,32 +222,26 @@ export class QuickBooksAccountingService {
     companyId: string,
     customers: NormalizedCustomer[],
   ): Promise<SyncCounts> {
+    if (customers.length === 0) return { processed: 0, created: 0, updated: 0, failed: 0 };
+
+    const externalIds = customers.map((c) => c.externalId);
+    const existing = await prisma.accountingCustomer.findMany({
+      where: { companyId, externalId: { in: externalIds } },
+      select: { externalId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.externalId));
     let created = 0;
     let updated = 0;
+    for (const c of customers) {
+      if (existingSet.has(c.externalId)) updated++;
+      else created++;
+    }
 
-    for (const customer of customers) {
-      const existing = await prisma.accountingCustomer.findUnique({
-        where: { companyId_externalId: { companyId, externalId: customer.externalId } },
-      });
-
-      if (existing) {
-        await prisma.accountingCustomer.update({
-          where: { id: existing.id },
-          data: {
-            displayName: customer.displayName,
-            companyName: customer.companyName,
-            email: customer.email,
-            phone: customer.phone,
-            address: customer.address as any,
-            active: customer.active,
-            balance: new Prisma.Decimal(customer.balance),
-            currency: customer.currency,
-          },
-        });
-        updated++;
-      } else {
-        await prisma.accountingCustomer.create({
-          data: {
+    await prisma.$transaction(
+      customers.map((customer) =>
+        prisma.accountingCustomer.upsert({
+          where: { companyId_externalId: { companyId, externalId: customer.externalId } },
+          create: {
             companyId,
             accountingConnectionId,
             externalId: customer.externalId,
@@ -252,10 +254,19 @@ export class QuickBooksAccountingService {
             balance: new Prisma.Decimal(customer.balance),
             currency: customer.currency,
           },
-        });
-        created++;
-      }
-    }
+          update: {
+            displayName: customer.displayName,
+            companyName: customer.companyName,
+            email: customer.email,
+            phone: customer.phone,
+            address: customer.address as any,
+            active: customer.active,
+            balance: new Prisma.Decimal(customer.balance),
+            currency: customer.currency,
+          },
+        }),
+      ),
+    );
 
     return { processed: customers.length, created, updated, failed: 0 };
   }
@@ -265,37 +276,26 @@ export class QuickBooksAccountingService {
     companyId: string,
     invoices: NormalizedInvoice[],
   ): Promise<SyncCounts> {
+    if (invoices.length === 0) return { processed: 0, created: 0, updated: 0, failed: 0 };
+
+    const externalIds = invoices.map((inv) => inv.externalId);
+    const existing = await prisma.accountingInvoice.findMany({
+      where: { companyId, externalId: { in: externalIds } },
+      select: { externalId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.externalId));
     let created = 0;
     let updated = 0;
+    for (const inv of invoices) {
+      if (existingSet.has(inv.externalId)) updated++;
+      else created++;
+    }
 
-    for (const invoice of invoices) {
-      const existing = await prisma.accountingInvoice.findUnique({
-        where: { companyId_externalId: { companyId, externalId: invoice.externalId } },
-      });
-
-      if (existing) {
-        await prisma.accountingInvoice.update({
-          where: { id: existing.id },
-          data: {
-            docNumber: invoice.docNumber,
-            customerId: invoice.customerId,
-            customerName: invoice.customerName,
-            totalAmount: new Prisma.Decimal(invoice.totalAmount),
-            balance: new Prisma.Decimal(invoice.balance),
-            currency: invoice.currency,
-            status: invoice.status,
-            dueDate: invoice.dueDate,
-            transactionDate: invoice.transactionDate,
-            emailStatus: invoice.emailStatus,
-            deliveryInfo: invoice.deliveryInfo as any,
-            lineItems: invoice.lineItems as any,
-            metadata: invoice.metadata as any,
-          },
-        });
-        updated++;
-      } else {
-        await prisma.accountingInvoice.create({
-          data: {
+    await prisma.$transaction(
+      invoices.map((invoice) =>
+        prisma.accountingInvoice.upsert({
+          where: { companyId_externalId: { companyId, externalId: invoice.externalId } },
+          create: {
             companyId,
             accountingConnectionId,
             externalId: invoice.externalId,
@@ -313,10 +313,24 @@ export class QuickBooksAccountingService {
             lineItems: invoice.lineItems as any,
             metadata: invoice.metadata as any,
           },
-        });
-        created++;
-      }
-    }
+          update: {
+            docNumber: invoice.docNumber,
+            customerId: invoice.customerId,
+            customerName: invoice.customerName,
+            totalAmount: new Prisma.Decimal(invoice.totalAmount),
+            balance: new Prisma.Decimal(invoice.balance),
+            currency: invoice.currency,
+            status: invoice.status,
+            dueDate: invoice.dueDate,
+            transactionDate: invoice.transactionDate,
+            emailStatus: invoice.emailStatus,
+            deliveryInfo: invoice.deliveryInfo as any,
+            lineItems: invoice.lineItems as any,
+            metadata: invoice.metadata as any,
+          },
+        }),
+      ),
+    );
 
     return { processed: invoices.length, created, updated, failed: 0 };
   }
@@ -393,7 +407,8 @@ export class QuickBooksAccountingService {
 
     if (!clientId || !clientSecret) return null;
 
-    const refreshToken = decrypt(connection.refreshToken);
+    let refreshToken: string | null = null;
+    try { refreshToken = decrypt(connection.refreshToken); } catch { return null; }
     if (!refreshToken) return null;
 
     const body = new URLSearchParams({

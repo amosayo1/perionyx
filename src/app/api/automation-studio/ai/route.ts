@@ -1,57 +1,72 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
-import { serverError } from "@/lib/validations/automation-studio";
+import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
+import { rbacService } from "@/modules/rbac/rbac.service";
+import { promptExecutionService } from "@/modules/ai-provider";
 
-const AI_API_KEY = process.env.AI_API_KEY;
-const AI_BASE_URL = process.env.AI_BASE_URL ?? "https://generativelanguage.googleapis.com";
-const AI_MODEL = process.env.AI_MODEL ?? "gemini-2.0-flash";
+const AUTOMATION_STUDIO_SYSTEM_PROMPT =
+  "You are Perionyx's automation studio AI assistant. You help finance teams design, configure, and optimize business rules, approval workflows, and automation schedules. Be concise, precise, and action-oriented.";
+
+interface GeminiContent {
+  role?: string;
+  parts?: Array<{ text?: string }>;
+}
 
 export async function POST(req: Request) {
-  const session = await auth();
-  const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-  if (!ctx) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  if (!AI_API_KEY) {
-    return NextResponse.json(
-      { error: "AI_API_KEY is not configured on the server" },
-      { status: 503 },
-    );
-  }
-
   try {
-    const body = await req.json();
-    const { contents } = body;
+    const session = await auth();
+    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, "automation.manage");
 
-    if (!contents || !Array.isArray(contents)) {
+    const body = await parseJsonBody<{ contents?: GeminiContent[] }>(req);
+
+    if (!body.contents || !Array.isArray(body.contents)) {
       return NextResponse.json(
-        { error: "Invalid request: expected `contents` array" },
+        { error: { code: "VALIDATION", message: "Invalid request: expected `contents` array" } },
         { status: 400 },
       );
     }
 
-    const url = `${AI_BASE_URL}/v1beta/models/${AI_MODEL}:generateContent`;
+    const messages = body.contents
+      .filter((c) => c.parts && c.parts.length > 0)
+      .map((c) => ({
+        role: (c.role === "model" ? "assistant" : "user") as "user" | "assistant",
+        content: c.parts!.map((p) => p.text ?? "").join("\n"),
+      }));
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": AI_API_KEY,
-      },
-      body: JSON.stringify({ contents }),
-    });
-
-    if (!response.ok) {
-      const errText = await response.text().catch(() => "Unknown error");
+    if (messages.length === 0) {
       return NextResponse.json(
-        { error: `AI provider returned ${response.status}`, details: errText },
-        { status: 502 },
+        { error: { code: "VALIDATION", message: "No valid messages in contents array" } },
+        { status: 400 },
       );
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    const response = await promptExecutionService.execute(AUTOMATION_STUDIO_SYSTEM_PROMPT, messages, {
+      companyId: ctx.companyId,
+      userId: ctx.userId,
+      feature: "automation-studio",
+    });
+
+    return NextResponse.json({
+      candidates: [
+        {
+          content: {
+            parts: [{ text: response.content }],
+            role: "model",
+          },
+          finishReason: response.finishReason ?? "STOP",
+        },
+      ],
+      usageMetadata: response.usage
+        ? {
+            promptTokenCount: response.usage.promptTokens,
+            candidatesTokenCount: response.usage.completionTokens,
+            totalTokenCount: response.usage.totalTokens,
+          }
+        : undefined,
+    });
   } catch (err) {
-    return serverError(err);
+    return handleRouteError(err, req);
   }
 }

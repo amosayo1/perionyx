@@ -3,6 +3,7 @@ import { auth } from '@/server/auth/auth';
 import { requireTenantContext } from '@/server/context/tenant-context';
 import { ApprovalWorkflowEngine } from '@/modules/ledger/approval-workflow';
 import { handleRouteError } from '@/server/http/handle-route';
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 type RouteContext = { params: Promise<{ id: string }> };
 

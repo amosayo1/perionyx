@@ -134,12 +134,12 @@ export default function AccountsPage() {
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Account name</Label>
-                <Input placeholder="Operating Account" value={createName} onChange={(e) => setCreateName(e.target.value)} />
+                <Label htmlFor="create-account-name">Account name</Label>
+                <Input id="create-account-name" placeholder="Operating Account" value={createName} onChange={(e) => setCreateName(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Currency</Label>
-                <Select value={createCurrency} onChange={(e) => setCreateCurrency(e.target.value)}>
+                <Label htmlFor="create-currency">Currency</Label>
+                <Select id="create-currency" value={createCurrency} onChange={(e) => setCreateCurrency(e.target.value)}>
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
                   <option value="GBP">GBP</option>
@@ -147,8 +147,8 @@ export default function AccountsPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Description</Label>
-                <Input placeholder="Operating account for payroll" value={createDescription} onChange={(e) => setCreateDescription(e.target.value)} />
+                <Label htmlFor="create-description">Description</Label>
+                <Input id="create-description" placeholder="Operating account for payroll" value={createDescription} onChange={(e) => setCreateDescription(e.target.value)} />
               </div>
             </div>
             <DialogFooter>

@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "f4f9e3712f5bdb58",
+    "type": "split",
+    "children": [
+      {
+        "id": "0d56646b234037eb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "84c849fd83d74c04",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "11-ADR/decision-network.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "decision-network"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "01468b512750390c",
+    "type": "split",
+    "children": [
+      {
+        "id": "88c3010e3c4cbe2c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5fc38e074ce45c52",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "9c7c1ccc8cfc108c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:domain/engineering",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "e104fc4f4ff8b20a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ff071f6cb4ccbbf5",
+    "type": "split",
+    "children": [
+      {
+        "id": "a856926ef4cc2cfd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0b4d675f0b089134",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "framer-motion-evaluation.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for framer-motion-evaluation"
+            }
+          },
+          {
+            "id": "ec6dcf29760af324",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "framer-motion-evaluation.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from framer-motion-evaluation"
+            }
+          },
+          {
+            "id": "f8a09b0b095a9b5f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "ba618c5174ea70ed",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "88a5bfeec07a96ee",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "framer-motion-evaluation.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of framer-motion-evaluation"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "84c849fd83d74c04",
+  "lastOpenFiles": [
+    "05-Engineering/Lessons/37-integration-tests-catch-interaction-bugs.md",
+    "05-Engineering/Knowledge/api-design-patterns.md",
+    "05-Engineering/Knowledge",
+    "05-Engineering/Lessons/36-api-contracts-encode-domain-boundaries.md",
+    "13-Engineering-Journal/index.md",
+    "journal-2026-07-19.md",
+    "journal-2026-07-21.md",
+    "00-Home/index.md",
+    "01-Vision-Strategy.md",
+    "00-Home/open-questions.md",
+    "05-Engineering/EngineeringJournal.md",
+    "05-Engineering/Lessons/35-command-handlers-encode-business-rules.md",
+    "05-Engineering/Lessons/34-entity-classification-prevents-over-schema.md",
+    "05-Engineering/Lessons/33-domain-architecture-precedes-implementation.md",
+    "05-Engineering/Lessons/32-domain-scaffolding-is-not-domain.md",
+    "05-Engineering/Lessons/31-cross-cutting-ux-shallow-impact.md",
+    "05-Engineering/Lessons/30-quick-wins-compound.md",
+    "09-Customer-Discovery/interview-adeel-aslam.md",
+    "05-Engineering/Lessons/29-workflow-success-defines-product-success.md",
+    "12-Roadmaps/ProductRoadmap/phase-20-findings.md",
+    "13-Knowledge/WorkflowKnowledge/validated-workflows.md",
+    "12-Roadmaps/ProductRoadmap",
+    "13-Knowledge/WorkflowKnowledge",
+    "13-Knowledge",
+    "05-Engineering/Lessons/28-modules-are-not-workflows.md",
+    "05-Engineering/Lessons/27-residual-handling-prevents-allocation-drift.md",
+    "05-Engineering/Lessons/26-financial-precision-is-non-negotiable.md",
+    "05-Engineering/Lessons/25-one-implementation-per-primitive.md",
+    "05-Engineering/Lessons/24-evidence-over-assumptions.md",
+    "00-Home/brain-health.md"
+  ]
+}

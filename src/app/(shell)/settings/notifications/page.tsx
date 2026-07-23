@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -118,7 +119,7 @@ export default function NotificationPreferencesPage() {
         <CardContent>
           <p className="text-sm text-perionyx-text-muted">
             To set up Slack or Email notifications, go to{" "}
-            <a href="/settings" className="text-perionyx-gold hover:underline">Settings → Channels</a>.
+            <Link href="/settings" className="text-perionyx-gold hover:underline">Settings → Channels</Link>.
             In-app notifications are enabled by default.
           </p>
         </CardContent>

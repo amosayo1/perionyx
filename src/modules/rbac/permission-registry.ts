@@ -23,4 +23,10 @@ export const PermissionRegistry: PermissionDefinition[] = [
   { name: 'admin.manage_approvers', category: 'Administration', description: 'Configure approver roles, wallet approvers, and approval thresholds.' },
   { name: 'admin.manage_authorities', category: 'Administration', description: 'Manage approval authority and transaction approval profiles.' },
   { name: 'admin.manage_users', category: 'Administration', description: 'Assign roles to users and manage user access.' },
+  { name: 'agents.manage', category: 'Agents', description: 'Manage agent definitions, tasks, sessions, and configurations.' },
+  { name: 'agents.view', category: 'Agents', description: 'View agent definitions, status, health, and audit history.' },
+  { name: 'crm.view', category: 'CRM', description: 'View CRM contacts, insights, pain points, and relationship data.' },
+  { name: 'crm.manage', category: 'CRM', description: 'Create, update, and manage CRM contacts, insights, and relationships.' },
+  { name: 'crm.delete', category: 'CRM', description: 'Delete CRM contacts and related data.' },
+  { name: 'crm.seed', category: 'CRM', description: 'Seed CRM data for development and testing.' },
 ];

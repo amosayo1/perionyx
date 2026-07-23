@@ -1,0 +1,205 @@
+{
+  "scanDate": "2026-07-13",
+  "repository": "/Users/horus/Desktop/vaultareloaded",
+  "applicationType": "Enterprise Treasury & Financial Platform",
+  "deployment": "Fortune 500",
+  "summary": {
+    "total": 19,
+    "critical": 4,
+    "high": 6,
+    "medium": 7,
+    "low": 2
+  },
+  "findings": [
+    {
+      "id": "SEC-001",
+      "finding": "ENCRYPTION_KEY set to known insecure default value in .env",
+      "description": "The .env file contains ENCRYPTION_KEY=\"test-encryption-key-for-development-only\" which is explicitly listed as a known default/insecure value in the EncryptionService constructor (src/server/security/encryption.ts:43). The service throws an EncryptionKeyError if this value is detected, causing the application to crash at startup.",
+      "file": "/Users/horus/Desktop/vaultareloaded/.env",
+      "line": 19,
+      "severity": "Critical",
+      "category": "unsafe_default",
+      "remediation": "Generate a proper 64-hex-character encryption key using: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\" and update ENCRYPTION_KEY in .env. Rotate immediately if any data has been encrypted with this key."
+    },
+    {
+      "id": "SEC-002",
+      "finding": "Hardcoded sandbox credentials in source code",
+      "description": "SANDBOX_EMAIL and SANDBOX_PASSWORD are hardcoded as module-level constants in sandbox-context.ts. These credentials are used by the /api/auth/sandbox-login endpoint which has no authentication requirement. Anyone who discovers these credentials can authenticate as the sandbox guest user.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/modules/sandbox/sandbox-context.ts",
+      "line": 23,
+      "severity": "Critical",
+      "category": "hardcoded_credentials",
+      "remediation": "Move sandbox credentials to environment variables (SANDBOX_EMAIL, SANDBOX_PASSWORD). Fall back to environment variables in the code, with no hardcoded defaults. Gated the sandbox-login endpoint behind DISABLE_DEMO or a feature flag in production."
+    },
+    {
+      "id": "SEC-003",
+      "finding": "Hardcoded demo credentials in source code",
+      "description": "DEMO_EMAIL=\"demo@perionyx.dev\" and DEMO_PASSWORD=\"demo1234\" are hardcoded in the demo bootstrap route. Any actor can use these to create a demo session, which then has access to seeded financial data (wallets, transactions, treasury accounts).",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/app/api/demo/bootstrap/route.ts",
+      "line": 15,
+      "severity": "Critical",
+      "category": "hardcoded_credentials",
+      "remediation": "Move demo credentials to environment variables. Gate the entire /api/demo/bootstrap endpoint behind a configuration flag (DISABLE_DEMO) that is set to '1' in production. Add explicit origin validation."
+    },
+    {
+      "id": "SEC-004",
+      "finding": "Hardcoded seed password for sandbox employee data",
+      "description": "A bcrypt hash of the password 'atlas-employee-2024' is hardcoded in sandbox-enterprise-seed.ts. This password is used for all 20+ sandbox employee accounts. The bcrypt cost factor is set to 4 (very low), making it trivially brute-forceable.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/modules/sandbox/sandbox-enterprise-seed.ts",
+      "line": 642,
+      "severity": "Critical",
+      "category": "hardcoded_credentials",
+      "remediation": "Generate unique passwords per sandbox user using crypto.randomBytes(). Store in environment variables. Increase bcrypt cost to at least 12 for any password hashing."
+    },
+    {
+      "id": "SEC-005",
+      "finding": "CSP allows unsafe-inline and unsafe-eval in production",
+      "description": "Content-Security-Policy in next.config.ts includes 'unsafe-inline' for script-src and style-src, and 'unsafe-eval' for script-src. This defeats XSS protection by allowing arbitrary inline script execution. The securityHeaders class in headers.ts also has the same policy.",
+      "file": "/Users/horus/Desktop/vaultareloaded/next.config.ts",
+      "line": 25,
+      "severity": "High",
+      "category": "unsafe_default",
+      "remediation": "Remove 'unsafe-inline' and 'unsafe-eval' from script-src. Use strict CSP with nonces or hashes instead. For Next.js, use the built-in strict CSP generation. If React's dev mode requires eval, ensure it's only added in development."
+    },
+    {
+      "id": "SEC-006",
+      "finding": "Rate limiting falls back to in-memory store (per-instance, not distributed)",
+      "description": "When REDIS_URL is not set, rate limiting uses a local Map<string, RateLimitEntry> in memory. This means each process/instance has its own rate limit counter, allowing an attacker to bypass rate limits by sending requests across different instances. The .env.example (line 18) marks REDIS_URL as optional.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/security/rate-limit.ts",
+      "line": 8,
+      "severity": "High",
+      "category": "insecure_config",
+      "remediation": "Make REDIS_URL required in production. The application should fail to start in production if REDIS_URL is not set. Remove the in-memory fallback for production environments, or at minimum log a critical warning."
+    },
+    {
+      "id": "SEC-007",
+      "finding": "CSRF origin validation passes when origin header is absent",
+      "description": "The validateOrigin() function in csrf.ts returns { ok: true } when the Origin header is null or missing. This allows CSRF attacks from any origin since requests without an Origin header (common from some automated tools and older browsers) will be accepted.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/security/csrf.ts",
+      "line": 9,
+      "severity": "High",
+      "category": "insecure_config",
+      "remediation": "Require the Origin header for all mutation requests in production. When Origin is absent, reject with 403 for state-changing requests. Only allow missing Origin for same-origin GET requests."
+    },
+    {
+      "id": "SEC-008",
+      "finding": "Demo/sandbox endpoints accessible in production with weak protection",
+      "description": "The sandbox-login endpoint (rate-limited to 10 req/min) and demo bootstrap (rate-limited to 3 req/min) are accessible even in production. The only gate is DISABLE_DEMO=1 env var or LICENSE_COMPANY_ID being set. No authentication is required for these endpoints. The sandbox scenario GET endpoint has no rate limiting at all.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/app/api/auth/sandbox-login/route.ts",
+      "line": 1,
+      "severity": "High",
+      "category": "debug_endpoint",
+      "remediation": "Add an explicit check at the top of all sandbox/demo endpoints that returns 404 if NODE_ENV=production. Alternatively, remove these routes from the production build entirely using conditional exports or build-time flag removal."
+    },
+    {
+      "id": "SEC-009",
+      "finding": "Tick/cron endpoint lacks required authentication when CRON_SECRET is unset",
+      "description": "The /api/v1/tick endpoint in route.ts only checks authentication if CRON_SECRET is set. If CRON_SECRET is not configured (it's optional according to .env.example line 110), the endpoint is publicly accessible and can trigger automated reconciliation, payments, and other financial operations.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/app/api/v1/tick/route.ts",
+      "line": 14,
+      "severity": "High",
+      "category": "insecure_config",
+      "remediation": "Make CRON_SECRET required in production. The endpoint should return 401 if CRON_SECRET is not set. Add IP-based allowlisting or require both a Bearer token and source IP validation."
+    },
+    {
+      "id": "SEC-010",
+      "finding": "Hardcoded mock Plaid access tokens in demo bootstrap route",
+      "description": "The demo bootstrap route stores mock Plaid access tokens ('mock-access-token-checking', 'mock-access-token-savings', 'mock-access-token-hsbc') directly in the database. While these are mock values, they set a precedent for storing unencrypted financial connector credentials.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/app/api/demo/bootstrap/route.ts",
+      "line": 137,
+      "severity": "Medium",
+      "category": "unsafe_default",
+      "remediation": "Even for mock/demo data, use the encryption service to encrypt mock tokens before storage. Add a comment explaining that real tokens must always be encrypted via the EncryptionService."
+    },
+    {
+      "id": "SEC-011",
+      "finding": "SameSite cookie set to 'lax' instead of 'strict' for session cookie",
+      "description": "The session cookie uses SameSite=Lax in both auth.ts (line 41) and register/route.ts (line 106). 'Lax' allows cookies to be sent on top-level navigations from external sites via GET requests, increasing CSRF surface area.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/auth/auth.ts",
+      "line": 41,
+      "severity": "Medium",
+      "category": "insecure_config",
+      "remediation": "Change SameSite to 'strict' for all session cookies. Validate that no legitimate cross-site redirect flows are broken. For the registration endpoint, also add Secure flag for production."
+    },
+    {
+      "id": "SEC-012",
+      "finding": "Security audit logger is in-memory only — entries lost on restart",
+      "description": "The SecurityAuditLogger in audit-logger.ts stores all entries in a local array with a max of 10,000 entries. On server restart, all security audit logs are permanently lost. This severely limits forensic investigation of security incidents.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/security/audit-logger.ts",
+      "line": 2,
+      "severity": "Medium",
+      "category": "insecure_config",
+      "remediation": "Persist security audit entries to the database (auditLog table) or to a dedicated security log stream. At minimum, add a Prisma-backed audit log store as fallback."
+    },
+    {
+      "id": "SEC-013",
+      "finding": "CSP missing upgrade-insecure-requests and frame-src directives",
+      "description": "The Content-Security-Policy does not include 'upgrade-insecure-requests' to automatically upgrade HTTP to HTTPS. The next.config.ts CSP has frame-src 'none' but the securityHeaders class in headers.ts is missing explicit frame-src and frame-ancestors.",
+      "file": "/Users/horus/Desktop/vaultareloaded/next.config.ts",
+      "line": 25,
+      "severity": "Medium",
+      "category": "unsafe_default",
+      "remediation": "Add 'upgrade-insecure-requests' to the CSP. Add explicit frame-src 'none' and frame-ancestors 'none' to the next.config.ts CSP to match the securityHeaders class."
+    },
+    {
+      "id": "SEC-014",
+      "finding": "X-XSS-Protection header uses deprecated directive",
+      "description": "The X-XSS-Protection header is set to '1; mode=block' which is deprecated by modern browsers (Chrome, Edge, Firefox). It can actually introduce XSS vulnerabilities in some browsers by enabling the filter for cross-origin pages.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/security/headers.ts",
+      "line": 35,
+      "severity": "Low",
+      "category": "unsafe_default",
+      "remediation": "Remove the X-XSS-Protection header entirely. Modern browsers use CSP to mitigate XSS. If kept for legacy compatibility, only serve it on legacy browsers."
+    },
+    {
+      "id": "SEC-015",
+      "finding": "Demo API key uses predictable prefix pattern and weak randomness",
+      "description": "The demo bootstrap creates an API key with prefix 'va_demo_' and only 13 characters of Math.random() entropy (Math.random().toString(36).substring(2, 15)). Math.random() is not cryptographically secure. The prefix 'va_demo_' makes the key trivially identifiable.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/app/api/demo/bootstrap/route.ts",
+      "line": 380,
+      "severity": "Medium",
+      "category": "unsafe_default",
+      "remediation": "Use crypto.randomBytes(32).toString('hex') for API key generation. Remove identifiable prefixes for demo keys. Encrypt all API keys before database storage (existing encrypt() call is correct)."
+    },
+    {
+      "id": "SEC-016",
+      "finding": "Test configuration sets known weak JWT_SECRET and ENCRYPTION_KEY globally",
+      "description": "The test setup file sets JWT_SECRET='test-jwt-secret-for-testing-only' and ENCRYPTION_KEY='test-encryption-key-32-chars-long!!' as global process.env values. While the code has guards against these in production, a misconfiguration (e.g., NODE_ENV not set properly) could use these values at runtime.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/testing/config/setup.ts",
+      "line": 9,
+      "severity": "Medium",
+      "category": "unsafe_default",
+      "remediation": "Add test-specific assertions that verify these values are never used outside test environment. Consider generating unique random values per test run instead of using static known strings."
+    },
+    {
+      "id": "SEC-017",
+      "finding": "NEXTAUTH_URL defaults to HTTP in dev mode with no HTTPS upgrade",
+      "description": "The environment.ts (line 40) and invites.service.ts (line 46) both fall back to 'http://localhost:3000' when NEXTAUTH_URL is not set. The auth.ts uses useSecureCookie based on URL scheme, meaning dev sessions use non-Secure cookies.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/security/environment.ts",
+      "line": 40,
+      "severity": "Low",
+      "category": "insecure_config",
+      "remediation": "Document that NEXTAUTH_URL must be set to an HTTPS URL in production. Add a warning when the app starts in development mode without HTTPS. Consider using a self-signed cert for local development."
+    },
+    {
+      "id": "SEC-018",
+      "finding": "Webhook secret rotation script logs secret to stdout",
+      "description": "The rotate-webhook-secret.ts script logs the newly generated webhook secret to the console (line 12). If this script is run in a CI/CD pipeline or shared terminal session, the secret could be captured in logs.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/scripts/rotate-webhook-secret.ts",
+      "line": 12,
+      "severity": "Medium",
+      "category": "dev_code",
+      "remediation": "Change the script to only display the secret with an interactive confirmation prompt. Add a warning that the secret will only be shown once. Consider writing directly to a secrets manager instead of stdout."
+    },
+    {
+      "id": "SEC-019",
+      "finding": "Hardcoded ALLOWED_ORIGINS in CSRF config — no environment variable support",
+      "description": "The CSRF origin allowlist is hardcoded in csrf.ts (lines 1-6) with only localhost and production/staging URLs. There is no mechanism to configure additional origins via environment variables, making it impossible to add custom enterprise deployment origins without code changes.",
+      "file": "/Users/horus/Desktop/vaultareloaded/src/server/security/csrf.ts",
+      "line": 1,
+      "severity": "High",
+      "category": "hardcoded_credentials",
+      "remediation": "Move ALLOWED_ORIGINS to an environment variable (CSRF_ALLOWED_ORIGINS) parsed at startup. Default to localhost for development but require explicit configuration in production. Add validation that production origins use HTTPS."
+    }
+  ]
+}

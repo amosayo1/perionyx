@@ -126,8 +126,8 @@ export default function TransfersPage() {
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>From account</Label>
-                <Select value={fromAccountId} onChange={(e) => setFromAccountId(e.target.value)}>
+                <Label htmlFor="transfer-from">From account</Label>
+                <Select id="transfer-from" value={fromAccountId} onChange={(e) => setFromAccountId(e.target.value)}>
                   <option value="">Select account</option>
                   {accounts.map((a) => (
                     <option key={a.id} value={a.id}>
@@ -137,8 +137,8 @@ export default function TransfersPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>To account</Label>
-                <Select value={toAccountId} onChange={(e) => setToAccountId(e.target.value)}>
+                <Label htmlFor="transfer-to">To account</Label>
+                <Select id="transfer-to" value={toAccountId} onChange={(e) => setToAccountId(e.target.value)}>
                   <option value="">Select account</option>
                   {accounts.map((a) => (
                     <option key={a.id} value={a.id}>
@@ -148,8 +148,8 @@ export default function TransfersPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Amount</Label>
-                <Input
+                <Label htmlFor="transfer-amount">Amount</Label>
+                <Input id="transfer-amount"
                   type="number"
                   step="0.01"
                   placeholder="0.00"
@@ -158,8 +158,8 @@ export default function TransfersPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Reference (optional)</Label>
-                <Input
+                <Label htmlFor="transfer-reference">Reference (optional)</Label>
+                <Input id="transfer-reference"
                   placeholder="Invoice #1234"
                   value={reference}
                   onChange={(e) => setReference(e.target.value)}

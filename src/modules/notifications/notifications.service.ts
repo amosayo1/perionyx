@@ -2,10 +2,11 @@ import { prisma as defaultPrisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
 import { sendInApp } from "./channels/in-app";
-import { sendEmail } from "./channels/email";
-import { sendSlackMessage } from "./channels/slack";
 import { enqueue } from "@/modules/queue/queue.service";
+import { enqueueEmailDelivery, enqueueSlackDelivery } from "@/modules/queue/jobs/notification-delivery.job";
 import { logger } from "@/lib/logger";
+import { emitRealtimeEvent } from "@/server/realtime";
+import { RealtimeEvents, RealtimeChannels } from "@/server/realtime";
 import type { DbClient } from "@/lib/db/types";
 
 export type NotificationEventType =
@@ -39,7 +40,7 @@ export class NotificationService {
   constructor(private prisma: DbClient = defaultPrisma) {}
 
   async send(input: SendNotificationInput) {
-    await sendInApp({
+    const notification = await sendInApp({
       companyId: input.companyId,
       userId: input.userId,
       eventType: input.eventType as any,
@@ -69,6 +70,21 @@ export class NotificationService {
     if (input.userId) {
       await this.sendViaExternalChannels(input);
     }
+
+    // Push real-time event to connected clients
+    if (input.userId) {
+      emitRealtimeEvent(
+        input.companyId,
+        RealtimeChannels.NOTIFICATION,
+        RealtimeEvents.NOTIFICATION_NEW,
+        {
+          notificationId: notification.id,
+          type: input.eventType,
+          title: input.title,
+          userId: input.userId,
+        },
+      );
+    }
   }
 
   private async sendViaExternalChannels(input: SendNotificationInput) {
@@ -90,7 +106,9 @@ export class NotificationService {
         if (pref.channel.type === "EMAIL") {
           const user = await this.prisma.user.findUnique({ where: { id: input.userId! } });
           if (user?.email) {
-            await sendEmail({
+            void enqueueEmailDelivery({
+              companyId: input.companyId,
+              userId: input.userId!,
               to: user.email,
               subject: `[Perionyx] ${input.title}`,
               text: input.message ?? input.title,
@@ -99,17 +117,13 @@ export class NotificationService {
         } else if (pref.channel.type === "SLACK") {
           const config = pref.channel.config as Record<string, any>;
           if (config.webhookUrl) {
-            await sendSlackMessage({
+            void enqueueSlackDelivery({
+              companyId: input.companyId,
+              userId: input.userId!,
               webhookUrl: config.webhookUrl,
               title: input.title,
               text: input.message ?? input.title,
-              fields: input.metadata
-                ? Object.entries(input.metadata).map(([k, v]) => ({
-                    title: k,
-                    value: String(v),
-                    short: true,
-                  }))
-                : undefined,
+              metadata: input.metadata,
             });
           }
         } else if (pref.channel.type === "SLACK_CONNECTOR" || pref.channel.type === "TEAMS_CONNECTOR") {
@@ -135,7 +149,7 @@ export class NotificationService {
           }
         }
       } catch (err) {
-        logger.error(err, `[Notifications] Failed to send via ${pref.channel.type}`);
+        logger.error(err, `[Notifications] Failed to enqueue via ${pref.channel.type}`);
       }
     }
   }

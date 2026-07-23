@@ -6,6 +6,7 @@ import { getProviderConfig } from "@/modules/identity/config";
 import { identityProviderRegistry } from "@/modules/identity/registry";
 import { MicrosoftEntraIdProvider } from "@/modules/identity/adapters/entra-id";
 import { GoogleWorkspaceProvider } from "@/modules/identity/adapters/google-workspace";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 const providerCtors: Record<string, new () => any> = {
   "entra-id": MicrosoftEntraIdProvider,
@@ -16,7 +17,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   try {
     const { id } = await params;
     const session = await auth();
-    requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
+    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.security');
 
     const config = await getProviderConfig(id);
     if (!config) {

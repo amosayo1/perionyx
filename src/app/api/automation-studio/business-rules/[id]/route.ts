@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/server/auth/auth";
 import { requireTenantContext } from "@/server/context/tenant-context";
 import { AutomationStudioService } from "@/modules/automation-studio/automation-studio.service";
-import { updateBusinessRuleSchema, validationError, notFoundError, serverError } from "@/lib/validations/automation-studio";
+import { updateBusinessRuleSchema } from "@/lib/validations/automation-studio";
+import { handleRouteError, zodErrorResponse, parseJsonBody } from "@/server/http/handle-route";
 
 const service = new AutomationStudioService();
 
@@ -12,33 +13,29 @@ async function getContext() {
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const ctx = await getContext();
-  if (!ctx) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   try {
+    const ctx = await getContext();
     const { id } = await params;
-    const body = await req.json();
+    const body = await parseJsonBody<Record<string, unknown>>(req);
     const parsed = updateBusinessRuleSchema.safeParse({ ...body, id });
-    if (!parsed.success) return validationError(parsed.error);
+    if (!parsed.success) return zodErrorResponse(parsed.error, req);
 
     const rule = await service.updateBusinessRule(ctx, id, parsed.data);
-    if (!rule) return notFoundError("Business rule");
+    if (!rule) return NextResponse.json({ error: { code: "NOT_FOUND", message: "Business rule not found" } }, { status: 404 });
     return NextResponse.json(rule);
   } catch (err) {
-    return serverError(err);
+    return handleRouteError(err, req);
   }
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const ctx = await getContext();
-  if (!ctx) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   try {
+    const ctx = await getContext();
     const { id } = await params;
     const deleted = await service.deleteBusinessRule(ctx, id);
-    if (!deleted) return notFoundError("Business rule");
+    if (!deleted) return NextResponse.json({ error: { code: "NOT_FOUND", message: "Business rule not found" } }, { status: 404 });
     return NextResponse.json({ success: true });
   } catch (err) {
-    return serverError(err);
+    return handleRouteError(err);
   }
 }

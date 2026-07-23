@@ -1,6 +1,7 @@
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
+import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import { PolicyRegistry } from "./policy-registry";
 import { NotFoundError, ConflictError } from "@/lib/errors/app-error";
 import type {
@@ -10,6 +11,11 @@ import type {
 
 export class GovernanceService {
   static async getMetrics(ctx: TenantContext): Promise<GovernanceMetrics> {
+    const cacheKey = tenantKey(ctx.companyId, CacheDomains.DASHBOARD, "governance");
+    return getCached(cacheKey, () => this._getMetrics(ctx), CacheTier.SHORT);
+  }
+
+  private static async _getMetrics(ctx: TenantContext): Promise<GovernanceMetrics> {
     const [violations, activePolicies, frameworks, exceptions, evalCount] = await Promise.all([
       this.getViolationSummary(ctx),
       prisma.policy.count({ where: { companyId: ctx.companyId, enabled: true } }),

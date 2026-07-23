@@ -39,6 +39,7 @@ export class ConnectorLifecycle {
 
       return { ok: true, connector, errors: [] };
     } catch (err: any) {
+      console.error("Connector install failed:", err);
       await connectorEventBus.publish({
         eventType: "connector:error",
         connectorId: config?.id ?? "unknown",

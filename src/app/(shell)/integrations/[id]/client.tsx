@@ -176,7 +176,7 @@ export function ConnectorDetailClient({
       {config.errorMessage && (
         <div className="flex items-start gap-2 rounded-xl border border-red-500/10 bg-red-500/[0.03] p-3">
           <AlertTriangle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-red-400">{config.errorMessage}</p>
+          <p role="alert" className="text-xs text-red-400">{config.errorMessage}</p>
         </div>
       )}
 

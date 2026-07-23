@@ -98,7 +98,7 @@ export default function InvestigationPage() {
       {/* Error */}
       {error && (
         <div className="rounded-xl border border-red-500/15 bg-red-500/5 p-4">
-          <p className="text-sm text-red-400">{error}</p>
+          <p role="alert" className="text-sm text-red-400">{error}</p>
         </div>
       )}
 

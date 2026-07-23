@@ -1,5 +1,3 @@
-'use client';
-
 import { AlertTriangle, Clock, Zap } from 'lucide-react';
 
 export interface EscalationWarningProps {
