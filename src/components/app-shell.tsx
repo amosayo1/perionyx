@@ -230,7 +230,7 @@ export function AppShell({
           Skip to main content
         </a>
 
-        <div className="flex min-h-screen bg-perionyx-bg-primary text-perionyx-text-primary">
+        <div className="flex h-screen overflow-hidden bg-perionyx-bg-primary text-perionyx-text-primary">
           <EnterpriseSidebarNew
             nav={visibleNav}
             sections={NAV_SECTIONS}
