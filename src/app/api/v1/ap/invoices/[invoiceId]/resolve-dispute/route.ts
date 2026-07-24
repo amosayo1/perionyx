@@ -10,13 +10,13 @@ import {
 import { apErrorResponse, apValidationError } from "@/server/procurement/api/errors";
 import { idempotencyKey } from "@/server/procurement/api/idempotency";
 import { AppError } from "@/lib/errors/app-error";
-import { InMemoryAPRepositoryRegistry } from "@/server/procurement/ap-repositories/in-memory-registry";
+import { getAPRepositories } from "@/server/procurement/ap-repositories/registry";
 import { InvoiceApplicationService } from "@/server/procurement/application";
 import { resolveDisputeSchema } from "@/lib/validations/ap";
 
 type RouteContext = { params: Promise<{ invoiceId: string }> };
 
-const repos = new InMemoryAPRepositoryRegistry();
+const repos = getAPRepositories();
 const invoiceService = new InvoiceApplicationService(repos);
 
 export async function POST(request: Request, context: RouteContext) {

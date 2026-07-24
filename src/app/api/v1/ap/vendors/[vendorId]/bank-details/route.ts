@@ -10,13 +10,13 @@ import {
 import { apErrorResponse, apValidationError } from "@/server/procurement/api/errors";
 import { idempotencyKey } from "@/server/procurement/api/idempotency";
 import { AppError } from "@/lib/errors/app-error";
-import { InMemoryAPRepositoryRegistry } from "@/server/procurement/ap-repositories/in-memory-registry";
+import { getAPRepositories } from "@/server/procurement/ap-repositories/registry";
 import { VendorApplicationService } from "@/server/procurement/application";
 import { updateVendorBankDetailsSchema } from "@/lib/validations/ap";
 
 type RouteContext = { params: Promise<{ vendorId: string }> };
 
-const repos = new InMemoryAPRepositoryRegistry();
+const repos = getAPRepositories();
 const vendorService = new VendorApplicationService(repos);
 
 export async function PUT(request: Request, context: RouteContext) {

@@ -7,13 +7,13 @@ import {
 } from "@/server/procurement/api/middleware";
 import { apErrorResponse, apValidationError, apNotFoundResponse } from "@/server/procurement/api/errors";
 import { AppError } from "@/lib/errors/app-error";
-import { InMemoryAPRepositoryRegistry } from "@/server/procurement/ap-repositories/in-memory-registry";
+import { getAPRepositories } from "@/server/procurement/ap-repositories/registry";
 import { InvoiceApplicationService } from "@/server/procurement/application";
 import { updateInvoiceSchema } from "@/lib/validations/ap";
 
 type RouteContext = { params: Promise<{ invoiceId: string }> };
 
-const repos = new InMemoryAPRepositoryRegistry();
+const repos = getAPRepositories();
 const invoiceService = new InvoiceApplicationService(repos);
 
 export async function GET(_request: Request, context: RouteContext) {

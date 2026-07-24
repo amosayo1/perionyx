@@ -11,11 +11,11 @@ import {
 import { apErrorResponse, apValidationError } from "@/server/procurement/api/errors";
 import { idempotencyKey } from "@/server/procurement/api/idempotency";
 import { AppError } from "@/lib/errors/app-error";
-import { InMemoryAPRepositoryRegistry } from "@/server/procurement/ap-repositories/in-memory-registry";
+import { getAPRepositories } from "@/server/procurement/ap-repositories/registry";
 import { ApprovalApplicationService } from "@/server/procurement/application";
 import { delegateApprovalSchema } from "@/lib/validations/ap";
 
-const repos = new InMemoryAPRepositoryRegistry();
+const repos = getAPRepositories();
 
 type RouteContext = { params: Promise<{ approvalChainId: string }> };
 
