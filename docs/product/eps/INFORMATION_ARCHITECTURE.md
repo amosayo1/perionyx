@@ -2,19 +2,19 @@
 title: "Information Architecture — AP Reference Workflow"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 phase: 27.1
 tags:
   - type/reference
   - domain/product
   - domain/ap
-  - status/draft
+  - status/active
 owner: Product Architecture Board
 authority: Product Constitution
 supersedes: UX_INFORMATION_ARCHITECTURE.md
 ---
 
-# Information Architecture — AP Reference Workflow
+# Information Architecture — AP Reference Workflow v2.0
 
 > **Classification**: Internal — Engineering & Product
 > **Phase**: 27.1 — EPS Companion Documents
@@ -71,7 +71,7 @@ Within each section, horizontal tabs provide sub-views. Gold underline (`#d4af37
 | Section | Tabs |
 |---------|------|
 | Work Queue | All · Unmatched · Matched · Pending Approval · Aging (60d+) |
-| Exceptions | All · Price Mismatch · Quantity Mismatch · Duplicate · Missing GRN · Validation Failed |
+| Exceptions | All · PRICE_MISMATCH · QUANTITY_MISMATCH · MISSING_GRN · DUPLICATE_INVOICE · MISSING_PO |
 | Payments | Proposals · Pending Execution · Completed · Failed |
 | Vendors | All · Active · Under Review · Blocked · High Risk |
 | Reports | AP Aging · DPO Trend · Spend Analytics · Exception Trends · Approval Cycle Time |
@@ -137,7 +137,7 @@ Available on every screen. Shows all active shortcuts for the current context. D
 
 **Right Context Panel** (320px, collapsible):
 - Contextual information relevant to the selected item
-- Invoice Detail: evidence tabs (Match, Vendor, History, Contract, AI, Audit)
+- Invoice Detail: evidence panel (Match, Vendor, History, Contract, AI, Audit tabs)
 - Approval View: evidence panel + decision panel
 - Exception Queue: exception detail panel
 - Collapsed by default on screens that do not need it
@@ -269,7 +269,7 @@ Keyboard: Shift+click for range select, Cmd+A for all visible, Cmd+D for deselec
 
 ### 6.1 Left Panel — Invoice Document
 
-**Header**: Invoice number, vendor name, date received, status badge, workflow stage indicator (10-dot progress bar).
+**Header**: Invoice number, vendor name, date received, status badge, workflow stage indicator (7-stage progress bar).
 
 **Document Viewer**: Embedded PDF/image viewer with zoom, pan, annotate. OCR-extracted fields highlighted with confidence indicators. Alt text on document image for screen readers.
 
@@ -286,7 +286,7 @@ Keyboard: Shift+click for range select, Cmd+A for all visible, Cmd+D for deselec
 
 **Totals**: Subtotal, Tax, Shipping, Total — each cross-referenced with PO totals inline. Functional currency equivalent shown below each total (P10 — Multi-Currency).
 
-### 6.2 Right Panel — Evidence Tabs
+### 6.2 Right Panel — Evidence Panel
 
 | Tab | Shortcut | Content |
 |-----|----------|---------|
@@ -294,7 +294,7 @@ Keyboard: Shift+click for range select, Cmd+A for all visible, Cmd+D for deselec
 | Vendor | Cmd+2 | Vendor profile: name, risk score ring, payment history summary, avg days-to-pay, dispute rate |
 | History | Cmd+3 | Prior invoices from this vendor (last 12 months), price trend chart, match rate |
 | Contract | Cmd+4 | Active contract terms: payment terms, discount %, pricing schedule, expiry date |
-| AI Package | Cmd+5 | Risk score (0-100 ring), recommendation text, confidence %, evidence summary, comparable invoices, cash flow impact |
+| AI Package | Cmd+5 | Risk score (0-100 ring), recommendation text, confidence %, evidence summary, comparable invoices, cash flow impact. AI explanations are collapsible by default, showing a 1-line summary. Full 5-question format is available on expand |
 | Audit | Cmd+6 | Full audit trail: timestamps, actors, state transitions, checksums, evidence hash |
 
 **Tab accessibility**: Tabs are keyboard-navigable with arrow keys. Active tab has gold underline. `role="tablist"`, `role="tab"`, `role="tabpanel"`. `aria-selected` on active tab.
@@ -312,6 +312,30 @@ Keyboard: Shift+click for range select, Cmd+A for all visible, Cmd+D for deselec
 | View Full Vendor | — | Link | Navigates to vendor profile |
 
 **Status line** within action bar: "Current approval level: AP Manager · Next approver: Controller" with approval chain visualization.
+
+### 6.4 Invoice Detail — Cognitive Load Reduction (Phase 27.1S)
+
+The Invoice Detail screen implements persona-based progressive disclosure to prevent cognitive overload:
+
+**Approver View (default)** — ~15 data points:
+- Header: Vendor name, invoice number, amount, due date, status badge
+- Key metrics: Match result (matched/tolerance/exception), AI confidence, days until due
+- Evidence summary: "PO-4521 matched, GRN received 3 days ago, price matches PO"
+- Action: Approve / Reject / Investigate buttons with authority limit shown
+- Context: Linked PO, GRN, contract links (expandable)
+
+**AP Clerk View** — ~35 data points:
+- All approver view data plus: line items, variance table, vendor history, exception details
+- Editable fields: coding, due date override, notes
+- AI resolution recommendation with expandable reasoning
+
+**Auditor View** — ~50 data points:
+- All data plus: complete audit trail, checksum chain, version history, evidence timestamps
+- Read-only with export capability
+
+**Controller View** — ~30 data points:
+- All approver data plus: GL coding, cost centre, project allocation, budget check
+- Adjustment entry capability
 
 ---
 
@@ -346,10 +370,16 @@ Keyboard: Shift+click for range select, Cmd+A for all visible, Cmd+D for deselec
 | Authority | Display only | — | Shows approver's authority level and threshold |
 | Amount within authority | Display only | — | Green check or red flag |
 
-**Approve button**: Gold, Cmd+Enter. Disabled until:
-1. Evidence panel has been scrolled/acknowledged (minimum 3 seconds visible)
-2. Decision is set to "Approve"
-3. Reason is provided (if override)
+**Approve button**: Gold, Cmd+Enter. Enables based on evidence-before-approval mode:
+
+Evidence-before-approval has three modes configured in Settings:
+- **Required**: Evidence must be explicitly viewed before approve button enables (default for new users)
+- **Standard**: Evidence panel auto-opens on invoice load; approve available after 3s (default)
+- **Trusted**: Approve available immediately with evidence panel collapsed but accessible
+
+Additional conditions (all modes):
+1. Decision is set to "Approve"
+2. Reason is provided (if override)
 
 **Reject button**: Red. Requires reason (minimum 10 characters). Confirmation dialog: "Rejecting this invoice will return it to the AP Clerk with your reason. Continue?"
 
@@ -373,7 +403,7 @@ On decision, the system captures:
 
 ## 8. Exception Queue
 
-**Purpose**: Dedicated view for invoices that failed three-way match or have other anomalies. Every exception has a clear resolution path.
+**Purpose**: Exception list screen — dedicated view for invoices that failed three-way match or have other anomalies. Every exception has a clear resolution path.
 **Primary persona**: AP Clerk, AP Manager
 **Layout**: Split — left (60%) = exception list; right (40%) = exception detail panel (opens on click, dismissible with Esc).
 
@@ -385,7 +415,7 @@ On decision, the system captures:
 
 | Column | Content |
 |--------|---------|
-| Severity | Colour badge: LOW (grey), MEDIUM (yellow), HIGH (orange), CRITICAL (red) |
+| Severity | Colour badge: LOW (grey), MEDIUM (yellow), HIGH (orange), CRITICAL (red). Exceptions are also colour-coded by category: Red (PRICE_MISMATCH, financial impact), Amber (QUANTITY_MISMATCH, process issue), Blue (MISSING_GRN, MISSING_PO, compliance/documentation), Grey (DUPLICATE_INVOICE, low impact pending resolution) |
 | Type | Exception type icon + label |
 | Invoice # | Link to invoice detail |
 | Vendor | Vendor name |
@@ -768,8 +798,8 @@ All error states preserve navigation context — the user can retry without losi
 | Principles | PRODUCT_PRINCIPLES.md (P1-P10) |
 | Screens | 25 (14 list/dashboard, 8 detail, 3 configuration) |
 | Personas Served | 9 (AP Clerk, AP Manager, Controller, Treasury Manager, Procurement Manager, CFO, Approver, Auditor, Vendor) |
-| Workflow Stages Covered | 10 (Invoice Received → Audit Completion) |
+| Workflow Stages Covered | 7 (Invoice Received → Audit Completion) |
 | Accessibility Standard | WCAG 2.1 AA |
 | Responsive Breakpoints | 4 (Desktop ≥1440, Laptop 1024-1439, Tablet 768-1023, Mobile <768) |
-| Status | Draft |
+| Status | Active |
 | Next Review | Phase 27.0B |

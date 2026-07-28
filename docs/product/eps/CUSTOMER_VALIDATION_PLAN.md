@@ -1,8 +1,8 @@
 ---
-title: "Customer Validation Plan — AP Reference Workflow v1.0"
+title: "Customer Validation Plan — AP Reference Workflow v2.0"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 phase: 27.1
 tags:
   - type/strategy
@@ -16,7 +16,7 @@ supersedes: none
 inherited_by: ["AR", "Treasury", "Financial Close"]
 ---
 
-# Customer Validation Plan — AP Reference Workflow v1.0
+# Customer Validation Plan — AP Reference Workflow v2.0
 
 > **Classification**: Restricted — Internal Use Only
 > **Status**: Draft — pending Product Architecture Board approval
@@ -54,7 +54,7 @@ This plan covers:
 | Document | Relationship |
 |----------|--------------|
 | [[ENTERPRISE_PRODUCT_SPECIFICATION_AP]] | Master spec; this plan validates its assumptions |
-| [[REFERENCE_WORKFLOW_AP]] | 10-stage workflow; this plan validates each stage |
+| [[REFERENCE_WORKFLOW_AP]] | 7-stage workflow; this plan validates each stage |
 | [[BUSINESS_RULE_LIBRARY]] | 65 rules; this plan validates the 17 [HYPOTHESIS] rules |
 | [[PERIONYX_PRODUCT_PROPERTIES]] | 10 principles; this plan validates the 2 Hypothesis principles |
 | `brain/03-Customer Intelligence/` | Source data for all evidence references |
@@ -87,8 +87,8 @@ Every candidate is scored across 6 dimensions. The composite score determines en
 | **Role** | Finance Manager |
 | **Engagement History** | CRM interaction, direct request: "What can I do to support you in building that operating system?" |
 | **Why Selected** | Highest engagement quality in the pipeline. Has requested to participate — no outbound required. Finance Manager role covers AP oversight, approval workflows, and payment readiness. Saudi Arabia aligns with multi-currency (T7) and Arabic-language (H-013) validation needs. |
-| **Validation Scope** | Stages 4-8 (Exception Queue through Payment Execution). Approval routing validation. Multi-currency requirement validation. |
-| **Expected Timeline** | Weeks 1-2: Onboard to design partner program. Weeks 3-4: Context interview. Weeks 5-8: Prototype review (Approval View, Exception Queue). Weeks 9-12: Workflow validation. |
+| **Validation Scope** | Stages 4-8 (Exception Resolution through Payment Execution). Approval path validation. Multi-currency requirement validation. |
+| **Expected Timeline** | Weeks 1-2: Onboard to design partner program. Weeks 3-4: Context interview. Weeks 5-8: Prototype review (Approval View, Exception Resolution). Weeks 9-12: Workflow validation. |
 | **Compensation** | $200/month retainer + $100/structured interview + early access to all AP features |
 
 | Dimension | Score | Weighted |
@@ -109,7 +109,7 @@ Every candidate is scored across 6 dimensions. The composite score determines en
 | **Role** | AP/P2P |
 | **Engagement History** | CRM interaction, requested Perionyx information |
 | **Why Selected** | Direct AP/P2P role — ideal persona fit. Pharmaceutical industry has complex AP workflows (multiple entities, regulatory compliance, multi-currency). Hikma is a large enterprise — provides enterprise-scale validation. |
-| **Validation Scope** | Stages 1-5 (Invoice Receipt through Approval Routing). Exception queue validation. AI matching validation. Regulatory compliance (T8) validation. |
+| **Validation Scope** | Stages 1-5 (Invoice Receipt through Approval Path). Exception resolution validation. AI matching validation. Regulatory compliance (T8) validation. |
 | **Expected Timeline** | Weeks 2-3: Onboard. Weeks 4-5: Context interview. Weeks 6-10: Prototype review (Invoice capture, Three-way match). Weeks 11-16: Workflow validation. |
 | **Compensation** | $200/month retainer + $100/structured interview + priority feature requests |
 
@@ -131,7 +131,7 @@ Every candidate is scored across 6 dimensions. The composite score determines en
 | **Role** | Finance (reported by contact) |
 | **Engagement History** | CRM notes: "Automated reconciliation is highly desired", "Intelligent discrepancy alerts would reduce manual work", "ERP integration gaps" |
 | **Why Selected** | Validated pain points T2 (Reconciliation) and T3 (ERP Silos). Agricultural sector has specific GRN/inventory matching challenges. Saudi Arabia aligns with multi-currency and Arabic-first hypotheses. |
-| **Validation Scope** | Stages 2-5 (Invoice Validation through Approval Routing). Three-way match validation. ERP integration validation. |
+| **Validation Scope** | Stages 2-5 (Invoice Validation through Approval Path). Three-way match validation. ERP integration validation. |
 | **Expected Timeline** | Weeks 3-4: Onboard. Weeks 5-6: Context interview. Weeks 7-12: Prototype review (Match view, Exception queue). |
 | **Compensation** | $200/month retainer + $100/structured interview + early access |
 
@@ -378,7 +378,7 @@ What to validate at each AP workflow stage. Each goal has a validation method, t
 | Two-way vs three-way preference | Context interview | Hypothesis | P2 | H-014: Services invoices use 2-way match (invoice vs PO); Goods invoices use 3-way match (invoice vs PO vs GRN) |
 | Partial receipt matching | Workflow discovery | Hypothesis | P1 | H-009: Partial shipments should not block matching of received quantities |
 
-### Stage 4 — Exception Queue
+### Stage 4 — Exception Resolution
 
 | Goal | Validation Method | Target Evidence | Priority | Success Criterion |
 |------|-------------------|-----------------|----------|-------------------|
@@ -388,7 +388,7 @@ What to validate at each AP workflow stage. Each goal has a validation method, t
 | Bulk resolution actions | Prototype review | Hypothesis | P2 | H-002: Batch resolution preferred over individual processing |
 | Exception priority sorting | Prototype review | Strong | P1 | Sort by SLA deadline first, then by financial impact — never chronology alone |
 
-### Stage 5 — Approval Routing
+### Stage 5 — Approval Path
 
 | Goal | Validation Method | Target Evidence | Priority | Success Criterion |
 |------|-------------------|-----------------|----------|-------------------|
@@ -818,7 +818,7 @@ Compensation is paid via gift card, bank transfer, or charitable donation — pa
 
 | Field | Value |
 |-------|-------|
-| Document ID | CVP_AP_v1.0 |
+| Document ID | CVP_AP_v2.0 |
 | Phase | 27.1 |
 | Authority | Product Team |
 | Supersedes | `docs/customer-intelligence/DESIGN_PARTNER_PIPELINE.md` |
@@ -835,7 +835,7 @@ Compensation is paid via gift card, bank transfer, or charitable donation — pa
 | Type | Document | Description |
 |------|----------|-------------|
 | Foundation | [[ENTERPRISE_PRODUCT_SPECIFICATION_AP]] | Master spec this plan validates |
-| Workflow | [[REFERENCE_WORKFLOW_AP]] | 10-stage workflow this plan validates per stage |
+| Workflow | [[REFERENCE_WORKFLOW_AP]] | 7-stage workflow this plan validates per stage |
 | Principles | [[PERIONYX_PRODUCT_PRINCIPLES]] | Principles this plan validates |
 | Evidence | `brain/03-Customer Intelligence/` | Source data for all customer references |
 | Implementation | `docs/customer-intelligence/DESIGN_PARTNER_PIPELINE.md` | Superseded — this document replaces |

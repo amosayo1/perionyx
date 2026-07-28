@@ -1,8 +1,8 @@
 ---
-title: "Design System Guide — EDL Application to the AP Workflow v1.0"
+title: "Design System Guide — EDL Application to the AP Workflow v2.0"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 tags:
   - type/specification
   - domain/design
@@ -12,7 +12,7 @@ owner: Design Systems Team
 authority: Phase 27.1
 ---
 
-# Design System Guide — EDL Application to the AP Workflow v1.0
+# Design System Guide — EDL Application to the AP Workflow v2.0
 
 > **Classification**: Restricted — Internal Use Only
 > **Status**: Design Document (Phase 27.1)
@@ -210,7 +210,7 @@ AP professionals process high volumes of financial data. Three density modes acc
 | **Hero metric** | 32px | Bold (700) | 40px | JetBrains Mono | Dashboard-level KPI values (e.g., "Total AP: $2,450,890") |
 | **Metric** | 24px | Bold (700) | 32px | JetBrains Mono | Card-level metric values (e.g., invoice amount, batch total) |
 | **Heading 1** | 20px | Semibold (600) | 28px | Inter | Page title (e.g., "Accounts Payable — Invoice Detail") |
-| **Heading 2** | 18px | Semibold (600) | 24px | Inter | Section heading (e.g., "Match Results", "Approval Chain") |
+| **Heading 2** | 18px | Semibold (600) | 24px | Inter | Section heading (e.g., "Match Results", "Approval Path") |
 | **Heading 3** | 16px | Medium (500) | 22px | Inter | Card title, panel heading (e.g., "Vendor Profile") |
 | **Subheading** | 14px | Medium (500) | 20px | Inter | Column headers, subsection labels, badge text, form labels |
 | **Body** | 14px | Regular (400) | 20px | Inter | Descriptions, table cell text (non-financial), forms |
@@ -302,7 +302,7 @@ All monetary values in tables and cards must:
 | **Invoice Detail** | `EnterpriseForm`, `EnterpriseSection`, `AnimatedCard`, `InlineEdit`, `AttachmentList` | Comfortable | Tab-navigable line grid, inline edit amounts, AI confidence badges per field | Phase 8B.6 |
 | **Exception Queue** | `AnimatedCard` (exception cards), `FilterBar`, `SortDropdown`, `SLACountdown` | Compact/Comfortable | Card-based (not table), severity border, SLA timer, resolve/ escalate buttons | Phase 8B.7 |
 | **Exception Resolution** | `EnterpriseForm`, `ConditionEditor`, `SmartSelect`, `AIInsightPanel`, `ConfirmDialog` | Comfortable | Root cause dropdown, resolution textarea, evidence links, amount adjustment | Phase 8B.6 |
-| **Approval Dashboard** | `ApprovalPreview`, `AnimatedCard`, `WorkflowCanvas`, `QuickActionBar` | Compact | Visual approval chain, approve/reject/delegate buttons, context panel | Phase 8B.6, 8B.8 |
+| **Approval Dashboard** | `ApprovalPreview`, `AnimatedCard`, `WorkflowCanvas`, `QuickActionBar` | Compact | Visual approval path, approve/reject/delegate buttons, context panel | Phase 8B.6, 8B.8 |
 | **Approval Detail** | `EnterpriseForm`, `AnimatedCard`, `EvidencePanel`, `AIRecommendationBox` | Comfortable | Invoice + PO + GRN side-by-side, AI risk score, approve/reject with reason | Phase 8B.6 |
 | **Payment Batches** | `EnterpriseTable`, `BatchSummaryCard`, `ProgressBar`, `PaymentMethodBadge` | Compact | Batch total running sum, method selector, invoice picker, type-to-confirm | Phase 8B.4 |
 | **Vendor List** | `EnterpriseTable`, `TableSearch`, `SmartSelect` (filter by status), `VendorRiskBadge` | Compact/Ultra-Compact | Sort by spend/risk/ageing, click for profile, bulk status change | Phase 8B.4 |
@@ -419,7 +419,7 @@ All monetary values in tables and cards must:
 │  │ [Show full reasoning →]                                       │  │
 │  └───────────────────────────────────────────────────────────────┘  │
 ├─────────────────────────────────────────────────────────────────────┤
-│  Approval Chain                                                      │
+│  Approval Path                                                      │
 │  ┌───[x]───[AP Manager]───[ ]───[Controller]───[ ]───[CFO]───┐     │
 │  │   Pending (2h)           ✓ Approved (1h)    — Not required  │     │
 │  └─────────────────────────────────────────────────────────────┘     │
@@ -667,7 +667,7 @@ import { financialRound, formatDecimalCurrency, toDisplayNumber } from '@/lib/fi
 | Foundation | [[PLATFORM_CONSTITUTION]] | Highest engineering authority — design must comply |
 | Product | [[ENTERPRISE_PRODUCT_SPECIFICATION_AP]] | Master product spec — this document is the design chapter |
 | Design | [[AI_BEHAVIOUR_GUIDE]] | AI explainability and confidence display patterns |
-| Workflow | [[REFERENCE_WORKFLOW_AP]] | 10-stage workflow this design supports |
+| Workflow | [[REFERENCE_WORKFLOW_AP]] | 7-stage workflow this design supports |
 | Tokens | `src/design-system/edl/` | EDL token source of truth |
 | Components | `src/components/enterprise/` | Component library reference |
 | Components | `src/components/enterprise/table/` | Enterprise Table system reference |

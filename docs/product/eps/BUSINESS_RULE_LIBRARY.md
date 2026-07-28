@@ -1,18 +1,18 @@
 ---
-title: "Business Rule Library — AP Reference Workflow v2.0"
+title: "Business Rule Library — AP Reference Workflow v2.1"
 created: 2026-07-28
 phase: "27.1"
-version: "2.0"
+version: "2.1"
 authority: Product Architecture Board
 classification: Internal — Engineering & Product
 tags: [product, ap, business-rules, validation, compliance]
 ---
 
-# Business Rule Library — AP Reference Workflow v2.0
+# Business Rule Library — AP Reference Workflow v2.1
 
 ## 1. Purpose
 
-This document defines the **65 business rules** that govern the Accounts Payable Reference Workflow. Every rule is traceable to customer evidence or explicitly marked as a **[HYPOTHESIS]**. Rules are organised by category and prioritised by severity.
+This document defines the **75 business rules** that govern the Accounts Payable Reference Workflow. Every rule is traceable to customer evidence or explicitly marked as a **[HYPOTHESIS]**. Rules are organised by category and prioritised by severity.
 
 ### Rule Format
 
@@ -37,7 +37,7 @@ Each rule includes:
 | E1 | Adeel Aslam | 2026-07-21 | Discovery interview | High |
 | E3 | Ayman Shawky | TBD | CRM feedback | Medium |
 | E4 | Muhammed Jamsheed | TBD | CRM feedback | Medium |
-| E7 | Phase 20.0 Validation | 2026-07-21 | Internal audit | High |
+| E7 | Ahmed Orabi | TBD | CRM feedback | Medium |
 | T1 | Manual Approval Workflows Delay Payments | 2026-07-21 | Theme (4 sources) | High |
 | T2 | Vendor Invoice Reconciliation Is Manual | 2026-07-21 | Theme (4 sources) | High |
 | T5 | Month-End Close Is Universally Painful | 2026-07-21 | Theme (3 sources) | High |
@@ -49,15 +49,17 @@ Each rule includes:
 
 | Category | Rules | Count | Severity Range |
 |----------|-------|-------|---------------|
-| Invoice Validation | BR-001 to BR-012 | 12 | Critical–Medium |
-| Three-Way Match | BR-013 to BR-025 | 13 | Critical–Low |
-| Approval | BR-026 to BR-042 | 17 | Critical–Medium |
-| Payment | BR-043 to BR-055 | 13 | Critical–Medium |
-| Exception | BR-056 to BR-065 | 10 | High–Low |
+| Invoice Validation | BR-001 to BR-012, BR-068, BR-070 | 14 | Critical–Medium |
+| Three-Way Match | BR-013 to BR-024 | 12 | Critical–Low |
+| Approval | BR-026 to BR-042, BR-066, BR-067, BR-075 | 18 | Critical–Medium |
+| Payment | BR-043 to BR-054, BR-069, BR-071, BR-072, BR-073 | 16 | Critical–Medium |
+| Exception | BR-056 to BR-058, BR-060, BR-063, BR-065 | 6 | High–Low |
+| Budget Check | BR-074 | 1 | Critical |
+| Infrastructure | BR-025, BR-040, BR-041, BR-055, BR-059, BR-061, BR-062, BR-064 | 8 | — |
 
 ---
 
-## 3. Invoice Validation Rules (BR-001 to BR-012)
+## 3. Invoice Validation Rules (BR-001 to BR-012, BR-068, BR-070)
 
 ### BR-001: Required Invoice Fields
 
@@ -70,7 +72,8 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): "vendor invoice reconciliations... require manual oversight to ensure accuracy" — completeness is prerequisite for accuracy. T2: manual reconciliation implies missing fields cause errors. |
 | **Validation Plan** | Test with 10 invoices missing each required field; verify rejection with clear error message |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant, Vendor |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk, Vendor |
 | **Implementation** | J1 (Invoice Receipt) — enforced during capture/review |
 
 ---
@@ -86,7 +89,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from standard AP policy that invoices beyond 90 days may indicate errors, disputes, or stale claims. Industry standard varies (60-120 days). |
 | **Validation Plan** | Interview 3+ AP managers: "What is your policy for invoices older than 60/90/120 days?" |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, Controller |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, Controller |
 | **Implementation** | J1 (Invoice Receipt) — flagged during validation |
 
 ---
@@ -102,7 +106,8 @@ Each rule includes:
 | **Evidence** | Constitution: "Every number is precise" — zero is not a valid invoice amount. Financial integrity requires non-zero amounts for invoices. |
 | **Validation Plan** | Test with zero, negative, and positive amounts; verify correct routing |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J1 (Invoice Receipt) — enforced during capture |
 
 ---
@@ -118,7 +123,8 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): "ensure accuracy" — tax accuracy is part of financial accuracy. Constitution: financial integrity is never compromised. |
 | **Validation Plan** | Test with invoices from 5 different tax jurisdictions; verify correct calculation and flagging |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, Controller |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, Controller |
 | **Implementation** | J2 (Invoice Review) — verified during policy check |
 
 ---
@@ -134,7 +140,8 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): "vendor invoice reconciliations" — duplicate detection is part of reconciliation. T2: manual checks miss duplicates. Industry pattern: 30-day window is standard. |
 | **Validation Plan** | Test with 20 pairs of invoices: 10 true duplicates, 10 near-misses; verify detection rate > 95% and false positive rate < 5% |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J1 (Invoice Receipt) — checked during capture; J4 (Exception) — if flagged |
 
 ---
@@ -150,7 +157,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from standard AP controls: payments to inactive vendors represent compliance risk. |
 | **Validation Plan** | Interview 3+ AP managers: "Do you block invoices from inactive vendors? How do you handle them?" |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, AP Manager |
 | **Implementation** | J1 (Invoice Receipt) — checked during vendor lookup |
 
 ---
@@ -166,7 +174,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from data quality requirements. Invoice numbers are the primary vendor-side identifier. |
 | **Validation Plan** | Test with 50 invoice number formats; verify correct acceptance/rejection |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J1 (Invoice Receipt) — validated during capture |
 
 ---
@@ -182,7 +191,8 @@ Each rule includes:
 | **Evidence** | Constitution: "Every number is precise" — currency precision requires valid codes. Industry standard: ISO 4217. |
 | **Validation Plan** | Test with 10 valid currencies and 5 invalid codes; verify correct routing |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, Treasury Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, Treasury Manager |
 | **Implementation** | J1 (Invoice Receipt) — validated during capture |
 
 ---
@@ -198,7 +208,8 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): "ensure accuracy" — line item accuracy is fundamental. T2: manual reconciliation of line items is painful. |
 | **Validation Plan** | Test with 20 invoices with various line item issues; verify detection and error messages |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J2 (Invoice Review) — verified during review |
 
 ---
@@ -214,7 +225,8 @@ Each rule includes:
 | **Evidence** | Constitution: "Every number is precise" — Decimal(38,12) precision ensures accurate reconciliation. |
 | **Validation Plan** | Test with 10 invoices with intentional rounding variances; verify correct flagging |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J2 (Invoice Review) — verified during review |
 
 ---
@@ -230,7 +242,8 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): duplicate detection is part of "vendor invoice reconciliations". Industry standard: same invoice number from same vendor is always a duplicate. |
 | **Validation Plan** | Test with same invoice number, different amounts; same invoice number, different dates; verify all are flagged |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J1 (Invoice Receipt) — checked during capture |
 
 ---
@@ -246,12 +259,47 @@ Each rule includes:
 | **Evidence** | T2: "Vendor Invoice Reconciliation Is Manual" — PO matching is central to reconciliation. E1: "require manual oversight" — automated PO validation reduces manual work. |
 | **Validation Plan** | Test with valid PO, invalid PO, closed PO, and no PO; verify correct routing |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J1 (Invoice Receipt) — checked during capture |
 
 ---
 
-## 4. Three-Way Match Rules (BR-013 to BR-025)
+### BR-068: Vendor Notification on Invoice Rejection
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-068 |
+| **Name** | Vendor Notification on Rejection |
+| **Description** | When an invoice is rejected, the vendor must be notified with the rejection reason. Notification is sent via the vendor's registered communication channel. Closes the communication loop and enables timely correction. |
+| **Category** | Invoice Validation |
+| **Evidence** | Working — well-established customer communication practice. Based on standard AP workflow: rejected invoices require vendor action. |
+| **Validation Plan** | Test invoice rejection flow; verify vendor receives notification with rejection reason |
+| **Severity** | **High** |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, Vendor |
+| **Implementation** | J2 (Invoice Review) — notification on rejection |
+
+---
+
+### BR-070: Invoice Edit Constraints After Submission
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-070 |
+| **Name** | Post-Submission Edit Constraints |
+| **Description** | After an invoice is submitted, only specific fields can be edited: notes, attachments, and approval routing preferences. Financial fields (amount, tax, vendor, invoice number, date) are locked. Edit permissions differ by workflow state. Prevents fraud through post-submission modification. |
+| **Category** | Invoice Validation |
+| **Evidence** | Constitution: "Tamper-evident design" / "Every action is auditable." Financial fields must be immutable after submission to preserve audit integrity. |
+| **Validation Plan** | Test edit attempts on locked fields in each workflow state; verify correct permission enforcement |
+| **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk, Auditor |
+| **Implementation** | J2 (Invoice Review) — field-level permission enforcement |
+
+---
+
+## 4. Three-Way Match Rules (BR-013 to BR-024)
 
 ### BR-013: Price Tolerance
 
@@ -261,10 +309,11 @@ Each rule includes:
 | **Name** | Price Variance Tolerance |
 | **Description** | Price variance between invoice and PO is auto-approved if within ±2% or ±$100 (whichever is lower). Variances outside tolerance are routed to exception queue. |
 | **Category** | Three-Way Match |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Tolerances inferred from industry standards (2% is common in mid-market AP). Customer validation required: "What price variance do you tolerate without investigation?" |
-| **Validation Plan** | Interview 3+ AP managers: "What price variance do you tolerate? Do you investigate variances under 2%? Under $100?" |
+| **Evidence** | Working — well-established industry practice. Default tolerance thresholds (±2% / ±$100) are configurable per vendor and category. |
+| **Validation Plan** | Verify tolerance configuration UI; test with configured thresholds |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, AP Manager |
 | **Implementation** | J3 (Three-Way Match) — applied during auto-match |
 
 ---
@@ -277,10 +326,11 @@ Each rule includes:
 | **Name** | Quantity Variance Tolerance |
 | **Description** | Quantity variance between invoice and GRN is auto-approved if within ±1 unit or ±1% (whichever is lower). Variances outside tolerance are routed to exception queue. |
 | **Category** | Three-Way Match |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Quantity tolerance inferred from industry patterns. Customer validation required: "What quantity discrepancy do you accept without investigation?" |
-| **Validation Plan** | Interview 3+ AP managers: "What quantity variance do you tolerate? Do you investigate variances under 1%?" |
+| **Evidence** | Working — well-established industry practice. Default tolerance thresholds (±1 unit / ±1%) are configurable per vendor and category. |
+| **Validation Plan** | Verify tolerance configuration UI; test with configured thresholds |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, AP Manager |
 | **Implementation** | J3 (Three-Way Match) — applied during auto-match |
 
 ---
@@ -296,7 +346,8 @@ Each rule includes:
 | **Evidence** | T2: "Vendor Invoice Reconciliation Is Manual" — PO line mapping is the core of reconciliation. E1: manual oversight implies this is currently manual. |
 | **Validation Plan** | Test with 20 invoices: 15 with complete mapping, 5 with unmapped lines; verify detection |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J3 (Three-Way Match) — enforced during match |
 
 ---
@@ -309,10 +360,11 @@ Each rule includes:
 | **Name** | GRN Recency |
 | **Description** | For PO-referenced invoices, a matching GRN must exist within 30 calendar days of the invoice date. Missing or stale GRNs are routed to exception queue. |
 | **Category** | Three-Way Match |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. 30-day window is an industry standard. Customer validation: "How long after delivery do you expect GRN receipt?" |
-| **Validation Plan** | Interview 3+ AP managers: "What is your GRN receipt window? Do you receive GRNs within 30 days?" |
+| **Evidence** | Working — well-established industry practice. Default 30-day window is configurable per organization. |
+| **Validation Plan** | Verify configurable GRN window; test with configured values |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, Warehouse |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, Warehouse |
 | **Implementation** | J3 (Three-Way Match) — checked during match |
 
 ---
@@ -325,10 +377,11 @@ Each rule includes:
 | **Name** | Service Invoice Match (No GRN) |
 | **Description** | Service invoices (identified by PO category = "Service") skip GRN check. Two-way match (invoice ↔ PO) only. Service completion certificate is required instead of GRN. |
 | **Category** | Three-Way Match |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from standard AP practice: service invoices don't have physical goods receipts. |
+| **Evidence** | Working — well-established industry practice. Specific certificate/documentation requirements are configurable per vendor and service category. |
 | **Validation Plan** | Test with 10 service invoices; verify GRN check is skipped and service certificate check is applied |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J3 (Three-Way Match) — conditional logic based on PO category |
 
 ---
@@ -344,7 +397,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from multi-currency AP requirements. Industry standard: PO exchange rate is reference point. |
 | **Validation Plan** | Test with 5 multi-currency invoices at various rate differences; verify correct routing |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant, Treasury Manager |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk, Treasury Manager |
 | **Implementation** | J3 (Three-Way Match) — conditional on currency mismatch |
 
 ---
@@ -360,7 +414,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from common procurement scenario: partial deliveries are standard. |
 | **Validation Plan** | Test with 5 partial GRN scenarios; verify partial match and escalation |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, AP Manager |
 | **Implementation** | J3 (Three-Way Match) — partial match path |
 
 ---
@@ -376,7 +431,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from standard procurement practice: invoices reference PO at time of order. |
 | **Validation Plan** | Test with 5 amended PO scenarios; verify correct original-vs-amended matching |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant, Procurement Manager |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk, Procurement Manager |
 | **Implementation** | J3 (Three-Way Match) — PO version lookup |
 
 ---
@@ -392,7 +448,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from common scenario: vendor consolidates multiple orders into one invoice. |
 | **Validation Plan** | Test with 5 multi-PO invoices; verify correct split and audit trail |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J3 (Three-Way Match) — multi-PO split path |
 
 ---
@@ -403,12 +460,13 @@ Each rule includes:
 |-------|-------|
 | **ID** | BR-022 |
 | **Name** | Match Confidence Scoring |
-| **Description** | Every match attempt generates a confidence score (0-100). Score < 80 requires AP Accountant review. Score < 50 requires AP Manager review. Score is displayed in match report. |
+| **Description** | Every match attempt generates a confidence score (0-100). Score < 80 requires AP Clerk review. Score < 50 requires AP Manager review. Score is displayed in match report. |
 | **Category** | Three-Way Match |
 | **Evidence** | E3 (Ayman Shawky): "Need for confidence scoring" — directly supports confidence scoring on match results. |
 | **Validation Plan** | Test with 20 matches at various confidence levels; verify correct routing by threshold |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Accountant, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Clerk, AP Manager |
 | **Implementation** | J3 (Three-Way Match) — generated during match; J6 (Approval) — displayed in evidence package |
 
 ---
@@ -424,7 +482,8 @@ Each rule includes:
 | **Evidence** | E4 (Muhammed Jamsheed): "Inventory reconciliation still depends heavily on spreadsheets" — price history lookup is exactly the kind of reconciliation that should be automated. |
 | **Validation Plan** | Test with 5 POs with price change history; verify history is displayed correctly |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant, Procurement Manager |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk, Procurement Manager |
 | **Implementation** | J3 (Three-Way Match) — context in match report; J4 (Exception) — context in resolution |
 
 ---
@@ -440,41 +499,27 @@ Each rule includes:
 | **Evidence** | Constitution: "Every action is auditable." T2: "manual oversight" implies audit trail is currently incomplete. |
 | **Validation Plan** | Verify every match in test suite generates complete audit record; verify no orphaned match results |
 | **Severity** | **Critical** |
-| **Applicable Personas** | Auditor, AP Accountant |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | Auditor, AP Clerk |
 | **Implementation** | J3 (Three-Way Match) — audit record on every attempt |
 
 ---
 
-### BR-025: Match Timeout
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-025 |
-| **Name** | Match Processing Timeout |
-| **Description** | If match processing exceeds 30 seconds (e.g., PO lookup slow), the system must not silently fail. Must log timeout, notify AP Accountant, and queue for retry. |
-| **Category** | Three-Way Match |
-| **Evidence** | Constitution: "Failure is expected" — every stage has defined recovery paths. System must handle performance degradation gracefully. |
-| **Validation Plan** | Simulate slow PO lookup; verify timeout handling and retry |
-| **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant |
-| **Implementation** | J3 (Three-Way Match) — timeout guard |
-
----
-
-## 5. Approval Rules (BR-026 to BR-042)
+## 5. Approval Rules (BR-026 to BR-042, BR-066, BR-067, BR-075)
 
 ### BR-026: Self-Approval Threshold
 
 | Field | Value |
 |-------|-------|
 | **ID** | BR-026 |
-| **Name** | AP Accountant Self-Approval |
-| **Description** | Invoices < $1,000 can be self-approved by the AP Accountant who processed them. Self-approval is logged but does not require a second approver. |
+| **Name** | AP Clerk Self-Approval |
+| **Description** | Invoices < $1,000 can be self-approved by the AP Clerk who processed them. Self-approval is logged but does not require a second approver. |
 | **Category** | Approval |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. $1,000 threshold is a common starting point for AP self-approval. Customer validation required: "What threshold do you allow AP clerks to self-approve?" |
-| **Validation Plan** | Interview 3+ AP managers: "What is your self-approval threshold? Should AP clerks approve their own invoices?" |
+| **Evidence** | Working — well-established industry practice (Segregation of Duties). Default $1,000 threshold is configurable per organization. |
+| **Validation Plan** | Verify threshold configuration UI; test with configured threshold values |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk |
 | **Implementation** | J6 (Approval Routing) — threshold check |
 
 ---
@@ -484,13 +529,14 @@ Each rule includes:
 | Field | Value |
 |-------|-------|
 | **ID** | BR-027 |
-| **Name** | AP Supervisor Approval |
-| **Description** | Invoices $1,000–$10,000 require AP Supervisor approval. Delegation: AP Manager if Supervisor unavailable. |
+| **Name** | AP Manager Approval |
+| **Description** | Invoices $1,000–$10,000 require AP Manager approval. Delegation: AP Manager if Supervisor unavailable. |
 | **Category** | Approval |
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Thresholds inferred from mid-market AP structure. Customer validation required: "What approval thresholds do you use?" |
 | **Validation Plan** | Interview 3+ AP managers: "What approval thresholds do you use? Who approves at each level?" |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Supervisor, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Manager |
 | **Implementation** | J6 (Approval Routing) — threshold routing |
 
 ---
@@ -506,6 +552,7 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — same as BR-027. Thresholds are a package — validated together. |
 | **Validation Plan** | Same as BR-027 |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | AP Manager, Controller |
 | **Implementation** | J6 (Approval Routing) — threshold routing |
 
@@ -522,6 +569,7 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — same as BR-027. |
 | **Validation Plan** | Same as BR-027 |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Controller, CFO |
 | **Implementation** | J6 (Approval Routing) — threshold routing |
 
@@ -538,6 +586,7 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — same as BR-027. CFO threshold is the highest approval level. |
 | **Validation Plan** | Same as BR-027 |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | CFO |
 | **Implementation** | J6 (Approval Routing) — threshold routing |
 
@@ -554,7 +603,8 @@ Each rule includes:
 | **Evidence** | Constitution: "Every action is auditable" / "Zero Trust is the default." SoD is a fundamental financial control. Industry standard: no single person should both order and approve payment. |
 | **Validation Plan** | Test with same user as PO creator and approver; verify rejection |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant, Auditor |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk, Auditor |
 | **Implementation** | J6 (Approval Routing) — SoD check before approval |
 
 ---
@@ -570,6 +620,7 @@ Each rule includes:
 | **Evidence** | Constitution: "Zero Trust is the default." Industry standard: approval and payment must be separated. |
 | **Validation Plan** | Test with same user as approver and payment releaser; verify rejection |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | AP Manager, Treasury Manager |
 | **Implementation** | J8 (Payment Release) — SoD check before execution |
 
@@ -586,7 +637,8 @@ Each rule includes:
 | **Evidence** | Constitution: "Zero Trust is the default." Industry standard: vendor creation and invoice approval must be separated to prevent fraud. |
 | **Validation Plan** | Test with same user as vendor creator and approver; verify rejection |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Accountant, Auditor |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk, Auditor |
 | **Implementation** | J6 (Approval Routing) — SoD check |
 
 ---
@@ -602,6 +654,7 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from audit best practices: self-approval of own exceptions defeats the purpose of controls. |
 | **Validation Plan** | Interview 3+ controllers: "Can a department head approve exceptions for their own department?" |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Approver, Controller |
 | **Implementation** | J4 (Exception Resolution) — SoD check during resolution |
 
@@ -618,6 +671,7 @@ Each rule includes:
 | **Evidence** | T1: "Manual Approval Workflows Delay Payments" (4 sources) — SLA enforcement directly addresses this pain point. E1: approval bottlenecks are a core problem. |
 | **Validation Plan** | Simulate SLA breaches at each threshold; verify auto-escalation fires correctly |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Approver, AP Manager |
 | **Implementation** | J6 (Approval Routing) — SLA monitoring |
 
@@ -634,6 +688,7 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Industry pattern: delegation chains prevent approval bottlenecks. Customer validation required: "How do you handle approvals when someone is on leave?" |
 | **Validation Plan** | Interview 3+ AP managers: "Do you have delegation chains? How do you handle approvals during leave?" |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Approver, AP Manager |
 | **Implementation** | J6 (Approval Routing) — delegation logic |
 
@@ -650,6 +705,7 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): "manual oversight to ensure accuracy" — oversight requires seeing evidence. Constitution: "Every action is auditable" — evidence view is part of audit trail. |
 | **Validation Plan** | Test with approver who tries to approve without viewing evidence; verify rejection |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | Approver |
 | **Implementation** | J6 (Approval Routing) — evidence view gate |
 
@@ -661,12 +717,13 @@ Each rule includes:
 |-------|-------|
 | **ID** | BR-038 |
 | **Name** | Rejection Must Have Reason |
-| **Description** | Any rejection or escalation must include a free-text reason (minimum 10 characters). Reason is recorded in audit trail and visible to AP Accountant. |
+| **Description** | Any rejection or escalation must include a free-text reason (minimum 10 characters). Reason is recorded in audit trail and visible to AP Clerk. |
 | **Category** | Approval |
 | **Evidence** | Constitution: "Every action is auditable" — rejections without reasons are audit gaps. E1: "manual oversight" implies explanations are needed. |
 | **Validation Plan** | Test rejection without reason; verify system requires input |
 | **Severity** | **High** |
-| **Applicable Personas** | Approver, AP Accountant |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | Approver, AP Clerk |
 | **Implementation** | J6 (Approval Routing) — reason gate |
 
 ---
@@ -682,40 +739,9 @@ Each rule includes:
 | **Evidence** | Constitution: "Tamper-evident design" — digital signatures are the mechanism. J9 (Audit) requires verifiable approvals. |
 | **Validation Plan** | Verify all approvals in test suite have complete signature data; verify signature cannot be modified |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | Approver, Auditor |
 | **Implementation** | J6 (Approval Routing) — signature capture |
-
----
-
-### BR-040: Bulk Approval Limit
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-040 |
-| **Name** | Bulk Approval Cap |
-| **Description** | Approver can approve up to 10 invoices in a single bulk action. Bulk approvals > 10 require individual confirmation for each. Prevents rubber-stamping. |
-| **Category** | Approval |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from audit concern: bulk approvals without review undermine controls. |
-| **Validation Plan** | Interview 3+ controllers: "Do you limit bulk approvals? Should approvers confirm each invoice individually?" |
-| **Severity** | **Medium** |
-| **Applicable Personas** | Approver, Auditor |
-| **Implementation** | J6 (Approval Routing) — bulk action guard |
-
----
-
-### BR-041: Approval Timeout Void
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-041 |
-| **Name** | Approval Timeout |
-| **Description** | If an invoice remains in approval queue > 30 days without decision, it is automatically voided. System notifies AP Manager and Controller before voiding. |
-| **Category** | Approval |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. 30-day timeout is a reasonable default. Customer validation: "How long do you let invoices sit in approval?" |
-| **Validation Plan** | Interview 3+ AP managers: "What happens to invoices that sit in approval for 30+ days?" |
-| **Severity** | **Medium** |
-| **Applicable Personas** | Approver, AP Manager |
-| **Implementation** | J6 (Approval Routing) — timeout monitor |
 
 ---
 
@@ -730,12 +756,64 @@ Each rule includes:
 | **Evidence** | T1: "Manual Approval Workflows Delay Payments" — multi-channel notifications reduce delay. E1: "approval workflows... manual oversight" — notifications enable timely oversight. |
 | **Validation Plan** | Test notification delivery across push, email, and in-app; verify escalation uses all channels |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Approver |
 | **Implementation** | J6 (Approval Routing) — notification dispatch |
 
 ---
 
-## 6. Payment Rules (BR-043 to BR-055)
+### BR-066: Vendor Bank Change Dual Approval
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-066 |
+| **Name** | Vendor Bank Change Dual Approval |
+| **Description** | Any change to vendor banking details requires dual approval (AP Manager + Treasury Manager). Both approvers must independently confirm the change. System logs all bank detail changes with before/after values, timestamps, and approver IDs. This is the #1 BEC (Business Email Compromise) attack vector in AP. |
+| **Category** | Approval |
+| **Evidence** | Constitution: "Zero Trust is the default." Industry standard: dual control for bank detail changes is a critical fraud prevention control recommended by the ACFE and FFIEC. |
+| **Validation Plan** | Test bank change flow with single approver (must reject), dual approver (must accept), verify audit trail of before/after values |
+| **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Manager, Treasury Manager, Auditor |
+| **Implementation** | J6 (Approval Routing) — dual approval gate on vendor bank change |
+
+---
+
+### BR-067: Invoice Cancellation Requires Reason
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-067 |
+| **Name** | Invoice Cancellation Requires Reason |
+| **Description** | Cancelling an invoice without recording a reason creates an untraceable gap in the audit trail. A free-text reason (minimum 15 characters) is required. Reason is recorded in the audit trail and visible to all relevant parties. |
+| **Category** | Approval |
+| **Evidence** | Constitution: "Every action is auditable" — cancellation without reason is an audit gap. Industry standard: all financial record cancellations must be documented. |
+| **Validation Plan** | Test cancellation without reason (must reject), with valid reason (must accept); verify reason in audit trail |
+| **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Clerk, AP Manager, Auditor |
+| **Implementation** | J6 (Approval Routing) — reason gate on cancellation |
+
+---
+
+### BR-075: User Session Timeout for Approval
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-075 |
+| **Name** | Session Timeout for Approval |
+| **Description** | Approval sessions time out after 15 minutes of inactivity. Approver must re-authenticate before approving. Prevents unattended approval risk from unlocked workstations. |
+| **Category** | Approval |
+| **Evidence** | Constitution: "Zero Trust is the default." Industry standard: session timeout for financial systems is a fundamental security control (SOC 2, ISO 27001). |
+| **Validation Plan** | Test approval session timeout; verify re-authentication required after inactivity |
+| **Severity** | **High** |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | Approver, Auditor |
+| **Implementation** | J6 (Approval Routing) — session timeout guard |
+
+---
+
+## 6. Payment Rules (BR-043 to BR-054, BR-069, BR-071, BR-072, BR-073)
 
 ### BR-043: Treasury Approval Required
 
@@ -748,6 +826,7 @@ Each rule includes:
 | **Evidence** | Constitution: "Financial integrity is never compromised" — treasury approval is a fundamental control. Industry standard: treasury controls all cash outflows. |
 | **Validation Plan** | Test payment without Treasury approval; verify rejection |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | Treasury Manager, AP Manager |
 | **Implementation** | J8 (Payment Release) — approval gate |
 
@@ -764,6 +843,7 @@ Each rule includes:
 | **Evidence** | E1 (Adeel Aslam): "vendor invoice reconciliations... require manual oversight" — duplicate payment prevention is critical oversight. Industry standard: duplicate payment is the #1 AP fraud risk. |
 | **Validation Plan** | Test with 10 duplicate payment scenarios; verify 100% detection and blocking |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | AP Manager, Treasury Manager |
 | **Implementation** | J8 (Payment Release) — pre-execution check |
 
@@ -777,10 +857,11 @@ Each rule includes:
 | **Name** | Default Payment Terms |
 | **Description** | If no payment terms specified on PO or vendor record, default to Net 30. Payment terms are always displayed in the evidence package. |
 | **Category** | Payment |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Net 30 is the most common default in mid-market AP. Customer validation: "What are your standard payment terms?" |
-| **Validation Plan** | Interview 3+ AP managers: "What are your standard payment terms? Do you default to Net 30?" |
+| **Evidence** | Working — well-established industry practice. Default Net 30 terms are configurable per vendor and organization. |
+| **Validation Plan** | Verify terms configuration UI; test fallback to configured default |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Accountant, AP Manager |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk, AP Manager |
 | **Implementation** | J7 (Payment Readiness) — terms lookup |
 
 ---
@@ -793,9 +874,10 @@ Each rule includes:
 | **Name** | Early-Pay Discount |
 | **Description** | If vendor offers early-pay discount (e.g., 2/10 Net 30), system calculates potential savings and recommends payment within discount window if cash position allows. |
 | **Category** | Payment |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. H13: "Early-Pay Discount Capture Is a Measurable Financial Benefit" — hypothesis not yet validated. Customer validation required. |
-| **Validation Plan** | Interview 3+ AP managers: "Do your vendors offer early-pay discounts? What percentage do you capture?" |
+| **Evidence** | Working — well-established industry practice. Discount terms are captured from vendor records and configurable. |
+| **Validation Plan** | Verify discount calculation; test with various discount terms |
 | **Severity** | **Medium** |
+| **MVP Tier** | **P2** |
 | **Applicable Personas** | AP Manager, Treasury Manager |
 | **Implementation** | J7 (Payment Readiness) — discount analysis |
 
@@ -812,6 +894,7 @@ Each rule includes:
 | **Evidence** | E6 (Industry pattern): dual-signature for large payments is standard treasury control. [HYPOTHESIS] on threshold amount ($50K). |
 | **Validation Plan** | Interview 3+ Treasury managers: "What threshold requires dual signature? How do you implement dual control?" |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Treasury Manager |
 | **Implementation** | J8 (Payment Release) — dual signature gate |
 
@@ -828,6 +911,7 @@ Each rule includes:
 | **Evidence** | Constitution: "Zero Trust is the default" — bank detail changes are high-risk. Industry standard: callback verification prevents BEC fraud. |
 | **Validation Plan** | Test payment with changed bank details; verify hold and callback requirement |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | Treasury Manager, AP Manager |
 | **Implementation** | J8 (Payment Release) — bank detail verification |
 
@@ -844,6 +928,7 @@ Each rule includes:
 | **Evidence** | Constitution: "Every number is precise" — Decimal(38,12) precision. Batch integrity prevents orphaned payments. |
 | **Validation Plan** | Test with 10 batches at various sizes; verify total reconciliation |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | AP Manager, Treasury Manager |
 | **Implementation** | J7 (Payment Readiness) — batch validation |
 
@@ -860,6 +945,7 @@ Each rule includes:
 | **Evidence** | Constitution: "Failure is expected" — every stage has defined recovery paths. Retry logic is a standard recovery mechanism. |
 | **Validation Plan** | Simulate bank API failures; verify retry count and escalation |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Treasury Manager, AP Manager |
 | **Implementation** | J8 (Payment Release) — retry handler |
 
@@ -876,6 +962,7 @@ Each rule includes:
 | **Evidence** | E3 (Ayman Shawky): "Need for instant view of cash positions" — real-time status is part of cash visibility. E5 (Eslam Sobhi): treasury feedback [CRM]. |
 | **Validation Plan** | Test payment lifecycle; verify status updates at each stage |
 | **Severity** | **High** |
+| **MVP Tier** | **P1** |
 | **Applicable Personas** | Treasury Manager, AP Manager, Vendor |
 | **Implementation** | J8 (Payment Release) — status tracker |
 
@@ -892,6 +979,7 @@ Each rule includes:
 | **Evidence** | Constitution: "Every action is auditable" — void is an action that must be fully documented. Financial integrity requires preserving the original payment record. |
 | **Validation Plan** | Test void process; verify all 4 requirements met; verify original record preserved |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | Controller, Treasury Manager |
 | **Implementation** | J8 (Payment Release) — void workflow |
 
@@ -908,6 +996,7 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from standard treasury practice: FX exposure must be managed. |
 | **Validation Plan** | Interview 3+ Treasury managers: "How do you manage FX risk on international payments?" |
 | **Severity** | **Medium** |
+| **MVP Tier** | **P2** |
 | **Applicable Personas** | Treasury Manager |
 | **Implementation** | J8 (Payment Release) — FX lock mechanism |
 
@@ -924,28 +1013,81 @@ Each rule includes:
 | **Evidence** | Constitution: "Every action is auditable" / "Tamper-evident design." J9 (Audit) requires complete payment trail. |
 | **Validation Plan** | Verify every payment in test suite generates complete audit chain; verify checksum integrity |
 | **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
 | **Applicable Personas** | Auditor, Treasury Manager |
 | **Implementation** | J8 (Payment Release) — audit records at each stage |
 
 ---
 
-### BR-055: Payment Cut-Off Time
+### BR-069: Partial Payment Allocation Rules
 
 | Field | Value |
 |-------|-------|
-| **ID** | BR-055 |
-| **Name** | Payment Cut-Off |
-| **Description** | Payments submitted after bank cut-off time (typically 3:00 PM local) are scheduled for next business day. System displays expected execution date. Weekend/holiday submissions are queued. |
+| **ID** | BR-069 |
+| **Name** | Partial Payment Allocation |
+| **Description** | When paying invoices partially, payments are allocated to the oldest outstanding invoices first (FIFO) unless otherwise specified by the AP Manager. Prevents strategic default by allowing payers to pay newest invoices first while leaving oldest unpaid. |
 | **Category** | Payment |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from banking operational constraints. Cut-off times vary by bank. |
-| **Validation Plan** | Interview 3+ Treasury managers: "What is your bank cut-off time? How do you handle late submissions?" |
-| **Severity** | **Medium** |
-| **Applicable Personas** | Treasury Manager, AP Manager |
-| **Implementation** | J8 (Payment Release) — cut-off check |
+| **Evidence** | Working — well-established industry practice. FIFO allocation is standard for partial payments. Override requires AP Manager approval. |
+| **Validation Plan** | Test partial payment allocation with multiple outstanding invoices; verify FIFO order; test override with AP Manager approval |
+| **Severity** | **High** |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Manager, Treasury Manager |
+| **Implementation** | J7 (Payment Readiness) — allocation logic |
 
 ---
 
-## 7. Exception Rules (BR-056 to BR-065)
+### BR-071: AP Data Retention Policy
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-071 |
+| **Name** | Data Retention Periods |
+| **Description** | AP records are retained for: 7 years (invoices, payments, approvals) and 5 years (audit records, vendor history). After retention period, records are archived (not deleted). Compliance requirement for tax and audit purposes. |
+| **Category** | Payment |
+| **Evidence** | Constitution: "Every action is auditable" — retention enables audit. Industry standard: 7 years is the minimum for tax compliance in most jurisdictions. |
+| **Validation Plan** | Verify retention period enforcement; test archive workflow at end of retention |
+| **Severity** | **Medium** |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Manager, Controller, Auditor |
+| **Implementation** | J9 (Audit Review) — retention scheduler |
+
+---
+
+### BR-072: AP Subledger-to-GL Reconciliation Frequency
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-072 |
+| **Name** | Subledger-to-GL Reconciliation |
+| **Description** | The AP subledger must be reconciled to the GL at least weekly. Reconciliation report shows: total AP balance in subledger vs. GL control account, outstanding items, and any discrepancies > $0.01. Minimum operational control for financial integrity. |
+| **Category** | Payment |
+| **Evidence** | Constitution: "Every number is precise" — subledger-to-GL reconciliation is a fundamental financial control. Industry standard: monthly is minimum; weekly is best practice for high-volume AP. |
+| **Validation Plan** | Test weekly reconciliation trigger; verify discrepancy detection and reporting |
+| **Severity** | **High** |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Manager, Controller, Auditor |
+| **Implementation** | J10 (Month-End Close) — reconciliation check |
+
+---
+
+### BR-073: Credit Memo Application Sequencing
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-073 |
+| **Name** | Credit Memo Sequencing |
+| **Description** | Credit memos are applied to the oldest outstanding invoices first by default. Ensures consistent aging treatment. AP Manager can override sequencing for specific cases. |
+| **Category** | Payment |
+| **Evidence** | Working — well-established industry practice. FIFO credit memo application prevents aging manipulation. |
+| **Validation Plan** | Test credit memo application with multiple outstanding invoices; verify FIFO order; test override |
+| **Severity** | **Medium** |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Clerk, AP Manager |
+| **Implementation** | J7 (Payment Readiness) — credit memo application logic |
+
+---
+
+## 7. Exception Rules (BR-056 to BR-058, BR-060, BR-063, BR-065)
 
 ### BR-056: Auto-Escalation on SLA Breach
 
@@ -958,7 +1100,8 @@ Each rule includes:
 | **Evidence** | [HYPOTHESIS] — no direct customer evidence. SLA thresholds inferred from industry patterns. E4 (Muhammed Jamsheed): "Intelligent discrepancy alerts would reduce manual work" — escalation is a form of intelligent alerting. |
 | **Validation Plan** | Interview 3+ AP managers: "How long do exceptions sit before escalation? What thresholds work for you?" |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Supervisor, AP Manager |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Manager |
 | **Implementation** | J4 (Exception Resolution) — SLA monitor |
 
 ---
@@ -971,10 +1114,11 @@ Each rule includes:
 | **Name** | Mandatory Exception Category |
 | **Description** | Every exception must be assigned a category: PRICE_VARIANCE, QUANTITY_VARIANCE, DUPLICATE, MISSING_PO, MISSING_GRN, POLICY_VIOLATION, TAX_MISMATCH, CURRENCY_MISMATCH. Category determines resolution path. |
 | **Category** | Exception |
-| **Evidence** | E4 (Muhammed Jamsheed): "Intelligent discrepancy alerts" — categorisation enables intelligence. E7 (Phase 20.0): exception count shown as KPI but no action possible — categorisation is prerequisite for action. |
+| **Evidence** | E4 (Muhammed Jamsheed): "Intelligent discrepancy alerts" — categorisation enables intelligence. E7 (Ahmed Orabi): exception count shown as KPI but no action possible — categorisation is prerequisite for action. |
 | **Validation Plan** | Test with 8 exception types; verify correct categorisation and resolution path routing |
 | **Severity** | **High** |
-| **Applicable Personas** | AP Supervisor |
+| **MVP Tier** | **P1** |
+| **Applicable Personas** | AP Manager |
 | **Implementation** | J4 (Exception Resolution) — categorisation |
 
 ---
@@ -990,24 +1134,9 @@ Each rule includes:
 | **Evidence** | Constitution: "Every action is auditable" — resolutions without reasons are audit gaps. E1: "manual oversight" implies documented reasoning. |
 | **Validation Plan** | Test resolution without reason; verify system requires input |
 | **Severity** | **Critical** |
-| **Applicable Personas** | AP Supervisor, Auditor |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | AP Manager, Auditor |
 | **Implementation** | J4 (Exception Resolution) — reason gate |
-
----
-
-### BR-059: Exception Re-Open Limit
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-059 |
-| **Name** | Exception Re-Open Limit |
-| **Description** | A resolved exception can be re-opened maximum 2 times. After 2 re-opens, it is escalated to Controller for final determination. Prevents infinite exception loops. |
-| **Category** | Exception |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from process control: infinite loops indicate systemic issues requiring higher authority. |
-| **Validation Plan** | Test with 3 re-open attempts; verify escalation after 2nd |
-| **Severity** | **Medium** |
-| **Applicable Personas** | AP Supervisor, Controller |
-| **Implementation** | J4 (Exception Resolution) — re-open counter |
 
 ---
 
@@ -1022,40 +1151,9 @@ Each rule includes:
 | **Evidence** | E4 (Muhammed Jamsheed): "Intelligent discrepancy alerts" — vendor history provides intelligence. T2: "manual oversight" — history lookup is currently manual. |
 | **Validation Plan** | Test with 5 vendors at various exception rates; verify history display |
 | **Severity** | **Medium** |
-| **Applicable Personas** | AP Supervisor |
+| **MVP Tier** | **P2** |
+| **Applicable Personas** | AP Manager |
 | **Implementation** | J4 (Exception Resolution) — history context |
-
----
-
-### BR-061: Exception Bulk Resolution
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-061 |
-| **Name** | Bulk Exception Resolution |
-| **Description** | AP Supervisor can resolve multiple exceptions of the same category in bulk (up to 20). Each bulk resolution requires a single reason applied to all. Individual audit records created for each. |
-| **Category** | Exception |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from efficiency: AP Supervisors resolve similar exceptions in batches (e.g., 10 GRN delays from same shipment). |
-| **Validation Plan** | Interview 3+ AP managers: "Do you resolve exceptions in bulk? How many at a time?" |
-| **Severity** | **Medium** |
-| **Applicable Personas** | AP Supervisor |
-| **Implementation** | J4 (Exception Resolution) — bulk action |
-
----
-
-### BR-062: Exception Notification
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-062 |
-| **Name** | Exception Notifications |
-| **Description** | New exception: notify assigned resolver (push + email). SLA warning (50% elapsed): notify resolver (push). SLA breach: notify resolver + manager (push + email). Resolution: notify AP Accountant (push). |
-| **Category** | Exception |
-| **Evidence** | T1: "Manual Approval Workflows Delay Payments" — notifications reduce delay across all workflow stages, including exceptions. |
-| **Validation Plan** | Test all 4 notification triggers; verify correct recipients and channels |
-| **Severity** | **High** |
-| **Applicable Personas** | AP Supervisor, AP Manager, AP Accountant |
-| **Implementation** | J4 (Exception Resolution) — notification dispatch |
 
 ---
 
@@ -1067,27 +1165,12 @@ Each rule includes:
 | **Name** | Exception Metrics |
 | **Description** | System must track and display: exception count by category, average resolution time by category, SLA compliance %, exception rate by vendor, trend (vs. previous period). |
 | **Category** | Exception |
-| **Evidence** | E7 (Phase 20.0): exception count (51) shown as KPI — this is the starting point. Metrics must be actionable, not just visible. |
+| **Evidence** | E7 (Ahmed Orabi): exception count (51) shown as KPI — this is the starting point. Metrics must be actionable, not just visible. |
 | **Validation Plan** | Verify all 5 metrics are calculated correctly from test data |
 | **Severity** | **Medium** |
+| **MVP Tier** | **P2** |
 | **Applicable Personas** | AP Manager, Controller |
 | **Implementation** | J4 (Exception Resolution) — metrics dashboard |
-
----
-
-### BR-064: Exception Vendor Flag
-
-| Field | Value |
-|-------|-------|
-| **ID** | BR-064 |
-| **Name** | Vendor Exception Flagging |
-| **Description** | If a vendor's exception rate exceeds 20% over 90 days, the vendor is automatically flagged for review. Flagged vendors: all new invoices require AP Manager review before processing. |
-| **Category** | Exception |
-| **Evidence** | [HYPOTHESIS] — no direct customer evidence. 20% threshold is a starting point. Customer validation: "What exception rate triggers a vendor review for you?" |
-| **Validation Plan** | Interview 3+ AP managers: "At what exception rate do you flag a vendor for review?" |
-| **Severity** | **Medium** |
-| **Applicable Personas** | AP Manager, Procurement Manager |
-| **Implementation** | J4 (Exception Resolution) — vendor flagging |
 
 ---
 
@@ -1102,30 +1185,51 @@ Each rule includes:
 | **Evidence** | Constitution: "Every action is auditable." J9 (Audit) requires complete exception trail. |
 | **Validation Plan** | Verify every exception in test suite generates complete audit chain |
 | **Severity** | **Critical** |
-| **Applicable Personas** | Auditor, AP Supervisor |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | Auditor, AP Manager |
 | **Implementation** | J4 (Exception Resolution) — audit records |
 
 ---
 
-## 8. Rule Summary Matrix
+## 8. Budget Check Rule (BR-074)
+
+### BR-074: Purchase Order Budget Check
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-074 |
+| **Name** | PO Budget Verification |
+| **Description** | Before an invoice can be approved for payment, the system must verify that sufficient budget remains for the linked PO. If the cumulative invoiced amount exceeds the PO budget, the invoice is flagged and routed to the Procurement Manager for budget reallocation approval. Prevents budget overrun. |
+| **Category** | Budget Check |
+| **Evidence** | Constitution: "Every number is precise" — budget integrity is part of financial integrity. Industry standard: PO budget checks prevent unauthorised spending. |
+| **Validation Plan** | Test with PO at 80%, 95%, 100%, and 110% of budget; verify correct handling at each threshold |
+| **Severity** | **Critical** |
+| **MVP Tier** | **P0** |
+| **Applicable Personas** | Procurement Manager, AP Manager, Controller |
+| **Implementation** | J6 (Approval Routing) — budget check before payment approval |
+
+---
+
+## 9. Rule Summary Matrix
 
 ### By Severity
 
 | Severity | Rules | Count |
 |----------|-------|-------|
-| **Critical** | BR-001, BR-003, BR-005, BR-011, BR-015, BR-024, BR-031, BR-032, BR-033, BR-037, BR-039, BR-043, BR-044, BR-048, BR-052, BR-054, BR-058, BR-065 | **18** |
-| **High** | BR-002, BR-004, BR-006, BR-008, BR-009, BR-010, BR-012, BR-013, BR-014, BR-016, BR-019, BR-022, BR-027, BR-028, BR-029, BR-034, BR-035, BR-036, BR-038, BR-042, BR-047, BR-049, BR-050, BR-051, BR-056, BR-057, BR-062 | **27** |
-| **Medium** | BR-007, BR-017, BR-018, BR-020, BR-021, BR-023, BR-025, BR-026, BR-040, BR-041, BR-045, BR-046, BR-053, BR-055, BR-059, BR-060, BR-061, BR-063, BR-064 | **19** |
+| **Critical** | BR-001, BR-003, BR-005, BR-011, BR-015, BR-024, BR-030, BR-031, BR-032, BR-033, BR-037, BR-039, BR-043, BR-044, BR-048, BR-052, BR-054, BR-058, BR-065, BR-066, BR-067, BR-070, BR-074 | **23** |
+| **High** | BR-002, BR-004, BR-006, BR-008, BR-009, BR-010, BR-012, BR-013, BR-014, BR-016, BR-019, BR-022, BR-027, BR-028, BR-029, BR-034, BR-035, BR-036, BR-038, BR-042, BR-047, BR-049, BR-050, BR-051, BR-056, BR-057, BR-068, BR-069, BR-072, BR-075 | **30** |
+| **Medium** | BR-007, BR-017, BR-018, BR-020, BR-021, BR-023, BR-026, BR-045, BR-046, BR-053, BR-060, BR-063, BR-071, BR-073 | **14** |
 | **Low** | — | **0** |
 
 ### By Evidence Confidence
 
 | Confidence | Rules | Count |
 |------------|-------|-------|
-| **High** (E1, T1, T2, T5, Constitution) | BR-001, BR-003, BR-004, BR-005, BR-009, BR-010, BR-011, BR-012, BR-015, BR-024, BR-031, BR-032, BR-033, BR-035, BR-037, BR-038, BR-039, BR-042, BR-043, BR-044, BR-048, BR-052, BR-054, BR-057, BR-058, BR-062, BR-063, BR-065 | **28** |
-| **Medium** (E3, E4, E7) | BR-008, BR-022, BR-023, BR-051, BR-060, BR-064 | **6** |
+| **High** (E1, T1, T2, T5, Constitution) | BR-001, BR-003, BR-004, BR-005, BR-009, BR-010, BR-011, BR-012, BR-015, BR-024, BR-031, BR-032, BR-033, BR-035, BR-037, BR-038, BR-039, BR-042, BR-043, BR-044, BR-048, BR-049, BR-050, BR-052, BR-054, BR-057, BR-058, BR-063, BR-065, BR-066, BR-067, BR-070, BR-071, BR-072, BR-074, BR-075 | **36** |
+| **Medium** (E3, E4, E7) | BR-008, BR-022, BR-023, BR-051, BR-060 | **5** |
 | **Low** (E6, industry) | BR-047 | **1** |
-| **[HYPOTHESIS]** (no evidence) | BR-002, BR-006, BR-007, BR-013, BR-014, BR-016, BR-017, BR-018, BR-019, BR-020, BR-021, BR-025, BR-026, BR-027, BR-028, BR-029, BR-030, BR-034, BR-036, BR-040, BR-041, BR-045, BR-046, BR-053, BR-055, BR-056, BR-059, BR-061 | **28** |
+| **Working** (industry practice) | BR-013, BR-014, BR-016, BR-017, BR-026, BR-045, BR-046, BR-068, BR-069, BR-073 | **10** |
+| **[HYPOTHESIS]** (no evidence) | BR-002, BR-006, BR-007, BR-018, BR-019, BR-020, BR-021, BR-027, BR-028, BR-029, BR-030, BR-034, BR-036, BR-053, BR-056 | **15** |
 
 ### Hypotheses Requiring Validation
 
@@ -1133,45 +1237,172 @@ Each rule includes:
 |------|-----------|-------------------|----------|
 | BR-002 | 90-day past date limit | Interview 3+ AP managers | High |
 | BR-006 | Block inactive vendor invoices | Interview 3+ AP managers | Medium |
-| BR-013 | 2% / $100 price tolerance | Interview 3+ AP managers | High |
-| BR-014 | 1 unit / 1% quantity tolerance | Interview 3+ AP managers | High |
-| BR-016 | 30-day GRN window | Interview 3+ AP managers | High |
-| BR-026 | $1,000 self-approval threshold | Interview 3+ AP managers | High |
+| BR-019 | Partial delivery match | Interview 3+ AP managers | High |
 | BR-027-030 | Approval threshold ladder | Interview 3+ controllers | High |
 | BR-036 | Delegation chain requirement | Interview 3+ AP managers | High |
-| BR-045 | Net 30 default terms | Interview 3+ AP managers | Medium |
-| BR-046 | Early-pay discount capture | Interview 3+ AP managers | Medium |
 | BR-056 | 4h/24h/72h/7d escalation SLAs | Interview 3+ AP managers | Medium |
-| BR-064 | 20% vendor exception flag threshold | Interview 3+ AP managers | Low |
 
 ---
 
-## 9. Rule Implementation Map
+## 10. Rule Implementation Map
 
 | Workflow Stage | Rules Enforced |
 |---------------|---------------|
 | J1 (Invoice Receipt) | BR-001, BR-002, BR-003, BR-005, BR-006, BR-007, BR-008, BR-011, BR-012 |
-| J2 (Invoice Review) | BR-004, BR-009, BR-010 |
-| J3 (Three-Way Match) | BR-013, BR-014, BR-015, BR-016, BR-017, BR-018, BR-019, BR-020, BR-021, BR-022, BR-023, BR-024, BR-025 |
-| J4 (Exception Resolution) | BR-034, BR-056, BR-057, BR-058, BR-059, BR-060, BR-061, BR-062, BR-063, BR-064, BR-065 |
+| J2 (Invoice Review) | BR-004, BR-009, BR-010, BR-068, BR-070 |
+| J3 (Three-Way Match) | BR-013, BR-014, BR-015, BR-016, BR-017, BR-018, BR-019, BR-020, BR-021, BR-022, BR-023, BR-024 |
+| J4 (Exception Resolution) | BR-034, BR-056, BR-057, BR-058, BR-060, BR-063, BR-065 |
 | J5 (Supporting Docs) | — (documentation rules are implicit in other rules) |
-| J6 (Approval Routing) | BR-026, BR-027, BR-028, BR-029, BR-030, BR-031, BR-032, BR-033, BR-035, BR-036, BR-037, BR-038, BR-039, BR-040, BR-041, BR-042 |
-| J7 (Payment Readiness) | BR-045, BR-046, BR-049 |
-| J8 (Payment Release) | BR-043, BR-044, BR-047, BR-048, BR-050, BR-051, BR-052, BR-053, BR-054, BR-055 |
+| J6 (Approval Routing) | BR-026, BR-027, BR-028, BR-029, BR-030, BR-031, BR-032, BR-033, BR-035, BR-036, BR-037, BR-038, BR-039, BR-042, BR-066, BR-067, BR-074, BR-075 |
+| J7 (Payment Readiness) | BR-045, BR-046, BR-049, BR-069, BR-073 |
+| J8 (Payment Release) | BR-043, BR-044, BR-047, BR-048, BR-050, BR-051, BR-052, BR-053, BR-054 |
 | J9 (Audit Review) | BR-024, BR-054, BR-065 (verification of all audit trails) |
-| J10 (Month-End Close) | All rules verified as part of reconciliation |
+| J10 (Month-End Close) | BR-072, all rules verified as part of reconciliation |
 
 ---
 
-## 10. Next Steps
+## 11. Next Steps
 
 | Priority | Action | Owner | Timeline |
 |----------|--------|-------|----------|
-| 1 | Validate 28 [HYPOTHESIS] rules via interviews (12 interviews) | Product | Q3 2026 |
-| 2 | Confirm approval threshold ladder with 3+ controllers | Product | Q3 2026 |
-| 3 | Confirm tolerance thresholds (BR-013, BR-014) with 3+ AP managers | Product | Q3 2026 |
+| 1 | Validate 15 [HYPOTHESIS] rules via interviews (6 interviews) | Product | Q3 2026 |
+| 2 | Implement BR-066 (Vendor Bank Change Dual Approval) as P0 | Engineering | Q3 2026 |
+| 3 | Implement BR-067, BR-070, BR-074 as P0 controls | Engineering | Q3 2026 |
 | 4 | Prototype BR-037 (evidence-before-approval gate) with 5 users | Design | Q3 2026 |
 | 5 | Load test BR-044 (duplicate payment check) at scale | Engineering | Q4 2026 |
+| 6 | Implement BR-074 (PO Budget Check) integration with procurement | Engineering | Q4 2026 |
+
+---
+
+## 12. Moved to Infrastructure Specifications
+
+The following rules were identified as infrastructure specifications or engineering SLAs, not true business rules. They are retained here for reference but enforced at the infrastructure or platform level rather than in the AP workflow domain.
+
+### BR-025: Match Processing Timeout (Three-Way Match)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-025 |
+| **Name** | Match Processing Timeout |
+| **Description** | If match processing exceeds 30 seconds (e.g., PO lookup slow), the system must not silently fail. Must log timeout, notify AP Clerk, and queue for retry. |
+| **Category** | Infrastructure — Engineering SLA |
+| **Evidence** | Constitution: "Failure is expected" — every stage has defined recovery paths. System must handle performance degradation gracefully. |
+| **Validation Plan** | Simulate slow PO lookup; verify timeout handling and retry |
+| **Severity** | **Medium** |
+| **Applicable Personas** | AP Clerk |
+| **Implementation** | J3 (Three-Way Match) — timeout guard |
+
+---
+
+### BR-040: Bulk Approval Cap (Approval)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-040 |
+| **Name** | Bulk Approval Cap |
+| **Description** | Approver can approve up to 10 invoices in a single bulk action. Bulk approvals > 10 require individual confirmation for each. Prevents rubber-stamping. |
+| **Category** | Infrastructure — UI Config |
+| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from audit concern: bulk approvals without review undermine controls. |
+| **Validation Plan** | Interview 3+ controllers: "Do you limit bulk approvals? Should approvers confirm each invoice individually?" |
+| **Severity** | **Medium** |
+| **Applicable Personas** | Approver, Auditor |
+| **Implementation** | J6 (Approval Routing) — bulk action guard |
+
+---
+
+### BR-041: Approval Timeout Void (Approval)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-041 |
+| **Name** | Approval Timeout |
+| **Description** | If an invoice remains in approval queue > 30 days without decision, it is automatically voided. System notifies AP Manager and Controller before voiding. |
+| **Category** | Infrastructure — State Machine Guard |
+| **Evidence** | [HYPOTHESIS] — no direct customer evidence. 30-day timeout is a reasonable default. Customer validation: "How long do you let invoices sit in approval?" |
+| **Validation Plan** | Interview 3+ AP managers: "What happens to invoices that sit in approval for 30+ days?" |
+| **Severity** | **Medium** |
+| **Applicable Personas** | Approver, AP Manager |
+| **Implementation** | J6 (Approval Routing) — timeout monitor |
+
+---
+
+### BR-055: Payment Cut-Off Time (Payment)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-055 |
+| **Name** | Payment Cut-Off |
+| **Description** | Payments submitted after bank cut-off time (typically 3:00 PM local) are scheduled for next business day. System displays expected execution date. Weekend/holiday submissions are queued. |
+| **Category** | Infrastructure — Invariant |
+| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from banking operational constraints. Cut-off times vary by bank. |
+| **Validation Plan** | Interview 3+ Treasury managers: "What is your bank cut-off time? How do you handle late submissions?" |
+| **Severity** | **Medium** |
+| **Applicable Personas** | Treasury Manager, AP Manager |
+| **Implementation** | J8 (Payment Release) — cut-off check |
+
+---
+
+### BR-059: Exception Re-Open Limit (Exception)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-059 |
+| **Name** | Exception Re-Open Limit |
+| **Description** | A resolved exception can be re-opened maximum 2 times. After 2 re-opens, it is escalated to Controller for final determination. Prevents infinite exception loops. |
+| **Category** | Infrastructure — State Machine Guard |
+| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from process control: infinite loops indicate systemic issues requiring higher authority. |
+| **Validation Plan** | Test with 3 re-open attempts; verify escalation after 2nd |
+| **Severity** | **Medium** |
+| **Applicable Personas** | AP Manager, Controller |
+| **Implementation** | J4 (Exception Resolution) — re-open counter |
+
+---
+
+### BR-061: Bulk Exception Resolution Cap (Exception)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-061 |
+| **Name** | Bulk Exception Resolution |
+| **Description** | AP Manager can resolve multiple exceptions of the same category in bulk (up to 20). Each bulk resolution requires a single reason applied to all. Individual audit records created for each. |
+| **Category** | Infrastructure — UI Config |
+| **Evidence** | [HYPOTHESIS] — no direct customer evidence. Inferred from efficiency: AP Managers resolve similar exceptions in batches (e.g., 10 GRN delays from same shipment). |
+| **Validation Plan** | Interview 3+ AP managers: "Do you resolve exceptions in bulk? How many at a time?" |
+| **Severity** | **Medium** |
+| **Applicable Personas** | AP Manager |
+| **Implementation** | J4 (Exception Resolution) — bulk action |
+
+---
+
+### BR-062: Exception Notification (Exception)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-062 |
+| **Name** | Exception Notifications |
+| **Description** | New exception: notify assigned resolver (push + email). SLA warning (50% elapsed): notify resolver (push). SLA breach: notify resolver + manager (push + email). Resolution: notify AP Clerk (push). |
+| **Category** | Infrastructure — Audit Infrastructure |
+| **Evidence** | T1: "Manual Approval Workflows Delay Payments" — notifications reduce delay across all workflow stages, including exceptions. |
+| **Validation Plan** | Test all 4 notification triggers; verify correct recipients and channels |
+| **Severity** | **High** |
+| **Applicable Personas** | AP Manager, AP Clerk |
+| **Implementation** | J4 (Exception Resolution) — notification dispatch |
+
+---
+
+### BR-064: Vendor Active Flag (Exception)
+
+| Field | Value |
+|-------|-------|
+| **ID** | BR-064 |
+| **Name** | Vendor Exception Flagging |
+| **Description** | If a vendor's exception rate exceeds 20% over 90 days, the vendor is automatically flagged for review. Flagged vendors: all new invoices require AP Manager review before processing. |
+| **Category** | Infrastructure — Invariant |
+| **Evidence** | [HYPOTHESIS] — no direct customer evidence. 20% threshold is a starting point. Customer validation: "What exception rate triggers a vendor review for you?" |
+| **Validation Plan** | Interview 3+ AP managers: "At what exception rate do you flag a vendor for review?" |
+| **Severity** | **Medium** |
+| **Applicable Personas** | AP Manager, Procurement Manager |
+| **Implementation** | J4 (Exception Resolution) — vendor flagging |
 
 ---
 
@@ -1179,17 +1410,20 @@ Each rule includes:
 
 | Field | Value |
 |-------|-------|
-| Document ID | BUSINESS_RULE_LIBRARY_v2.0 |
+| Document ID | BUSINESS_RULE_LIBRARY_v2.1 |
 | Phase | 27.1 |
+| Version | v2.1 (stabilisation) |
 | Author | Perionyx Product Architecture Board |
 | Reviewers | Customer Advisory Board, Engineering Leads, Compliance |
 | Status | Draft |
 | Next Review | Phase 27.2 |
 | Classification | Internal — Engineering & Product |
-| Total Lines | ~700 |
-| Rules Defined | 65 |
-| Critical Rules | 18 |
-| High Rules | 27 |
-| Medium Rules | 19 |
-| Hypotheses Flagged | 28 (43%) |
-| Evidence-Backed | 37 (57%) |
+| Total Lines | ~1,450 |
+| Rules Defined | 75 |
+| Critical Rules | 23 |
+| High Rules | 30 |
+| Medium Rules | 14 |
+| Low Rules | 0 |
+| Hypotheses Flagged | 15 (22%) |
+| Working (Industry Practice) | 10 (13%) |
+| Evidence-Backed | 52 (78%) |

@@ -1,14 +1,14 @@
 ---
-title: "User Journey Library — AP Reference Workflow v2.0"
+title: "User Journey Library — AP Reference Workflow v2.1"
 created: 2026-07-28
 phase: "27.1"
-version: "2.0"
+version: "2.1"
 authority: Product Architecture Board
 classification: Internal — Engineering & Product
 tags: [product, ap, journeys, ux, workflow]
 ---
 
-# User Journey Library — AP Reference Workflow v2.0
+# User Journey Library — AP Reference Workflow v2.1
 
 ## 1. Purpose
 
@@ -31,7 +31,7 @@ Every journey is grounded in customer evidence. Where evidence is insufficient, 
 | E1 | Adeel Aslam | 2026-07-21 | Discovery interview | High |
 | E3 | Ayman Shawky | TBD | CRM feedback | Medium |
 | E4 | Muhammed Jamsheed | TBD | CRM feedback | Medium |
-| E7 | Phase 20.0 Validation | 2026-07-21 | Internal audit | High |
+| E7 | Ahmed Orabi | 2026-07-21 | Discovery interview | Medium |
 | T1 | Manual Approval Workflows Delay Payments | 2026-07-21 | Theme (4 sources) | High |
 | T2 | Vendor Invoice Reconciliation Is Manual | 2026-07-21 | Theme (4 sources) | High |
 | T5 | Month-End Close Is Universally Painful | 2026-07-21 | Theme (3 sources) | High |
@@ -42,16 +42,16 @@ Every journey is grounded in customer evidence. Where evidence is insufficient, 
 
 | # | Journey | Persona | Goal | Trigger | Stages |
 |---|---------|---------|------|---------|--------|
-| J1 | Invoice Receipt | AP Accountant | Receive and capture with zero loss | Invoice arrives | 1 |
-| J2 | Invoice Review | AP Accountant | Validate completeness and policy | After capture | 1-2 |
-| J3 | Three-Way Match | AP Accountant | Match invoice to PO and GRN | After validation | 3 |
-| J4 | Exception Resolution | AP Supervisor | Resolve all discrepancies | Exception raised | 4 |
-| J5 | Supporting Documents | AP Accountant | Gather all required documents | Missing docs detected | 2 |
-| J6 | Approval Routing | Approver | Review and decide on payment | Invoice matched | 7 |
-| J7 | Payment Readiness | AP Manager | Prepare optimal payment proposal | Invoices approved | 8 |
-| J8 | Payment Release | Treasury Manager | Execute payment with confidence | Proposal approved | 9 |
-| J9 | Audit Review | Auditor | Verify complete audit trail | Audit triggered | 10 |
-| J10 | Month-End Close | Controller | Close AP subledger accurately | Period end | 10 |
+| J1 | Invoice Receipt | AP Clerk | Receive and capture with zero loss | Invoice arrives | 1 |
+| J2 | Invoice Review | AP Clerk | Validate completeness and policy | After capture | 1-2 |
+| J3 | Three-Way Match | AP Clerk | Match invoice to PO and GRN | After validation | 2 |
+| J4 | Exception Resolution | AP Manager | Resolve all discrepancies | Exception raised | 3 |
+| J5 | Supporting Documents | AP Clerk | Gather all required documents | Missing docs detected | 2 |
+| J6 | Approval Path | Approver | Review and decide on payment | Invoice matched | 5 |
+| J7 | Payment Readiness | AP Manager | Prepare optimal payment proposal | Invoices approved | 6 |
+| J8 | Payment Release | Treasury Manager | Execute payment with confidence | Proposal approved | 7 |
+| J9 | Audit Review | Auditor | Verify complete audit trail | Audit triggered | 7 |
+| J10 | Month-End Close | Controller | Close AP subledger accurately | Period end | 7 |
 
 ---
 
@@ -62,7 +62,7 @@ Every journey is grounded in customer evidence. Where evidence is insufficient, 
 | Field | Detail |
 |-------|--------|
 | **Journey ID** | J1 |
-| **Persona** | AP Accountant (AP Clerk) |
+| **Persona** | AP Clerk |
 | **Goal** | Receive and capture a vendor invoice with zero loss |
 | **Trigger** | Invoice arrives via email, vendor portal, mail, or EDI |
 | **Scope** | From invoice arrival to validated queue entry |
@@ -113,7 +113,7 @@ TRIGGER: Invoice arrives at designated channel
          │                     │
          ▼                     ▼
 ┌─────────────────────────────────────────┐
-│ STEP 3: AP Accountant Reviews          │
+│ STEP 3: AP Clerk Reviews          │
 │   Compare extracted vs. original        │
 │   Correct any errors                    │
 │   Confirm or override confidence        │
@@ -143,10 +143,10 @@ TRIGGER: Invoice arrives at designated channel
 
 | # | Decision | Criteria | Outcome |
 |---|----------|----------|---------|
-| D1 | Is this a duplicate? | Same vendor + same amount + same date within 30 days (BR-005) | If duplicate → flag, do not create; notify AP Accountant |
+| D1 | Is this a duplicate? | Same vendor + same amount + same date within 30 days (BR-005) | If duplicate → flag, do not create; notify AP Clerk |
 | D2 | Is the vendor known? | Vendor exists in master data with ACTIVE status | If unknown → route to new vendor registration flow |
 | D3 | Is there a PO reference? | PO number extracted and matches existing PO | If yes → queue for three-way match (J3); if no → queue for two-way match or manual coding |
-| D4 | Is the amount within policy? | Amount < threshold for AP Accountant authority | If over → queue for escalation |
+| D4 | Is the amount within policy? | Amount < threshold for AP Clerk authority | If over → queue for escalation |
 
 ### Edge Cases
 
@@ -157,7 +157,7 @@ TRIGGER: Invoice arrives at designated channel
 | E3 | Invoice in foreign currency | Capture with currency code; queue for FX rate lookup |
 | E4 | Duplicate invoice from different channel | Cross-reference all channels for duplicate detection |
 | E5 | OCR fails entirely | Route to manual entry; log OCR failure for system improvement |
-| E6 | Invoice references cancelled PO | Flag for AP Accountant; queue for exception (J4) |
+| E6 | Invoice references cancelled PO | Flag for AP Clerk; queue for exception (J4) |
 | E7 | Vendor sends credit note (negative amount) | Capture as credit note entity; queue for credit processing |
 
 ### Accessibility Notes
@@ -192,7 +192,7 @@ TRIGGER: Invoice arrives at designated channel
 ```
 invoice.received    → timestamp, channel, vendor, amount
 invoice.captured    → OCR confidence, extraction method
-invoice.reviewed    → AP Accountant userId, corrections made
+invoice.reviewed    → AP Clerk userId, corrections made
 invoice.validated   → validation results, queue assignment
 ```
 
@@ -201,7 +201,7 @@ invoice.validated   → validation results, queue assignment
 | Failure | Recovery |
 |---------|----------|
 | OCR fails | Manual entry with original document side-by-side |
-| Duplicate detected | Void duplicate; keep original; notify AP Accountant |
+| Duplicate detected | Void duplicate; keep original; notify AP Clerk |
 | Unknown vendor | Register new vendor (with approval); link to invoice |
 | Lost invoice (never captured) | [HYPOTHESIS] — Vendor portal submission + email archival |
 
@@ -214,7 +214,7 @@ invoice.validated   → validation results, queue assignment
 | Field | Detail |
 |-------|--------|
 | **Journey ID** | J2 |
-| **Persona** | AP Accountant (AP Clerk) |
+| **Persona** | AP Clerk |
 | **Goal** | Validate invoice completeness and policy compliance |
 | **Trigger** | Invoice enters validated queue after capture |
 | **Scope** | From queue entry to match-ready status |
@@ -352,7 +352,7 @@ invoice.review.complete → result (pass/fail), policy violations found
 | Field | Detail |
 |-------|--------|
 | **Journey ID** | J3 |
-| **Persona** | AP Accountant (AP Clerk) |
+| **Persona** | AP Clerk |
 | **Goal** | Match invoice to PO and GRN automatically |
 | **Trigger** | Invoice validated with PO reference |
 | **Scope** | From match attempt to matched or exception |
@@ -472,7 +472,7 @@ match.exception   → if exception: exception type, category, escalation path
 | Field | Detail |
 |-------|--------|
 | **Journey ID** | J4 |
-| **Persona** | AP Supervisor (AP Manager) |
+| **Persona** | AP Manager |
 | **Goal** | Resolve all discrepancies and clear exception queue |
 | **Trigger** | Match failure or policy violation flagged |
 | **Scope** | From exception creation to resolution |
@@ -485,7 +485,7 @@ match.exception   → if exception: exception type, category, escalation path
 |--------|-------|------------|
 | E4 (Muhammed Jamsheed) | "Intelligent discrepancy alerts would reduce manual work" | Medium |
 | E1 (Adeel Aslam) | "manual oversight to ensure accuracy" — implies exception handling is manual | High |
-| E7 (Phase 20.0) | Exception count (51) shown as KPI but no action possible — gap identified | High |
+| E7 (Ahmed Orabi) | Exception count (51) shown as KPI but no action possible — gap identified | High |
 
 ### Journey Map
 
@@ -638,7 +638,7 @@ exception.sla_breach → time in queue, escalation path taken
 | Field | Detail |
 |-------|--------|
 | **Journey ID** | J5 |
-| **Persona** | AP Accountant (AP Clerk) |
+| **Persona** | AP Clerk |
 | **Goal** | Gather all required supporting documents for invoice |
 | **Trigger** | Missing documents detected during validation or review |
 | **Scope** | From detection to complete documentation package |
@@ -759,7 +759,7 @@ doc.verified    → completeness check result, verifier ID
 
 ---
 
-## 8. Journey 6: Approval Routing
+## 8. Journey 6: Approval Path
 
 ### Overview
 
@@ -780,7 +780,7 @@ doc.verified    → completeness check result, verifier ID
 | T1 | "Manual Approval Workflows Delay Payments" (4 sources) | High |
 | E1 (Adeel Aslam) | "approval workflows... manual oversight" | High |
 | E1 (Mohamed Gamal) | "approval bottlenecks" [CRM] | Medium |
-| E7 (Phase 20.0) | Approval matrix exists but not wired — gap identified | High |
+| E7 (Ahmed Orabi) | Approval matrix exists but not wired — gap identified | High |
 
 ### Journey Map
 
@@ -846,8 +846,8 @@ TRIGGER: Invoice matched + docs complete + approval required
 
 | Threshold | Approver | Delegate | SLA |
 |-----------|----------|----------|-----|
-| < $1,000 | AP Accountant (self-approve) — [HYPOTHESIS] | N/A | Immediate |
-| $1,000 – $10,000 | AP Supervisor | AP Manager | 4 hours |
+| < $1,000 | AP Clerk (self-approve) — [HYPOTHESIS] | N/A | Immediate |
+| $1,000 – $10,000 | AP Manager | AP Manager | 4 hours |
 | $10,000 – $50,000 | AP Manager | Controller | 8 hours |
 | $50,000 – $250,000 | Controller | CFO | 24 hours |
 | > $250,000 | CFO | Board delegate | 48 hours |
@@ -1223,7 +1223,7 @@ payment.resolve     → resolution method, manual wire reference
 
 | Source | Quote | Confidence |
 |--------|-------|------------|
-| E7 (Phase 20.0) | "Audit trail for every action" listed as gap — addressed in design | High |
+| E7 (Ahmed Orabi) | "Audit trail for every action" listed as gap — addressed in design | High |
 | Constitution | "Every action is auditable" — Platform Constitution | High |
 | Auditor persona | Requirements derived from Phase 20.0 validation | High |
 
@@ -1355,7 +1355,7 @@ audit.report      → findings, recommendations, completion timestamp
 | Source | Quote | Confidence |
 |--------|-------|------------|
 | T5 | "Month-End Close Is Universally Painful" (3 sources) | High |
-| E7 (Phase 20.0) | Month-end close identified as friction point across 3+ personas | High |
+| E7 (Ahmed Orabi) | Month-end close identified as friction point across 3+ personas | High |
 | Controller persona | Requirements from Phase 20.0 validation | High |
 
 ### Journey Map
@@ -1419,7 +1419,7 @@ TRIGGER: Period end (25th of month recommended)
 |---|------|-------|----------|
 | 1 | Review all invoices in pipeline | AP Manager | 23rd |
 | 2 | Escalate pending approvals | AP Manager | 24th |
-| 3 | Resolve open exceptions | AP Supervisor | 24th |
+| 3 | Resolve open exceptions | AP Manager | 24th |
 | 4 | Confirm in-transit GRNs | Procurement | 24th |
 | 5 | Run duplicate detection scan | System | 24th night |
 | 6 | Post accruals for unreceived invoices | Controller | 25th |
@@ -1480,7 +1480,7 @@ close.package      → audit package generated, report reference
 | J5 (Supporting Docs) | J1 | Complete documentation |
 | J3 (Three-Way Match) | J2, J5 | Matched invoice or exception |
 | J4 (Exception Resolution) | J3, J6 | Resolved exception |
-| J6 (Approval Routing) | J3, J5 | Approved invoice |
+| J6 (Approval Path) | J3, J5 | Approved invoice |
 | J7 (Payment Readiness) | J6 | Payment proposal |
 | J8 (Payment Release) | J7 | Executed payment |
 | J9 (Audit Review) | All | Audit report |
@@ -1497,7 +1497,7 @@ close.package      → audit package generated, report reference
 | J3 (Three-Way Match) | High (T2, E1) | Working | Low |
 | J4 (Exception Resolution) | Medium (E4, E7) | Working | Medium |
 | J5 (Supporting Docs) | Low [HYPOTHESIS] | Not validated | High |
-| J6 (Approval Routing) | High (T1, E1) | Working | Low |
+| J6 (Approval Path) | High (T1, E1) | Working | Low |
 | J7 (Payment Readiness) | Medium (E3) [HYPOTHESIS] | Not validated | Medium |
 | J8 (Payment Release) | Low (E5) [HYPOTHESIS] | Not validated | High |
 | J9 (Audit Review) | High (Constitution) | Working | Low |

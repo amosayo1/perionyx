@@ -1,22 +1,22 @@
 ---
-title: "AI Behaviour Guide — Role of Artificial Intelligence in the AP Workflow v1.0"
+title: "AI Behaviour Guide — Role of Artificial Intelligence in the AP Workflow v2.0"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 tags:
   - type/specification
   - domain/ai
   - domain/ap
   - status/active
 owner: AI Platform Team
-authority: Phase 27.1
+authority: Phase 27.1S
 ---
 
-# AI Behaviour Guide — Role of Artificial Intelligence in the AP Workflow v1.0
+# AI Behaviour Guide — Role of Artificial Intelligence in the AP Workflow v2.0
 
 > **Classification**: Restricted — Internal Use Only
-> **Status**: Design Document (Phase 27.1)
-> **Authority**: Phase 27.1 — AI Behaviour Contract for AP Reference Workflow
+> **Status**: Active Specification (Phase 27.1S)
+> **Authority**: Phase 27.1S — AI Behaviour Contract for AP Reference Workflow
 > **Evidence Basis**: Adeel Aslam (E1), Ayman Shawky (E3), Muhammed Jamsheed (E4), Mohamed Gamal (E5), Khaleel Ur Rehman (E6), Ahmed Orabi (E7), Themes T1–T8, Principles P1–P10
 
 ---
@@ -25,7 +25,7 @@ authority: Phase 27.1
 
 ### 1.1 Core Tenet
 
-AI in Perionyx is an **evidence collector and explainer**, never a decision-maker. Every AI output is a recommendation that a human can accept, modify, or reject with a reason. This is non-negotiable and applies to all 10 stages of the AP workflow.
+AI in Perionyx is an **evidence collector and explainer**, never a decision-maker. Every AI output is a recommendation that a human can accept, modify, or reject with a reason. This is non-negotiable and applies to all 7 stages of the AP workflow.
 
 **The AI Promise:**
 
@@ -52,7 +52,7 @@ AI in Perionyx is an **evidence collector and explainer**, never a decision-make
 3. **Every AI output is explainable** — it must answer: What was found? Why is this relevant? What evidence supports this? What is the confidence? What happens if ignored?
 4. **Every AI output is overridable** — humans can reject any recommendation with a mandatory reason; overrides are logged and used to improve models
 5. **Every AI action is logged** — full audit trail of reasoning, inputs, outputs, model version, human action taken
-6. **AI fails gracefully** — when uncertain (< 50% confidence), it falls back to manual processing, never to guesses or approximations
+6. **AI fails gracefully** — when uncertain, it falls back to manual processing, never to guesses or approximations
 
 ---
 
@@ -69,18 +69,13 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | **Matching** | Three-way match computation, variance calculation, tolerance evaluation | Automated | Override match with reason |
 | **Duplicate Detection** | Similarity scoring, exact match detection, near-duplicate flagging | Automated | Confirm duplicate before void |
 | **Anomaly Detection** | Statistical outlier detection, behavioural shift detection, pattern identification | Automated | Investigate flagged items |
-| **Coding Suggestions** | GL code suggestions from history + PO match | Suggestive | Confirm coding before posting |
-| **Cash Flow Prediction** | Payment outflow projection, discount NPV calculation | Suggestive | Treasury approves timing [HYPOTHESIS] |
-| **Vendor Risk Scoring** | Composite risk score from payment history, dispute history, ageing | Suggestive | Interpret score, make decision |
 | **Audit Trail Analysis** | Chronological reconstruction, checksum verification, gap detection | Automated | Review exceptions only |
 | **Work Prioritisation** | SLA-based queue ordering, risk-based ranking, deadline alerts | Suggestive | Accept or override ranking |
 | **Exception Classification** | Type assignment, severity scoring, root cause diagnosis | Suggestive | Confirm classification |
 | **Resolution Suggestion** | Historical match-based resolution proposal | Suggestive | Choose and apply resolution |
 | **Recommendation Generation** | Approve/review/reject recommendation with reasoning chain | Suggestive | Make final decision |
-| **Payment Optimisation** | Discount capture calculation, timing recommendation, batch grouping | Suggestive | Treasury approves proposal |
 | **Payment Failure Diagnosis** | Error code interpretation, root cause, retry recommendation | Suggestive | Decide action |
 | **Reconciliation Matching** | Bank statement line matching, exception flagging | Automated | Review exceptions |
-| **GL Auto-Coding** | Account code suggestion by vendor category, item type, history | Suggestive | Controller confirms coding |
 | **SLA Monitoring** | Real-time SLA tracking, breach prediction, escalation triggers | Automated | Act on breach alerts |
 
 ### 2.2 What Requires Human Confirmation
@@ -93,25 +88,22 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | Exception Classification | Confirm type and severity | AP Manager | WP1: exceptions deserve attention |
 | Resolution Suggestion | Choose and apply resolution | AP Manager | P5: AI explains, human decides |
 | Recommendation | Accept/reject approve/review/reject | Role-based approver | T1: approval workflow pain point |
-| GL Coding | Confirm account codes | Controller | E5: manual reconciliation pain |
-| Payment Optimisation | Approve batch timing and composition | Treasury Manager | E3: cash position visibility |
 | Payment Failure | Decide retry, reschedule, or manual | Treasury Manager | E9: treasury reliability |
 | Routing Plan | Approve cross-department routing | AP Manager | T3: ERP silos integration pain |
-| Risk Score | Interpret and act on score | Approver | E3: confidence scoring need |
 | Anomaly | Investigate flagged item | AP Clerk / AP Manager | T6: AI trust requires verification |
 
 ### 2.3 What AI Must Never Do (Hard Blocks)
 
 | Restriction | Stage | Reason | Fallback | Evidence |
 |------------|-------|--------|----------|----------|
-| Approve invoices | 7 | Legal authority requires human decision; AI lacks legal standing | Route to human approver | SOX compliance, constitutional |
-| Execute payments | 9 | Financial authority requires human decision; AI cannot hold signing authority | Route to Treasury Manager | SOX, dual-signature requirement |
-| Override approval thresholds | 7 | Compliance and SoD controls; threshold overrides are control failures | Block override, log attempt | Constitution Law 12 |
-| Modify vendor banking details | 1–9 | Fraud prevention; banking detail changes are the #1 BEC attack vector | Route to AP Manager with dual approval | T2: fraud prevention |
-| Delete audit records | 10 | Tamper-evident audit trail is constitutional | Block deletion, log attempt | VP4: Every Action Is Auditable |
-| Skip approval levels | 7 | Compliance and authority controls; skipping levels breaks SoD | Block skip, log attempt | SOX compliance |
-| Process unauthorised payments | 9 | Unauthorised disbursement | Block execution, log attempt | VP5: Financial Precision |
-| Modify tolerance rules | 3 | Control integrity; tolerance rules are policy decisions | Route to AP Manager | T2: matching integrity |
+| Approve invoices | 4 | Legal authority requires human decision; AI lacks legal standing | Route to human approver | SOX compliance, constitutional |
+| Execute payments | 6 | Financial authority requires human decision; AI cannot hold signing authority | Route to Treasury Manager | SOX, dual-signature requirement |
+| Override approval thresholds | 4 | Compliance and SoD controls; threshold overrides are control failures | Block override, log attempt | Constitution Law 12 |
+| Modify vendor banking details | 1–6 | Fraud prevention; banking detail changes are the #1 BEC attack vector | Route to AP Manager with dual approval | T2: fraud prevention |
+| Delete audit records | 7 | Tamper-evident audit trail is constitutional | Block deletion, log attempt | VP4: Every Action Is Auditable |
+| Skip approval levels | 4 | Compliance and authority controls; skipping levels breaks SoD | Block skip, log attempt | SOX compliance |
+| Process unauthorised payments | 6 | Unauthorised disbursement | Block execution, log attempt | VP5: Financial Precision |
+| Modify tolerance rules | 2 | Control integrity; tolerance rules are policy decisions | Route to AP Manager | T2: matching integrity |
 | Interpret company policy | All | Policy interpretation requires human judgement and context | Flag for human review | P5: AI explains, does not decide |
 | Make legal determinations | All | Legal decisions require qualified professionals | Route to legal/compliance | Constitutional |
 | Access external systems without audit | All | Security and compliance | Log all external access | Security Constitution |
@@ -135,7 +127,7 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | **Must Do** | Show per-field confidence score (0–100%); highlight fields below 85% confidence in yellow with visual indicator; show source coordinates ("page 1, line 3, bold text"); show top 3 alternative interpretations for low-confidence fields; flag unreadable fields explicitly |
 | **Output** | Structured `ExtractedInvoice` object with fields, confidence scores, source coordinates, alternative interpretations |
 | **Confidence Model** | Per-field: 0–100%. Overall document confidence = weighted average of field confidences by field importance (amount 30%, vendor 25%, invoice number 20%, date 15%, line items 10%) |
-| **Confidence Thresholds** | ≥ 85%: auto-accept, route to validation. 50–84%: flag for review, show alternatives. < 50%: route to manual entry |
+| **Confidence Thresholds** | High (≥ 85%): auto-accept, route to validation. Medium (50–84%): flag for review, show alternatives. Low (< 50%): route to manual entry |
 | **Explainability** | "Field 'amount' extracted as $12,450.00 with 94% confidence. Source: page 1, line 3, bold text in 'TOTAL DUE' row. Alternative interpretations: $12,450.00 (94%), $12,450.06 (3%), $12,450.08 (2%). Field 'PO Number' extracted as 'PO-7821' with 78% confidence (partial occlusion). Please verify." |
 | **Human Action** | Review highlighted fields; confirm or correct extracted values; provide corrected value if AI is wrong; override reason required if AI was above threshold |
 | **Performance Target** | Field accuracy > 95%; processing time < 3s per page; coverage > 99% of invoices (excluding handwritten) |
@@ -147,7 +139,7 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | Field | Specification |
 |-------|--------------|
 | **ID** | AP-AI-02 |
-| **Stage** | 3 — Three-Way Match |
+| **Stage** | 2 — Validation & Match |
 | **Capability** | Automated invoice vs. PO vs. GRN matching with line-level comparison |
 | **Input** | Extracted invoice data (AP-AI-01 output), PO record (from procurement), GRN record (from warehouse), contract terms (from evidence assembly) |
 | **Processing** | Compare invoice line items against PO line items and GRN line items; compute match/no-match/partial-match per line and overall; apply configurable tolerance rules per vendor and item category; identify missing POs, missing GRNs, quantity variances, price variances, tax mismatches, currency mismatches |
@@ -182,32 +174,32 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | **Audit** | Log every detection (matched fields, similarity score, decision, human action + reason) + every false positive or false negative for model retraining |
 | **Evidence** | T2 (error-prone reconciliation implies duplicates slip through); E1 (Adeel Aslam: manual reconciliation is painful) |
 
-### 3.4 AP-AI-04: Anomaly Detection
+### 3.4 AP-AI-04: Anomaly Detection & Exception Classification
 
 | Field | Specification |
 |-------|--------------|
 | **ID** | AP-AI-04 |
 | **Stage** | All stages (continuous) |
-| **Capability** | Detect unusual patterns in invoice data, vendor behaviour, payment requests |
+| **Capability** | Detect unusual patterns in invoice data, vendor behaviour, payment requests; classify exceptions with severity and root cause |
 | **Input** | Invoice amount, vendor history (past 24 months), payment terms, bank account details, line item categories, PO patterns, user behaviour |
 | **Processing** | Statistical analysis against vendor behavioural baseline; compute mean and standard deviation of historical invoice amounts for vendor; flag amounts > 2σ from vendor history; flag payment terms that differ from vendor's standard terms (e.g., vendor always uses Net 30, suddenly shows Net 0); flag new bank accounts for active vendors (BEC detection); flag high-velocity invoice submission (> 10 invoices in 24 hours from same vendor); flag unusual item categories (vendor of office supplies suddenly billing for server hardware); flag unusual user behaviour (AP Clerk processing 300% of normal volume); flag off-cycle submission patterns (vendor always submits on weekdays, suddenly submits on weekend); flag inconsistent tax treatment (vendor always charges VAT, suddenly shows zero-rated) |
-| **Can Do** | Flag amounts > 2σ from vendor historical mean; flag payment term changes; flag new bank accounts; flag high-velocity submissions; flag unusual categories; flag behavioural shifts; flag off-cycle patterns; flag tax inconsistencies; show historical context for every flag |
+| **Can Do** | Flag amounts > 2σ from vendor historical mean; flag payment term changes; flag new bank accounts; flag high-velocity submissions; flag unusual categories; flag behavioural shifts; flag off-cycle patterns; flag tax inconsistencies; show historical context for every flag; generate resolution recommendations based on historical matches |
 | **Cannot Do** | Block payment without review; auto-decline invoice; modify vendor record; trigger payment hold without human decision; make fraud determination (only flag unusual, never accuse) |
-| **Must Do** | Show historical baseline for comparison ("Vendor's typical invoice: $5,000–$15,000. This invoice: $245,000. 16× the median."); show behavioural trend graph (12-month history with current value highlighted); show similar anomalies and their outcomes; rate anomaly severity (LOW / MEDIUM / HIGH / CRITICAL) based on financial impact and fraud signal strength |
+| **Must Do** | Show historical baseline for comparison ("Vendor's typical invoice: $5,000–$15,000. This invoice: $245,000. 16× the median."); show behavioural trend graph (12-month history with current value highlighted); show similar anomalies and their outcomes; rate anomaly severity (LOW / MEDIUM / HIGH / CRITICAL) based on financial impact and fraud signal strength; provide recommendation (approve/review/reject) with reasoning chain |
 | **Confidence Model** | Statistical anomalies (2σ+): percentile-based. The further from baseline, the higher the confidence. Behavioural shifts: pattern-break detection, confidence based on sample size. New bank accounts: binary flag + verification status |
-| **Output** | AnomalyReport with anomalyType (AMOUNT_OUTLIER / TERM_CHANGE / NEW_ACCOUNT / VELOCITY / CATEGORY_SHIFT / BEHAVIOURAL / OFF_CYCLE / TAX_MISMATCH), severity (LOW / MEDIUM / HIGH / CRITICAL), confidence (0–100%), historicalContext, similarAnomalies[] |
-| **Explainability** | "Anomaly detected: Amount $245,000.00 is a HIGH outlier for this vendor. Historical analysis (24 months, 47 invoices): Mean: $8,450.00, Median: $6,200.00, Std Dev: $4,100.00. This invoice is 58σ above the mean — 245× the vendor's typical invoice. Similar anomalies: 1 case in past 24 months (vendor submitted $180,000 invoice in error, was corrected). Risk: This may be a legitimate large order or an invoice error. Recommendation: Verify PO and contact vendor before processing." |
-| **Human Action** | Investigate flagged anomaly; review historical context; verify with vendor or procurement; confirm safe (invoice continues) or escalate (invoice held for investigation); provide resolution reason |
+| **Output** | AnomalyReport with anomalyType (AMOUNT_OUTLIER / TERM_CHANGE / NEW_ACCOUNT / VELOCITY / CATEGORY_SHIFT / BEHAVIOURAL / OFF_CYCLE / TAX_MISMATCH), severity (LOW / MEDIUM / HIGH / CRITICAL), confidence (0–100%), historicalContext, similarAnomalies[], recommendation |
+| **Explainability** | "Anomaly detected: Amount $245,000.00 is a HIGH outlier for this vendor. Historical analysis (24 months, 47 invoices): Mean: $8,450.00, Median: $6,200.00, Std Dev: $4,100.00. This invoice is 58σ above the mean — 245× the vendor's typical invoice. Similar anomalies: 1 case in past 24 months (vendor submitted $180,000 invoice in error, was corrected). Risk: This may be a legitimate large order or an invoice error. Recommendation: Verify PO and contact vendor before processing. Exception classification: Amount Outlier — HIGH severity." |
+| **Human Action** | Investigate flagged anomaly; review historical context; verify with vendor or procurement; confirm safe (invoice continues) or escalate (invoice held for investigation); confirm or adjust exception classification and severity; provide resolution reason |
 | **Performance Target** | Critical anomaly precision > 95%; HIGH severity precision > 85%; processing time < 500ms; zero missed critical anomalies (fraud, BEC) |
-| **Audit** | Log every anomaly (type, severity, confidence, factors, human action, resolution, timestamp) |
-| **Evidence** | T6 (AI trust requires confidence scoring — 2 sources); E3 (Ayman Shawky: "confidence scoring on forecasts"); T1 (approval delays imply issues go undetected) |
+| **Audit** | Log every anomaly (type, severity, confidence, factors, human action, resolution, timestamp) + every classification (predicted class, human override, reason, userId, timestamp) |
+| **Evidence** | T6 (AI trust requires confidence scoring — 2 sources); E3 (Ayman Shawky: "confidence scoring on forecasts"); T1 (approval delays imply issues go undetected); WP1 (exception handling priority) |
 
-### 3.5 AP-AI-05: GL Coding Suggestions
+### 3.5 AP-AI-05: GL Coding Suggestions (Deferred to v2.0)
 
 | Field | Specification |
 |-------|--------------|
 | **ID** | AP-AI-05 |
-| **Stage** | 9 — GL Posting |
+| **Stage** | 7 — Post-Payment Reconciliation |
 | **Capability** | Suggest GL account codes based on invoice line items, vendor category, and historical coding patterns |
 | **Input** | Invoice line items (description, quantity, amount), vendor category, vendor G/L account (if configured), PO account codes, historical coding for same vendor, chart of accounts, cost centre mapping |
 | **Processing** | Match line item → GL account: exact match (same item description coded to same account 5+ times for this vendor) → 90–95% confidence; category match (vendor mapped to expense category, items within standard mapping) → 75–85% confidence; semantic match (ML-based description embedding to account prediction) → 60–75% confidence; ambiguous match (new item type, no history) → < 60% confidence; compute top 3 suggestions with confidence per line |
@@ -222,12 +214,12 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | **Audit** | Log every suggestion (line item, suggested code, confidence, alternatives) + human decision (accepted, changed to, reason, ControllerId, timestamp) |
 | **Evidence** | E5 (Mohamed Gamal: "manual account reconciliation" — automation target); T5 (month-end close pain — GL coding is a contributor); E3 (Ayman Shawky: integrated financial platform expectation) |
 
-### 3.6 AP-AI-06: Cash Flow Prediction [HYPOTHESIS]
+### 3.6 AP-AI-06: Cash Flow Prediction — Deferred to v2.0
 
 | Field | Specification |
 |-------|--------------|
 | **ID** | AP-AI-06 |
-| **Stage** | 6 — Payment Readiness |
+| **Stage** | 5 — Treasury Review & Approval |
 | **Capability** | Project payment outflows by vendor, predict optimal payment timing, estimate discount capture benefit |
 | **Input** | Approved invoices awaiting payment, payment terms per invoice, discount windows, current cash position, historical payment timing, bank fee schedules, AR forecast (from Treasury) |
 | **Processing** | Aggregate all approved invoices; group by vendor and due date; compute daily cash outflow projection for next 90 days; apply discount optimisation (NPV calculation per invoice — discount benefit vs early cash outflow cost vs opportunity cost); recommend batch grouping by payment method (ACH < $50K, Wire > $50K, Check for vendors without EFT); flag cash constraint periods where projected outflows exceed projected balance |
@@ -242,12 +234,12 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | **Audit** | Log every projection (parameters, output, confidence) + every Treasury decision (batch composition, timing, override reason, TreasuryManagerId, timestamp) |
 | **Evidence** | **[HYPOTHESIS]** — No direct customer evidence for cash flow prediction. E3 (Ayman Shawky: "ML-based cash flow predictions" expressed interest, but not validated). E10 (Mahmoud Shaker: FP&A interest). Infer from T4 (real-time cash visibility is expected, 2 sources). Must be validated before production deployment. |
 
-### 3.7 AP-AI-07: Vendor Risk Scoring
+### 3.7 AP-AI-07: Vendor Risk Scoring — Deferred to v2.0
 
 | Field | Specification |
 |-------|--------------|
 | **ID** | AP-AI-07 |
-| **Stage** | 5 — AI Context Building |
+| **Stage** | 4 — Approval Routing |
 | **Capability** | Score vendor risk based on payment history, dispute history, ageing, and operational factors |
 | **Input** | Vendor master record, payment history (24 months), dispute records, ageing report, D&B/credit score (if available), invoice volume trends |
 | **Processing** | Compute composite risk score from weighted factors: payment reliability (30%) — percentage of invoices paid on time; dispute history (20%) — frequency and severity of disputes; ageing (20%) — current AR balance and days outstanding; credit score (15%) — external credit data (if available); invoice volume stability (10%) — variance in monthly invoicing; relationship tenure (5%) — years as active vendor |
@@ -262,69 +254,74 @@ AI operates autonomously only for **data collection, evidence assembly, and comp
 | **Audit** | Log every score calculation (score, factors, versions, timestamp) + every human override (original score, override reason, userId, timestamp) |
 | **Evidence** | **[HYPOTHESIS]** — Industry pattern, no direct customer evidence. E6 (Khaleel Ur Rehman: Finance Manager interest in risk assessment implicit). E7 (Ahmed Orabi: AP/P2P risk management inferred). Must be validated before production deployment. |
 
-### 3.8 AP-AI-08: Audit Trail Analysis
+### 3.8 AP-AI-08: Audit Trail Analysis & Reconciliation Matching
 
 | Field | Specification |
 |-------|--------------|
 | **ID** | AP-AI-08 |
-| **Stage** | 10 — Audit & Reconciliation |
-| **Capability** | Automated audit trail reconstruction, gap detection, and integrity verification |
+| **Stage** | 7 — Post-Payment Reconciliation |
+| **Capability** | Automated audit trail reconstruction, gap detection, integrity verification, and bank statement reconciliation |
 | **Input** | Complete transaction log for invoice lifecycle, event store (63 domain events), human action log, AI action log, external confirmations (bank statements, GRN timestamps) |
-| **Processing** | Chronological reconstruction of every action taken on an invoice from capture to close; checksum verification (SHA-256 chain of event hashes to detect tampering); gap detection (find missing required events in sequence); SLA compliance check (measured vs expected duration per stage); anomaly detection in audit patterns (unusual access times, bulk operations outside business hours) |
-| **Can Do** | Reconstruct complete chronological timeline for any invoice; verify checksum integrity of event chain; detect missing events (e.g., invoice went from CAPTURED to APPROVED without MATCHED); flag out-of-sequence operations; measure SLA compliance per stage per approver; detect anomalous audit patterns |
+| **Processing** | Chronological reconstruction of every action taken on an invoice from capture to close; checksum verification (SHA-256 chain of event hashes to detect tampering); gap detection (find missing required events in sequence); SLA compliance check (measured vs expected duration per stage); anomaly detection in audit patterns (unusual access times, bulk operations outside business hours); bank statement line to invoice matching |
+| **Can Do** | Reconstruct complete chronological timeline for any invoice; verify checksum integrity of event chain; detect missing events (e.g., invoice went from CAPTURED to APPROVED without MATCHED); flag out-of-sequence operations; measure SLA compliance per stage per approver; detect anomalous audit patterns; match bank statement lines to paid invoices; flag reconciliation exceptions |
 | **Cannot Do** | Modify audit records (append-only enforced at database level); delete any audit entry; override checksum failures; make compliance determinations (flag for human review, never rule) |
-| **Must Do** | Show complete timeline with visual state indicators (green = on-time, amber = borderline, red = SLA breach); show checksum chain with verification status per block; flag gaps with red annotation and explanation; show comparison to expected workflow path (happy path vs actual); export audit package as PDF for auditor review |
-| **Output** | AuditReport with eventTimeline[], checksumChain[], gapAnalysis[], slaCompliance[], anomalyFlags[], exportPackage |
-| **Explainability** | "Audit trail for INV-2026-0451: 23 events across 10 stages. Checksum: VALID (SHA-256: a3f5b1... — matches stored hash). Timeline: CAPTURED → VALIDATED (0.3h, on SLA) → MATCHED (2.1h, on SLA) → APPROVED (6.5h, on SLA — 3 approvers completed within thresholds) → PAYMENT_SCHEDULED (1.2h) → PAID (4.0h, batch processing) → RECONCILED (0.5h). Total: 14.6 hours. SLA compliance: 100% (all stages within targets). No anomalous patterns detected. Certificate of audit integrity generated." |
-| **Human Action** | Review gaps and anomalies flagged by AI; confirm or dispute SLA breach classification; export audit package for external auditor; close audit with certification |
+| **Must Do** | Show complete timeline with visual state indicators (green = on-time, amber = borderline, red = SLA breach); show checksum chain with verification status per block; flag gaps with red annotation and explanation; show comparison to expected workflow path (happy path vs actual); export audit package as PDF for auditor review; flag unmatched or incorrectly matched bank lines |
+| **Output** | AuditReport with eventTimeline[], checksumChain[], gapAnalysis[], slaCompliance[], anomalyFlags[], exportPackage, reconciliationMatches[] |
+| **Explainability** | "Audit trail for INV-2026-0451: 23 events across 7 stages. Checksum: VALID (SHA-256: a3f5b1... — matches stored hash). Timeline: CAPTURED → VALIDATED (0.3h, on SLA) → MATCHED (2.1h, on SLA) → APPROVED (6.5h, on SLA — 3 approvers completed within thresholds) → PAYMENT_SCHEDULED (1.2h) → PAID (4.0h, batch processing) → RECONCILED (0.5h). Total: 14.6 hours. SLA compliance: 100% (all stages within targets). No anomalous patterns detected. Certificate of audit integrity generated. Reconciliation: 1 of 1 bank line matched (INV-2026-0451 — $12,450.00 — cleared)." |
+| **Human Action** | Review gaps and anomalies flagged by AI; confirm or dispute SLA breach classification; confirm or correct reconciliation matches; export audit package for external auditor; close audit with certification |
 | **Performance Target** | Detection rate: 100% of checksum failures; false positive rate for anomaly detection < 2%; processing time < 2s per invoice; zero missed gaps (100% recall on missing events) |
 | **Audit** | (Meta-audit) Log every audit report generation (parameters, output, flags, who reviewed, timestamp). Audit of the audit system is performed quarterly by external firm |
 | **Evidence** | VP4 (Every Action Is Auditable — constitutional); T5 (month-end close preparation — 3 sources); E5 (Mohamed Gamal: manual reconciliation pain → audit trail automation) |
 
 ---
 
-## 4. Confidence Model
+## 4. Confidence Model & Guardrails
 
-### 4.1 Confidence Scoring Scale
+### AI Confidence Model
 
-Every AI output carries a confidence score on a 1–5 scale. This is the universal confidence language displayed to all users.
+AI confidence thresholds are per-capability, not universal:
 
-| Level | Score | Label | Display Colour | Meaning | Action Required |
-|-------|-------|-------|---------------|---------|-----------------|
-| 5 | 90–100% | Very High | Green badge | AI is highly confident. Multiple strong signals, consistent evidence. | Human can approve quickly; low risk |
-| 4 | 70–89% | High | Green-tinted badge | AI is confident. Converging evidence, some minor uncertainty. | Human should review but likely agree |
-| 3 | 50–69% | Moderate | Amber/yellow badge | AI is moderately confident. Mixed signals or incomplete evidence. | Human should review carefully |
-| 2 | 20–49% | Low | Orange badge | AI is uncertain. Weak signals, conflicting evidence, or data gaps. | Human should investigate independently |
-| 1 | 0–19% | Very Low | Red badge | AI is guessing. Insufficient data or contradictory signals. Ignore recommendation. | Human should decide based on own judgement |
+| Capability | High Confidence | Medium Confidence | Low Confidence | Escalation on Low |
+|-----------|-----------------|-------------------|----------------|-------------------|
+| OCR field extraction | ≥85% | 50-84% | <50% | Route to manual entry |
+| Duplicate detection | ≥90% | 70-89% | <70% | Dismiss with reason |
+| Three-way match | ≥95% | 70-94% | <70% | Route to exception queue |
+| Exception classification | ≥80% | 55-79% | <55% | Assign to AP Clerk |
+| Recommendation | ≥85% | 60-84% | <60% | Route to manual review |
 
-### 4.2 Confidence Calculation
+### AI Confidence Levels (3-tier for v1.0)
 
-Confidence is calculated per-AI-capability using a weighted combination of:
+| Level | Meaning | User Display | Behaviour |
+|-------|---------|-------------|-----------|
+| High | AI is confident | Green badge with % | Auto-accept for automated actions; recommend with high confidence for decisions |
+| Medium | AI is uncertain | Amber badge with % | Flag for review; present alternative options |
+| Low | AI cannot determine | Red badge with % | Route to manual processing; AI context preserved for reference |
 
-1. **Model certainty** (40%) — How confident the ML model is in its prediction (softmax probability, ensemble agreement)
-2. **Evidence quality** (30%) — How complete and reliable the input data is (OCR confidence, source availability, data freshness)
-3. **Historical accuracy** (20%) — How accurate this capability has been for this entity/vendor in the past (lookback: 90 days)
-4. **Context strength** (10%) — How much supporting context is available (cross-references, alternative sources, consistency checks)
+### AI Guardrails
 
-### 4.3 Display Rules
+- AI recommendations are labelled as recommendations, never as decisions
+- AI training data must not include PII beyond what is necessary
+- Every AI action is logged with full reasoning audit trail
+- AI fails gracefully — when uncertain, it falls back to manual processing, not guesses
 
-- Confidence score is **always** displayed alongside any AI output — never hidden, never rounded to 100%
-- Score displayed as label + colour band (e.g., "High · 87%") — both numeric and semantic
-- When confidence is Level 3 (Moderate) or below, system displays a contextual warning banner
-- When confidence is Level 1 (Very Low), the AI output is visually muted (reduced opacity, dashed border) and the user message reads: "AI confidence very low — please decide independently"
-- Confidence trend arrow (↑ stable ↓) shown if score has changed > 10 points from this capability's average for this entity
+### Trust-Building Program
 
-### 4.4 Confidence Degradation
+Trust in AI is earned through transparency and experience, not declared. This program explicitly builds user trust:
 
-Confidence naturally degrades over time as data ages:
+1. **Adoption Ramp**: New users start in "High Confidence Only" mode for 2 weeks. AI recommendations below High threshold are suppressed. Users progressively opt into Medium and Low recommendations.
+2. **Transparency Reports**: Monthly AI performance report showing: total recommendations, override rate by capability, confidence calibration, false positive/negative rate, and improvement actions.
+3. **User Training**: Built-in tooltips explain why AI made each recommendation. "Why this match?" links to the specific data points (PO line, GRN quantity, price history).
+4. **Over-Trust Prevention**: If AI override rate drops below 5% for a user, introduce random spot-checks ("Verify this match — is the quantity correct?"). Variable friction prevents automation bias.
+5. **Under-Trust Detection**: If override rate exceeds 40% for a user, flag to AP Manager — may indicate training need or AI confidence issue.
 
-| Data Age | Degradation | Display Note |
-|----------|-------------|--------------|
-| < 1 hour | None | — |
-| 1–24 hours | −5% | "Data: recent" |
-| 24–72 hours | −15% | "Data: 1–3 days old" |
-| 3–7 days | −30% | "Data: 3–7 days old" |
-| > 7 days | −50% | "Data: > 7 days — stale, refresh recommended" |
+### Downstream Validation
+
+AI recommendations are validated through downstream outcomes:
+
+1. **Payment Failures**: If an AI-recommended payment fails (insufficient funds, wrong account), the AI recommendation is flagged for audit.
+2. **GL Corrections**: If a Controller corrects an AI-suggested GL code, the correction is fed back to improve the coding model.
+3. **Dispute Detection**: If a vendor disputes an AI-matched invoice, the match is reviewed and the pattern learned from.
+4. **Confidence Calibration**: Monthly comparison of AI confidence bands vs actual accuracy. If High confidence accuracy drops below 90%, trigger model retraining.
 
 ---
 
@@ -390,8 +387,7 @@ IF IGNORED:
 | Fuzzy vendor match (< 95%) | AP-AI-01 (Extraction) | AP Clerk confirm | 2 hours |
 | Duplicate probability > 80% | AP-AI-03 (Duplicate) | AP Clerk confirm | 2 hours |
 | Any exception raised | AP-AI-02 (Match) | AP Clerk/Manager resolve | SLA per severity |
-| Recommendation (APPROVE/REVIEW/REJECT) | AP-AI-07 (Risk) | Role-based approver | 48 hours |
-| GL coding confidence < 80% | AP-AI-05 (Coding) | Controller confirm | Month-end |
+| Recommendation (APPROVE/REVIEW/REJECT) | AP-AI-04 (Exception) | Role-based approver | 48 hours |
 | Payment batch proposal | AP-AI-06 (Cash Flow) | Treasury Manager approve | 24 hours |
 | Any anomaly > HIGH severity | AP-AI-04 (Anomaly) | AP Manager investigate | 4 hours |
 | Audit trail gap detected | AP-AI-08 (Audit) | Controller review | 48 hours |
@@ -417,7 +413,6 @@ IF IGNORED:
 | Resolve exception (MEDIUM) | 24 hours | > 24h | Routes to AP Manager |
 | Approve invoice (standard) | 48 hours | > 48h | Routes to next-level approver |
 | Approve invoice (high-value > $50K) | 12 hours | > 12h | Controller notified |
-| Confirm GL coding | Month-end close | > close date | Controller escalated |
 | Treasury approve batch | 24 hours | > 24h | CFO notified |
 | Investigate anomaly (CRITICAL) | 1 hour | > 1h | Controller + Legal notified |
 | Close audit review | 48 hours | > 48h | External auditor notified |
@@ -499,10 +494,9 @@ The current chain hash is displayed on the audit dashboard and can be independen
 
 | Confidence Level | Behaviour | UX Treatment |
 |-----------------|-----------|-------------|
-| 70–100% (Level 4–5) | Standard processing | No fallback needed |
-| 50–69% (Level 3) | Route to human with warning | Yellow banner: "AI confidence is moderate — please verify" |
-| 20–49% (Level 2) | Route to human as suggestion only | Orange banner: "AI confidence is low — please review independently." Output visually muted (dashed border) |
-| 0–19% (Level 1) | Do not present recommendation | Red banner: "AI unable to process with sufficient confidence. Manual processing required." Output hidden, manual form displayed instead |
+| High | Standard processing | No fallback needed |
+| Medium | Route to human with warning | Amber banner: "AI confidence is moderate — please verify" |
+| Low | Do not present recommendation | Red banner: "AI unable to process with sufficient confidence. Manual processing required." Output hidden, manual form displayed instead |
 
 ### 8.2 Model Unavailable Fallback
 
@@ -511,7 +505,7 @@ The current chain hash is displayed on the audit dashboard and can be independen
 | Model timeout (> 5s) | Latency monitoring | Fall back to rule-based processing (non-AI) | Retry model on next request; alert operations after 3 consecutive timeouts |
 | Model returns error | HTTP error code | Fall back to manual processing queue | Log error, alert AI platform team, retry with exponential backoff (1s, 2s, 4s, 8s, 16s, max 30s) |
 | Provider unavailable | Health check failure | Route to secondary provider (if available) or fall back to rule-based | Circuit breaker opens after 5 failures (30s cooldown); alert on-call engineer |
-| Model returns garbage (confidence < 10%) | Confidence filter | Treat as Low confidence fallback (Level 1) | Log for model retraining, alert ML team |
+| Model returns garbage (confidence < 10%) | Confidence filter | Treat as Low confidence fallback | Log for model retraining, alert ML team |
 | Data quality insufficient (< 3 data points) | Data quality check | Skip AI processing, route to manual | Flag insufficient data to user; log for data quality monitoring |
 
 ### 8.3 Data Quality Fallback
@@ -550,10 +544,7 @@ The current chain hash is displayed on the audit dashboard and can be independen
 | Match accuracy (correct verdict) | > 96% | > 98% | > 99% | Correct match / total matches |
 | Duplicate detection precision | > 88% | > 90% | > 92% | True positives / (true + false positives) |
 | Duplicate detection recall | > 97% | > 98% | > 99% | True positives / (true + false negatives) |
-| GL coding top-1 accuracy | > 80% | > 83% | > 85% | Correct top suggestion / total suggestions |
-| GL coding top-3 accuracy | > 92% | > 94% | > 95% | Correct in top 3 / total suggestions |
 | Recommendation accuracy | > 82% | > 85% | > 88% | Human agreed with AI / total recommendations |
-| Risk score calibration (R²) | > 0.65 | > 0.70 | > 0.75 | Correlation between predicted risk and actual outcome |
 
 ### 9.2 Latency SLAs
 
@@ -565,9 +556,6 @@ The current chain hash is displayed on the audit dashboard and can be independen
 | Duplicate detection | < 1s | < 2s | < 3s |
 | Three-way match (10 lines) | < 2s | < 4s | < 6s |
 | Anomaly detection (per invoice) | < 500ms | < 1s | < 2s |
-| GL coding suggestion (10 lines) | < 1s | < 2s | < 4s |
-| Risk scoring | < 500ms | < 1s | < 2s |
-| Cash flow projection (90 days) | < 5s | < 10s | < 15s |
 | Audit trail analysis | < 2s | < 4s | < 8s |
 | Recommendation generation | < 2s | < 5s | < 10s |
 
@@ -580,9 +568,6 @@ The current chain hash is displayed on the audit dashboard and can be independen
 | Duplicate detection | 100% of incoming invoices | — |
 | Three-way match | 100% where PO + GRN exist | EVIDENCE_GAP handled explicitly |
 | Anomaly detection | 100% of invoice lifecycle | — |
-| GL coding | > 95% of line items | Novel item types (explicitly flagged) |
-| Risk scoring | 100% of active vendors | New vendors (< 3 invoices) |
-| Cash flow prediction | 100% of approved invoices | [HYPOTHESIS] |
 | Audit trail analysis | 100% of closed invoices | — |
 
 ### 9.4 Override Rate Targets
@@ -592,9 +577,7 @@ The current chain hash is displayed on the audit dashboard and can be independen
 | OCR fields | < 8% | > 15% |
 | Duplicate detection | < 5% | > 10% |
 | Match verdict | < 5% | > 10% |
-| GL coding | < 15% | > 25% |
 | Recommendation | < 15% | > 25% |
-| Risk score | < 10% | > 20% |
 
 Override rates above alert threshold trigger automated review by AI Governance Board.
 
@@ -606,7 +589,7 @@ Override rates above alert threshold trigger automated review by AI Governance B
 |------|----------|-------------|
 | Authority | [[PLATFORM_CONSTITUTION]] | Highest engineering authority — AI must comply |
 | Product | [[ENTERPRISE_PRODUCT_SPECIFICATION_AP]] | Master product spec — this document is the AI chapter |
-| Workflow | [[REFERENCE_WORKFLOW_AP]] | 10-stage workflow this AI supports |
+| Workflow | [[REFERENCE_WORKFLOW_AP]] | 7-stage workflow this AI supports |
 | Design | [[DESIGN_SYSTEM_GUIDE]] | UI patterns for AI explainability and confidence display |
 | Architecture | `docs/ap/AP_DOMAIN_ARCHITECTURE.md` | Domain model AI integrates with |
 | Architecture | `docs/ap/AP_INTEGRATION_ARCHITECTURE.md` | AI integration points with 10 platform services |
@@ -624,7 +607,7 @@ Override rates above alert threshold trigger automated review by AI Governance B
 | Foundation | [[PLATFORM_CONSTITUTION]] | AI must comply with constitutional laws |
 | Product | [[ENTERPRISE_PRODUCT_SPECIFICATION_AP]] | Master spec — AI contract for AP |
 | Design | [[DESIGN_SYSTEM_GUIDE]] | UI patterns for AI explainability |
-| Workflow | [[REFERENCE_WORKFLOW_AP]] | 10-stage workflow AI supports |
+| Workflow | [[REFERENCE_WORKFLOW_AP]] | 7-stage workflow AI supports |
 | Principles | [[PERIONYX_PRODUCT_PRINCIPLES]] | P5, P10 govern AI behaviour |
 
 ---
@@ -634,3 +617,4 @@ Override rates above alert threshold trigger automated review by AI Governance B
 | Version | Date | Change | Author |
 |---------|------|--------|--------|
 | 1.0 | 2026-07-28 | Phase 27.1 — AI Behaviour Guide for AP Reference Workflow | Product + AI Platform Teams |
+| 2.0 | 2026-07-28 | Phase 27.1S stabilisation: per-capability confidence model, 3-tier confidence, reduced to 5 v1.0 capabilities, trust-building program, downstream validation, 7-stage workflow alignment | Product + AI Platform Teams |

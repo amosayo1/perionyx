@@ -1,8 +1,8 @@
 ---
-title: "Open Product Hypotheses — AP Reference Workflow v1.0"
+title: "Open Product Hypotheses — AP Reference Workflow v2.0"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 phase: 27.1
 tags:
   - type/reference
@@ -16,7 +16,7 @@ supersedes: "[[HYPOTHESIS_REGISTER]] (for AP scope)"
 inherited_by: ["AR", "Treasury", "Financial Close"]
 ---
 
-# Open Product Hypotheses — AP Reference Workflow v1.0
+# Open Product Hypotheses — AP Reference Workflow v2.0
 
 > **Classification**: Restricted — Internal Use Only
 > **Status**: Draft — pending design partner validation
@@ -104,7 +104,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | If validated: Portal is P1 in Phase 21C. Vendor aggregate includes portal access fields, invitation workflow, portal activity audit trail. If invalidated: Portal is P3 deferred. Vendor communication remains email/phone. |
 | **Priority** | P2 |
 | **Decision Gate** | H-003-GATE: Vendor portal feature scope. If Validated → portal wireframes, portal API design, vendor-facing UX research. If Invalidated → no portal investment in v1. |
-| **Interdependencies** | Stage 1 (Invoice Received — portal as intake channel), Stage 8 (Payment Execution — payment status visibility) |
+| **Interdependencies** | Stage 1 (Invoice Received — portal as intake channel), Stage 6 (Payment Execution — payment status visibility) |
 
 ---
 
@@ -142,7 +142,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | If validated: AI GL coding with confidence threshold is P1. Integration with AI platform. Evidence-reasoning UI component. Coding audit trail includes AI suggestion + human decision. If invalidated: Manual GL coding with search/autocomplete. Defer AI integration. |
 | **Priority** | P1 |
 | **Decision Gate** | H-005-GATE: AI coding feature architecture. If Validated → AI coding provider driver, confidence-threshold UI, explanation component, coding audit trail. If Invalidated → manual GL coding with smart search. |
-| **Interdependencies** | Stage 2 (Invoice Validated), Stage 9 (GL Posting), AI platform, AI Behaviour Guide (transparency requirements) |
+| **Interdependencies** | Stage 2 (Invoice Validated), Stage 7 (GL Posting), AI platform, AI Behaviour Guide (transparency requirements) |
 
 ---
 
@@ -180,7 +180,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | If validated: Budget check integration is P2 for Phase 21D. BudgetWarning domain event. Budget service integration (ERP or internal). Warning UI on approval screen. If invalidated: No budget integration. PO budget check is sufficient. |
 | **Priority** | P2 |
 | **Decision Gate** | H-007-GATE: Budget integration feature. If Validated → budget check at Stage 5 (Approval). If Invalidated → no budget integration in scope. |
-| **Interdependencies** | Stage 5 (Approval Routing), ERP Platform, Budget domain |
+| **Interdependencies** | Stage 5 (Approval Path), ERP Platform, Budget domain |
 
 ---
 
@@ -199,7 +199,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | If validated: WHT automation is P2 for Phase 21D. WHT domain entity with configurable rates by vendor/category/jurisdiction. WHT report generation. Regulatory compliance module integration. If invalidated: Defer WHT automation. Manual WHT handling via GL coding. |
 | **Priority** | P2 |
 | **Decision Gate** | H-008-GATE: WHT automation feature. If Validated → WHT engine, rate configuration, report generation. If Invalidated → manual WHT via GL coding. |
-| **Interdependencies** | Stage 7 (Treasury Approval — WHT impacts net payment), Stage 9 (GL Posting — WHT entries), H-012 (Regulatory compliance), T8 (Regulatory Compliance) |
+| **Interdependencies** | Stage 5 (Treasury Approval — WHT impacts net payment), Stage 7 (GL Posting — WHT entries), H-012 (Regulatory compliance), T8 (Regulatory Compliance) |
 
 ---
 
@@ -218,7 +218,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | If validated: Partial payment support is P2 for Phase 21D. Partially-paid invoice state. Open balance computation. Partial payment approval routing (amount-based threshold may differ from full invoice). If invalidated: Full-payment-only is sufficient for v1. |
 | **Priority** | P2 |
 | **Decision Gate** | H-009-GATE: Partial payment feature. If Validated → invoice state machine expanded for partial payment, open balance tracking, partial approval flow. If Invalidated → full-payment-only v1. |
-| **Interdependencies** | Stage 8 (Payment Execution), Invoice state machine, Balance tracking |
+| **Interdependencies** | Stage 6 (Payment Execution), Invoice state machine, Balance tracking |
 
 ---
 
@@ -237,7 +237,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | Low risk — proceed with standard implementation. Credit note flow mirrors invoice flow with mirrored impact. CreditNote aggregate, CreditNoteApplied event. Integration with invoice open balance. If invalidated (unlikely): Credit notes handled as negative invoices. |
 | **Priority** | P3 |
 | **Decision Gate** | H-010-GATE: Credit note workflow. Low risk — included in Phase 21B implementation plan unless invalidated. |
-| **Interdependencies** | Stage 3 (Three-Way Match — matching against returns), Stage 9 (GL Posting — credit note journal entries) |
+| **Interdependencies** | Stage 2 (Three-Way Match — matching against returns), Stage 7 (GL Posting — credit note journal entries) |
 
 ---
 
@@ -275,7 +275,7 @@ This document is the **single register of every unvalidated product hypothesis**
 | **Risk Assessment** | If validated: Compliance reporting module is P1 for Phase 21D. Report template configuration per jurisdiction. VAT return generation. WHT certificate generation. Audit-ready AP package (aging, payment history, exception log, approval log). If invalidated: Standard AP reporting (aging, volume, cycle times) without jurisdiction-specific compliance. |
 | **Priority** | P1 |
 | **Decision Gate** | H-012-GATE: Compliance reporting architecture. If Validated → compliance report templates, jurisdiction configuration, regulatory calculation engine. If Invalidated → standard AP reporting only. |
-| **Interdependencies** | Stage 10 (Audit & Reconciliation), H-008 (Withholding tax automation), T8 (Regulatory Compliance), Platform Constitution (audit trail requirements) |
+| **Interdependencies** | Stage 7 (Audit & Reconciliation), H-008 (Withholding tax automation), T8 (Regulatory Compliance), Platform Constitution (audit trail requirements) |
 
 ---
 
@@ -429,7 +429,7 @@ IMP  Medium     3 │   3      6      9     12      15
 
 | Field | Value |
 |-------|-------|
-| Document ID | OPH_AP_v1.0 |
+| Document ID | OPH_AP_v2.0 |
 | Phase | 27.1 |
 | Authority | Product Team |
 | Supersedes | `docs/product/HYPOTHESIS_REGISTER.md` (for AP scope) |
@@ -451,7 +451,7 @@ IMP  Medium     3 │   3      6      9     12      15
 | Type | Document | Description |
 |------|----------|-------------|
 | Foundation | [[ENTERPRISE_PRODUCT_SPECIFICATION_AP]] | Master spec containing these hypotheses |
-| Workflow | [[REFERENCE_WORKFLOW_AP]] | 10-stage workflow these hypotheses affect |
+| Workflow | [[REFERENCE_WORKFLOW_AP]] | 7-stage workflow these hypotheses affect |
 | Validation | [[CUSTOMER_VALIDATION_PLAN]] | Detailed validation plans for each hypothesis |
 | Principles | [[PERIONYX_PRODUCT_PRINCIPLES]] | Product principles this register inherits from |
 | Evidence | `brain/03-Customer Intelligence/` | Source data for customer evidence references |

@@ -2,19 +2,19 @@
 title: "Product Principles — AP Reference Workflow"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 phase: 27.1
 tags:
   - type/reference
   - domain/product
   - domain/ap
-  - status/draft
+  - status/active
 owner: Product Architecture Board
 authority: Product Constitution
 inherits_by: ["AR", "Treasury", "Financial Close", "Compliance", "Banking", "Financial Intelligence"]
 ---
 
-# Product Principles — AP Reference Workflow
+# Product Principles — AP Reference Workflow v2.0
 
 > **Classification**: Internal — Engineering & Product
 > **Phase**: 27.1 — EPS Companion Documents
@@ -125,7 +125,7 @@ Every principle is traceable to customer evidence. When evidence is absent or we
 |-------|-------|
 | **Statement** | Before any financial decision, the decision-maker must have all relevant context visible on a single screen — no tab-switching, no "let me check the PO." |
 | **Evidence** | T1 (Manual Approvals): 4 independent sources identify approval delays caused by context-gathering, not decision-making. Mohamed Gamal (CRM): "approval bottlenecks" — bottlenecks exist because approvers lack context. Adeel Aslam (2026-07-21): approval workflows "require manual oversight to ensure accuracy" — oversight requires context. |
-| **Application** | The Invoice Detail screen presents the invoice document, line items, PO match, GRN match, vendor history, AI risk score, and approval chain on a single screen with tabbed evidence. The Approval View shows the evidence panel (left) and decision panel (right) simultaneously — no navigation required to make the decision. The Exception Queue shows the root cause, suggested resolution, and financial impact inline. |
+| **Application** | The Invoice Detail screen presents the invoice document, line items, PO match, GRN match, vendor history, AI risk score, and approval path on a single screen with tabbed evidence. The Approval View shows the evidence panel (left) and decision panel (right) simultaneously — no navigation required to make the decision. The Exception Queue shows the root cause, suggested resolution, and financial impact inline. |
 | **Anti-Pattern** | Requiring the approver to open the PO in a separate tab. Forcing the AP Clerk to navigate to the vendor profile to check payment history. Showing "3 exceptions" without showing what they are. Requiring the Treasury Manager to open a separate cash-position screen before approving a payment batch. |
 | **Validation Status** | **Validated** — 4 sources (T1×4, Mohamed Gamal) |
 | **Related Principles** | P1 (Trusted Information Before Transactions), P6 (Evidence Before Approval), P8 (Decision Readiness) |
@@ -205,8 +205,8 @@ Every principle is traceable to customer evidence. When evidence is absent or we
 |-------|-------|
 | **Statement** | Every screen is designed so that the decision-maker can make their decision immediately upon arrival — no setup, no navigation, no "let me find the right view." |
 | **Evidence** | Phase 27.0A UX Architecture: 25 screens designed with the "5 questions" framework. Every screen answers: What needs attention? Why? What evidence exists? What decision is required? What happens next? Mohamed Gamal (CRM): "approval bottlenecks" — bottlenecks exist when screens do not support instant decisions. |
-| **Application** | The Dashboard answers "what do I do today?" on arrival. The Work Queue answers "which invoice do I process first?" on arrival. The Approval View answers "should I approve this?" on arrival. The Exception Queue answers "which exception should I resolve first?" on arrival. No screen requires the user to perform setup actions before the primary decision is supported. |
-| **Anti-Pattern** | A Dashboard that shows charts but no action queue. An Approval View that requires clicking through 3 tabs before the approve button becomes relevant. An Exception Queue that lists exceptions but does not show resolution options until the user clicks into each one. |
+| **Application** | The Dashboard answers "what do I do today?" on arrival. The Work Queue answers "which invoice do I process first?" on arrival. The Approval View answers "should I approve this?" on arrival. The Exception Resolution screen answers "which exception should I resolve first?" on arrival. No screen requires the user to perform setup actions before the primary decision is supported. |
+| **Anti-Pattern** | A Dashboard that shows charts but no action queue. An Approval View that requires clicking through 3 tabs before the approve button becomes relevant. An Exception Resolution screen that lists exceptions but does not show resolution options until the user clicks into each one. |
 | **Validation Status** | **Working** — 2 sources (Phase 27.0A, Mohamed Gamal) |
 | **Related Principles** | P4 (Context Before Action), P5 (Exceptions First), P6 (Evidence Before Approval) |
 
@@ -323,7 +323,7 @@ Every future Perionyx workflow inherits these 10 principles unchanged. A workflo
 
 | Field | Value |
 |-------|-------|
-| Document ID | PP_AP_v1.0 |
+| Document ID | PP_AP_v2.0 |
 | Phase | 27.1 |
 | Authority | Product Architecture Board |
 | Supersedes | PERIONYX_PRODUCT_PRINCIPLES.md (AP scope) |

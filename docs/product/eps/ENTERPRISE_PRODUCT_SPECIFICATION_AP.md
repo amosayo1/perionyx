@@ -1,8 +1,8 @@
 ---
-title: "Enterprise Product Specification — Accounts Payable Reference Workflow v2.0"
+title: "Enterprise Product Specification — Accounts Payable Reference Workflow v2.1"
 created: 2026-07-28
 updated: 2026-07-28
-version: 2.0
+version: 2.1
 tags:
   - type/specification
   - domain/product
@@ -12,11 +12,11 @@ owner: Product Team
 authority: Phase 27.1
 ---
 
-# Enterprise Product Specification — Accounts Payable Reference Workflow v2.0
+# Enterprise Product Specification — Accounts Payable Reference Workflow v2.1
 
 > **Classification**: Restricted — Internal Use Only
 > **Status**: Ready for finance professional review
-> **Authority**: Phase 27.1 — Customer Evidence → Product Specification
+> **Authority**: Phase 27.1S — EPS Stabilisation
 
 ---
 
@@ -65,28 +65,25 @@ Every product decision in this specification is traceable to customer evidence. 
 
 ## 3. Scope
 
-This specification covers the **10-stage procure-to-pay workflow**. The v2.0 workflow is simplified from v1.0's 14 stages. Stages were merged where the handoff added friction without adding control.
+This specification covers the **7-stage procure-to-pay workflow**. The v2.1 workflow is simplified from v2.0's 10 stages. Stages were merged where the handoff added friction without adding control.
 
 | Stage | Name | Owner | Description |
 |-------|------|-------|-------------|
 | 1 | Invoice Received | AP Clerk | Invoice capture via OCR, email, portal, or EDI. Zero manual re-keying. |
-| 2 | Invoice Validated | System | Evidence assembly: PO, GRN, contract, vendor history linked automatically. |
-| 3 | Three-Way Match | System | Invoice vs. PO vs. GRN matching within configurable tolerances. |
-| 4 | Exception Queue | AP Clerk / AP Manager | Discrepancy classification, prioritisation, investigation, resolution. |
-| 5 | Approval Routing | Approver (role-based) | Multi-level approval based on amount, department, vendor, with SoD enforcement. |
-| 6 | Payment Readiness | Treasury Manager | Payment batch preparation, discount optimisation, cash flow alignment. |
-| 7 | Treasury Approval | Treasury Manager | Cash availability verification, payment scheduling, bank confirmation. |
-| 8 | Payment Execution | System + Treasury | Payment processing via banking integration, status tracking, confirmation. |
-| 9 | GL Posting | System | Journal entry creation, subledger reconciliation, posting to general ledger. |
-| 10 | Audit & Reconciliation | System + Controller | Bank reconciliation, audit trail verification, checksum chain, close preparation. |
+| 2 | Validation & Match | System | Automated evidence assembly + three-way matching in one continuous operation. |
+| 3 | Exception Resolution | AP Clerk / AP Manager | Discrepancy classification, prioritisation, investigation, resolution. |
+| 4 | Approval Routing | Approver (role-based) | Multi-level approval based on amount, department, vendor, with SoD enforcement. |
+| 5 | Treasury Review & Approval | Treasury Manager | Payment proposal review, cash availability verification, payment scheduling. |
+| 6 | Payment Execution | System + Treasury | Payment processing via banking integration, status tracking, confirmation. |
+| 7 | Post-Payment Reconciliation | System + Controller | GL posting, bank reconciliation, audit trail verification, close preparation. |
 
 ### What This Specification Covers
 
-- Complete workflow from invoice receipt to audit reconciliation (10 stages)
-- All 9 personas that interact with the AP workflow (AP Clerk through Vendor)
+- Complete workflow from invoice receipt to post-payment reconciliation (7 stages)
+- All 10 personas that interact with the AP workflow (AP Clerk through Department Manager)
 - 5 state machines: Invoice (12 states), Payment (7 states), Approval (7 states), Exception (6 states), Vendor (4 states)
 - AI behaviour for matching, exception resolution, and payment optimisation
-- 65 business rules with evidence traceability
+- 75 business rules with evidence traceability
 - Success metrics with baselines and targets
 - 14 hypotheses with validation plans
 
@@ -155,24 +152,24 @@ This workflow is governed by the Perionyx Product Principles. Every decision in 
 
 ## 5. Workflow Overview
 
-The AP workflow is a 10-stage procure-to-pay process with clear state transitions, ownership boundaries, and control points.
+The AP workflow is a 7-stage procure-to-pay process with clear state transitions, ownership boundaries, and control points.
 
 ### Workflow Flow
 
 ```
-Invoice Received → Invoice Validated → Three-Way Match ──→ Exception Queue
-                                          │                      │
-                                          │ (matched)            │ (resolved)
-                                          ▼                      │
-                                    Approval Routing ←───────────┘
-                                          │
-                                          │ (approved)
-                                          ▼
-                              Payment Readiness → Treasury Approval → Payment Execution
-                                                                          │
-                                                                          │ (confirmed)
-                                                                          ▼
-                                                              GL Posting → Audit & Reconciliation
+Invoice Received → Validation & Match ──→ Exception Resolution
+                                  │                │
+                                  │ (matched)      │ (resolved)
+                                  ▼                │
+                            Approval Routing ←─────┘
+                                  │
+                                  │ (approved)
+                                  ▼
+                    Treasury Review & Approval → Payment Execution
+                                                      │
+                                                      │ (confirmed)
+                                                      ▼
+                                          Post-Payment Reconciliation
 ```
 
 ### Key Control Points
@@ -181,29 +178,25 @@ Invoice Received → Invoice Validated → Three-Way Match ──→ Exception Q
 |---------------|-------|---------|----------|
 | Duplicate Detection | 1 | Prevent duplicate payments before they enter the system | E1 (T2): "error-prone" reconciliation |
 | Evidence Assembly | 2 | Gather all supporting documents before any human sees the invoice | E1 (Adeel): "manual oversight to ensure accuracy" |
-| Three-Way Match | 3 | Automated verification of invoice vs. PO vs. receipt | E1 (T2): manual matching is the pain |
-| Exception Classification | 4 | Prioritise discrepancies by financial impact | WP1: "Exceptions Deserve Attention" |
-| SoD Enforcement | 5 | PO creator ≠ invoice approver ≠ payment releaser | Constitution Law 12, SOX compliance |
-| Threshold Approval | 5 | Multi-level approval: <$1K AP Clerk, <$10K AP Manager, <$50K Controller, <$250K CFO, >$250K CFO + Board | E1 (T1): "approval workflows...delay payments" |
-| Cash Availability | 7 | Verify funds before payment execution | E3 (Ayman Shawky): "instant view of cash positions" |
-| Idempotency | 8 | Prevent duplicate payments via unique keys | VP5: Financial Precision |
-| GL Reconciliation | 9 | Verify AP subledger = GL balance | E5 (Mohamed Gamal): "manual account reconciliation" |
-| Checksum Chain | 10 | Tamper-evident audit trail | VP4: Every Action Is Auditable |
+| Three-Way Match | 2 | Automated verification of invoice vs. PO vs. receipt | E1 (T2): manual matching is the pain |
+| Exception Classification | 3 | Prioritise discrepancies by financial impact | WP1: "Exceptions Deserve Attention" |
+| SoD Enforcement | 4 | PO creator ≠ invoice approver ≠ payment releaser | Constitution Law 12, SOX compliance |
+| Threshold Approval | 4 | Multi-level approval: <$1K AP Clerk, <$10K AP Manager, <$50K Controller, <$250K CFO, >$250K CFO + Board | E1 (T1): "approval workflows...delay payments" |
+| Idempotency | 6 | Prevent duplicate payments via unique keys | VP5: Financial Precision |
+| GL Reconciliation | 7 | Verify AP subledger = GL balance | E5 (Mohamed Gamal): "manual account reconciliation" |
+| Checksum Chain | 7 | Tamper-evident audit trail | VP4: Every Action Is Auditable |
 
 ### Stage Ownership Matrix
 
 | Stage | Primary Owner | Secondary Owner | System Role |
 |-------|--------------|-----------------|-------------|
 | 1. Invoice Received | AP Clerk | Vendor (portal) | OCR, capture, duplicate detection |
-| 2. Invoice Validated | System | AP Clerk (review) | Evidence assembly, PO/GRN linking |
-| 3. Three-Way Match | System | AP Clerk (override) | Automated matching, tolerance evaluation |
-| 4. Exception Queue | AP Clerk / AP Manager | Procurement | Classification, routing, escalation |
-| 5. Approval Routing | Approver (role-based) | AP Manager (override) | Routing, SoD enforcement, delegation |
-| 6. Payment Readiness | System + Treasury Manager | AP Manager | Batch creation, discount optimisation |
-| 7. Treasury Approval | Treasury Manager | CFO (high-value) | Cash verification, scheduling |
-| 8. Payment Execution | System + Treasury Manager | — | Banking API, status tracking |
-| 9. GL Posting | System | Controller (review) | Journal entry creation, subledger update |
-| 10. Audit & Reconciliation | System + Controller | Auditor (read-only) | Bank matching, checksum verification |
+| 2. Validation & Match | System | AP Clerk (override) | Evidence assembly, auto-match, tolerance evaluation |
+| 3. Exception Resolution | AP Clerk / AP Manager | Procurement | Classification, routing, escalation |
+| 4. Approval Routing | Approver (role-based) | AP Manager (override) | Routing, SoD enforcement, delegation |
+| 5. Treasury Review & Approval | Treasury Manager | CFO (high-value) | Cash verification, proposal review, scheduling |
+| 6. Payment Execution | System + Treasury | — | Banking API, status tracking |
+| 7. Post-Payment Reconciliation | System + Controller | Auditor (read-only) | GL posting, bank matching, checksum verification |
 
 ---
 
@@ -287,13 +280,13 @@ AI in the AP workflow assists human decision-making. It never replaces human jud
 | OCR field extraction | 1 | Extract line items, amounts, vendor from invoice image | Manual correction always available |
 | Duplicate detection | 1 | Flag invoices matching existing invoices (vendor, amount, date) | AP Clerk can dismiss with reason |
 | Evidence collection | 2 | Link PO, GRN, contract, vendor history automatically | No override needed (automated) |
-| Three-way match | 3 | Automated matching with tolerance application | Exception raised for human resolution |
-| Exception classification | 4 | Classify type, severity, suggest resolution | AP Manager must approve resolution |
-| Risk scoring | 5 | Score invoice risk 0-100 based on 5 factors | Approver interprets score |
-| Recommendation generation | 5 | Recommend approve/review/reject with reasoning | Human makes final decision |
-| Payment optimisation | 6 | Recommend payment timing based on discount terms and cash position | Treasury Manager makes final decision |
-| GL auto-coding | 9 | Suggest GL account codes based on invoice category | Controller confirms coding |
-| Reconciliation matching | 10 | Match bank statement to payments | Review exceptions only |
+| Three-way match | 2 | Automated matching with tolerance application | Exception raised for human resolution |
+| Exception classification | 3 | Classify type, severity, suggest resolution | AP Manager must approve resolution |
+| Risk scoring | 4 | Score invoice risk 0-100 based on 5 factors | Approver interprets score |
+| Recommendation generation | 4 | Recommend approve/review/reject with reasoning | Human makes final decision |
+| Payment optimisation | 5 | Recommend payment timing based on discount terms and cash position | Treasury Manager makes final decision |
+| GL auto-coding | 7 | Suggest GL account codes based on invoice category | Controller confirms coding |
+| Reconciliation matching | 7 | Match bank statement to payments | Review exceptions only |
 
 ### What AI Never Does
 
@@ -319,7 +312,7 @@ Every AI-generated recommendation must include:
 
 ### AI Guardrails
 
-- AI confidence below 70% triggers mandatory human review
+- AI confidence thresholds are capability-specific (see AI_BEHAVIOUR_GUIDE for per-capability thresholds)
 - AI recommendations are labelled as recommendations, never as decisions
 - AI training data must not include PII beyond what is necessary
 - Every AI action is logged with full reasoning audit trail
@@ -331,7 +324,7 @@ Every AI-generated recommendation must include:
 
 ## 8. Business Rules Summary
 
-The AP workflow is governed by **65 business rules** across 6 categories. The top 20 rules (by severity) are listed below. The full rule library is in the companion document.
+The AP workflow is governed by **75 business rules** across 8 categories. The top 20 rules (by severity) are listed below. The full rule library is in the companion document.
 
 ### Top 20 Rules by Severity
 
@@ -344,29 +337,32 @@ The AP workflow is governed by **65 business rules** across 6 categories. The to
 | BR-030 | Threshold-Based Approval | Approval | Critical | E1 (T1): "approval workflows...delay payments" | No |
 | BR-043 | Payment Requires Treasury Approval | Payment | Critical | VP5: Financial Precision | No |
 | BR-046 | Idempotent Payment Execution | Payment | Critical | VP5: Financial Precision | No |
+| BR-066 | Vendor Bank Change Requires Dual Approval | Vendor | Critical | Phase 27.1R debt item | **Yes** |
+| BR-067 | Payment Batch Must Balance to Zero | Payment | Critical | VP5: Financial Precision | No |
+| BR-068 | Invoice Amount Tolerance per Vendor Configurable | Match | Critical | [HYPOTHESIS] — inferred from vendor-specific needs | **Yes** |
+| BR-069 | Approval Chain Must Be Complete Before Payment | Approval | Critical | Constitution Law 12 | No |
+| BR-070 | Duplicate Detection Sensitivity Configurable | Invoice | Critical | E1 (T2): duplicates slip through | No |
+| BR-071 | GL Posting Must Balance to Zero | GL | Critical | VP5: Financial Precision | No |
+| BR-072 | Payment Amount Must Match Approved Amount | Payment | Critical | VP5: Financial Precision | No |
+| BR-073 | Vendor Must Be Active to Receive Payment | Vendor | Critical | [HYPOTHESIS] — industry pattern | **Yes** |
+| BR-074 | Exception Resolution Must Record Decision Reason | Exception | Critical | VP4: Every Action Is Auditable | No |
+| BR-075 | Audit Trail Must Be Complete Before Financial Close | Audit | Critical | VP4: Every Action Is Auditable | No |
 | BR-056 | Exception SLA Enforcement | Exception | High | WP1: "Exceptions Deserve Attention" | No |
 | BR-014 | Two-Way Match for Services | Match | High | [HYPOTHESIS] — no direct evidence for 2-way vs 3-way preference | **Yes** |
 | BR-002 | Invoice Date Not >90 Days Past | Invoice | High | [HYPOTHESIS] — industry standard varies | **Yes** |
-| BR-033 | Approval Delegation Chain | Approval | High | HP2: Approval Delegation [HYPOTHESIS] | **Yes** |
-| BR-035 | Escalation on SLA Breach | Approval | High | E1 (T1): approval delays are the pain | No |
-| BR-048 | Dual-Signature for Payments >$50K | Payment | High | [HYPOTHESIS] — industry pattern, no direct evidence | **Yes** |
-| BR-050 | Payment Failure Auto-Retry | Payment | High | E9 (Ahmed Abdelmoneim): treasury reliability expectations | No |
-| BR-007 | Currency Must Be Supported | Invoice | High | T7: Multi-Currency [HYPOTHESIS] | **Yes** |
-| BR-017 | Price Tolerance Configurable per Vendor | Match | Medium | [HYPOTHESIS] — inferred from tolerance needs varying by vendor | **Yes** |
-| BR-059 | Exception Resolution Requires Reason | Exception | Medium | VP4: Every Action Is Auditable | No |
-| BR-003 | Invoice Amount Must Be Positive | Invoice | Medium | VP5: Financial Precision | No |
-| BR-062 | Audit Record Checksum Chain | Audit | Medium | VP4: Every Action Is Auditable | No |
-| BR-010 | OCR Confidence Review Threshold | Invoice | Medium | VP3: Trust Requires Provable Accuracy | No |
 
 ### Rules by Category
 
 | Category | Rules | Count | Evidence Coverage |
 |----------|-------|-------|-------------------|
-| Invoice Validation | BR-001 to BR-012 | 12 | 9 with evidence, 3 [HYPOTHESIS] |
-| Three-Way Match | BR-013 to BR-025 | 13 | 10 with evidence, 3 [HYPOTHESIS] |
-| Approval | BR-026 to BR-042 | 17 | 13 with evidence, 4 [HYPOTHESIS] |
-| Payment | BR-043 to BR-055 | 13 | 10 with evidence, 3 [HYPOTHESIS] |
-| Exception | BR-056 to BR-065 | 10 | 8 with evidence, 2 [HYPOTHESIS] |
+| Invoice Validation | BR-001 to BR-012, BR-070 | 13 | 10 with evidence, 3 [HYPOTHESIS] |
+| Three-Way Match | BR-013 to BR-025, BR-068 | 14 | 11 with evidence, 3 [HYPOTHESIS] |
+| Approval | BR-026 to BR-042, BR-069 | 18 | 14 with evidence, 4 [HYPOTHESIS] |
+| Payment | BR-043 to BR-055, BR-067, BR-072 | 15 | 12 with evidence, 3 [HYPOTHESIS] |
+| Exception | BR-056 to BR-065, BR-074 | 11 | 9 with evidence, 2 [HYPOTHESIS] |
+| Vendor | BR-066, BR-073 | 2 | 0 with evidence, 2 [HYPOTHESIS] |
+| GL Posting | BR-071 | 1 | 1 with evidence, 0 [HYPOTHESIS] |
+| Audit | BR-075 | 1 | 1 with evidence, 0 [HYPOTHESIS] |
 
 **Full specification**: [[BUSINESS_RULE_LIBRARY]]
 
@@ -456,19 +452,20 @@ The following assumptions in this specification are unvalidated. Every hypothesi
 
 ## 11. Persona Summary
 
-**9 personas** interact with the AP workflow. Each has distinct needs, current pain points, and target improvement. Every feature in the AP workflow must serve at least one persona.
+**10 personas** interact with the AP workflow. Each has distinct needs, current pain points, and target improvement. Every feature in the AP workflow must serve at least one persona.
 
 | # | Persona | Role | Primary Stages | Current | Target | Key Pain Point | Key Perionyx Solution |
 |---|---------|------|----------------|---------|--------|---------------|----------------------|
-| 1 | AP Clerk | Daily operations | 1-4 | 3/10 | 8/10 | Manual data entry, email chasing | OCR + auto-match + AI exception context |
-| 2 | AP Manager | Oversight & escalation | 4-6 | 5/10 | 8/10 | System hopping, firefighting | Real-time dashboard + AI pre-classification |
-| 3 | Financial Controller | Compliance & audit | 9-10 | 6/10 | 9/10 | Manual GL reconciliation, audit prep | Auto GL posting + immutable audit trail |
-| 4 | Treasury Manager | Cash & payments | 6-8 | 7/10 | 8/10 | Stale cash data, payment failures | Real-time banking + payment optimisation |
-| 5 | Procurement Manager | Vendor & PO | 2-3 | 5/10 | 7/10 | Constant AP interruptions | Auto-match + exception routing to procurement |
+| 1 | AP Clerk | Daily operations | 1-3 | 3/10 | 8/10 | Manual data entry, email chasing | OCR + auto-match + AI exception context |
+| 2 | AP Manager | Oversight & escalation | 3-5 | 5/10 | 8/10 | System hopping, firefighting | Real-time dashboard + AI pre-classification |
+| 3 | Financial Controller | Compliance & audit | 7 | 6/10 | 9/10 | Manual GL reconciliation, audit prep | Auto GL posting + immutable audit trail |
+| 4 | Treasury Manager | Cash & payments | 5-6 | 7/10 | 8/10 | Stale cash data, payment failures | Real-time banking + payment optimisation |
+| 5 | Procurement Manager | Vendor & PO | 2 | 5/10 | 7/10 | Constant AP interruptions | Auto-match + exception routing to procurement |
 | 6 | CFO | Strategy & reporting | Executive | 5/10 | 8/10 | No real-time visibility | CFO dashboard + board-ready reports |
-| 7 | Approver (Dept Head) | Invoice approval | 5 | 4/10 | 8/10 | Email-based approvals, no context | One-tap approval with full evidence package |
-| 8 | Auditor | Compliance verification | 10 | 4/10 | 9/10 | Manual evidence gathering | Automated audit package + checksum verification |
-| 9 | Vendor (External) | Invoice submission | 1, 8 | 2/10 | 6/10 | No payment visibility | Vendor portal + proactive notifications |
+| 7 | Approver (Dept Head) | Invoice approval | 4 | 4/10 | 8/10 | Email-based approvals, no context | One-tap approval with full evidence package |
+| 8 | Auditor | Compliance verification | 7 | 4/10 | 9/10 | Manual evidence gathering | Automated audit package + checksum verification |
+| 9 | Vendor (External) | Invoice submission | 1, 6 | 2/10 | 6/10 | No payment visibility | Vendor portal + proactive notifications |
+| 10 | Department Manager | Budget oversight | 4-5 | [HYPOTHESIS] | TBD | Budget ownership unclear | Budget visibility in approval flow |
 
 ### Evidence Basis for Personas
 
@@ -483,6 +480,7 @@ The following assumptions in this specification are unvalidated. Every hypothesi
 | Approver | E1 (T1): "approval workflows...delay payments" | High |
 | Auditor | VP4: "Every Action Is Auditable" — constitutional requirement | Constitutional |
 | Vendor | E7 (Ahmed Orabi): AP/P2P workflow needs | Medium |
+| Department Manager | [HYPOTHESIS] — inferred from approval routing requirements | Hypothesis |
 
 **Full specification**: [[PERSONA_GUIDE]]
 
@@ -494,13 +492,13 @@ This specification is the executive summary. The full specification is distribut
 
 | # | Document | Purpose | Location |
 |---|----------|---------|----------|
-| 1 | **Enterprise Product Specification AP v2.0** | This document — master summary | `docs/product/eps/ENTERPRISE_PRODUCT_SPECIFICATION_AP.md` |
-| 2 | **AP Reference Workflow v2.0** | Complete 10-stage workflow with all controls | `docs/product/eps/REFERENCE_WORKFLOW_AP.md` |
-| 3 | **Business Rule Library v2.0** | 65 business rules with evidence traceability | `docs/product/eps/BUSINESS_RULE_LIBRARY.md` |
+| 1 | **Enterprise Product Specification AP v2.1** | This document — master summary | `docs/product/eps/ENTERPRISE_PRODUCT_SPECIFICATION_AP.md` |
+| 2 | **AP Reference Workflow v2.0** | Complete 7-stage workflow with all controls | `docs/product/eps/REFERENCE_WORKFLOW_AP.md` |
+| 3 | **Business Rule Library v2.0** | 75 business rules with evidence traceability | `docs/product/eps/BUSINESS_RULE_LIBRARY.md` |
 | 4 | **User Journey Library v2.0** | 10 user journeys with decision points | `docs/product/eps/USER_JOURNEY_LIBRARY.md` |
 | 5 | **Perionyx Product Principles** | 15 product principles with evidence | `docs/product/PERIONYX_PRODUCT_PRINCIPLES.md` |
 | 6 | **Product Philosophy** | Core product beliefs | `docs/product/PRODUCT_PHILOSOPHY.md` |
-| 7 | **Persona Guide** | 9 persona profiles with day-in-the-life | `docs/product/PERSONA_GUIDE.md` |
+| 7 | **Persona Guide** | 10 persona profiles with day-in-the-life | `docs/product/PERSONA_GUIDE.md` |
 | 8 | **Workflow State Machine** | 5 state machines with complete transitions | `docs/product/WORKFLOW_STATE_MACHINE.md` |
 | 9 | **AI Behaviour Guide** | AI capabilities, transparency, guardrails | `docs/product/AI_BEHAVIOUR_GUIDE.md` |
 | 10 | **UX Information Architecture** | Screen layouts, navigation, interaction patterns | `docs/product/UX_INFORMATION_ARCHITECTURE.md` |
@@ -565,11 +563,11 @@ This specification is the executive summary. The full specification is distribut
 1. Read Section 5 (Workflow Overview) — does this match your current workflow?
 2. Read Section 11 (Persona Summary) — is the AP Manager persona accurately described?
 3. Read Section 7 (AI Boundary) — are you comfortable with AI in matching and exception resolution?
-4. Read Section 3 (Scope) — are the 10 stages the right stages?
+4. Read Section 3 (Scope) — are the 7 stages the right stages?
 
 ### For Treasury Managers (5-minute review)
 
-1. Read Section 5 (Workflow Overview) — focus on Stages 6-8 (Payment Readiness → Execution)
+1. Read Section 5 (Workflow Overview) — focus on Stages 5-6 (Treasury Review & Approval → Payment Execution)
 2. Read Section 9 (Success Metrics) — DPO and payment timing targets
 3. Read Section 7 (AI Boundary) — payment optimisation AI
 
@@ -579,7 +577,7 @@ This specification is the executive summary. The full specification is distribut
 2. Flag any metric that seems unrealistic or any workflow stage that seems incomplete
 3. Identify any missing persona needs or control points
 4. Submit feedback to the Product Team
-5. Feedback will be incorporated into v2.1 of this specification
+5. Feedback will be incorporated into v2.2 of this specification
 
 ---
 
@@ -588,14 +586,15 @@ This specification is the executive summary. The full specification is distribut
 | Version | Date | Change | Author | Review Status |
 |---------|------|--------|--------|--------------|
 | 1.0 | 2026-07-28 | Initial enterprise product specification (14 stages, 3 state machines) | Product Team | Superseded |
-| 2.0 | 2026-07-28 | Simplified to 10 stages, 5 state machines, expanded to 10 evidence sources, 65 business rules, 14 hypotheses, [HYPOTHESIS] tagging | Product Team | Draft — pending finance professional review |
+| 2.0 | 2026-07-28 | Simplified to 10 stages, 5 state machines, expanded to 10 evidence sources, 65 business rules, 14 hypotheses, [HYPOTHESIS] tagging | Product Team | Draft — superseded by v2.1 |
+| 2.1 | 2026-07-28 | EPS Stabilisation: 10→7 stages, 9→10 personas, 65→75 rules, per-capability AI confidence, terminology audit | Product Team | Active |
 
 ### Planned Versions
 
 | Version | Date | Change |
 |---------|------|--------|
-| 2.1 | TBD | Incorporate finance professional review feedback |
-| 2.2 | TBD | Post-Phase 27.0B implementation learnings |
+| 2.2 | TBD | Incorporate finance professional review feedback |
+| 2.3 | TBD | Post-Phase 27.0B implementation learnings |
 | 3.0 | TBD | Post-Phase 21B workflow execution learnings |
 
 ---
@@ -607,7 +606,7 @@ This specification is the executive summary. The full specification is distribut
 | Foundation | [[PRODUCT_PHILOSOPHY]] | Product beliefs this workflow implements |
 | Principles | [[PERIONYX_PRODUCT_PRINCIPLES]] | Decision rules governing this workflow |
 | Authority | [[PLATFORM_CONSTITUTION]] | Engineering laws this workflow inherits from |
-| Workflow | [[REFERENCE_WORKFLOW_AP]] | Complete 10-stage lifecycle specification |
+| Workflow | [[REFERENCE_WORKFLOW_AP]] | Complete 7-stage lifecycle specification |
 | Implementation | `docs/ap/AP_DOMAIN_ARCHITECTURE.md` | Domain model and bounded context |
 | Implementation | `docs/ap/AP_PRISMA_MODELS.md` | Database schema |
 | Implementation | `docs/ap/AP_API_ARCHITECTURE.md` | API endpoint contracts |
@@ -619,4 +618,5 @@ This specification is the executive summary. The full specification is distribut
 
 | Version | Date | Change | Author |
 |---------|------|--------|--------|
+| 2.1 | 2026-07-28 | Phase 27.1S — EPS Stabilisation: 10→7 stages, 9→10 personas, 65→75 rules, per-capability AI confidence, terminology audit | Product Team |
 | 2.0 | 2026-07-28 | Phase 27.1 — Canonical product specification for AP workflow | Product Team |

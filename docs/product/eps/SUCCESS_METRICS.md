@@ -1,8 +1,8 @@
 ---
-title: "Success Metrics — AP Reference Workflow v1.0"
+title: "Success Metrics — AP Reference Workflow v2.0"
 created: 2026-07-28
 updated: 2026-07-28
-version: 1.0
+version: 2.0
 phase: 27.1
 tags:
   - type/reference
@@ -13,7 +13,7 @@ owner: Product Architecture Board
 authority: Phase 27.1
 ---
 
-# Success Metrics — AP Reference Workflow v1.0
+# Success Metrics — AP Reference Workflow v2.0
 
 > **Classification**: Internal — Product & Engineering
 > **Phase**: 27.1 — EPS Companion Documents
@@ -32,7 +32,7 @@ Enterprise software succeeds not when it is feature-rich but when it **reduces c
 |----------|-----------|----------------|
 | **Operational Efficiency** | Speed and throughput of the AP workflow | CFOs and Controllers cannot close the books until every invoice is processed. Evidence: T5 (Month-End Close Is Universally Painful, 3 sources, Validated). Mohamed Gamal (E5): "delayed information collection... approval bottlenecks." |
 | **Financial Control** | Accuracy, completeness, and auditability of every transaction | A single overpayment erodes trust in the entire system. Evidence: P3 (Trust Requires Accuracy, Validated with 3 sources). Platform Constitution Law 6: "Financial integrity is never compromised." |
-| **User Trust** | Willingness of finance professionals to rely on system decisions | If the AP Accountant double-checks every AI recommendation, automation has failed. Evidence: T6 (AI Forecasting Is Interesting but Untrusted, 2 sources, Working). Adeel Aslam (E1): "manual oversight to ensure accuracy." |
+| **User Trust** | Willingness of finance professionals to rely on system decisions | If the AP Clerk double-checks every AI recommendation, automation has failed. Evidence: T6 (AI Forecasting Is Interesting but Untrusted, 2 sources, Working). Adeel Aslam (E1): "manual oversight to ensure accuracy." |
 
 ### Measurement Cadence
 
