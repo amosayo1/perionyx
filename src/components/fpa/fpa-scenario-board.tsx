@@ -41,7 +41,7 @@ export default function FPAScenarioBoard({ scenarios, comparisons }: FPAScenario
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.25 }}
               style={{
-                background: '#1a1a2e',
+                background: '#1a1a24',
                 borderRadius: 12,
                 border: '1px solid #2a2a3e',
                 padding: 20,
@@ -63,9 +63,9 @@ export default function FPAScenarioBoard({ scenarios, comparisons }: FPAScenario
               <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                 <span style={{ color: '#888', fontSize: 12 }}>Probability:</span>
                 <div style={{ flex: 1, height: 6, background: '#2a2a3e', borderRadius: 3, overflow: 'hidden' }}>
-                  <div style={{ width: `${s.probability}%`, height: '100%', background: '#d4a843', borderRadius: 3 }} />
+                  <div style={{ width: `${s.probability}%`, height: '100%', background: '#d4af37', borderRadius: 3 }} />
                 </div>
-                <span style={{ color: '#d4a843', fontSize: 12, fontWeight: 600, minWidth: 32, textAlign: 'right' }}>{s.probability}%</span>
+                <span style={{ color: '#d4af37', fontSize: 12, fontWeight: 600, minWidth: 32, textAlign: 'right' }}>{s.probability}%</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                 <div>

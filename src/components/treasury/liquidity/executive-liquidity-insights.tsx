@@ -24,7 +24,7 @@ export function ExecutiveLiquidityInsights({ className }: { className?: string }
             </div>
             <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed">{insight.description}</p>
             {insight.action && (
-              <p className="mt-1.5 text-[11px] font-medium text-[#c9a84c]">→ {insight.action}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-gold">→ {insight.action}</p>
             )}
           </div>
         ))}

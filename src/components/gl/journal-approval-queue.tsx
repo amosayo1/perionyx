@@ -50,13 +50,13 @@ export const JournalApprovalQueue = memo(function JournalApprovalQueue({ journal
   return (
     <div className={cn("space-y-3", className)}>
       <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-        <FileText className="h-4 w-4 text-[#d4af37]" />
+        <FileText className="h-4 w-4 text-gold" />
         Approval Queue ({pendingJournals.length})
       </h3>
       {pendingJournals.map((j) => {
         const isExpanded = expanded === j.id;
         return (
-          <div key={j.id} className={cn("rounded-lg border bg-zinc-900/40 transition-colors", isExpanded ? "border-[#d4af37]/20" : "border-zinc-800/60", "hover:border-zinc-700/60")}>
+          <div key={j.id} className={cn("rounded-lg border bg-zinc-900/40 transition-colors", isExpanded ? "border-gold/20" : "border-zinc-800/60", "hover:border-zinc-700/60")}>
             <div className="flex items-start justify-between px-4 py-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ export const JournalApprovalQueue = memo(function JournalApprovalQueue({ journal
                     <div key={e.id} className="flex items-center justify-between rounded-md bg-zinc-800/30 px-3 py-1.5">
                       <span className="text-xs text-zinc-300">{e.description ?? "No description"}</span>
                       <div className="flex items-center gap-3 text-xs font-mono">
-                        {e.debit > 0 && <span className="text-[#d4af37]">{formatCurrency(e.debit)} dr</span>}
+                        {e.debit > 0 && <span className="text-gold">{formatCurrency(e.debit)} dr</span>}
                         {e.credit > 0 && <span className="text-zinc-400">{formatCurrency(e.credit)} cr</span>}
                       </div>
                     </div>

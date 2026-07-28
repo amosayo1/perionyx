@@ -22,7 +22,7 @@ function Card({ label, value, icon, color }: { label: string; value: string; ico
     amber: { icon: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/10" },
     blue: { icon: "text-blue-400", border: "border-blue-500/20", bg: "bg-blue-500/10" },
     emerald: { icon: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
-    gold: { icon: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+    gold: { icon: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
   }[color] ?? { icon: "text-zinc-400", border: "border-zinc-500/20", bg: "bg-zinc-500/10" };
 
   return (
@@ -73,7 +73,7 @@ export const CorporateTaxDashboard = memo(function CorporateTaxDashboard({ provi
                 <td className="px-4 py-3 text-sm text-white">{p.jurisdictionId}</td>
                 <td className="px-4 py-3 text-sm text-zinc-400">{p.period}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{formatCurrency(p.taxableIncome)}</td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{formatCurrency(p.taxPayable)}</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{formatCurrency(p.taxPayable)}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{formatCurrency(p.deferredTaxLiability)}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-400">{p.taxRate}%</td>
               </tr>

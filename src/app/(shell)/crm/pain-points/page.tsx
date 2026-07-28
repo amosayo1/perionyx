@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { PainPointService } from "@/modules/crm";
 import { PageContainer } from "@/components/enterprise/page-container";
 import { EnterprisePageHeader } from "@/components/enterprise/enterprise-page-header";
 import { AlertTriangle, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 
 const painPointService = new PainPointService();
 
@@ -38,114 +38,113 @@ function TrendIcon({ trend }: { trend?: string }) {
 }
 
 export default async function PainPointsPage() {
-  const session = await auth();
-  const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-  if (!ctx) redirect("/sign-in");
-
-  const [painPoints, topPainPoints, growing] = await Promise.all([
-    painPointService.list({}).catch(() => []),
-    painPointService.getTopPainPoints(10).catch(() => []),
-    painPointService.getFastestGrowingPainPoints(5).catch(() => []),
-  ]);
-
-  return (
-    <PageContainer>
-      <EnterprisePageHeader
-        title="Pain Points"
-        description="Tracked challenges across industries, roles, and finance domains"
-      />
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-rose-400">
-              <AlertTriangle className="h-5 w-5" />
+  return withRuntimeContext(await headers(), async (ctx) => {
+  
+    const [painPoints, topPainPoints, growing] = await Promise.all([
+      painPointService.list({}).catch(() => []),
+      painPointService.getTopPainPoints(10).catch(() => []),
+      painPointService.getFastestGrowingPainPoints(5).catch(() => []),
+    ]);
+  
+    return (
+      <PageContainer>
+        <EnterprisePageHeader
+          title="Pain Points"
+          description="Tracked challenges across industries, roles, and finance domains"
+        />
+  
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-rose-400">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs text-zinc-500">Total Tracked</p>
+                <p className="text-2xl font-bold text-white">{painPoints.length}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-zinc-500">Total Tracked</p>
-              <p className="text-2xl font-bold text-white">{painPoints.length}</p>
+          </div>
+          <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-amber-400">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs text-zinc-500">Categories</p>
+                <p className="text-2xl font-bold text-white">{new Set(painPoints.map((p) => p.category)).size}</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-rose-400">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs text-zinc-500">Growing</p>
+                <p className="text-2xl font-bold text-white">{growing.reduce((s, g) => s + g.count, 0)}</p>
+              </div>
             </div>
           </div>
         </div>
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-amber-400">
-              <TrendingUp className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs text-zinc-500">Categories</p>
-              <p className="text-2xl font-bold text-white">{new Set(painPoints.map((p) => p.category)).size}</p>
-            </div>
+  
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
+            <h3 className="mb-4 text-sm font-semibold text-white">Top Pain Point Categories</h3>
+            {topPainPoints.length > 0 ? (
+              <div className="space-y-3">
+                {topPainPoints.map((pp, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-medium capitalize leading-4 ${
+                        CATEGORY_COLORS[pp.category] ?? "text-zinc-400 bg-zinc-500/10"
+                      }`}>
+                        {pp.category.replace(/-/g, " ")}
+                      </span>
+                      <span className={`rounded px-1.5 py-0.5 text-[10px] ${
+                        pp.severity === "high" ? "bg-rose-500/10 text-rose-400" :
+                        pp.severity === "medium" ? "bg-amber-500/10 text-amber-400" :
+                        "bg-zinc-500/10 text-zinc-400"
+                      }`}>
+                        {pp.severity}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <TrendIcon trend={pp.trend} />
+                      <span className="text-sm font-medium text-white">{pp.count}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-zinc-500">No pain points tracked yet</p>
+            )}
           </div>
-        </div>
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-rose-400">
-              <TrendingUp className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs text-zinc-500">Growing</p>
-              <p className="text-2xl font-bold text-white">{growing.reduce((s, g) => s + g.count, 0)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
-          <h3 className="mb-4 text-sm font-semibold text-white">Top Pain Point Categories</h3>
-          {topPainPoints.length > 0 ? (
-            <div className="space-y-3">
-              {topPainPoints.map((pp, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+  
+          <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
+            <h3 className="mb-4 text-sm font-semibold text-white">Fastest Growing Pain Points</h3>
+            {growing.length > 0 ? (
+              <div className="space-y-3">
+                {growing.map((gp, i) => (
+                  <div key={i} className="flex items-center justify-between">
                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-medium capitalize leading-4 ${
-                      CATEGORY_COLORS[pp.category] ?? "text-zinc-400 bg-zinc-500/10"
+                      CATEGORY_COLORS[gp.category] ?? "text-zinc-400 bg-zinc-500/10"
                     }`}>
-                      {pp.category.replace(/-/g, " ")}
+                      {gp.category.replace(/-/g, " ")}
                     </span>
-                    <span className={`rounded px-1.5 py-0.5 text-[10px] ${
-                      pp.severity === "high" ? "bg-rose-500/10 text-rose-400" :
-                      pp.severity === "medium" ? "bg-amber-500/10 text-amber-400" :
-                      "bg-zinc-500/10 text-zinc-400"
-                    }`}>
-                      {pp.severity}
+                    <span className="rounded bg-rose-500/10 px-2 py-0.5 text-xs text-rose-400">
+                      +{gp.count}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <TrendIcon trend={pp.trend} />
-                    <span className="text-sm font-medium text-white">{pp.count}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-zinc-500">No pain points tracked yet</p>
-          )}
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-zinc-500">No growing pain points identified</p>
+            )}
+          </div>
         </div>
-
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-5">
-          <h3 className="mb-4 text-sm font-semibold text-white">Fastest Growing Pain Points</h3>
-          {growing.length > 0 ? (
-            <div className="space-y-3">
-              {growing.map((gp, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-medium capitalize leading-4 ${
-                    CATEGORY_COLORS[gp.category] ?? "text-zinc-400 bg-zinc-500/10"
-                  }`}>
-                    {gp.category.replace(/-/g, " ")}
-                  </span>
-                  <span className="rounded bg-rose-500/10 px-2 py-0.5 text-xs text-rose-400">
-                    +{gp.count}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-zinc-500">No growing pain points identified</p>
-          )}
-        </div>
-      </div>
-    </PageContainer>
-  );
+      </PageContainer>
+    );
+  });
 }

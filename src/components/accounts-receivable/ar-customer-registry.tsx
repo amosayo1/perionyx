@@ -31,7 +31,7 @@ export function ARCustomerRegistry({ customers }: ARCustomerRegistryProps) {
     <div>
       <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search customers..."
         style={{ width: "100%", padding: "10px 16px", background: "#16213e", border: "1px solid #2a2a4a", borderRadius: 8, color: "#e0e0e0", fontSize: 14, marginBottom: 16, outline: "none" }} />
-      <div style={{ background: "#1a1a2e", borderRadius: 8, overflow: "hidden" }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, overflow: "hidden" }}>
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 80px 1fr 1fr", gap: 8, padding: "12px 16px", background: "#16213e", borderBottom: "1px solid #2a2a4a", color: "#94a3b8", fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>
           {["name", "customerNumber", "totalOutstanding", "riskRating", "dso", "creditLimit"].map(f => (
             <div key={f} onClick={() => toggleSort(f as keyof Customer)} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
@@ -45,7 +45,7 @@ export function ARCustomerRegistry({ customers }: ARCustomerRegistryProps) {
             style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 80px 1fr 1fr", gap: 8, padding: "12px 16px", borderBottom: "1px solid #2a2a4a", alignItems: "center", fontSize: 13, color: "#e0e0e0" }}>
             <div style={{ fontWeight: 600 }}>{c.name}</div>
             <div style={{ color: "#94a3b8", fontFamily: "ui-monospace, monospace" }}>{c.customerNumber}</div>
-            <div style={{ fontFamily: "ui-monospace, monospace", color: "#d4a843" }}>${c.totalOutstanding.toLocaleString()}</div>
+            <div style={{ fontFamily: "ui-monospace, monospace", color: "#d4af37" }}>${c.totalOutstanding.toLocaleString()}</div>
             <div style={{ background: riskColors[c.riskRating] + "22", color: riskColors[c.riskRating], fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10, textAlign: "center", textTransform: "uppercase" }}>
               {c.riskRating}
             </div>

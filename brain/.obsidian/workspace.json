@@ -4,21 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "0d56646b234037eb",
+        "id": "60ddee8793153083",
         "type": "tabs",
         "children": [
           {
-            "id": "84c849fd83d74c04",
+            "id": "4a4ab51b1daa797d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "canvas",
               "state": {
-                "file": "11-ADR/decision-network.md",
-                "mode": "source",
-                "source": false
+                "file": "Untitled.canvas",
+                "viewState": {
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 0
+                }
               },
-              "icon": "lucide-file",
-              "title": "decision-network"
+              "icon": "lucide-layout-dashboard",
+              "title": "Untitled"
             }
           }
         ]
@@ -53,12 +56,12 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:domain/engineering",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
-                "collapseAll": false,
-                "extraContext": false,
-                "sortOrder": "alphabetical"
+                "collapseAll": true,
+                "extraContext": true,
+                "sortOrder": "byModifiedTime"
               },
               "icon": "lucide-search",
               "title": "Search"
@@ -74,11 +77,13 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "ff071f6cb4ccbbf5",
@@ -183,37 +188,41 @@
       "bases:Create new base": false
     }
   },
-  "active": "84c849fd83d74c04",
+  "active": "4a4ab51b1daa797d",
   "lastOpenFiles": [
-    "05-Engineering/Lessons/37-integration-tests-catch-interaction-bugs.md",
-    "05-Engineering/Knowledge/api-design-patterns.md",
-    "05-Engineering/Knowledge",
-    "05-Engineering/Lessons/36-api-contracts-encode-domain-boundaries.md",
-    "13-Engineering-Journal/index.md",
-    "journal-2026-07-19.md",
-    "journal-2026-07-21.md",
-    "00-Home/index.md",
-    "01-Vision-Strategy.md",
-    "00-Home/open-questions.md",
-    "05-Engineering/EngineeringJournal.md",
-    "05-Engineering/Lessons/35-command-handlers-encode-business-rules.md",
-    "05-Engineering/Lessons/34-entity-classification-prevents-over-schema.md",
-    "05-Engineering/Lessons/33-domain-architecture-precedes-implementation.md",
-    "05-Engineering/Lessons/32-domain-scaffolding-is-not-domain.md",
-    "05-Engineering/Lessons/31-cross-cutting-ux-shallow-impact.md",
-    "05-Engineering/Lessons/30-quick-wins-compound.md",
-    "09-Customer-Discovery/interview-adeel-aslam.md",
-    "05-Engineering/Lessons/29-workflow-success-defines-product-success.md",
-    "12-Roadmaps/ProductRoadmap/phase-20-findings.md",
-    "13-Knowledge/WorkflowKnowledge/validated-workflows.md",
-    "12-Roadmaps/ProductRoadmap",
-    "13-Knowledge/WorkflowKnowledge",
-    "13-Knowledge",
-    "05-Engineering/Lessons/28-modules-are-not-workflows.md",
-    "05-Engineering/Lessons/27-residual-handling-prevents-allocation-drift.md",
-    "05-Engineering/Lessons/26-financial-precision-is-non-negotiable.md",
+    "Untitled.canvas",
+    "2026-07-28.md",
+    "BRAIN_CONSTITUTION.md",
+    "05-Engineering/Lessons/03-proxy-over-middleware.md",
+    "05-Engineering/lessons-learned.md",
+    "05-Engineering/Lessons/01-in-memory-stores-fine-for-v1.md",
+    "03-Architecture/index.md",
+    "Untitled 2.canvas",
+    "2026-07-25.md",
+    "Untitled.base",
+    "10-Research/index.md",
+    "11-ADR/index.md",
     "05-Engineering/Lessons/25-one-implementation-per-primitive.md",
     "05-Engineering/Lessons/24-evidence-over-assumptions.md",
-    "00-Home/brain-health.md"
+    "05-Engineering/Lessons/23-proxy-correlation-ids.md",
+    "05-Engineering/Lessons/22-prisma-parameterized-queries.md",
+    "05-Engineering/Lessons/21-testing-at-85-percent.md",
+    "05-Engineering/Lessons/20-cache-headers-free-performance.md",
+    "05-Engineering/Lessons/19-unified-error-handling.md",
+    "05-Engineering/Lessons/18-pilot-criteria-before-building.md",
+    "05-Engineering/Lessons/17-one-screen-one-question-product.md",
+    "05-Engineering/Lessons/16-cfos-dont-wait.md",
+    "05-Engineering/Lessons/15-build-constitution-first.md",
+    "05-Engineering/Lessons/14-enterprise-tables-density-control.md",
+    "05-Engineering/Lessons/13-motion-serves-function.md",
+    "05-Engineering/Lessons/12-validation-must-explain-how-to-fix.md",
+    "05-Engineering/Lessons/11-progressive-disclosure-over-everything.md",
+    "05-Engineering/Lessons/10-security-audits-before-launch.md",
+    "Untitled 1.canvas",
+    "Canvas/architecture-overview.canvas",
+    "05-Engineering/Knowledge",
+    "12-Roadmaps/ProductRoadmap",
+    "13-Knowledge/WorkflowKnowledge",
+    "13-Knowledge"
   ]
 }

@@ -180,7 +180,7 @@ export function PaymentsOverview({ className }: PaymentsOverviewProps) {
       trend: "up",
       delta: 5.3,
       status: "positive",
-      barColor: "#c9a84c",
+      barColor: "#d4af37",
       barWidth: 65,
     },
   ];

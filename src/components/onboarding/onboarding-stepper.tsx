@@ -44,7 +44,7 @@ function StepIcon({ stepId, status }: { stepId: string; status: string }) {
 
   const colors: Record<string, string> = {
     COMPLETED: "text-emerald-400",
-    IN_PROGRESS: "text-[#d4af37]",
+    IN_PROGRESS: "text-gold",
     FAILED: "text-red-400",
     SKIPPED: "text-zinc-500",
     PENDING: "text-zinc-600",
@@ -53,7 +53,7 @@ function StepIcon({ stepId, status }: { stepId: string; status: string }) {
   return (
     <div className={cn(
       "flex h-8 w-8 items-center justify-center rounded-lg",
-      status === "IN_PROGRESS" ? "bg-[#d4af37]/10" : "bg-transparent",
+      status === "IN_PROGRESS" ? "bg-gold/10" : "bg-transparent",
     )}>
       <Icon className={cn("h-4 w-4", colors[status] ?? "text-zinc-600")} />
     </div>
@@ -65,7 +65,7 @@ function StatusIndicator({ status }: { status: string }) {
     case "COMPLETED":
       return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
     case "IN_PROGRESS":
-      return <Play className="h-4 w-4 text-[#d4af37]" />;
+      return <Play className="h-4 w-4 text-gold" />;
     case "FAILED":
       return <AlertCircle className="h-4 w-4 text-red-400" />;
     case "SKIPPED":
@@ -88,7 +88,7 @@ export function OnboardingStepper({ steps, overall, estimatedRemainingMinutes, o
         <div className="mt-3">
           <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
             <div
-              className="h-full rounded-full bg-[#d4af37] transition-all duration-500"
+              className="h-full rounded-full bg-gold transition-all duration-500"
               style={{ width: `${overall.percentComplete}%` }}
             />
           </div>
@@ -109,7 +109,7 @@ export function OnboardingStepper({ steps, overall, estimatedRemainingMinutes, o
                   disabled={!isClickable}
                   className={cn(
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
-                    step.isActive && "bg-[#d4af37]/10 ring-1 ring-[#d4af37]/20",
+                    step.isActive && "bg-gold/10 ring-1 ring-gold/20",
                     isClickable && !step.isActive && "hover:bg-white/[0.04] cursor-pointer",
                     !isClickable && !step.isActive && "cursor-default",
                   )}
@@ -130,7 +130,7 @@ export function OnboardingStepper({ steps, overall, estimatedRemainingMinutes, o
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className={cn(
                         "text-[10px] uppercase tracking-wider",
-                        step.category === "core" && "text-[#d4af37]/60",
+                        step.category === "core" && "text-gold/60",
                         step.category === "integration" && "text-blue-400/60",
                         step.category === "governance" && "text-emerald-400/60",
                         step.category === "automation" && "text-purple-400/60",

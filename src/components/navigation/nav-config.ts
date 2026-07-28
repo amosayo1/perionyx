@@ -54,6 +54,8 @@ export const ALL_NAV: NavItem[] = [
   { href: "/order-to-cash", label: "Order-to-Cash", icon: Receipt, permission: "ordertocash.view", minRole: "MEMBER", keywords: "order to cash o2c revenue billing collections credit" },
   { href: "/accounts-receivable", label: "Accounts Receivable", icon: DollarSign, permission: "ar.view", minRole: "TREASURER", keywords: "accounts receivable ar invoices collections customers credit cash application disputes" },
   { href: "/procurement", label: "Procurement", icon: ShoppingCart, permission: "procurement.view", minRole: "MEMBER", keywords: "procurement p2p sourcing vendors purchase" },
+  { href: "/procurement/exceptions", label: "Exception Queue", icon: AlertTriangle, permission: "ap.exceptions.view", minRole: "MEMBER", keywords: "ap exceptions queue errors variance duplicate" },
+  { href: "/procurement/reports", label: "AP Reports", icon: BarChart3, permission: "ap.reports.view", minRole: "MEMBER", keywords: "ap reports aging payment calendar cash requirements duplicates analytics" },
   { href: "/transactions", label: "Transactions", icon: ArrowLeftRight, permission: "transactions.transfer", minRole: "TREASURER" },
   { href: "/ledger", label: "Ledger", icon: BookOpen, permission: "audit.view", minRole: "ADMIN" },
 
@@ -158,6 +160,8 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/order-to-cash", label: "Order-to-Cash", icon: Receipt, permission: "ordertocash.view", minRole: "MEMBER" },
       { href: "/accounts-receivable", label: "Accounts Receivable", icon: DollarSign, permission: "ar.view", minRole: "TREASURER" },
       { href: "/procurement", label: "Procurement", icon: ShoppingCart, permission: "procurement.view", minRole: "MEMBER" },
+      { href: "/procurement/exceptions", label: "Exception Queue", icon: AlertTriangle, permission: "ap.exceptions.view", minRole: "MEMBER", keywords: "ap exceptions queue errors variance duplicate" },
+      { href: "/procurement/reports", label: "AP Reports", icon: BarChart3, permission: "ap.reports.view", minRole: "MEMBER", keywords: "ap reports aging payment calendar cash requirements duplicates analytics" },
       { href: "/transactions", label: "Transactions", icon: ArrowLeftRight, permission: "transactions.transfer", minRole: "TREASURER" },
       { href: "/ledger", label: "Ledger", icon: BookOpen, permission: "audit.view", minRole: "ADMIN" },
     ],

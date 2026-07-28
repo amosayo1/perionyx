@@ -6,7 +6,7 @@ interface Props {
 }
 
 const colorMap: Record<string, string> = {
-  emerald: "bg-[#d4af37]",
+  emerald: "bg-gold",
   blue: "bg-blue-500",
   purple: "bg-purple-500",
   amber: "bg-amber-500",

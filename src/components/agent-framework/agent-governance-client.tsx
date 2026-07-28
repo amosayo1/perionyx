@@ -236,14 +236,14 @@ export function AgentGovernanceClient({
           { label: "Allowed", value: summary.allowedPermissions, color: "text-emerald-400" },
           { label: "Denied", value: summary.deniedPermissions, color: "text-red-400" },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-white/[0.09] bg-[#101010] p-3">
+          <div key={s.label} className="rounded-xl border border-white/[0.09] bg-[#111118] p-3">
             <p className="text-[11px] text-zinc-500">{s.label}</p>
             <p className={cn("text-lg font-bold", s.color ?? "text-white")}>{s.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/[0.09] bg-[#101010] p-3">
+      <div className="rounded-xl border border-white/[0.09] bg-[#111118] p-3">
         <div className="flex items-center gap-2 mb-3">
           <Settings className="h-3.5 w-3.5 text-zinc-500" />
           <h3 className="text-xs font-semibold text-zinc-400">Fleet Averages</h3>
@@ -263,7 +263,7 @@ export function AgentGovernanceClient({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/[0.09] bg-[#101010]">
+      <div className="rounded-2xl border border-white/[0.09] bg-[#111118]">
         <div className="border-b border-white/[0.06] px-4 py-3">
           <h3 className="text-sm font-semibold text-white">Permission Overview per Agent</h3>
         </div>
@@ -287,7 +287,7 @@ export function AgentGovernanceClient({
       </div>
 
       {recentAudit.length > 0 && (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <Eye className="h-3.5 w-3.5 text-zinc-500" />
             <h3 className="text-xs font-semibold text-zinc-400">Recent Permission Changes</h3>

@@ -19,7 +19,7 @@ interface MetricCardProps {
 }
 
 const COLORS = {
-  gold: { icon: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+  gold: { icon: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
   emerald: { icon: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
   amber: { icon: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/10" },
   red: { icon: "text-red-400", border: "border-red-500/20", bg: "bg-red-500/10" },

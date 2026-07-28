@@ -61,7 +61,7 @@ export const IntercompanyEliminationBoard = memo(function IntercompanyEliminatio
       <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40">
         <div className="border-b border-zinc-800/60 px-4 py-3">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-            <ArrowLeftRight className="h-4 w-4 text-[#d4af37]" />
+            <ArrowLeftRight className="h-4 w-4 text-gold" />
             Intercompany Accounts
           </h3>
         </div>
@@ -87,7 +87,7 @@ export const IntercompanyEliminationBoard = memo(function IntercompanyEliminatio
                   <tr key={a.id} className="transition-colors hover:bg-zinc-800/40">
                     <td className="px-4 py-3 text-sm text-white">{a.fromCompanyId}</td>
                     <td className="px-4 py-3 text-sm text-zinc-400">{a.toCompanyId}</td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-[#d4af37]">{formatCurrency(a.dueTo)}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-gold">{formatCurrency(a.dueTo)}</td>
                     <td className="px-4 py-3 text-right text-sm font-mono text-zinc-300">{formatCurrency(a.dueFrom)}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={cn("rounded-md border px-2 py-0.5 text-[10px] font-medium capitalize", SETTLEMENT_STYLES[a.settlementStatus] ?? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
@@ -132,7 +132,7 @@ export const IntercompanyEliminationBoard = memo(function IntercompanyEliminatio
                   <tr key={e.id} className="transition-colors hover:bg-zinc-800/40">
                     <td className="px-4 py-3 text-sm text-white">{e.fromEntity}</td>
                     <td className="px-4 py-3 text-sm text-zinc-400">{e.toEntity}</td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-[#d4af37]">{formatCurrency(e.amount)}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-gold">{formatCurrency(e.amount)}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={cn("rounded-md border px-2 py-0.5 text-[10px] font-medium capitalize", ELIMINATION_STATUS[e.status] ?? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
                         {e.status}

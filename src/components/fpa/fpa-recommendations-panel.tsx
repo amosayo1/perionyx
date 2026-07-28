@@ -6,7 +6,7 @@ import type { PlanningRecommendation } from '@/server/fpa/types'
 const priorityColors: Record<string, string> = { critical: '#ef4444', high: '#f97316', medium: '#eab308', low: '#64748b' }
 const effortColors: Record<string, string> = { low: '#22c55e', medium: '#eab308', high: '#ef4444' }
 const typeColors: Record<string, string> = {
-  budget: '#d4a843', forecast: '#3b82f6', scenario: '#a855f7',
+  budget: '#d4af37', forecast: '#3b82f6', scenario: '#a855f7',
   cost: '#22c55e', revenue: '#22c55e', workforce: '#14b8a6',
   capital: '#f97316', strategic: '#e0e0e0',
 }
@@ -69,7 +69,7 @@ export function FPARecommendationsPanel({ recommendations }: FPARecommendationsP
               </div>
               {items.map((r, i) => (
                 <motion.div key={r.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: i * 0.03 }}
-                  style={{ background: '#1a1a2e', borderRadius: 8, padding: 16, marginBottom: 8, border: '1px solid #2a2a4a', borderLeft: `3px solid ${priorityColors[r.priority]}` }}>
+                  style={{ background: '#1a1a24', borderRadius: 8, padding: 16, marginBottom: 8, border: '1px solid #2a2a4a', borderLeft: `3px solid ${priorityColors[r.priority]}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                       <div style={{ width: 32, height: 32, borderRadius: 8, background: (typeColors[r.type] ?? '#64748b') + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', color: typeColors[r.type] ?? '#64748b', fontSize: 16 }}>{typeIcons[r.type] ?? '?'}</div>
@@ -80,7 +80,7 @@ export function FPARecommendationsPanel({ recommendations }: FPARecommendationsP
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
                       <span style={{ background: (typeColors[r.type] ?? '#64748b') + '22', color: typeColors[r.type] ?? '#64748b', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, textTransform: 'capitalize' }}>{r.type}</span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#d4a843' }}>{r.impact}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#d4af37' }}>{r.impact}</span>
                       <span style={{ background: effortColors[r.effort] + '22', color: effortColors[r.effort], fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, textTransform: 'capitalize' }}>{r.effort} effort</span>
                     </div>
                   </div>

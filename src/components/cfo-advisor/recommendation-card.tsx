@@ -35,7 +35,7 @@ interface RecommendationCardProps {
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  treasury: { bg: "bg-[#d4af37]/10", text: "text-[#d4af37]", border: "border-[#d4af37]/20" },
+  treasury: { bg: "bg-gold/10", text: "text-gold", border: "border-gold/20" },
   risk: { bg: "bg-red-400/10", text: "text-red-400", border: "border-red-400/20" },
   compliance: { bg: "bg-blue-400/10", text: "text-blue-400", border: "border-blue-400/20" },
   investment: { bg: "bg-emerald-400/10", text: "text-emerald-400", border: "border-emerald-400/20" },
@@ -66,7 +66,7 @@ export function RecommendationCard({ recommendation, onAction, className }: Reco
       whileHover={{ y: -2, boxShadow: "0 8px 30px rgba(0,0,0,0.3)" }}
       transition={{ duration: 0.15 }}
       className={cn(
-        "rounded-2xl border border-white/[0.09] bg-[#101010] p-5 transition-colors",
+        "rounded-2xl border border-white/[0.09] bg-[#111118] p-5 transition-colors",
         className,
       )}
     >
@@ -146,7 +146,7 @@ export function RecommendationCard({ recommendation, onAction, className }: Reco
               confidence >= 80
                 ? "bg-emerald-400"
                 : confidence >= 50
-                  ? "bg-[#d4af37]"
+                  ? "bg-gold"
                   : "bg-red-400",
             )}
           />
@@ -209,7 +209,7 @@ export function RecommendationCard({ recommendation, onAction, className }: Reco
           </button>
           <button
             onClick={() => onAction("accept")}
-            className="flex-1 rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/10 px-3 py-1.5 text-xs font-medium text-[#d4af37] hover:bg-[#d4af37]/20 transition-colors"
+            className="flex-1 rounded-lg border border-gold/30 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold hover:bg-gold/20 transition-colors"
           >
             <ThumbsUp className="mr-1 inline h-3 w-3" />
             Accept

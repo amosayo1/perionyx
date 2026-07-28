@@ -1,3 +1,4 @@
+import nodeCrypto from "crypto";
 import type { AuditSeverity } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
 import { logger } from "@/lib/logger";
@@ -17,34 +18,93 @@ interface PlaidWebhookPayload {
   removed_transactions?: string[];
 }
 
+/**
+ * Verify a Plaid webhook using JWS signature verification.
+ *
+ * Plaid signs webhooks with ES256 (ECDSA P-256 + SHA-256).
+ * The Plaid-Verification header contains a JWS with:
+ *   - Header: { alg: "ES256", kid: "<key_id>", ... }
+ *   - Payload: { body: "<raw_request_body>", ... }
+ *   - Signature: ECDSA P-256 signature
+ *
+ * Verification steps:
+ *   1. Parse JWS header to extract kid (key ID)
+ *   2. Fetch Plaid's public JWKS from their well-known endpoint
+ *   3. Verify JWS signature against the public key
+ *   4. Confirm the payload body matches the raw request body
+ */
 export async function verifyPlaidWebhook(
-  _body: string,
-  _plaidVerificationHeader: string,
+  body: string,
+  plaidVerificationHeader: string,
 ): Promise<boolean> {
   try {
-    const { PlaidApi, PlaidEnvironments, Configuration } = await import("plaid");
-    const clientId = process.env.PLAID_CLIENT_ID;
-    const secret = process.env.PLAID_SECRET;
-    const env = (process.env.PLAID_ENV ?? "sandbox") as "sandbox" | "development" | "production";
+    if (!plaidVerificationHeader) {
+      logger.warn("[PlaidWebhook] Missing Plaid-Verification header");
+      return false;
+    }
 
-    if (!clientId || !secret) return false;
+    const parts = plaidVerificationHeader.split(".");
+    if (parts.length !== 3) {
+      logger.warn("[PlaidWebhook] Invalid JWS format — expected 3 parts");
+      return false;
+    }
 
-    const client = new PlaidApi(
-      new Configuration({
-        basePath: PlaidEnvironments[env],
-        baseOptions: {
-          headers: { "PLAID-CLIENT-ID": clientId, "PLAID-SECRET": secret },
-        },
-      }),
-    );
+    const [headerB64, payloadB64, signatureB64] = parts;
+    const header = JSON.parse(Buffer.from(headerB64, "base64url").toString("utf8"));
 
-    const response = await client.institutionsGet({
-      count: 1,
-      offset: 0,
-      country_codes: ["US" as any],
+    if (header.alg !== "ES256") {
+      logger.warn({ alg: header.alg }, "[PlaidWebhook] Unsupported algorithm");
+      return false;
+    }
+
+    const kid = header.kid;
+    if (!kid) {
+      logger.warn("[PlaidWebhook] Missing kid in JWS header");
+      return false;
+    }
+
+    const jwksUrl = process.env.PLAID_JWKS_URL ?? "https://production.plaid.com/.well-known/jwks.json";
+    const response = await fetch(jwksUrl);
+    if (!response.ok) {
+      logger.error({ status: response.status }, "[PlaidWebhook] Failed to fetch JWKS");
+      return false;
+    }
+
+    const { keys } = await response.json() as { keys: Array<{ kid: string; kty: string; crv: string; x: string; y: string }> };
+    const key = keys.find((k) => k.kid === kid);
+    if (!key) {
+      logger.warn({ kid }, "[PlaidWebhook] Key not found in JWKS");
+      return false;
+    }
+
+    const publicKey = nodeCrypto.createPublicKey({
+      key: {
+        key: Buffer.from(
+          JSON.stringify({ kty: key.kty, crv: key.crv, x: key.x, y: key.y }),
+          "utf8",
+        ),
+        format: "jwk",
+      },
+      format: "jwk",
+      type: "spki",
     });
 
-    return response.data.institutions.length > 0;
+    const verifyingInput = Buffer.from(`${headerB64}.${payloadB64}`);
+    const sigBytes = Buffer.from(signatureB64, "base64url");
+    const isValid = nodeCrypto.verify(null, verifyingInput, publicKey, sigBytes);
+
+    if (!isValid) {
+      logger.warn("[PlaidWebhook] JWS signature verification failed");
+      return false;
+    }
+
+    const verifiedPayload = JSON.parse(Buffer.from(payloadB64, "base64url").toString("utf8"));
+    if (typeof verifiedPayload.body === "string" && verifiedPayload.body !== body) {
+      logger.warn("[PlaidWebhook] Body mismatch after signature verification");
+      return false;
+    }
+
+    return true;
   } catch (err) {
     logger.error({ err }, "[PlaidWebhook] Verification failed");
     return false;

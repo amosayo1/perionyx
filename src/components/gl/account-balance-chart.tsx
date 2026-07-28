@@ -89,7 +89,7 @@ export const AccountBalanceChart = memo(function AccountBalanceChart({ data, cla
           <span className="text-[11px] text-zinc-400">Negative</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="h-0.5 w-4 border-t border-dashed border-[#d4af37]" />
+          <span className="h-0.5 w-4 border-t border-dashed border-gold" />
           <span className="text-[11px] text-zinc-400">Previous</span>
         </div>
       </div>

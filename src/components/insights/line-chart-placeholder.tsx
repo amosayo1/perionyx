@@ -16,7 +16,7 @@ export function LineChartPlaceholder({
   const range = max - min || 1;
 
   const colorClasses: Record<string, string> = {
-    emerald: "bg-[#d4af37]/20",
+    emerald: "bg-gold/20",
     blue: "bg-blue-500/20",
     amber: "bg-amber-500/20",
     red: "bg-red-500/20",

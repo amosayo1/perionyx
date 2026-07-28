@@ -28,7 +28,7 @@ export function FCVarianceDashboard({ variances }: FCVarianceDashboardProps) {
           { label: "Unfavorable", value: stats.unfavorable, color: "#f97316" },
         ].map((s, i) => (
           <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, textAlign: "center" }}>
+            style={{ background: "#1a1a24", borderRadius: 8, padding: 16, textAlign: "center" }}>
             <div style={{ color: "#94a3b8", fontSize: 11, textTransform: "uppercase", marginBottom: 6 }}>{s.label}</div>
             <div style={{ color: s.color, fontSize: 28, fontWeight: 700, fontFamily: "ui-monospace, monospace" }}>{s.value}</div>
           </motion.div>
@@ -37,7 +37,7 @@ export function FCVarianceDashboard({ variances }: FCVarianceDashboardProps) {
       {sorted.map((v, i) => (
         <motion.div key={v.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
           style={{
-            background: "#1a1a2e", borderRadius: 8, padding: 16, marginBottom: 8,
+            background: "#1a1a24", borderRadius: 8, padding: 16, marginBottom: 8,
             borderLeft: `3px solid ${v.isSignificant ? "#ef4444" : dirColors[v.direction]}`,
             borderColor: v.isSignificant ? "#ef4444" : dirColors[v.direction],
             borderStyle: "solid", borderTop: "1px solid #2a2a4a", borderRight: "1px solid #2a2a4a", borderBottom: "1px solid #2a2a4a",
@@ -58,7 +58,7 @@ export function FCVarianceDashboard({ variances }: FCVarianceDashboardProps) {
             </div>
           </div>
           <div style={{ display: "flex", gap: 24, fontSize: 12, color: "#94a3b8" }}>
-            <span>Current: <strong style={{ color: "#d4a843" }}>${v.currentPeriodAmount.toLocaleString()}</strong></span>
+            <span>Current: <strong style={{ color: "#d4af37" }}>${v.currentPeriodAmount.toLocaleString()}</strong></span>
             <span>Prior: <strong style={{ color: "#94a3b8" }}>${v.priorPeriodAmount.toLocaleString()}</strong></span>
           </div>
           {expanded.has(v.id) && (

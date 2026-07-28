@@ -64,7 +64,7 @@ export function CashForecastTable({ className }: { className?: string }) {
             placeholder="Search entity, period, owner..."
             value={query}
             onChange={(e) => { setQuery(e.target.value); setShowAll(false); }}
-            className="w-72 rounded-md border border-white/[0.06] bg-zinc-800/50 py-1.5 pl-9 pr-3 text-[13px] text-white placeholder-zinc-500 outline-none focus:border-[#c9a84c]/50"
+            className="w-72 rounded-md border border-white/[0.06] bg-zinc-800/50 py-1.5 pl-9 pr-3 text-[13px] text-white placeholder-zinc-500 outline-none focus:border-gold/50"
           />
         </div>
       </div>

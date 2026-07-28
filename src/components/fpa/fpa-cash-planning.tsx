@@ -37,7 +37,7 @@ export default function FPACashPlanning({ plans }: FPACashPlanningProps) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
         {summaryItems.map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}
-            style={{ background: '#1a1a2e', borderRadius: 10, padding: 16, textAlign: 'center', border: '1px solid #2a2a4a' }}>
+            style={{ background: '#1a1a24', borderRadius: 10, padding: 16, textAlign: 'center', border: '1px solid #2a2a4a' }}>
             <div style={{ color: '#94a3b8', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 20, fontWeight: 700, fontFamily: 'ui-monospace, monospace' }}>{item.value}</div>
           </motion.div>
@@ -60,7 +60,7 @@ export default function FPACashPlanning({ plans }: FPACashPlanningProps) {
           </div>
           {plans.map((p, i) => (
             <motion.div key={p.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03 }}
-              style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', gap: 6, padding: '10px 12px', background: '#1a1a2e', borderRadius: 6, alignItems: 'center', border: '1px solid #2a2a4a' }}>
+              style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', gap: 6, padding: '10px 12px', background: '#1a1a24', borderRadius: 6, alignItems: 'center', border: '1px solid #2a2a4a' }}>
               <span style={{ color: '#e0e0e0', fontSize: 12, fontWeight: 500 }}>{p.period}</span>
               <span style={{ color: '#e0e0e0', fontSize: 12, fontFamily: 'ui-monospace, monospace' }}>{formatCurrency(p.beginningCash)}</span>
               <CashFlowCell value={p.netOperatingCash} />

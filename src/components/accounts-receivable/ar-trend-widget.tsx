@@ -18,7 +18,7 @@ export function ARTrendWidget({ label, value, previousValue, format, trend, icon
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      style={{ background: "#1a1a2e", borderRadius: 8, padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", minWidth: 180 }}>
+      style={{ background: "#1a1a24", borderRadius: 8, padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", minWidth: 180 }}>
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
           {icon && <span style={{ fontSize: 14 }}>{icon}</span>}

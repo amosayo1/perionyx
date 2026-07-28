@@ -40,11 +40,11 @@ export const PeriodCloseTimeline = memo(function PeriodCloseTimeline({ steps, cl
 
           return (
             <g key={i}>
-              <circle cx={x} cy={height / 2} r={radius} fill={color} stroke="#1a1a1a" strokeWidth="2">
+              <circle cx={x} cy={height / 2} r={radius} fill={color} stroke="#1a1a24" strokeWidth="2">
                 <title>{step.label}: {step.status}</title>
               </circle>
               {step.status === "in-progress" && (
-                <circle cx={x} cy={height / 2} r="4" fill="#1a1a1a" />
+                <circle cx={x} cy={height / 2} r="4" fill="#1a1a24" />
               )}
               <text x={x} y={height / 2 - radius - 6} textAnchor="middle" className="fill-zinc-400" fontSize="9">
                 {step.status === "completed" ? "✓" : step.status === "in-progress" ? "◉" : "○"}
@@ -63,7 +63,7 @@ export const PeriodCloseTimeline = memo(function PeriodCloseTimeline({ steps, cl
           <span className="text-[11px] text-zinc-400">Completed</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#d4af37]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-gold" />
           <span className="text-[11px] text-zinc-400">In Progress</span>
         </div>
         <div className="flex items-center gap-1.5">

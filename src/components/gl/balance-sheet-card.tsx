@@ -21,13 +21,13 @@ export const BalanceSheetCard = memo(function BalanceSheetCard({ data, className
 
   return (
     <div className={cn("rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4", className)}>
-      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-[#d4af37]">
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gold">
         Balance Sheet Summary
       </h3>
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg border border-zinc-800/60 p-3">
           <p className="text-[11px] text-zinc-500">Total Assets</p>
-          <p className="mt-1 text-xl font-bold text-[#d4af37]">{formatCurrency(data.totalAssets)}</p>
+          <p className="mt-1 text-xl font-bold text-gold">{formatCurrency(data.totalAssets)}</p>
           <div className="mt-1 flex items-center gap-2 text-[10px] text-zinc-600">
             <span>Current: {formatCurrency(data.currentAssets)}</span>
             <span>Non-Current: {formatCurrency(data.nonCurrentAssets)}</span>

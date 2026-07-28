@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { logger } from "@/lib/logger";
 
 const Decimal = Prisma.Decimal;
 
@@ -183,7 +184,8 @@ export function formatDecimalCurrency(
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(n);
-  } catch {
+  } catch (err) {
+    logger.error(err, "Failed to format decimal currency");
     return `${String(value)} ${currencyCode}`;
   }
 }

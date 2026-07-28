@@ -33,25 +33,25 @@ function NavLink({ item, active, pendingApprovals, onToggleFavorite }: {
       )}
     >
       {active && (
-        <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-[#c9a84c]" />
+        <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-gold" />
       )}
       <span className={cn(
         "flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors duration-100",
-        active ? "bg-gold-500/10 text-[#c9a84c]" : "text-zinc-500 group-hover:text-zinc-300",
+        active ? "bg-gold-500/10 text-gold" : "text-zinc-500 group-hover:text-zinc-300",
       )}>
         <Icon className="h-3.5 w-3.5" />
       </span>
       <span className="flex flex-1 items-center gap-2 truncate">
         {item.label}
         {item.badge === "pending-approvals" && pendingApprovals > 0 && (
-          <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#c9a84c] px-1 text-[9px] font-bold text-black">
+          <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-black">
             {pendingApprovals > 99 ? "99+" : pendingApprovals}
           </span>
         )}
       </span>
       <button
         onClick={(e) => { e.preventDefault(); onToggleFavorite(item.href); }}
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100 hover:text-[#c9a84c]"
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100 hover:text-gold"
         aria-label={`Toggle ${item.label} as favorite`}
       >
         <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -77,7 +77,7 @@ function FavoriteItem({ item, active, onToggleFavorite }: {
           active ? "bg-zinc-800/60 text-white" : "text-zinc-400 hover:bg-zinc-800/30 hover:text-zinc-200",
         )}
       >
-        <Icon className="h-3 w-3 shrink-0 text-[#c9a84c]" />
+        <Icon className="h-3 w-3 shrink-0 text-gold" />
         <span className="truncate">{item.label}</span>
       </Link>
       <button

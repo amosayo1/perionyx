@@ -43,9 +43,9 @@ import { ContextMenu } from "./context-menu";
 function SortIcon({ active, direction }: { active: boolean; direction: SortDirection }) {
   if (!active) return <ArrowUpDown className="ml-1 h-3 w-3 shrink-0 opacity-0 group-hover:opacity-40" />;
   return direction === "asc" ? (
-    <ArrowUp className="ml-1 h-3 w-3 shrink-0 text-[#d4af37]" />
+    <ArrowUp className="ml-1 h-3 w-3 shrink-0 text-gold" />
   ) : (
-    <ArrowDown className="ml-1 h-3 w-3 shrink-0 text-[#d4af37]" />
+    <ArrowDown className="ml-1 h-3 w-3 shrink-0 text-gold" />
   );
 }
 
@@ -238,7 +238,7 @@ export function DataTable<T>({
       {/* Table */}
       <div
         className={cn(
-          "relative w-full overflow-auto rounded-[28px] border border-[rgba(255,255,255,0.09)] bg-[linear-gradient(120deg,#101010_80%,rgba(212,175,55,0.03)_100%)] shadow-[0_24px_64px_rgba(0,0,0,0.22)]",
+          "relative w-full overflow-auto rounded-[28px] border border-[rgba(255,255,255,0.09)] bg-[linear-gradient(120deg,#111118_80%,rgba(212,175,55,0.03)_100%)] shadow-[0_24px_64px_rgba(0,0,0,0.22)]",
           stickyHeader && "max-h-[70vh]",
         )}
       >
@@ -263,8 +263,8 @@ export function DataTable<T>({
                     className={cn(
                       "group cursor-pointer select-none",
                       col.headerClassName,
-                      col.sticky === "left" && "sticky left-0 z-[11] bg-[#101010]",
-                      col.sticky === "right" && "sticky right-0 z-[11] bg-[#101010]",
+                      col.sticky === "left" && "sticky left-0 z-[11] bg-[#111118]",
+                      col.sticky === "right" && "sticky right-0 z-[11] bg-[#111118]",
                     )}
                     onClick={() => handleSort(col)}
                   >
@@ -301,7 +301,7 @@ export function DataTable<T>({
                       <TableRow
                         className={cn(
                           "cursor-pointer",
-                          isSelected && "bg-[#d4af37]/5",
+                          isSelected && "bg-gold/5",
                         )}
                         onClick={() => onRowClick?.(row)}
                         onContextMenu={(e) => {
@@ -335,8 +335,8 @@ export function DataTable<T>({
                             className={cn(
                               rowDensityClass,
                               col.className,
-                              col.sticky === "left" && "sticky left-0 z-[11] bg-[#101010]",
-                              col.sticky === "right" && "sticky right-0 z-[11] bg-[#101010]",
+                              col.sticky === "left" && "sticky left-0 z-[11] bg-[#111118]",
+                              col.sticky === "right" && "sticky right-0 z-[11] bg-[#111118]",
                             )}
                           >
                             {col.accessor(row)}
@@ -417,7 +417,7 @@ export function DataTable<T>({
                   onClick={() => (onPageChange ?? setInternalPage)(pageNum)}
                   className={cn(
                     "h-7 min-w-[28px] text-xs",
-                    pageNum === currentPage && "bg-[#d4af37]/10 text-[#d4af37]",
+                    pageNum === currentPage && "bg-gold/10 text-gold",
                   )}
                 >
                   {pageNum + 1}

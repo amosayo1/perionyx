@@ -61,8 +61,8 @@ export default function FPAExpensePlanning({ expenses }: FPAExpensePlanningProps
             })}
           </tbody>
           <tfoot>
-            <tr style={{ borderTop: '2px solid #d4a843' }}>
-              <td style={{ padding: '10px 12px', color: '#d4a843', fontWeight: 700, fontSize: 12 }}>TOTAL</td>
+            <tr style={{ borderTop: '2px solid #d4af37' }}>
+              <td style={{ padding: '10px 12px', color: '#d4af37', fontWeight: 700, fontSize: 12 }}>TOTAL</td>
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px', color: '#ef4444', fontWeight: 700 }}>{formatCurrency(totalAmount)}</td>

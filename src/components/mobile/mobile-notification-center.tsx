@@ -29,7 +29,7 @@ const typeIcons = {
   critical: <AlertCircle className="h-4 w-4 text-red-400" />,
   warning: <AlertTriangle className="h-4 w-4 text-amber-400" />,
   info: <Info className="h-4 w-4 text-blue-400" />,
-  approval: <Bell className="h-4 w-4 text-[#d4af37]" />,
+  approval: <Bell className="h-4 w-4 text-gold" />,
   compliance: <CheckCheck className="h-4 w-4 text-emerald-400" />,
 };
 
@@ -37,7 +37,7 @@ const typeBorders = {
   critical: "border-l-red-500/50",
   warning: "border-l-amber-500/50",
   info: "border-l-blue-500/50",
-  approval: "border-l-[#d4af37]/50",
+  approval: "border-l-gold/50",
   compliance: "border-l-emerald-500/50",
 };
 
@@ -58,7 +58,7 @@ export function MobileNotificationCenter({
           <span className="text-[11px] text-zinc-500">{unread} unread</span>
           <button
             onClick={() => notifications.filter((n) => !n.isRead).forEach((n) => onMarkRead(n.id))}
-            className="text-[11px] text-[#d4af37] active:text-[#d4af37]/60"
+            className="text-[11px] text-gold active:text-gold/60"
           >
             Mark all read
           </button>
@@ -87,7 +87,7 @@ export function MobileNotificationCenter({
                   <span className={cn("text-sm font-medium", n.isRead ? "text-zinc-400" : "text-zinc-200")}>
                     {n.title}
                   </span>
-                  {!n.isRead && <span className="h-2 w-2 shrink-0 rounded-full bg-[#d4af37]" />}
+                  {!n.isRead && <span className="h-2 w-2 shrink-0 rounded-full bg-gold" />}
                 </div>
                 <p className="mt-0.5 text-[12px] text-zinc-500">{n.message}</p>
                 <span className="mt-1 block text-[10px] text-zinc-600">{n.timestamp}</span>
@@ -96,7 +96,7 @@ export function MobileNotificationCenter({
                   {n.actionLabel && (
                     <button
                       onClick={() => onAction(n.id)}
-                      className="rounded-lg bg-[#d4af37]/10 px-3 py-1.5 text-[11px] font-medium text-[#d4af37] active:bg-[#d4af37]/20"
+                      className="rounded-lg bg-gold/10 px-3 py-1.5 text-[11px] font-medium text-gold active:bg-gold/20"
                     >
                       {n.actionLabel}
                     </button>

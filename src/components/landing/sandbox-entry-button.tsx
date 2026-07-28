@@ -32,7 +32,7 @@ export function SandboxEntryButton({ className }: { className?: string }) {
       <button
         onClick={handleEnter}
         disabled={loading}
-        className={`inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37] hover:bg-[#d4af37]/10 hover:border-[#d4af37]/30 transition-all duration-200 disabled:opacity-50 ${className ?? ""}`}
+        className={`inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold rounded-xl border border-gold/20 bg-gold/5 text-gold hover:bg-gold/10 hover:border-gold/30 transition-all duration-200 disabled:opacity-50 ${className ?? ""}`}
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
         {loading ? "Entering..." : "Explore Interactive Sandbox"}

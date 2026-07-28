@@ -81,7 +81,7 @@ export function InspectorPanel({
                 className={cn(
                   "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
                   activeSection === section.id
-                    ? "bg-[#d4af37]/10 text-[#d4af37]"
+                    ? "bg-gold/10 text-gold"
                     : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]",
                 )}
               >

@@ -16,7 +16,7 @@ interface Zone10Props {
 const actions = [
   { id: "invoice", label: "New Invoice", icon: FileText, href: "/transactions/new", color: "text-blue-400 bg-blue-500/10" },
   { id: "payment", label: "Payment", icon: Wallet, href: "/transactions/new", color: "text-emerald-400 bg-emerald-500/10" },
-  { id: "transfer", label: "Transfer", icon: ArrowLeftRight, href: "/transactions/new", color: "text-[#c9a84c] bg-gold-500/10" },
+  { id: "transfer", label: "Transfer", icon: ArrowLeftRight, href: "/transactions/new", color: "text-gold bg-gold-500/10" },
   { id: "journal", label: "Journal", icon: BookOpen, href: "/ledger", color: "text-purple-400 bg-purple-500/10" },
   { id: "approval", label: "Approval", icon: CheckCircle2, href: "/approvals", color: "text-amber-400 bg-amber-500/10" },
   { id: "report", label: "Report", icon: BarChart3, href: "/reports", color: "text-cyan-400 bg-cyan-500/10" },

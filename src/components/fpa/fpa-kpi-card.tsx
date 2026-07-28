@@ -19,7 +19,7 @@ function FPAMPKpiCard({ title, value, subtitle, trend, trendValue, color, icon: 
 
   return (
     <div style={{
-      background: "#1a1a2e",
+      background: "#1a1a24",
       borderRadius: 8,
       padding: "16px 20px",
       border: "1px solid #2a2a4a",

@@ -34,7 +34,7 @@ export function FCCloseTimeline({ entries }: FCCloseTimelineProps) {
               {i < sorted.length - 1 && (
                 <div style={{ position: "absolute", left: -21, top: 16, width: 2, height: "calc(100% - 4px)", background: isPast ? "#22c55e33" : "#2a2a4a", zIndex: 0 }} />
               )}
-              <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 14, border: `1px solid ${isToday ? "#3b82f644" : "#2a2a4a"}`, borderLeft: `3px solid ${statusColor}` }}>
+              <div style={{ background: "#1a1a24", borderRadius: 8, padding: 14, border: `1px solid ${isToday ? "#3b82f644" : "#2a2a4a"}`, borderLeft: `3px solid ${statusColor}` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span style={{ fontSize: 16 }}>{typeIcons[entry.type] ?? "\uD83D\uDCC5"}</span>

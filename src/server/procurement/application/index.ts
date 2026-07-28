@@ -64,3 +64,9 @@ export { CreditApplicationService } from "./credit-service";
 // ── Unit of Work ─────────────────────────────────────────────────────────────
 export { executeUnitOfWork, unitOfWorkResult } from "./unit-of-work";
 export type { UnitOfWorkResult, TransactionalOperation } from "./unit-of-work";
+
+// ── Workflow Orchestrator ────────────────────────────────────────────────────
+export { executeWithUnitOfWork } from "./workflow-orchestrator";
+
+// ── Event Handlers ───────────────────────────────────────────────────────────
+export { registerAllAPEventHandlers } from "../domain/event-handlers";

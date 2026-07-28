@@ -11,7 +11,7 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  ready: { label: "Ready", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+  ready: { label: "Ready", className: "bg-gold/10 text-gold border-gold/20" },
   generating: { label: "Generating", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   unavailable: { label: "Unavailable", className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" },
 };
@@ -26,7 +26,7 @@ export function ExportCard({ option }: { option: ExportOption }) {
           <div className="text-zinc-400">{iconMap[option.format] ?? <FileText className="h-5 w-5" />}</div>
           <div>
             <span className="text-sm font-medium text-white">{option.label}</span>
-            <span className={cn("block text-[10px] font-semibold", option.status === "ready" ? "text-[#d4af37]" : option.status === "unavailable" ? "text-zinc-600" : "text-amber-400")}>
+            <span className={cn("block text-[10px] font-semibold", option.status === "ready" ? "text-gold" : option.status === "unavailable" ? "text-zinc-600" : "text-amber-400")}>
               {cfg.label}
             </span>
           </div>

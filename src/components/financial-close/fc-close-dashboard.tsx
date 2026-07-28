@@ -11,7 +11,7 @@ export default function FCCloseDashboard({ progress, periods, metrics }: FCClose
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      style={{ background: "#1a1a2e", borderRadius: 12, padding: 28, display: "flex", flexDirection: "column", gap: 24 }}
+      style={{ background: "#1a1a24", borderRadius: 12, padding: 28, display: "flex", flexDirection: "column", gap: 24 }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2 style={{ color: "#e0e0e0", fontSize: 22, fontWeight: 700, margin: 0 }}>
@@ -20,8 +20,8 @@ export default function FCCloseDashboard({ progress, periods, metrics }: FCClose
         {activePeriod && (
           <span
             style={{
-              background: "#d4a84320",
-              color: "#d4a843",
+              background: "#d4af3720",
+              color: "#d4af37",
               padding: "4px 12px",
               borderRadius: 6,
               fontSize: 13,
@@ -47,7 +47,7 @@ export default function FCCloseDashboard({ progress, periods, metrics }: FCClose
             transition={{ duration: 0.8, ease: "easeOut" }}
             style={{
               height: "100%",
-              background: "linear-gradient(90deg, #d4a843, #e6b95a)",
+              background: "linear-gradient(90deg, #d4af37, #e6b95a)",
               borderRadius: 6,
             }}
           />

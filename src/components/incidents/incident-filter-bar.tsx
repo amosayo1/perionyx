@@ -58,7 +58,7 @@ function FilterChip<T extends string>({
       className={cn(
         "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors",
         active
-          ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/20"
+          ? "bg-gold/10 text-gold border border-gold/20"
           : "bg-zinc-900/40 text-zinc-500 border border-white/[0.06] hover:text-zinc-300 hover:border-white/[0.1]",
       )}
     >

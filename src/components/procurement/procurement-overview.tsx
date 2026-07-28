@@ -31,7 +31,7 @@ export function ProcurementOverview({ metrics }: ProcurementOverviewProps) {
         const value = metrics[key as keyof ProcurementOverviewMetrics];
         const formattedValue = typeof value === "number" ? value.toLocaleString() : String(value);
         return (
-          <div key={key} className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+          <div key={key} className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <p className="text-sm text-gray-400">{title}</p>

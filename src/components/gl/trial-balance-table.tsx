@@ -69,11 +69,11 @@ export const TrialBalanceTable = memo(function TrialBalanceTable({ trialBalance,
                     {tb.category.replace(/-/g, " ")}
                   </span>
                 </td>
-                <td className="px-3 py-2.5 text-right text-xs font-mono text-[#d4af37]">{tb.beginningDebit > 0 ? formatCurrency(tb.beginningDebit) : "—"}</td>
+                <td className="px-3 py-2.5 text-right text-xs font-mono text-gold">{tb.beginningDebit > 0 ? formatCurrency(tb.beginningDebit) : "—"}</td>
                 <td className="px-3 py-2.5 text-right text-xs font-mono text-zinc-400">{tb.beginningCredit > 0 ? formatCurrency(tb.beginningCredit) : "—"}</td>
-                <td className="px-3 py-2.5 text-right text-xs font-mono text-[#d4af37]">{tb.periodDebit > 0 ? formatCurrency(tb.periodDebit) : "—"}</td>
+                <td className="px-3 py-2.5 text-right text-xs font-mono text-gold">{tb.periodDebit > 0 ? formatCurrency(tb.periodDebit) : "—"}</td>
                 <td className="px-3 py-2.5 text-right text-xs font-mono text-zinc-400">{tb.periodCredit > 0 ? formatCurrency(tb.periodCredit) : "—"}</td>
-                <td className="px-3 py-2.5 text-right text-xs font-mono text-[#d4af37]">{tb.endingDebit > 0 ? formatCurrency(tb.endingDebit) : "—"}</td>
+                <td className="px-3 py-2.5 text-right text-xs font-mono text-gold">{tb.endingDebit > 0 ? formatCurrency(tb.endingDebit) : "—"}</td>
                 <td className="px-3 py-2.5 text-right text-xs font-mono text-zinc-400">{tb.endingCredit > 0 ? formatCurrency(tb.endingCredit) : "—"}</td>
                 <td className={cn("px-3 py-2.5 text-right text-xs font-mono", tb.netMovement >= 0 ? "text-emerald-400" : "text-red-400")}>
                   {formatCurrency(Math.abs(tb.netMovement))}
@@ -84,11 +84,11 @@ export const TrialBalanceTable = memo(function TrialBalanceTable({ trialBalance,
           <tfoot>
             <tr className="border-t border-zinc-800/60 bg-zinc-900/80">
               <td colSpan={3} className="px-3 py-3 text-xs font-semibold text-zinc-400">Totals</td>
-              <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-[#d4af37]">{formatCurrency(totals.beginningDebit)}</td>
+              <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-gold">{formatCurrency(totals.beginningDebit)}</td>
               <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-zinc-400">{formatCurrency(totals.beginningCredit)}</td>
-              <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-[#d4af37]">{formatCurrency(totals.periodDebit)}</td>
+              <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-gold">{formatCurrency(totals.periodDebit)}</td>
               <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-zinc-400">{formatCurrency(totals.periodCredit)}</td>
-              <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-[#d4af37]">{formatCurrency(totals.endingDebit)}</td>
+              <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-gold">{formatCurrency(totals.endingDebit)}</td>
               <td className="px-3 py-3 text-right text-xs font-mono font-semibold text-zinc-400">{formatCurrency(totals.endingCredit)}</td>
               <td className={cn("px-3 py-3 text-right text-xs font-mono font-semibold", totals.netMovement >= 0 ? "text-emerald-400" : "text-red-400")}>
                 {formatCurrency(Math.abs(totals.netMovement))}

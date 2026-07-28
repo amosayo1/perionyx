@@ -74,7 +74,7 @@ export function ExecutiveHeader() {
           onClick={toggleSchedule}
           className={`inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all active:scale-[0.97] ${
             scheduled
-              ? "border-[#d4af37]/30 bg-[#d4af37]/10 text-[#d4af37]"
+              ? "border-gold/30 bg-gold/10 text-gold"
               : "border-white/[0.06] bg-transparent text-zinc-300 hover:bg-white/[0.04]"
           }`}
         >

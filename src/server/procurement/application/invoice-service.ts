@@ -850,14 +850,11 @@ export class InvoiceApplicationService {
 
     await this.repos.invoice.save(invoice);
 
-    const event = invoiceEvents.captured(cmd.invoiceId, {
+    const event = invoiceEvents.updated(cmd.invoiceId, {
       companyId: ctx.companyId,
       userId: ctx.userId,
       correlationId: ctx.correlationId,
-      vendorId: invoice.vendorId,
-      amount: invoice.totalAmount,
-      currency: invoice.currency,
-      source: "approval_service",
+      changedFields: ["status", "approvedAt", "approvedBy"],
     });
 
     const audit = makeAuditEntry("approved", cmd.invoiceId, ctx, {
@@ -909,6 +906,13 @@ export class InvoiceApplicationService {
 
     await this.repos.invoice.save(invoice);
 
+    const event = invoiceEvents.updated(cmd.invoiceId, {
+      companyId: ctx.companyId,
+      userId: ctx.userId,
+      correlationId: ctx.correlationId,
+      changedFields: ["status", "rejectedAt", "rejectedBy", "rejectionReason"],
+    });
+
     const audit = makeAuditEntry(
       "rejected",
       cmd.invoiceId,
@@ -917,7 +921,7 @@ export class InvoiceApplicationService {
       "WARNING",
     );
 
-    return ok(invoice, [], [audit]);
+    return ok(invoice, [event], [audit]);
   }
 
   // ── 9. Escalate Invoice (pass-through) ─────────────────────────────────
@@ -953,6 +957,13 @@ export class InvoiceApplicationService {
 
     await this.repos.invoice.save(invoice);
 
+    const event = invoiceEvents.updated(cmd.invoiceId, {
+      companyId: ctx.companyId,
+      userId: ctx.userId,
+      correlationId: ctx.correlationId,
+      changedFields: ["status", "updatedAt", "updatedBy"],
+    });
+
     const audit = makeAuditEntry(
       "escalated",
       cmd.invoiceId,
@@ -961,7 +972,7 @@ export class InvoiceApplicationService {
       "WARNING",
     );
 
-    return ok(invoice, [], [audit]);
+    return ok(invoice, [event], [audit]);
   }
 
   // ── 10. Schedule for Payment ───────────────────────────────────────────

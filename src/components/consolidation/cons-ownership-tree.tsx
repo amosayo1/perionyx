@@ -29,7 +29,7 @@ function renderNode(node: import("@/server/consolidation").GroupNode, depth: num
           gap: 8,
           padding: "8px 12px",
           marginLeft: depth * 28,
-          background: depth % 2 === 0 ? "#1a1a2e" : "#16213e",
+          background: depth % 2 === 0 ? "#1a1a24" : "#16213e",
           borderRadius: 6,
           border: "1px solid #2a2a4a",
           borderLeft: `3px solid ${lineColor}`,
@@ -57,7 +57,7 @@ function renderNode(node: import("@/server/consolidation").GroupNode, depth: num
         >
           {node.consolidationMethod}
         </span>
-        <span style={{ color: "#d4a843", fontWeight: 600, fontSize: 12, marginLeft: "auto" }}>
+        <span style={{ color: "#d4af37", fontWeight: 600, fontSize: 12, marginLeft: "auto" }}>
           {node.ownershipPercentage}%
         </span>
       </motion.div>

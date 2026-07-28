@@ -25,14 +25,14 @@ export function CashMovementTimeline({ className }: CashMovementTimelineProps) {
                 <div className={cn(
                   "z-10 flex h-6 w-6 items-center justify-center rounded-full border-2",
                   isOpening ? "border-zinc-500 bg-zinc-800" :
-                  isClosing ? "border-[#c9a84c] bg-[#c9a84c]/10" :
+                  isClosing ? "border-gold bg-gold/10" :
                   event.amount >= 0 ? "border-emerald-500 bg-emerald-500/10" :
                   "border-red-500 bg-red-500/10",
                 )}>
                   <span className={cn(
                     "text-[10px] font-bold",
                     isOpening ? "text-zinc-400" :
-                    isClosing ? "text-[#c9a84c]" :
+                    isClosing ? "text-gold" :
                     event.amount >= 0 ? "text-emerald-400" : "text-red-400",
                   )}>
                     {isOpening ? "O" : isClosing ? "C" : i}
@@ -49,7 +49,7 @@ export function CashMovementTimeline({ className }: CashMovementTimelineProps) {
                   <span className={cn(
                     "text-sm font-semibold whitespace-nowrap",
                     isOpening ? "text-zinc-400" :
-                    isClosing ? "text-[#c9a84c]" :
+                    isClosing ? "text-gold" :
                     event.amount >= 0 ? "text-emerald-400" : "text-red-400",
                   )}>
                     {event.amount >= 0 ? "+" : ""}{formatCurrency(event.amount)}

@@ -1,4 +1,5 @@
 import { prisma } from "@/server/db/prisma";
+import { logger } from "@/lib/logger";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { OperationsService } from "@/modules/operations/operations.service";
 import { GovernanceService } from "@/modules/governance/governance.service";
@@ -86,7 +87,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "identity", label: "Identity", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: identity");
       return { domain: "identity", label: "Identity", status: "FAIL", score: 0, details: ["Could not verify identity configuration"], suggestions: ["Check identity provider setup"] };
     }
   }
@@ -116,7 +118,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "organization", label: "Organization", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: organization");
       return { domain: "organization", label: "Organization", status: "FAIL", score: 0, details: ["Could not verify organization structure"], suggestions: ["Set up organization hierarchy"] };
     }
   }
@@ -153,7 +156,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "users", label: "Users", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: users");
       return { domain: "users", label: "Users", status: "FAIL", score: 0, details: ["Could not verify users"], suggestions: ["Invite users to the platform"] };
     }
   }
@@ -195,7 +199,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "treasury", label: "Treasury", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: treasury");
       return { domain: "treasury", label: "Treasury", status: "FAIL", score: 0, details: ["Could not verify treasury setup"], suggestions: ["Configure bank accounts and wallets"] };
     }
   }
@@ -246,7 +251,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: label.toLowerCase(), label, status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: %s connectors", label);
       return {
         domain: label.toLowerCase(), label, status: "FAIL", score: 0,
         details: [`Could not verify ${label.toLowerCase()} integrations`],
@@ -284,7 +290,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "governance", label: "Governance", status: "PASS", score: metrics.healthScore.overall, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: governance");
       return { domain: "governance", label: "Governance", status: "FAIL", score: 0, details: ["Could not verify governance"], suggestions: ["Configure governance framework"] };
     }
   }
@@ -314,7 +321,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "workflow", label: "Workflow", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: workflow");
       return { domain: "workflow", label: "Workflow", status: "FAIL", score: 0, details: ["Could not verify workflow engine"], suggestions: ["Check workflow engine configuration"] };
     }
   }
@@ -342,7 +350,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "automation", label: "Automation", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: automation");
       return { domain: "automation", label: "Automation", status: "FAIL", score: 0, details: ["Could not verify automation"], suggestions: ["Check automation configuration"] };
     }
   }
@@ -364,7 +373,8 @@ export class EnterpriseReadinessService {
       details.push(`Providers: ${providers.map((p) => p.label).join(", ")}`);
 
       return { domain: "ai", label: "AI", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: ai");
       return { domain: "ai", label: "AI", status: "WARN", score: 0, details: ["Could not verify AI provider"], suggestions: ["Check AI provider configuration"] };
     }
   }
@@ -399,7 +409,8 @@ export class EnterpriseReadinessService {
       }
 
       return { domain: "connectors", label: "Connectors", status: "PASS", score: 100, details, suggestions };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Readiness check failed: connectors");
       return { domain: "connectors", label: "Connectors", status: "FAIL", score: 0, details: ["Could not evaluate connectors"], suggestions: ["Check connector health"] };
     }
   }

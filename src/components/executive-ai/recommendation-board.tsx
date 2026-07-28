@@ -64,7 +64,7 @@ export const RecommendationBoard = memo(function RecommendationBoard({
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-          <Lightbulb className="h-4 w-4 text-[#d4af37]" />
+          <Lightbulb className="h-4 w-4 text-gold" />
           Recommendations ({recommendations.length})
         </h2>
         <div className="flex items-center gap-2">
@@ -75,7 +75,7 @@ export const RecommendationBoard = memo(function RecommendationBoard({
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search..."
-              className="w-40 rounded-md border border-zinc-800/60 bg-zinc-900/60 py-1.5 pl-8 pr-3 text-xs text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-[#d4af37]/40"
+              className="w-40 rounded-md border border-zinc-800/60 bg-zinc-900/60 py-1.5 pl-8 pr-3 text-xs text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-gold/40"
             />
           </div>
           <div className="flex rounded-md border border-zinc-800/60 bg-zinc-900/60 text-xs">
@@ -85,7 +85,7 @@ export const RecommendationBoard = memo(function RecommendationBoard({
                 onClick={() => setFilter(f)}
                 className={cn(
                   "px-2.5 py-1.5 transition-colors",
-                  filter === f ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 hover:text-zinc-300",
+                  filter === f ? "bg-gold/10 text-gold" : "text-zinc-500 hover:text-zinc-300",
                   f === "all" && "rounded-l-md",
                   f === "dismissed" && "rounded-r-md"
                 )}
@@ -143,7 +143,7 @@ export const RecommendationBoard = memo(function RecommendationBoard({
                       <p className="text-[11px] font-medium text-zinc-500">Actions:</p>
                       {rec.actions.map((a, i) => (
                         <p key={i} className="flex items-start gap-1.5 text-[11px] text-zinc-400">
-                          <span className="mt-0.5 text-[#d4af37]">{i + 1}.</span>
+                          <span className="mt-0.5 text-gold">{i + 1}.</span>
                           {a}
                         </p>
                       ))}

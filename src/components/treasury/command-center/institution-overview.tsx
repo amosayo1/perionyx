@@ -20,7 +20,7 @@ const HEALTH_STYLES: Record<string, { dot: string; text: string; bg: string }> =
 
 function ServiceBadge({ level }: { level: "premium" | "standard" | "basic" }) {
   const colors: Record<string, string> = {
-    premium: "bg-[#c9a84c]/10 text-[#c9a84c] border-[#c9a84c]/20",
+    premium: "bg-gold/10 text-gold border-gold/20",
     standard: "bg-zinc-800 text-zinc-300 border-white/[0.06]",
     basic: "bg-zinc-800/50 text-zinc-500 border-white/[0.04]",
   };

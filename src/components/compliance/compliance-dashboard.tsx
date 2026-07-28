@@ -29,7 +29,7 @@ function StatCard({ label, value, color }: { label: string; value: string; color
     amber: "text-amber-400",
     red: "text-red-400",
     blue: "text-blue-400",
-    gold: "text-[#d4af37]",
+    gold: "text-gold",
   }[color] ?? "text-zinc-400";
 
   return (

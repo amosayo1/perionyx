@@ -125,7 +125,7 @@ export function RecommendedActions({ actions, title = "Recommended Actions", cla
   return (
     <div className={cn("rounded-2xl border border-white/[0.06] bg-gradient-to-b from-zinc-900/40 to-black/30 p-5", className)}>
       <div className="flex items-center gap-2 mb-3">
-        <Lightbulb className="h-4 w-4 text-[#d4af37]" />
+        <Lightbulb className="h-4 w-4 text-gold" />
         <span className="text-xs font-semibold uppercase tracking-[0.15em] text-zinc-500">{title}</span>
       </div>
       <div className="space-y-2">
@@ -133,10 +133,10 @@ export function RecommendedActions({ actions, title = "Recommended Actions", cla
           <button
             key={action.id}
             onClick={action.onClick}
-            className="flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] px-4 py-3 text-left transition-all hover:border-[#d4af37]/20 hover:bg-[#d4af37]/5"
+            className="flex w-full items-center gap-3 rounded-xl border border-white/[0.04] bg-white/[0.02] px-4 py-3 text-left transition-all hover:border-gold/20 hover:bg-gold/5"
           >
             {action.icon && (
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#d4af37]/10 text-[#d4af37]">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/10 text-gold">
                 {action.icon}
               </span>
             )}
@@ -163,11 +163,11 @@ interface ExecutiveSummaryProps {
 
 export function ExecutiveSummary({ title = "Executive Summary", children, className }: ExecutiveSummaryProps) {
   return (
-    <div className={cn("relative overflow-hidden rounded-2xl border border-[#d4af37]/10 bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/50 p-6 lg:p-8", className)}>
-      <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[#d4af37] opacity-[0.03] blur-3xl" />
+    <div className={cn("relative overflow-hidden rounded-2xl border border-gold/10 bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/50 p-6 lg:p-8", className)}>
+      <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gold opacity-[0.03] blur-3xl" />
       <div className="relative">
-        <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d4af37]/80 mb-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
+        <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/80 mb-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-gold" />
           {title}
         </div>
         {children}
@@ -191,7 +191,7 @@ export function DismissibleBanner({ children, id, className }: DismissibleBanner
   if (dismissed) return null;
 
   return (
-    <div className={cn("relative rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/5 p-4", className)}>
+    <div className={cn("relative rounded-xl border border-gold/20 bg-gold/5 p-4", className)}>
       <button
         onClick={() => { setDismissed(true); try { localStorage.setItem(`banner-dismissed-${id}`, "true"); } catch {} } }
         className="absolute right-3 top-3 rounded-full p-0.5 text-zinc-500 hover:bg-white/10 hover:text-zinc-300"

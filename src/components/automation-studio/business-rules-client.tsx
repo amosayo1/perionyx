@@ -228,7 +228,7 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
             aria-selected={typeFilter === null}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
               typeFilter === null
-                ? "bg-[#d4af37]/10 text-[#d4af37]"
+                ? "bg-gold/10 text-gold"
                 : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
             }`}
           >
@@ -242,7 +242,7 @@ export function BusinessRulesClient({ rules: initialRules }: Props) {
               aria-selected={typeFilter === t}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                 typeFilter === t
-                  ? "bg-[#d4af37]/10 text-[#d4af37]"
+                  ? "bg-gold/10 text-gold"
                   : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
               }`}
             >

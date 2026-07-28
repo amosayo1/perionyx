@@ -224,7 +224,7 @@ export function EnterpriseAccountRegistry() {
         {!showAll && (
           <button
             onClick={() => setShowAll(true)}
-            className="rounded-lg border border-[#c9a84c]/20 bg-[#c9a84c]/10 px-4 py-2 text-[12px] font-medium text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/20"
+            className="rounded-lg border border-gold/20 bg-gold/10 px-4 py-2 text-[12px] font-medium text-gold transition-colors hover:bg-gold/20"
             aria-label={`View all ${MOCK_ACCOUNTS.length} accounts`}
           >
             View All {MOCK_ACCOUNTS.length.toLocaleString()} Accounts

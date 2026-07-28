@@ -80,15 +80,15 @@ export function Step2PolicyEngine() {
             </>
           ) : phase === "evaluating" ? (
             <>
-              <div className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
-              <span className="text-xs text-[#d4af37] font-medium">Evaluating policies</span>
+              <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+              <span className="text-xs text-gold font-medium">Evaluating policies</span>
             </>
           ) : (
             <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span className="text-xs text-[#d4af37] font-medium">Evaluation complete</span>
+              <span className="text-xs text-gold font-medium">Evaluation complete</span>
             </>
           )}
         </div>
@@ -106,7 +106,7 @@ export function Step2PolicyEngine() {
         </div>
         <div className="relative h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
           <motion.div
-            className="absolute inset-y-0 left-0 bg-[#d4af37] rounded-full"
+            className="absolute inset-y-0 left-0 bg-gold rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: `${((currentPolicy + 1) / policies.length) * 100}%` }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -132,7 +132,7 @@ export function Step2PolicyEngine() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className={`rounded-xl border p-4 transition-all duration-300 ${
                 isActive
-                  ? "border-[#d4af37]/30 bg-[#d4af37]/5 shadow-lg shadow-[#d4af37]/5"
+                  ? "border-gold/30 bg-gold/5 shadow-lg shadow-gold/5"
                   : isVisible
                   ? "border-white/[0.06] bg-zinc-900/40"
                   : "border-white/[0.03] bg-zinc-900/20"
@@ -143,23 +143,23 @@ export function Step2PolicyEngine() {
                   {/* Icon */}
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
                     isActive
-                      ? "bg-[#d4af37]/10 border border-[#d4af37]/20"
+                      ? "bg-gold/10 border border-gold/20"
                       : isVisible && policy.status === "triggered"
                       ? "bg-amber-500/10 border border-amber-500/20"
                       : isVisible
-                      ? "bg-[#d4af37]/10 border border-[#d4af37]/20"
+                      ? "bg-gold/10 border border-gold/20"
                       : "bg-zinc-800 border border-zinc-700"
                   }`}>
                     {!isVisible ? (
                       <div className="w-3 h-3 rounded-full border-2 border-zinc-600" />
                     ) : isActive ? (
-                      <div className="w-3 h-3 rounded-full border-2 border-[#d4af37] border-t-transparent animate-spin" />
+                      <div className="w-3 h-3 rounded-full border-2 border-gold border-t-transparent animate-spin" />
                     ) : policy.status === "triggered" ? (
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-400">
                         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                       </svg>
                     ) : (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                       </svg>
                     )}
@@ -175,15 +175,15 @@ export function Step2PolicyEngine() {
 
                 {isVisible && !isActive && (
                   <div className={`text-right shrink-0 ${
-                    policy.status === "triggered" ? "bg-amber-500/10 text-amber-400" : "bg-[#d4af37]/10 text-[#d4af37]"
+                    policy.status === "triggered" ? "bg-amber-500/10 text-amber-400" : "bg-gold/10 text-gold"
                   } px-2.5 py-1 rounded-lg`}>
                     <span className="text-[11px] font-medium">{policy.status === "triggered" ? "Triggered" : "Passed"}</span>
                   </div>
                 )}
 
                 {isActive && (
-                  <div className="px-2.5 py-1 rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/20">
-                    <span className="text-[11px] text-[#d4af37] font-medium">Checking...</span>
+                  <div className="px-2.5 py-1 rounded-lg bg-gold/10 border border-gold/20">
+                    <span className="text-[11px] text-gold font-medium">Checking...</span>
                   </div>
                 )}
               </div>
@@ -222,12 +222,12 @@ export function Step2PolicyEngine() {
           className="mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800/40 border border-white/[0.06]"
         >
           <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={riskLevel === "Medium" ? "text-amber-400" : "text-[#d4af37]"}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={riskLevel === "Medium" ? "text-amber-400" : "text-gold"}>
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
             <span className="text-xs text-zinc-400">Risk Score</span>
           </div>
-          <span className={`text-sm font-semibold ${riskLevel === "Medium" ? "text-amber-400" : "text-[#d4af37]"}`}>
+          <span className={`text-sm font-semibold ${riskLevel === "Medium" ? "text-amber-400" : "text-gold"}`}>
             {riskLevel}
           </span>
         </motion.div>
@@ -239,12 +239,12 @@ export function Step2PolicyEngine() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-[#d4af37]/5 border border-[#d4af37]/10"
+          className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-gold/5 border border-gold/10"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
             <polyline points="20 6 9 17 4 12" />
           </svg>
-          <span className="text-xs text-[#d4af37]">
+          <span className="text-xs text-gold">
             {triggered} of {policies.length} policies triggered — {triggered > 0 ? `${triggered} approval${triggered > 1 ? "s" : ""} required` : "no approvals required"}
           </span>
         </motion.div>

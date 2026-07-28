@@ -65,7 +65,7 @@ export const FinancialHealthChart = memo(function FinancialHealthChart({ metrics
             <>
               <polygon points={dataPointsStr} fill="#d4af37" opacity="0.2" stroke="#d4af37" strokeWidth="2" />
               {dataPoints.map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="4" fill="#d4af37" stroke="#1a1a1a" strokeWidth="2">
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill="#d4af37" stroke="#1a1a24" strokeWidth="2">
                   <title>{metrics[i].label}: {((metrics[i].value / (metrics[i].maxValue || 1)) * 100).toFixed(0)}%</title>
                 </circle>
               ))}
@@ -89,7 +89,7 @@ export const FinancialHealthChart = memo(function FinancialHealthChart({ metrics
             <div className="flex items-center gap-1.5">
               <div className="h-2 w-12 overflow-hidden rounded-full bg-zinc-700">
                 <div
-                  className="h-full rounded-full bg-[#d4af37]"
+                  className="h-full rounded-full bg-gold"
                   style={{ width: `${Math.min((m.value / (m.maxValue || 1)) * 100, 100)}%` }}
                 />
               </div>

@@ -44,6 +44,15 @@ async function main() {
       "approvals.escalate",
       "admin.manage_roles",
       "webhooks.manage",
+      // AP permissions
+      "ap.vendors.create", "ap.vendors.view", "ap.vendors.manage", "ap.vendors.approve", "ap.vendors.delete",
+      "ap.invoices.create", "ap.invoices.view", "ap.invoices.manage", "ap.invoices.approve", "ap.invoices.delete", "ap.invoices.match",
+      "ap.exceptions.view", "ap.exceptions.manage", "ap.exceptions.assign", "ap.exceptions.resolve",
+      "ap.approvals.view", "ap.approvals.approve", "ap.approvals.reject", "ap.approvals.delegate", "ap.approvals.escalate",
+      "ap.payments.view", "ap.payments.create", "ap.payments.execute", "ap.payments.approve", "ap.payments.reverse",
+      "ap.reconciliation.view", "ap.reconciliation.execute", "ap.reconciliation.adjust",
+      "ap.credits.view", "ap.credits.create", "ap.credits.apply", "ap.credits.void",
+      "ap.reports.view", "ap.reports.export", "ap.admin.manage",
     ];
 
     for (const p of perms) {

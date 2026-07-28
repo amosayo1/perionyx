@@ -3,7 +3,6 @@ export { EnvironmentValidator, environmentValidator } from "./environment";
 export type { Environment, EnvironmentConfig } from "./environment";
 export { SecurityHeadersManager, securityHeaders } from "./headers";
 export type { SecurityHeaders } from "./headers";
-export { RateLimiter, rateLimiter } from "./rate-limiter";
 export { validateOrigin } from "./csrf";
 export { InputValidator, inputValidator } from "./input-validator";
 export {

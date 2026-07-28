@@ -8,9 +8,9 @@ export interface FocusManagerState {
 
 export function useFocusRing(visible: "always" | "keyboardOnly"): string {
   if (visible === "always") {
-    return "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
+    return "focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
   }
-  return "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
+  return "focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
 }
 
 export function trapFocus(element: HTMLElement, event: KeyboardEvent): void {

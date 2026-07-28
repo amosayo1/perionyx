@@ -30,7 +30,7 @@ export function IntercompanyFundingMatrix({ className }: { className?: string })
                 <td className="px-5 py-3 text-white">{row.fromEntity}</td>
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-2">
-                    <ArrowRight className="h-4 w-4 text-[#c9a84c]" />
+                    <ArrowRight className="h-4 w-4 text-gold" />
                     <span className="text-zinc-300">{row.toEntity}</span>
                   </div>
                 </td>

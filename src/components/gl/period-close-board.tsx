@@ -80,7 +80,7 @@ export const PeriodCloseBoard = memo(function PeriodCloseBoard({ periods, checkl
                   <div className="mt-1 flex items-center gap-2">
                     <div className="h-1.5 w-20 overflow-hidden rounded-full bg-zinc-700">
                       <div
-                        className={cn("h-full rounded-full transition-all", progress === 100 ? "bg-emerald-500" : "bg-[#d4af37]")}
+                        className={cn("h-full rounded-full transition-all", progress === 100 ? "bg-emerald-500" : "bg-gold")}
                         style={{ width: `${progress}%` }}
                       />
                     </div>

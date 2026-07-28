@@ -70,7 +70,7 @@ export function WhyPerionyx() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37] mb-6">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-gold/20 bg-gold/5 text-gold mb-6">
             Enterprise Outcomes
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
@@ -91,7 +91,7 @@ export function WhyPerionyx() {
               transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="group rounded-xl border border-white/[0.06] bg-gradient-to-b from-zinc-900/30 to-black/30 p-5 hover:bg-zinc-900/50 hover:border-white/[0.1] transition-all duration-300"
             >
-              <div className="w-9 h-9 rounded-lg bg-[#d4af37]/5 border border-[#d4af37]/10 flex items-center justify-center text-[#d4af37] mb-4 group-hover:bg-[#d4af37]/10 transition-colors">
+              <div className="w-9 h-9 rounded-lg bg-gold/5 border border-gold/10 flex items-center justify-center text-gold mb-4 group-hover:bg-gold/10 transition-colors">
                 {item.icon}
               </div>
               <h3 className="text-sm font-semibold text-white mb-1.5">{item.title}</h3>

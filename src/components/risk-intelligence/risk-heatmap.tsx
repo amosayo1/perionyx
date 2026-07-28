@@ -35,7 +35,7 @@ export function RiskHeatmap() {
       </div>
       <div className="flex items-center gap-4 text-[10px] text-zinc-600">
         <span className="font-medium">Legend:</span>
-        <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded bg-[#d4af37]/30" /> Low</span>
+        <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded bg-gold/30" /> Low</span>
         <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded bg-amber-500/30" /> Medium</span>
         <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded bg-orange-500/30" /> High</span>
         <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded bg-red-500/30" /> Critical</span>

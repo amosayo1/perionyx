@@ -72,7 +72,7 @@ export const KpiChart = memo(function KpiChart({ data, className, height = 240 }
 
         {data.map((d, i) => (
           <g key={i}>
-            <circle cx={toX(i)} cy={toY(d.value)} r="3" fill="#d4af37" stroke="#1a1a1a" strokeWidth="1.5">
+            <circle cx={toX(i)} cy={toY(d.value)} r="3" fill="#d4af37" stroke="#1a1a24" strokeWidth="1.5">
               <title>{d.period}: {d.value.toFixed(2)}</title>
             </circle>
           </g>

@@ -39,8 +39,8 @@ export function AgentMetricCard({ label, value, trend, icon, active, className }
       className={cn(
         "rounded-2xl border p-5 transition-colors",
         active
-          ? "border-[#d4af37]/30 bg-[#d4af37]/5"
-          : "border-white/[0.09] bg-[#101010]",
+          ? "border-gold/30 bg-gold/5"
+          : "border-white/[0.09] bg-[#111118]",
         className,
       )}
     >
@@ -50,7 +50,7 @@ export function AgentMetricCard({ label, value, trend, icon, active, className }
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-lg border",
               active
-                ? "border-[#d4af37]/20 bg-[#d4af37]/10 text-[#d4af37]"
+                ? "border-gold/20 bg-gold/10 text-gold"
                 : "border-white/[0.06] bg-white/[0.03] text-zinc-400",
             )}
           >
@@ -60,7 +60,7 @@ export function AgentMetricCard({ label, value, trend, icon, active, className }
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs text-zinc-500">{label}</p>
           <div className="flex items-baseline gap-2">
-            <p className={cn("text-2xl font-bold", active ? "text-[#d4af37]" : "text-white")}>
+            <p className={cn("text-2xl font-bold", active ? "text-gold" : "text-white")}>
               {value}
             </p>
             {trend && trendConfig && (

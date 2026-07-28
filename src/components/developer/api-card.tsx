@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { ApiEndpoint } from "./types";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  stable: { label: "Stable", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+  stable: { label: "Stable", className: "bg-gold/10 text-gold border-gold/20" },
   beta: { label: "Beta", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   deprecated: { label: "Deprecated", className: "bg-red-500/10 text-red-400 border-red-500/20" },
 };

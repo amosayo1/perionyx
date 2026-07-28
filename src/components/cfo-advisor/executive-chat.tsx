@@ -23,7 +23,7 @@ interface ExecutiveChatProps {
 
 const ROLE_CONFIG: Record<string, { icon: typeof Bot; color: string; bg: string; label: string }> = {
   user: { icon: User, color: "text-blue-400", bg: "bg-blue-400/10", label: "You" },
-  advisor: { icon: Bot, color: "text-[#d4af37]", bg: "bg-[#d4af37]/10", label: "Advisor" },
+  advisor: { icon: Bot, color: "text-gold", bg: "bg-gold/10", label: "Advisor" },
   system: { icon: Database, color: "text-zinc-400", bg: "bg-zinc-400/10", label: "System" },
 };
 
@@ -78,7 +78,7 @@ export function ExecutiveChat({ messages, onSend, className }: ExecutiveChatProp
               result.push(
                 <span
                   key={`evidence-${ref}-${i}`}
-                  className="inline-flex items-center gap-0.5 rounded border border-[#d4af37]/20 bg-[#d4af37]/10 px-1 py-0 text-[10px] font-medium text-[#d4af37]"
+                  className="inline-flex items-center gap-0.5 rounded border border-gold/20 bg-gold/10 px-1 py-0 text-[10px] font-medium text-gold"
                 >
                   <Database className="h-2.5 w-2.5" />
                   {ref}
@@ -126,7 +126,7 @@ export function ExecutiveChat({ messages, onSend, className }: ExecutiveChatProp
       initial="hidden"
       animate="visible"
       className={cn(
-        "flex flex-col rounded-2xl border border-white/[0.09] bg-[#101010] overflow-hidden",
+        "flex flex-col rounded-2xl border border-white/[0.09] bg-[#111118] overflow-hidden",
         className,
       )}
     >
@@ -207,12 +207,12 @@ export function ExecutiveChat({ messages, onSend, className }: ExecutiveChatProp
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about treasury, risk, or recommendations..."
-              className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:border-[#d4af37]/30 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/20 transition-colors"
+              className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:border-gold/30 focus:outline-none focus:ring-1 focus:ring-gold/20 transition-colors"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim()}
-              className="flex items-center justify-center rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/10 px-3 py-2 text-[#d4af37] hover:bg-[#d4af37]/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-gold hover:bg-gold/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Send className="h-4 w-4" />
             </button>

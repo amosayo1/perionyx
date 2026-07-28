@@ -87,7 +87,7 @@ export const TaxReturnBoard = memo(function TaxReturnBoard({ returns, className 
                     {r.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{formatCurrency(r.totalLiability)}</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{formatCurrency(r.totalLiability)}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{formatCurrency(r.totalPaid)}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{r.submittedDate ? formatDate(r.submittedDate) : formatDate(r.dueDate)}</td>
               </tr>

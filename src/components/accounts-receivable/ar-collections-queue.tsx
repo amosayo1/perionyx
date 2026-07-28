@@ -27,14 +27,14 @@ export function ARCollectionsQueue({ collections }: ARCollectionsQueueProps) {
             </div>
             {items.map((c, i) => (
               <motion.div key={c.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${priorityColors[c.priority]}` }}>
+                style={{ background: "#1a1a24", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${priorityColors[c.priority]}` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                   <div>
                     <div style={{ fontSize: 15, fontWeight: 600, color: "#e0e0e0" }}>{c.customerName}</div>
                     <div style={{ fontSize: 12, color: "#94a3b8" }}>{c.invoiceNumber} - {c.daysOverdue} days overdue</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: "#d4a843", fontFamily: "ui-monospace, monospace" }}>${c.amountDue.toLocaleString()}</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "#d4af37", fontFamily: "ui-monospace, monospace" }}>${c.amountDue.toLocaleString()}</div>
                     <span style={{ background: priorityColors[c.priority] + "22", color: priorityColors[c.priority], fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" }}>
                       {c.priority}
                     </span>

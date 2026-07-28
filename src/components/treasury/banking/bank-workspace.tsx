@@ -32,7 +32,7 @@ export function BankWorkspace({ children, className }: { children: React.ReactNo
               className={cn(
                 "flex items-center gap-2 px-4 py-3 text-[13px] font-medium whitespace-nowrap border-b-2 transition-colors",
                 active
-                  ? "border-[#c9a84c] text-white"
+                  ? "border-gold text-white"
                   : "border-transparent text-zinc-400 hover:text-zinc-200 hover:border-zinc-600",
               )}
             >

@@ -65,7 +65,7 @@ function NavLink({
           className={cn(
             "flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-100",
             active
-              ? "bg-gold-500/10 text-[#c9a84c]"
+              ? "bg-gold-500/10 text-gold"
               : "text-zinc-500 hover:bg-zinc-800/40 hover:text-zinc-300",
           )}
           aria-label={item.label}
@@ -73,7 +73,7 @@ function NavLink({
           <Icon className="h-4 w-4" />
         </Link>
         {item.badge === "pending-approvals" && pendingApprovals > 0 && (
-          <span className="absolute right-1 top-1 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-[#c9a84c] px-[3px] text-[8px] font-bold text-black">
+          <span className="absolute right-1 top-1 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-gold px-[3px] text-[8px] font-bold text-black">
             {pendingApprovals > 9 ? "9+" : pendingApprovals}
           </span>
         )}
@@ -95,12 +95,12 @@ function NavLink({
       )}
     >
       {active && (
-        <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-[#c9a84c]" />
+        <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-gold" />
       )}
       <span
         className={cn(
           "flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors duration-100",
-          active ? "bg-gold-500/10 text-[#c9a84c]" : "text-zinc-500 group-hover:text-zinc-300",
+          active ? "bg-gold-500/10 text-gold" : "text-zinc-500 group-hover:text-zinc-300",
         )}
       >
         <Icon className="h-3.5 w-3.5" />
@@ -108,7 +108,7 @@ function NavLink({
       <span className="flex flex-1 items-center gap-2 truncate">
         {item.label}
         {item.badge === "pending-approvals" && pendingApprovals > 0 && (
-          <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#c9a84c] px-1 text-[9px] font-bold text-black">
+          <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-black">
             {pendingApprovals > 99 ? "99+" : pendingApprovals}
           </span>
         )}
@@ -122,12 +122,12 @@ function NavLink({
         className={cn(
           "flex h-5 w-5 shrink-0 items-center justify-center rounded transition-opacity",
           isFavorite
-            ? "text-[#c9a84c] opacity-100"
-            : "opacity-0 group-hover:opacity-100 hover:text-[#c9a84c]",
+            ? "text-gold opacity-100"
+            : "opacity-0 group-hover:opacity-100 hover:text-gold",
         )}
         aria-label={isFavorite ? `Remove ${item.label} from favorites` : `Add ${item.label} to favorites`}
       >
-        <Star className={cn("h-3 w-3", isFavorite ? "fill-[#c9a84c]" : "")} />
+        <Star className={cn("h-3 w-3", isFavorite ? "fill-gold" : "")} />
       </button>
     </Link>
   );
@@ -248,13 +248,13 @@ export const EnterpriseSidebarNew = memo(function EnterpriseSidebarNew({
       )}>
         {collapsed ? (
           <Link href="/dashboard" aria-label="Perionyx" className="flex items-center justify-center">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c9a84c] shadow-lg shadow-gold-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-lg shadow-gold-500/20">
               <img src="/logo.svg" alt="" className="h-full w-full object-cover" />
             </div>
           </Link>
         ) : (
           <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c9a84c] shadow-lg shadow-gold-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-lg shadow-gold-500/20">
               <img src="/logo.svg" alt="" className="h-full w-full object-cover" />
             </div>
             <span className="text-sm font-bold uppercase tracking-[0.25em] text-white">Perionyx</span>
@@ -301,7 +301,7 @@ export const EnterpriseSidebarNew = memo(function EnterpriseSidebarNew({
             <div className="space-y-0.5">
               {!collapsed && (
                 <div className="flex items-center gap-2 px-3 py-1.5">
-                  <Star className="h-3 w-3 text-[#c9a84c]" />
+                  <Star className="h-3 w-3 text-gold" />
                   <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-500">
                     Favorites
                   </span>
@@ -410,7 +410,7 @@ export const EnterpriseSidebarNew = memo(function EnterpriseSidebarNew({
         aria-label="Main sidebar"
         className={cn(
           "relative hidden h-screen shrink-0 overflow-hidden border-r border-white/[0.06] bg-gradient-to-b from-[#0a0a0a] to-[#070707] md:flex md:flex-col",
-          "before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-[#d4af37]/20 before:to-transparent before:z-10 before:content-['']",
+          "before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-gold/20 before:to-transparent before:z-10 before:content-['']",
         )}
         animate={{ width: collapsed ? 64 : 272 }}
         transition={{ duration: 0.2, ease: [0, 0, 0.2, 1] }}

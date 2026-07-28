@@ -35,9 +35,9 @@ export default function ConsFinancialStatementViewer({ statements }: ConsFinanci
             key={s.statementType}
             onClick={() => setActiveStatement(s.statementType)}
             style={{
-              background: activeStatement === s.statementType ? "#d4a84333" : "#1a1a2e",
-              color: activeStatement === s.statementType ? "#d4a843" : "#94a3b8",
-              border: `1px solid ${activeStatement === s.statementType ? "#d4a843" : "#2a2a4a"}`,
+              background: activeStatement === s.statementType ? "#d4af3733" : "#1a1a24",
+              color: activeStatement === s.statementType ? "#d4af37" : "#94a3b8",
+              border: `1px solid ${activeStatement === s.statementType ? "#d4af37" : "#2a2a4a"}`,
               borderRadius: 6,
               padding: "6px 14px",
               fontSize: 12,
@@ -58,7 +58,7 @@ export default function ConsFinancialStatementViewer({ statements }: ConsFinanci
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            style={{ background: "#1a1a2e", borderRadius: 10, border: "1px solid #2a2a4a", overflow: "hidden" }}
+            style={{ background: "#1a1a24", borderRadius: 10, border: "1px solid #2a2a4a", overflow: "hidden" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", borderBottom: "1px solid #2a2a4a" }}>
               <span style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14 }}>
@@ -93,7 +93,7 @@ export default function ConsFinancialStatementViewer({ statements }: ConsFinanci
                     fontWeight: entry.isTotal ? 700 : 400,
                   }}
                 >
-                  <span style={{ color: entry.isTotal ? "#d4a843" : "#e0e0e0", paddingLeft: entry.isCalculated ? 20 : 0 }}>
+                  <span style={{ color: entry.isTotal ? "#d4af37" : "#e0e0e0", paddingLeft: entry.isCalculated ? 20 : 0 }}>
                     {entry.lineItem}
                   </span>
                   <span style={{ color: "#e0e0e0", textAlign: "right", fontFamily: "ui-monospace, monospace" }}>

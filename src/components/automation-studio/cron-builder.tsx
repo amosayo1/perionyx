@@ -97,7 +97,7 @@ export function CronBuilder({ value, onChange, }: CronBuilderProps) {
               size="sm"
               onClick={() => applyPreset(preset)}
               className={`h-7 text-[10px] ${
-                value === preset.expression ? "bg-[#d4af37]/10 text-[#d4af37]" : ""
+                value === preset.expression ? "bg-gold/10 text-gold" : ""
               }`}
             >
               {preset.label}

@@ -8,11 +8,11 @@ const riskColors: Record<string, string> = {
   critical: "bg-red-500/10 text-red-400 border-red-500/20",
   high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
   medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  low: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20",
+  low: "bg-gold/10 text-gold border-gold/20",
 };
 
 const statusIcons: Record<string, React.ReactNode> = {
-  active: <ShieldCheck className="h-3 w-3 text-[#d4af37]" />,
+  active: <ShieldCheck className="h-3 w-3 text-gold" />,
   review: <Eye className="h-3 w-3 text-amber-400" />,
   watchlist: <AlertTriangle className="h-3 w-3 text-red-400" />,
   suspended: <AlertTriangle className="h-3 w-3 text-zinc-500" />,

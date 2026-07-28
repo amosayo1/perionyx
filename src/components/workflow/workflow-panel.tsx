@@ -151,7 +151,7 @@ export function WorkflowPanel({
             <div>
               <CardTitle className="text-sm font-semibold text-white">Workflow Pipeline</CardTitle>
               <CardDescription className="text-xs text-zinc-500">
-                Current stage: <span className="text-[#d4af37] font-medium">
+                Current stage: <span className="text-gold font-medium">
                   {workflow.stages.find((s) => s.status === "active")?.label ?? workflow.stages.find((s) => s.status === "completed")?.label ?? "Pending"}
                 </span>
               </CardDescription>
@@ -171,15 +171,15 @@ export function WorkflowPanel({
         <CardContent className="p-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full border-b border-white/[0.06] rounded-none bg-transparent px-4">
-              <TabsTrigger value="overview" className="gap-1.5 text-xs data-[state=active]:text-[#d4af37]">
+              <TabsTrigger value="overview" className="gap-1.5 text-xs data-[state=active]:text-gold">
                 <Activity className="h-3.5 w-3.5" />
                 Timeline
               </TabsTrigger>
-              <TabsTrigger value="actions" className="gap-1.5 text-xs data-[state=active]:text-[#d4af37]">
+              <TabsTrigger value="actions" className="gap-1.5 text-xs data-[state=active]:text-gold">
                 <Zap className="h-3.5 w-3.5" />
                 Actions
               </TabsTrigger>
-              <TabsTrigger value="discussion" className="gap-1.5 text-xs data-[state=active]:text-[#d4af37]">
+              <TabsTrigger value="discussion" className="gap-1.5 text-xs data-[state=active]:text-gold">
                 <MessageSquare className="h-3.5 w-3.5" />
                 Discussion
               </TabsTrigger>

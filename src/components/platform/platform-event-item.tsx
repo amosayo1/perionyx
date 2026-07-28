@@ -6,7 +6,7 @@ const severityConfig: Record<string, { icon: React.ReactNode; color: string }> =
   info: { icon: <Info className="h-3.5 w-3.5" />, color: "text-blue-400" },
   warning: { icon: <AlertTriangle className="h-3.5 w-3.5" />, color: "text-amber-400" },
   error: { icon: <XCircle className="h-3.5 w-3.5" />, color: "text-red-400" },
-  success: { icon: <CheckCircle2 className="h-3.5 w-3.5" />, color: "text-[#d4af37]" },
+  success: { icon: <CheckCircle2 className="h-3.5 w-3.5" />, color: "text-gold" },
 };
 
 function formatTime(iso: string): string {

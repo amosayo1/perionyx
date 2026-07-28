@@ -28,7 +28,7 @@ const eventColors: Record<string, string> = {
   payment: "text-blue-400 bg-blue-500/10",
   risk: "text-red-400 bg-red-500/10",
   policy: "text-purple-400 bg-purple-500/10",
-  treasury: "text-[#c9a84c] bg-gold-500/10",
+  treasury: "text-gold bg-gold-500/10",
   automation: "text-cyan-400 bg-cyan-500/10",
   ai: "text-violet-400 bg-violet-500/10",
   compliance: "text-amber-400 bg-amber-500/10",

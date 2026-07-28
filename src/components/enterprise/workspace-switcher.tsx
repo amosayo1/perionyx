@@ -54,20 +54,20 @@ export function WorkspaceSwitcher({ companies, activeId, onSwitch, className }: 
                 onClick={() => onSwitch(company.id)}
                 className={cn(
                   "flex items-center justify-between",
-                  isActive && "bg-[#d4af37]/10",
+                  isActive && "bg-gold/10",
                 )}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold",
-                    isActive ? "bg-[#d4af37] text-black" : "bg-zinc-800 text-zinc-400",
+                    isActive ? "bg-gold text-black" : "bg-zinc-800 text-zinc-400",
                   )}>
                     {company.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0">
                     <p className={cn(
                       "text-sm truncate",
-                      isActive ? "text-[#d4af37]" : "text-white",
+                      isActive ? "text-gold" : "text-white",
                     )}>
                       {company.name}
                     </p>
@@ -76,7 +76,7 @@ export function WorkspaceSwitcher({ companies, activeId, onSwitch, className }: 
                     )}
                   </div>
                 </div>
-                {isActive && <Check className="h-4 w-4 text-[#d4af37] shrink-0" />}
+                {isActive && <Check className="h-4 w-4 text-gold shrink-0" />}
               </DropdownMenuItem>
             );
           })

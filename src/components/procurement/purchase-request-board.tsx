@@ -23,7 +23,7 @@ const urgencyColors: Record<string, string> = {
 export function PurchaseRequestBoard({ requests }: PurchaseRequestBoardProps) {
   if (requests.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No purchase requests found</p>
       </div>
     );
@@ -32,7 +32,7 @@ export function PurchaseRequestBoard({ requests }: PurchaseRequestBoardProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-800">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-gray-800 bg-[#1a1a1a]">
+        <thead className="border-b border-gray-800 bg-[#1a1a24]">
           <tr className="text-xs text-gray-500">
             <th className="px-4 py-3 font-medium">PR Number</th>
             <th className="px-4 py-3 font-medium">Title</th>
@@ -43,7 +43,7 @@ export function PurchaseRequestBoard({ requests }: PurchaseRequestBoardProps) {
             <th className="px-4 py-3 font-medium">Urgency</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800 bg-[#1a1a1a]">
+        <tbody className="divide-y divide-gray-800 bg-[#1a1a24]">
           {requests.map((pr) => {
             const style = statusStyles[pr.status] || statusStyles.draft;
             return (

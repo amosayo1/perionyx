@@ -11388,3 +11388,657 @@ model ProcurementAPAuditRecord {
   @@index([correlationId])
   @@index([companyId, createdAt])
 }
+
+// ---------------------------------------------------------------------------
+// Runtime Services — Phase 24.0B
+//
+// Shared enterprise services consumed by every Platform, Provider Driver,
+// AI Agent, Workflow, and Financial Domain. Domain-agnostic.
+// ---------------------------------------------------------------------------
+
+// ── Configuration ─────────────────────────────────────────────────────────
+
+enum RuntimeConfigScope {
+  GLOBAL
+  ENVIRONMENT
+  TENANT
+  PROVIDER
+}
+
+enum RuntimeConfigStatus {
+  ACTIVE
+  DEPRECATED
+  OVERRIDDEN
+  DELETED
+}
+
+model RuntimeConfiguration {
+  id        String             @id @default(cuid())
+  companyId String?
+
+  /// Configuration key — unique within scope
+  key   String
+  scope RuntimeConfigScope
+
+  /// Value stored as JSON for flexibility (string, number, boolean, object, array)
+  value Json
+
+  /// Environment filter (null = all environments)
+  environment String?
+
+  /// Provider filter (null = all providers)
+  provider String?
+
+  /// Metadata
+  status      RuntimeConfigStatus @default(ACTIVE)
+  sensitive   Boolean             @default(false)
+  description String?
+  tags        String?             // comma-separated
+
+  /// Ownership
+  createdBy String?
+  updatedBy String?
+
+  /// Schema reference — key into registered ConfigSchemaDefinition
+  schemaKey String?
+
+  /// Version tracking
+  version Int @default(1)
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// Unique per scope
+  @@unique([key, scope, companyId, environment, provider])
+  @@index([companyId, key])
+  @@index([scope])
+  @@index([companyId, scope])
+  @@index([status])
+  @@index([key])
+  @@index([companyId])
+}
+
+model RuntimeConfigurationVersion {
+  id        String  @id @default(cuid())
+  configId  String
+  companyId String?
+
+  /// Snapshot of the value at this version
+  value Json
+  version Int
+
+  /// Who changed it and why
+  changedBy  String?
+  changeNote String?
+
+  /// Timestamp — append-only
+  createdAt DateTime @default(now())
+
+  @@index([configId])
+  @@index([companyId, configId])
+  @@index([createdAt])
+}
+
+// ── Feature Flags ─────────────────────────────────────────────────────────
+
+enum RuntimeFeatureFlagStatus {
+  ACTIVE
+  DISABLED
+  ARCHIVED
+}
+
+enum RuntimeFeatureFlagRollout {
+  ALL
+  PERCENTAGE
+  TENANT
+  ENVIRONMENT
+}
+
+model RuntimeFeatureFlag {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Unique flag key (e.g., "ap.three-way-matching")
+  key         String   @unique
+  enabled     Boolean  @default(false)
+  description String?
+
+  /// Rollout strategy
+  rolloutStrategy RuntimeFeatureFlagRollout @default(ALL)
+  percentage      Int?                      // 0-100, used when strategy = PERCENTAGE
+  allowedEnvs     String?                   // comma-separated: "production,staging"
+  allowedTenants  String?                   // comma-separated tenant IDs
+
+  /// Tags for grouping (e.g., "ap,finance,beta")
+  tags String?
+
+  /// Status
+  status RuntimeFeatureFlagStatus @default(ACTIVE)
+
+  /// Ownership
+  createdBy  String?
+  updatedBy  String?
+  ownerTeam  String? // e.g., "platform", "payments", "ai"
+
+  /// Scheduling
+  activatesAt DateTime? // scheduled activation
+  expiresAt   DateTime? // auto-disable after this date
+
+  /// Metadata
+  metadata Json?
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([status])
+  @@index([tags])
+  @@index([companyId, key])
+}
+
+model RuntimeFeatureFlagOverride {
+  id        String  @id @default(cuid())
+  flagId    String
+  companyId String
+
+  /// Override value — takes precedence over flag's global enabled
+  enabled Boolean
+
+  /// Why this override exists
+  reason  String?
+  enabledBy String?
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([flagId, companyId])
+  @@index([flagId])
+  @@index([companyId])
+}
+
+// ── Secrets ───────────────────────────────────────────────────────────────
+
+enum RuntimeSecretProvider {
+  ENVIRONMENT
+  VAULT
+  AWS_SECRETS
+  AZURE_KEYVAULT
+  GCP_SECRET_MANAGER
+}
+
+enum RuntimeSecretCategory {
+  DATABASE
+  API_KEY
+  ENCRYPTION_KEY
+  OAUTH_TOKEN
+  WEBHOOK_SECRET
+  CERTIFICATE
+  SERVICE_ACCOUNT
+  LICENSE_KEY
+  OTHER
+}
+
+enum RuntimeSecretStatus {
+  ACTIVE
+  ROTATING
+  DEPRECATED
+  DELETED
+}
+
+model RuntimeSecretMetadata {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Human-readable name (e.g., "plaid-client-id")
+  name     String
+  category RuntimeSecretCategory @default(API_KEY)
+
+  /// Which provider holds the actual value
+  provider RuntimeSecretProvider @default(ENVIRONMENT)
+
+  /// Provider-specific key/path (e.g., env var name, Vault path)
+  providerKey String
+
+  /// Current version number
+  version Int @default(1)
+
+  /// Rotation policy
+  rotationIntervalDays Int?   // null = never auto-rotate
+  nextRotationAt       DateTime?
+
+  /// Expiration
+  expiresAt DateTime?
+
+  /// Ownership
+  createdBy   String?
+  ownerTeam   String?
+  ownerUserId String?
+
+  /// Status
+  status RuntimeSecretStatus @default(ACTIVE)
+
+  /// Audit metadata (last accessed, last rotated)
+  lastAccessedAt DateTime?
+  lastAccessedBy String?
+  lastRotatedAt  DateTime?
+  lastRotatedBy  String?
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@index([name])
+  @@index([provider])
+  @@index([status])
+  @@index([nextRotationAt]) // for rotation scheduler polling
+}
+
+model RuntimeSecretVersion {
+  id       String @id @default(cuid())
+  secretId String
+
+  /// Version number (monotonically increasing)
+  version Int
+
+  /// Hash of the secret value (not the value itself)
+  valueHash String
+
+  /// Who rotated it and why
+  rotatedBy String?
+  rotatedAt DateTime @default(now())
+  reason    String?
+
+  /// Provider metadata (e.g., Vault version, AWS version)
+  providerMetadata Json?
+
+  @@unique([secretId, version])
+  @@index([secretId])
+  @@index([rotatedAt])
+}
+
+// ── Capability Registry ───────────────────────────────────────────────────
+
+enum RuntimeCapabilityCategory {
+  INTEGRATION
+  BANKING
+  ERP
+  PAYMENTS
+  IDENTITY
+  NOTIFICATION
+  DOCUMENT
+  AI
+  WORKFLOW
+  AUDIT
+  OBSERVABILITY
+  SEARCH
+  STORAGE
+  SECURITY
+  ANALYTICS
+}
+
+enum RuntimeCapabilityStatus {
+  HEALTHY
+  DEGRADED
+  UNHEALTHY
+  DISABLED
+  UNKNOWN
+}
+
+model RuntimeCapability {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Stable programmatic ID (e.g., "banking.plaid")
+  capabilityId String @unique
+
+  /// Display name
+  name String
+
+  /// Category
+  category RuntimeCapabilityCategory
+
+  /// Which platform provides this capability
+  platformId String?
+
+  /// Current status
+  status RuntimeCapabilityStatus @default(UNKNOWN)
+
+  /// Health data (latest snapshot)
+  lastHealthCheckAt DateTime?
+  healthLatencyMs   Int?
+  healthError       String?
+
+  /// Version
+  version String?
+
+  /// Dependencies — comma-separated capability IDs this depends on
+  dependencies String?
+
+  /// Ownership
+  createdBy String?
+  ownerTeam String?
+
+  /// Metadata
+  description String?
+  metadata    Json?
+
+  /// Deprecation
+  deprecatedAt    DateTime?
+  deprecationNote String?
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([category])
+  @@index([status])
+  @@index([platformId])
+  @@index([companyId, category])
+  @@index([capabilityId])
+}
+
+model RuntimeCapabilityHealthHistory {
+  id           String  @id @default(cuid())
+  capabilityId String
+  companyId    String?
+
+  /// Health snapshot
+  status    RuntimeCapabilityStatus
+  latencyMs Int?
+  error     String?
+  metadata  Json?
+
+  /// Timestamp — append-only
+  createdAt DateTime @default(now())
+
+  @@index([capabilityId])
+  @@index([companyId, capabilityId])
+  @@index([createdAt])
+  @@index([status])
+}
+
+// ── Data Classification ───────────────────────────────────────────────────
+
+enum RuntimeClassificationLevel {
+  PUBLIC
+  INTERNAL
+  CONFIDENTIAL
+  SECRET
+  TOP_SECRET
+  RESTRICTED
+  SENSITIVE
+  PROPRIETARY
+  PII
+  PHI
+  SYSTEM
+}
+
+model RuntimeClassificationEntry {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Entity type + field name (e.g., "User.email")
+  entityType String
+  fieldName  String
+
+  /// Classification level for this specific field
+  level RuntimeClassificationLevel @default(INTERNAL)
+
+  /// Field-level policy overrides (masking, encryption, access rules)
+  policy Json?
+
+  /// Source: "manual" or "auto" (auto-registered from Prisma schema)
+  source String @default("manual")
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([entityType, fieldName])
+  @@index([entityType])
+  @@index([level])
+  @@index([companyId])
+}
+
+model RuntimeClassificationEntity {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Entity type (e.g., "User", "Transaction")
+  entityType String @unique
+
+  /// Default classification for all fields in this entity
+  level RuntimeClassificationLevel @default(INTERNAL)
+
+  /// Entity-level policy (encryption, retention, access rules)
+  policy Json?
+
+  /// Source: "manual" or "auto"
+  source String @default("manual")
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([level])
+  @@index([entityType])
+}
+
+model RuntimeClassificationAudit {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// What was classified
+  entityType String
+  entityId   String?
+  fieldName  String?
+
+  /// Classification decision
+  level RuntimeClassificationLevel
+
+  /// Access check result
+  granted  Boolean
+  userRole String?
+  reason   String?
+
+  /// Request context
+  userId        String?
+  correlationId String?
+  ipAddress     String?
+
+  /// Masking applied
+  maskingApplied String? // REDACT, PARTIAL, HASH, TOKENIZE
+
+  /// Timestamp — append-only
+  createdAt DateTime @default(now())
+
+  @@index([companyId])
+  @@index([entityType, entityId])
+  @@index([level])
+  @@index([granted])
+  @@index([createdAt])
+  @@index([companyId, createdAt])
+}
+
+// ── Policy Engine ─────────────────────────────────────────────────────────
+
+enum RuntimePolicyType {
+  RBAC
+  ABAC
+  APPROVAL
+  FINANCIAL
+  COMPLIANCE
+  RISK
+  DATA_ACCESS
+  MUTATION
+}
+
+enum RuntimePolicyStatus {
+  ACTIVE
+  DISABLED
+  DRAFT
+}
+
+model RuntimePolicy {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Unique policy key
+  key   String @unique
+  name  String
+  type  RuntimePolicyType
+  status RuntimePolicyStatus @default(ACTIVE)
+
+  /// Policy rules (structured JSON — evaluated by PolicyEngine)
+  rules Json
+
+  /// Priority (higher = evaluated first)
+  priority Int @default(0)
+
+  /// Description
+  description String?
+
+  /// Ownership
+  createdBy String?
+  ownerTeam String?
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([type])
+  @@index([status])
+  @@index([companyId, type])
+  @@index([priority])
+}
+
+model RuntimePolicyEvaluation {
+  id       String  @id @default(cuid())
+  policyId String
+  companyId String?
+
+  /// Evaluation result
+  granted Boolean
+  reason  String?
+
+  /// Request context
+  userId       String?
+  action       String?
+  resourceType String?
+  resourceId   String?
+
+  /// Evaluation metadata
+  evaluationMs   Int? // time to evaluate
+  rulesEvaluated Int? // how many rules were checked
+
+  /// Request context
+  correlationId String?
+  ipAddress     String?
+
+  /// Timestamp — append-only
+  createdAt DateTime @default(now())
+
+  @@index([policyId])
+  @@index([companyId])
+  @@index([granted])
+  @@index([createdAt])
+  @@index([companyId, createdAt])
+}
+
+// ── Event Outbox ──────────────────────────────────────────────────────────
+
+enum RuntimeEventStatus {
+  PENDING
+  DELIVERED
+  FAILED
+  DEAD_LETTER
+  REPLAYED
+}
+
+model RuntimeEventEnvelope {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Event type (e.g., "invoice.created", "payment.executed")
+  type String
+
+  /// Event payload
+  payload Json
+
+  /// Delivery status
+  status RuntimeEventStatus @default(PENDING)
+
+  /// Correlation chain
+  correlationId String?
+  causationId   String? // the event that caused this event
+
+  /// Versioning
+  schemaVersion Int @default(1)
+
+  /// Retry tracking
+  attemptCount Int      @default(0)
+  maxAttempts  Int      @default(3)
+  nextRetryAt  DateTime?
+
+  /// Error tracking (on failure)
+  lastError     String?
+  lastAttemptAt DateTime?
+
+  /// Metadata
+  metadata Json?
+
+  /// Timestamp — append-only
+  createdAt   DateTime  @default(now())
+  deliveredAt DateTime?
+
+  @@index([companyId])
+  @@index([type])
+  @@index([status])
+  @@index([companyId, type])
+  @@index([status, createdAt])    // for outbox polling
+  @@index([status, nextRetryAt])  // for retry polling
+  @@index([correlationId])
+  @@index([createdAt])
+}
+
+model RuntimeEventDeadLetter {
+  id        String  @id @default(cuid())
+  companyId String?
+
+  /// Original event data
+  type    String
+  payload Json
+
+  /// Failure tracking
+  error         String
+  attemptCount  Int
+  firstFailedAt DateTime @default(now())
+  lastFailedAt  DateTime @default(now())
+
+  /// Original context
+  correlationId String?
+  causationId   String?
+
+  /// Resolution
+  resolved    Boolean  @default(false)
+  resolvedBy  String?
+  resolvedAt  DateTime?
+  resolveNote String?
+
+  /// Metadata
+  metadata Json?
+
+  @@index([companyId])
+  @@index([type])
+  @@index([resolved])
+  @@index([companyId, resolved])
+  @@index([firstFailedAt])
+}

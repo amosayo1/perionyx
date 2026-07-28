@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { Integration } from "./types";
 
 const statusConfig: Record<string, { label: string; dot: string }> = {
-  connected: { label: "Connected", dot: "bg-[#d4af37]" },
+  connected: { label: "Connected", dot: "bg-gold" },
   disconnected: { label: "Disconnected", dot: "bg-red-500" },
   warning: { label: "Warning", dot: "bg-amber-500" },
   retrying: { label: "Retrying", dot: "bg-amber-500 animate-pulse" },
@@ -18,7 +18,7 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
           <div className={cn("h-2 w-2 rounded-full", cfg.dot)} />
           <span className="text-sm font-medium text-white">{integration.name}</span>
         </div>
-        <span className={cn("text-[10px] font-semibold", integration.status === "connected" && "text-[#d4af37]", integration.status === "disconnected" && "text-red-400", (integration.status === "warning" || integration.status === "retrying") && "text-amber-400")}>
+        <span className={cn("text-[10px] font-semibold", integration.status === "connected" && "text-gold", integration.status === "disconnected" && "text-red-400", (integration.status === "warning" || integration.status === "retrying") && "text-amber-400")}>
           {cfg.label}
         </span>
       </div>

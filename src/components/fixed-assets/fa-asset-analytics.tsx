@@ -35,7 +35,7 @@ export default function FAAssetAnalytics({ kpis, aggregates, categoryBreakdown }
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
             {kpis.map((kpi, i) => (
               <motion.div key={kpi.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                style={{ background: '#1a1a2e', borderRadius: 8, padding: 16, borderTop: `3px solid ${statusColors[kpi.status] || '#888'}`, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                style={{ background: '#1a1a24', borderRadius: 8, padding: 16, borderTop: `3px solid ${statusColors[kpi.status] || '#888'}`, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ color: '#888', fontSize: 11, fontWeight: 500 }}>{kpi.name}</span>
                   <span style={{ background: `${statusColors[kpi.status]}20`, color: statusColors[kpi.status], padding: '2px 6px', borderRadius: 4, fontSize: 10, fontWeight: 600, textTransform: 'capitalize' }}>
@@ -85,7 +85,7 @@ export default function FAAssetAnalytics({ kpis, aggregates, categoryBreakdown }
       {categoryBreakdown && categoryBreakdown.length > 0 && (
         <div>
           <div style={{ color: '#e0e0e0', fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Category Breakdown</div>
-          <div style={{ background: '#1a1a2e', borderRadius: 8, overflow: 'hidden', border: '1px solid #2a2a4a' }}>
+          <div style={{ background: '#1a1a24', borderRadius: 8, overflow: 'hidden', border: '1px solid #2a2a4a' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
               <thead>
                 <tr style={{ background: '#16213e', borderBottom: '1px solid #2a2a4a' }}>

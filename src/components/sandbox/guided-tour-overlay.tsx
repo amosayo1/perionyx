@@ -110,8 +110,8 @@ export function GuidedTourOverlay() {
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/20">
-                <step.icon className="h-5 w-5 text-[#d4af37]" />
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10 border border-gold/20">
+                <step.icon className="h-5 w-5 text-gold" />
               </span>
               <div>
                 <p className="text-sm font-semibold text-white">{step.title}</p>
@@ -125,7 +125,7 @@ export function GuidedTourOverlay() {
 
             <div className="h-1.5 rounded-full bg-white/[0.06] mb-5 overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-[#d4af37]"
+                className="h-full rounded-full bg-gold"
                 initial={{ width: `${((currentTourStep) / STEPS.length) * 100}%` }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.4 }}
@@ -150,7 +150,7 @@ export function GuidedTourOverlay() {
                     key={i}
                     onClick={() => setTourStep(i)}
                     className={`h-2 w-2 rounded-full transition-all ${
-                      i === currentTourStep ? "bg-[#d4af37] w-5" : "bg-white/[0.12] hover:bg-white/[0.2]"
+                      i === currentTourStep ? "bg-gold w-5" : "bg-white/[0.12] hover:bg-white/[0.2]"
                     }`}
                   />
                 ))}
@@ -165,7 +165,7 @@ export function GuidedTourOverlay() {
                     setTourStep(currentTourStep + 1);
                   }
                 }}
-                className="flex items-center gap-1.5 rounded-lg bg-[#d4af37] px-4 py-2 text-xs font-bold text-black transition-all hover:bg-[#d4af37]/90"
+                className="flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-xs font-bold text-black transition-all hover:bg-gold/90"
               >
                 {isLast ? (
                   <>

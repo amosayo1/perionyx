@@ -50,15 +50,15 @@ export function UndoProvider({ children }: { children: ReactNode }) {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-20 left-1/2 z-[200] -translate-x-1/2 md:bottom-6"
+          className="fixed bottom-20 left-1/2 z-toast -translate-x-1/2 md:bottom-6"
         >
-          <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-[#1a1a1a] px-4 py-3 shadow-2xl backdrop-blur-xl">
+          <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-[#1a1a24] px-4 py-3 shadow-2xl backdrop-blur-xl">
             <span className="text-[13px] text-zinc-300">{toast.label}</span>
             <button
               onClick={handleUndo}
               className={cn(
                 "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors",
-                "bg-[#d4af37]/15 text-[#d4af37] hover:bg-[#d4af37]/25",
+                "bg-gold/15 text-gold hover:bg-gold/25",
               )}
             >
               <Undo2 className="h-3.5 w-3.5" />

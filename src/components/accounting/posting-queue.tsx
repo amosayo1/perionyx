@@ -19,7 +19,7 @@ const statusConfig: Record<string, { icon: React.ReactNode; color: string }> = {
 export function PostingQueue({ batches }: PostingQueueProps) {
   const sorted = [...batches].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a]">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24]">
       <div className="border-b border-gray-800 px-4 py-3">
         <h3 className="text-sm font-medium text-gray-200">Posting Queue</h3>
       </div>

@@ -2,13 +2,13 @@ import { cn } from "@/lib/utils";
 import type { ScheduledReport } from "./types";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  active: { label: "Active", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+  active: { label: "Active", className: "bg-gold/10 text-gold border-gold/20" },
   paused: { label: "Paused", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   error: { label: "Error", className: "bg-red-500/10 text-red-400 border-red-500/20" },
 };
 
 const freqColors: Record<string, string> = {
-  daily: "text-blue-400", weekly: "text-[#d4af37]", monthly: "text-purple-400", quarterly: "text-amber-400",
+  daily: "text-blue-400", weekly: "text-gold", monthly: "text-purple-400", quarterly: "text-amber-400",
 };
 
 export function ScheduledReportCard({ report }: { report: ScheduledReport }) {

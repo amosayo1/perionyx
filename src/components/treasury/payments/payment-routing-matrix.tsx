@@ -38,7 +38,7 @@ export function PaymentRoutingMatrix({ className }: { className?: string }) {
     <div className={cn("rounded-lg border border-white/[0.06] bg-zinc-900/50", className)}>
       <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
         <div className="flex items-center gap-2">
-          <Globe className="h-5 w-5 text-[#c9a84c]" />
+          <Globe className="h-5 w-5 text-gold" />
           <h3 className="text-sm font-semibold text-white">Payment Routing Matrix</h3>
           <span className="ml-2 rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] text-zinc-400">
             {sorted.length} routes

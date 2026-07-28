@@ -42,9 +42,9 @@ export function ConfirmDialog({
         <div className="flex items-start gap-4">
           <div className={cn(
             "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-            destructive ? "bg-red-500/10" : "bg-[#d4af37]/10",
+            destructive ? "bg-red-500/10" : "bg-gold/10",
           )}>
-            <AlertTriangle className={cn("h-5 w-5", destructive ? "text-red-400" : "text-[#d4af37]")} />
+            <AlertTriangle className={cn("h-5 w-5", destructive ? "text-red-400" : "text-gold")} />
           </div>
           <div className="flex-1">
             <h2 id="confirm-title" className="text-base font-semibold text-zinc-200">{title}</h2>
@@ -65,7 +65,7 @@ export function ConfirmDialog({
               "rounded-lg px-4 py-2 text-sm font-medium",
               destructive
                 ? "bg-red-600 text-white hover:bg-red-500 active:bg-red-400"
-                : "bg-[#d4af37] text-black hover:bg-[#d4af37]/90 active:bg-[#d4af37]/80",
+                : "bg-gold text-black hover:bg-gold/90 active:bg-gold/80",
             )}
           >
             {confirmLabel}

@@ -30,8 +30,8 @@ export function NavigationCards({ className }: { className?: string }) {
               role="article" aria-label={card.title}
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#c9a84c]/10 border border-[#c9a84c]/20">
-                  <Icon className="h-4 w-4 text-[#c9a84c]" aria-hidden="true" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10 border border-gold/20">
+                  <Icon className="h-4 w-4 text-gold" aria-hidden="true" />
                 </div>
                 {isComing && (
                   <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-zinc-500 border border-white/[0.06]">
@@ -50,7 +50,7 @@ export function NavigationCards({ className }: { className?: string }) {
                 ))}
               </div>
               {!isComing && (
-                <button className="mt-3 flex items-center gap-1 text-[11px] font-medium text-[#c9a84c] hover:text-[#c9a84c]/80 transition-colors" aria-label={`Open ${card.title}`}>
+                <button className="mt-3 flex items-center gap-1 text-[11px] font-medium text-gold hover:text-gold/80 transition-colors" aria-label={`Open ${card.title}`}>
                   Open <ArrowRight className="h-3 w-3" aria-hidden="true" />
                 </button>
               )}

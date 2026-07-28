@@ -19,7 +19,7 @@ interface ValuationDashboardProps {
 
 function ValCard({ label, value, icon, variant }: { label: string; value: string; icon: React.ReactNode; variant: "gold" | "emerald" | "blue" | "amber" | "purple" }) {
   const COLORS = {
-    gold: { icon: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+    gold: { icon: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
     emerald: { icon: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
     blue: { icon: "text-blue-400", border: "border-blue-500/20", bg: "bg-blue-500/10" },
     amber: { icon: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/10" },

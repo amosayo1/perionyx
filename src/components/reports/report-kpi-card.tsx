@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { ReportKpi } from "./types";
 
 const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
-const trendColors: Record<string, string> = { up: "text-[#d4af37]", down: "text-red-400", neutral: "text-zinc-500" };
+const trendColors: Record<string, string> = { up: "text-gold", down: "text-red-400", neutral: "text-zinc-500" };
 
 export function ReportKpiCard({ kpi }: { kpi: ReportKpi }) {
   const TrendIcon = trendIcons[kpi.trend];
@@ -29,7 +29,7 @@ export function ReportKpiCard({ kpi }: { kpi: ReportKpi }) {
         {kpi.sparklineData.map((point, i) => {
           const max = Math.max(...kpi.sparklineData, 1);
           return (
-            <div key={i} className="w-[3px] rounded-full bg-[#d4af37]/40" style={{ height: Math.max((point / max) * 22, 3) }} />
+            <div key={i} className="w-[3px] rounded-full bg-gold/40" style={{ height: Math.max((point / max) * 22, 3) }} />
           );
         })}
       </div>

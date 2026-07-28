@@ -15,6 +15,7 @@ import { PrismaPaymentProposalRepository, PrismaPaymentBatchRepository } from ".
 import { PrismaCreditRepository } from "./prisma-credit-repository";
 import { PrismaReconciliationRepository } from "./prisma-reconciliation-repository";
 import { PrismaAuditRepository } from "./prisma-audit-repository";
+import { registerAllAPEventHandlers } from "../domain/event-handlers";
 
 import type { IVendorRepository } from "./vendor-repository";
 import type { IInvoiceRepository } from "./invoice-repository";
@@ -60,6 +61,9 @@ export function initializeAPRepositories(): APRepositoryRegistry {
     reconciliation: new PrismaReconciliationRepository(prisma),
     audit: new PrismaAuditRepository(prisma),
   };
+
+  // Register event handlers (GL posting, notifications, audit trail)
+  registerAllAPEventHandlers();
 
   return registry;
 }

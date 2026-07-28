@@ -37,12 +37,12 @@ export function RiskTimeline({ events }: RiskTimelineProps) {
   };
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-300">Activity Timeline</h3>
       <div className="space-y-0">
         {events.slice(0, 15).map((event, i) => (
           <div key={i} className="relative flex gap-3 pb-4 pl-6 last:pb-0">
-            <div className={`absolute left-2 top-1.5 flex h-3 w-3 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-[#1a1a1a] text-[8px] ${borderColor(event.type)}`}>
+            <div className={`absolute left-2 top-1.5 flex h-3 w-3 -translate-x-1/2 items-center justify-center rounded-full border-2 bg-[#1a1a24] text-[8px] ${borderColor(event.type)}`}>
               {renderIcon(event.type)}
             </div>
             {i < events.length - 1 && <div className="absolute bottom-0 left-2 top-4 w-px -translate-x-1/2 bg-gray-800" />}

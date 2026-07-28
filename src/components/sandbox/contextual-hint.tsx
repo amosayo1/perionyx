@@ -32,9 +32,9 @@ export function ContextualHint({ module }: { module: string }) {
         initial={{ opacity: 0, y: -8, height: 0 }}
         animate={{ opacity: 1, y: 0, height: "auto" }}
         exit={{ opacity: 0, y: -8, height: 0 }}
-        className="mb-4 flex items-start gap-2.5 rounded-xl border border-[#d4af37]/15 bg-[#d4af37]/5 px-4 py-3"
+        className="mb-4 flex items-start gap-2.5 rounded-xl border border-gold/15 bg-gold/5 px-4 py-3"
       >
-        <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-[#d4af37]" />
+        <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
         <p className="text-xs text-zinc-300 leading-relaxed flex-1">{hint.text}</p>
         <button
           onClick={() => dismissHint(hint.id)}

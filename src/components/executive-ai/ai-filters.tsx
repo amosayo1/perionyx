@@ -64,7 +64,7 @@ export const AIFilters = memo(function AIFilters({
         <select
           value={selectedCategory || ""}
           onChange={e => onCategoryChange?.(e.target.value)}
-          className="appearance-none rounded-md border border-zinc-800/60 bg-zinc-900/60 px-3 py-1.5 pr-8 text-xs text-zinc-300 outline-none transition-colors hover:border-zinc-700/60 focus:border-[#d4af37]/40"
+          className="appearance-none rounded-md border border-zinc-800/60 bg-zinc-900/60 px-3 py-1.5 pr-8 text-xs text-zinc-300 outline-none transition-colors hover:border-zinc-700/60 focus:border-gold/40"
         >
           {CATEGORIES.map(c => (
             <option key={c.value} value={c.value}>{c.label}</option>
@@ -77,7 +77,7 @@ export const AIFilters = memo(function AIFilters({
         <select
           value={selectedSeverity || ""}
           onChange={e => onSeverityChange?.(e.target.value)}
-          className="appearance-none rounded-md border border-zinc-800/60 bg-zinc-900/60 px-3 py-1.5 pr-8 text-xs text-zinc-300 outline-none transition-colors hover:border-zinc-700/60 focus:border-[#d4af37]/40"
+          className="appearance-none rounded-md border border-zinc-800/60 bg-zinc-900/60 px-3 py-1.5 pr-8 text-xs text-zinc-300 outline-none transition-colors hover:border-zinc-700/60 focus:border-gold/40"
         >
           {SEVERITIES.map(s => (
             <option key={s.value} value={s.value}>{s.label}</option>
@@ -90,7 +90,7 @@ export const AIFilters = memo(function AIFilters({
         <select
           value={selectedStatus || ""}
           onChange={e => onStatusChange?.(e.target.value)}
-          className="appearance-none rounded-md border border-zinc-800/60 bg-zinc-900/60 px-3 py-1.5 pr-8 text-xs text-zinc-300 outline-none transition-colors hover:border-zinc-700/60 focus:border-[#d4af37]/40"
+          className="appearance-none rounded-md border border-zinc-800/60 bg-zinc-900/60 px-3 py-1.5 pr-8 text-xs text-zinc-300 outline-none transition-colors hover:border-zinc-700/60 focus:border-gold/40"
         >
           {STATUSES.map(s => (
             <option key={s.value} value={s.value}>{s.label}</option>

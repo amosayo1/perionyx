@@ -53,7 +53,7 @@ export default function ConsFXExposure({ exposures }: ConsFXExposureProps) {
               gridTemplateColumns: "1fr 60px 60px 100px 100px 100px 100px 100px",
               gap: 8,
               padding: "10px 12px",
-              background: "#1a1a2e",
+              background: "#1a1a24",
               borderRadius: 4,
               alignItems: "center",
               border: "1px solid #2a2a4a",

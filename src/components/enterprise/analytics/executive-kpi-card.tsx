@@ -42,7 +42,7 @@ function SparklineSvg({ data, gold }: { data: number[]; gold?: boolean }) {
   const range = max - min || 1;
   const w = data.length - 1;
   const h = 28;
-  const color = gold ? "#c9a84c" : "#808080";
+  const color = gold ? "#d4af37" : "#808080";
   const points = data.map((v, i) => `${i},${h - ((v - min) / range) * (h - 2) - 1}`).join(" ");
 
   return (
@@ -83,7 +83,7 @@ export const ExecutiveKpiCard = memo(function ExecutiveKpiCard({
       className={cn(
         "group relative overflow-hidden rounded-xl border p-5 transition-all duration-200",
         gold
-          ? "border-[#c9a84c]/20 bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/40"
+          ? "border-gold/20 bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/40"
           : "border-white/[0.06] bg-gradient-to-b from-zinc-900/40 to-black/30",
         "hover:border-white/[0.1] hover:bg-white/[0.02]",
         drillDownAction && "cursor-pointer",
@@ -95,7 +95,7 @@ export const ExecutiveKpiCard = memo(function ExecutiveKpiCard({
       onKeyDown={drillDownAction ? (e) => { if (e.key === "Enter" || e.key === " ") drillDownAction(); } : undefined}
     >
       {gold && (
-        <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#c9a84c]/5 blur-3xl" />
+        <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gold/5 blur-3xl" />
       )}
 
       {sparklineData && sparklineData.length > 1 && (
@@ -118,7 +118,7 @@ export const ExecutiveKpiCard = memo(function ExecutiveKpiCard({
           <span
             className={cn(
               "text-[32px] font-bold leading-[40px] tracking-[-0.02em]",
-              gold ? "text-[#c9a84c]" : "text-white",
+              gold ? "text-gold" : "text-white",
             )}
           >
             {formatKpiValue(value)}
@@ -164,7 +164,7 @@ export const ExecutiveKpiCard = memo(function ExecutiveKpiCard({
 
         {drillDownAction && drillDownLabel && (
           <div className="pt-1">
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#c9a84c] opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gold opacity-0 group-hover:opacity-100 transition-opacity">
               {drillDownLabel}
               <ChevronRight className="h-3 w-3" />
             </span>

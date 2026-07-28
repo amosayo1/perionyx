@@ -77,7 +77,7 @@ function HealthScoreRing({ score, label }: { score: number; label: string }) {
         <svg width="140" height="140" viewBox="0 0 140 140" className="transform -rotate-90">
           <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
           <motion.circle
-            cx="70" cy="70" r="54" fill="none" stroke="#c9a84c" strokeWidth="8" strokeLinecap="round"
+            cx="70" cy="70" r="54" fill="none" stroke="#d4af37" strokeWidth="8" strokeLinecap="round"
             strokeDasharray={circumference}
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset: offset }}
@@ -86,7 +86,7 @@ function HealthScoreRing({ score, label }: { score: number; label: string }) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <motion.span
-            className="text-4xl font-bold text-[#c9a84c]"
+            className="text-4xl font-bold text-gold"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -96,7 +96,7 @@ function HealthScoreRing({ score, label }: { score: number; label: string }) {
           <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 mt-0.5">{label}</span>
         </div>
       </div>
-      <span className="mt-2 text-[13px] font-medium text-[#c9a84c]">{label}</span>
+      <span className="mt-2 text-[13px] font-medium text-gold">{label}</span>
     </div>
   );
 }
@@ -149,7 +149,7 @@ export function ExecutiveHeader({ className }: { className?: string }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <button className="flex items-center gap-2 rounded-lg border border-[#c9a84c]/30 bg-[#c9a84c]/10 px-4 py-2.5 text-[13px] font-medium text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/20" aria-label="View Full Cash Position">
+        <button className="flex items-center gap-2 rounded-lg border border-gold/30 bg-gold/10 px-4 py-2.5 text-[13px] font-medium text-gold transition-colors hover:bg-gold/20" aria-label="View Full Cash Position">
           View Full Cash Position
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>

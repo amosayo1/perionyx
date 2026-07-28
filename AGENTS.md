@@ -5,7 +5,7 @@
 ```bash
 pnpm typecheck     # TypeScript strict mode — must pass before any commit
 pnpm build         # Production build — must pass before any commit
-pnpm test          # Test suite (currently 443/443 pass via vitest)
+pnpm test          # Test suite (currently 60/60 runtime + 52/52 AP + others pass via vitest)
 ```
 
 ## Engineering Constitution — UI Decision Mandate
@@ -602,13 +602,301 @@ Every new feature, edit, or optimization MUST pass all 10 questions below. Docum
 - **Deliverables**: 9 documents at `docs/ap/` — AP_WORKFLOW_EXECUTION_REPORT, AP_END_TO_END_VALIDATION, AP_EVENT_VALIDATION, AP_PERMISSION_VALIDATION, AP_FINANCIAL_INTEGRITY_REPORT, AP_CONCURRENCY_REPORT, AP_FAILURE_RECOVERY_REPORT, AP_WORKFLOW_SCORECARD, EDP_21A_4
 - **Brain**: Lesson 37 (Integration Tests Catch Interaction Bugs That Unit Tests Miss), Principle #13 in Decision Network, evolution timeline entry
 
+### Phase 21B.2 — Enterprise AP Seed Data System (Complete)
+- **Scope**: Deterministic seed data generator producing ~28,000 records across 10 AP aggregate types
+- **Files Created**: 10 generator files in `src/server/procurement/seeds/` (~2,450 lines)
+- **Data Volumes**: 158 vendors, 3,527 invoices, 612 approvals, 358 exceptions, 250 proposals, 120 batches, 649 payment records, 130 credits, 40 statements (496 lines), 40 reconciliation results, 21,800 audit records
+- **Key Decisions**: mulberry32 deterministic PRNG, per-generator seeds, dependency-ordered generation, count thresholds for idempotent re-runs
+- **Bugs Found**: 5 schema inconsistencies caught during generation (invalid enum values, missing required fields, type mismatches)
+- **Deliverables**: `docs/ap/PHASE_21B_2_SEED_DATA.md`, `docs/ap/EDP_21B_2.md`
+- **Brain**: Lesson 39 (Deterministic Seed Data Reveals Integration Gaps), Principle #15 in Decision Network, evolution timeline entry
+
 ### Phase 22.0A — Public Platform Architecture (Complete)
 - **Scope**: 25 documents defining the complete public-facing website architecture — zero code, all design
 - **Documents**: WEBSITE_INFORMATION_ARCHITECTURE, SITE_MAP (97 URLs), PAGE_HIERARCHY (71 pages), NAVIGATION_MODEL (global nav + mega menus + mobile + footer + Cmd+K), CONTENT_STRATEGY (6 pillars), CONTENT_GOVERNANCE (RACI), PUBLIC_CONTENT_POLICY (CAN/CANNOT publish), SEO_STRATEGY, KEYWORD_STRATEGY (60+ keywords), DESIGN_LANGUAGE (PEDL extension), BRANDING_GUIDELINES, VISUAL_DIRECTION (hero concepts + scroll behaviors), MOTION_SYSTEM (page-level + component-level specs), ILLUSTRATION_GUIDE (diagram style, no stock), ICONOGRAPHY_GUIDE (Lucide + custom product icons), ACCESSIBILITY_GUIDE (WCAG 2.1 AA), COPYWRITING_GUIDE (voice pillars + headline formulas), MICROCOPY_GUIDE (buttons, forms, validation, tooltips), CALL_TO_ACTION_STRATEGY (hierarchy + placement + A/B tests), USER_JOURNEYS (8 persona journeys), COMPETITOR_WEBSITE_ANALYSIS (8 competitors), REFERENCE_EXPERIENCE (curated web inspirations), CONTENT_BRIEFS (10 priority page briefs), WEBSITE_ROADMAP (5-phase, 16-week plan), EDP_22_0A (10 key decisions)
 - **Key Decisions**: Brain is source of truth (website = curated public view), dark-first (#040404) + gold accent (#d4af37), no stock imagery, Inter + JetBrains Mono, WCAG 2.1 AA, 97 URLs across 9 sections, 16-week phased rollout
 - **Brain**: Lesson 38 (Brain→Public Content Pipeline), Principle #14 in Decision Network, evolution timeline entry
 
-### Upcoming (Phase 8+)
+### Phase 22.0B — Enterprise Design Language (EDL) Foundation (Complete)
+- **Scope**: Canonical visual operating system — 8 token files, 16 documentation files
+- **Design Audit Findings**: 4 background palettes, 3 gold hex codes, 6 font stacks, 3 motion systems, 6+ card patterns, 2 parallel component libraries, status colors in 3 locations
+- **Token Files** (8): `src/design-system/edl/colors.ts` (brand, surfaces, text, borders, status, financial, risk, charts, AI, shadows, elevation), `typography.ts` (Inter + JetBrains Mono, 14-size scale), `spacing.ts` (4px base, semantic layout), `radius.ts` (8 values), `motion.ts` (durations, easings, variants, reduced-motion), `z-index.ts` (14 levels), `icons.ts` (sizes, strokes, feature map), `components.ts` (Button, Card, Input, Badge, Table, Dialog, Toast, Tooltip, Skeleton presets), `index.ts` (barrel)
+- **Documentation** (16): ENTERPRISE_DESIGN_LANGUAGE, DESIGN_PRINCIPLES (8 principles), VISUAL_IDENTITY, COLOR_SYSTEM, TYPOGRAPHY_SYSTEM, SPACING_SYSTEM, LAYOUT_SYSTEM, MOTION_SYSTEM, ICONOGRAPHY, ILLUSTRATION_SYSTEM, ACCESSIBILITY_SYSTEM, RESPONSIVE_SYSTEM, COMPONENT_PRINCIPLES, TOKEN_ARCHITECTURE, BRAND_GUIDELINES, EDP_22_0B
+- **Key Decisions**: `#0a0a0f` canonical base, `#d4af37` canonical gold, Inter + JetBrains Mono, 4px spacing, no spring physics, legacy tokens deprecated not deleted
+- **Brain**: Lesson 40 (Design Language Is Infrastructure), Principle #16 in Decision Network, evolution timeline entry
+
+### Phase 22.0B.1 — EDL Token Migration (Complete)
+- **Scope**: Migrated ~470+ files from hardcoded values to EDL tokens
+- **Legacy gold eliminated**: ~88 files #c9a84c→#d4af37; ~20+ files #d4a843→#d4af37
+- **Wrong surfaces fixed**: ~35 files #101010→#111118; ~94 files #1a1a1a→#1a1a24; ~104 files #1a1a2e→#1a1a24
+- **Tailwind arbitrary replaced**: 17 files gold arbitrary→EDL utilities; 120+ files status arbitrary→EDL utilities
+- **Legacy motion tokens rewritten**: `src/components/enterprise/motion/tokens.ts` now re-exports from EDL; 35 consumers unchanged
+- **Legacy design-system barrel updated**: `src/components/design-system/index.ts` now exports from EDL canonical sources
+- **virtualized-table.tsx fully rewritten**: 25 hardcoded values replaced with EDL tokens
+- **z-index fixes**: `z-[11]`→`z-[10]`, `z-[200]`→`z-toast`
+- **Brain**: Lesson 40 updated, Principle #16, evolution timeline entry
+
+### Phase 22.0B.5 — Enterprise Design Governance & Compliance (Complete)
+- **Scope**: Automated enforcement of EDL through tooling — 12 ESLint rules, 5 CI scripts, auto-fixer, VS Code integration
+- **Governance Tooling** (`tools/design-governance/`): constants.ts, token-validator.ts, component-auditor.ts, page-auditor.ts, codebase-scanner.ts, edl-fixer.ts, edl-audit.ts, edl-report.ts, edl-tokens.ts, edl-compliance.ts
+- **12 ESLint Rules**: no-hardcoded-colors, no-hardcoded-spacing, no-hardcoded-shadow, no-hardcoded-zindex, no-hardcoded-radius, no-hardcoded-typography, no-hardcoded-animation, no-inline-style-colors, require-design-tokens, no-arbitrary-tailwind-colors, no-legacy-imports, require-motion-import
+- **5 CI Scripts**: `pnpm edl:audit` (full audit), `pnpm edl:fix` (auto-fix safe violations), `pnpm edl:report` (generate compliance report), `pnpm edl:tokens` (token health check), `pnpm edl:compliance` (component compliance audit)
+- **Auto-fixer**: Safely replaces hardcoded values with EDL equivalents; dry-run by default, `--apply` to write
+- **VS Code Integration**: `.vscode/settings.json` with ESLint on save, Tailwind CSS class detection, edl/* rules as warnings
+- **Documentation** (6 files): DESIGN_GOVERNANCE, DESIGN_TOKEN_POLICY, DESIGN_REVIEW_CHECKLIST, EDL_CI_PIPELINE, DESIGN_COMPLIANCE_REPORT, EDP_22_0B_5
+- **Brain**: Lesson 40 updated ("Architecture is enforced through tooling"), Principle #17 (Architecture Enforcement Through Tooling), evolution timeline entry
+
+### Phase 23.0 — Perionyx Platform Constitution (Complete)
+- **Scope**: Constitutional architecture for the Enterprise Financial Operating System — 32 documents, 15 Architectural Laws, 15 Platforms, canonical financial model, provider driver model
+- **Constitutional Authority**: `docs/platform/PLATFORM_CONSTITUTION.md` — highest engineering authority for all Perionyx code
+- **15 Architectural Laws**: Business domains never import provider SDKs; vendor terminology never enters domain model; every platform exposes capability contracts; provider drivers are replaceable; every external dependency is observable; financial integrity is never compromised; architecture governed through automation; every platform is measurable; every platform is testable; every platform is replaceable; tenant isolation is absolute; zero trust is the default; data classification governs handling; events are vendor-neutral; constitution evolves through process
+- **15 Platforms Defined**: Integration, Banking, ERP, Payments, Identity, Notification, Document, AI, Workflow, Audit, Observability, Search, Storage, Security, Developer
+- **Canonical Financial Model**: 38 entities, 5 value objects, translation tables for Plaid, QuickBooks, SAP, NetSuite, Dynamics
+- **Provider Driver Model**: Thin adapters (auth, retries, pagination, rate limiting, error translation, telemetry) — no business logic
+- **Security Constitution**: Zero Trust, defense in depth, RBAC+ABAC, AES-256-GCM, MFA, SSO, tenant isolation
+- **Data Constitution**: 5 classification levels, Decimal(38,12) precision, retention, encryption, backup, GDPR
+- **Deployment Constitution**: 5 models (Shared SaaS → On-Prem), blue-green, canary, zero-downtime
+- **Governance**: Maturity model (0-4), ownership matrix, extension guide, provider certification, readiness checklist
+- **Documents** (32 in `docs/platform/`): PLATFORM_CONSTITUTION, ENTERPRISE_PLATFORM_ARCHITECTURE, PLATFORM_CAPABILITIES, CANONICAL_FINANCIAL_MODEL, CAPABILITY_CONTRACTS, PROVIDER_DRIVER_MODEL, INTEGRATION_PLATFORM, ERP_PLATFORM, BANKING_PLATFORM, PAYMENTS_PLATFORM, IDENTITY_PLATFORM, NOTIFICATION_PLATFORM, DOCUMENT_PLATFORM, AI_PLATFORM, WORKFLOW_PLATFORM, AUDIT_PLATFORM, OBSERVABILITY_PLATFORM, SEARCH_PLATFORM, STORAGE_PLATFORM, SECURITY_PLATFORM, DEVELOPER_PLATFORM, DEPLOYMENT_ARCHITECTURE, MULTI_TENANCY_MODEL, EVENT_ARCHITECTURE, ERROR_ARCHITECTURE, DATA_ARCHITECTURE, PLATFORM_MATURITY_MODEL, PLATFORM_OWNERSHIP_MATRIX, PLATFORM_EXTENSION_GUIDE, PROVIDER_CERTIFICATION_GUIDE, ENTERPRISE_READINESS_CHECKLIST, EDP_23_0
+- **Brain**: Lesson 41 ("Constitutions outlive architectures"), Principle #18 (Platform Constitution is Highest Engineering Authority), evolution timeline entry
+
+### Phase 23.1 — Constitutional Validation (Complete)
+- **Scope**: Evidence-based validation of the Platform Constitution against actual codebase implementation — 15 Laws, 15 Platforms, AP reference implementation, dependencies, security, observability, governance
+- **Validation Documents** (9 in `docs/platform/`): PLATFORM_CONSTITUTION_VALIDATION, CONSTITUTION_COMPLIANCE_MATRIX, PLATFORM_GAP_ANALYSIS, REFERENCE_IMPLEMENTATION_REVIEW, DEPENDENCY_ANALYSIS, CANONICAL_MODEL_VALIDATION, ARCHITECTURAL_DEBT_REGISTER, SECURITY_OBSERVABILITY_ASSESSMENT, EDP_23_1
+- **Constitutional Compliance**: 7.0/10 — 7 PASS (Laws 2,4,6,7,12,14,15), 7 PARTIAL (Laws 1,3,5,8,9,10,11), 1 FAIL (Law 13: Data Classification)
+- **Platform Maturity**: 3.5/10 — Average maturity 1.4/4 across 15 platforms. 1 at Level 3 (Banking), 9 at Level 2, 2 at Level 1, 3 at Level 0
+- **AP Reference Implementation**: 7.4/10 CONDITIONAL — 5 conditions: wire audit persistence, eliminate `as any`, persist idempotency, fix duplicate-detection arithmetic, add event schema versioning
+- **Governance**: 6.3/10 — 32/32 docs present, Brain aligned (18/19 principles, 40/41 lessons), Constitution overstates platform readiness corrected
+- **Architectural Debt Register**: 17 items — 3 P0 (data classification, audit persistence, tick.service.ts), 6 P1 (contracts, metrics, workflow engine, identity store, idempotency, duplicate detection), 5 P2, 3 P3
+- **Violations Found**: `tick.service.ts:3` imports PlaidService (Law 1); zero data classification (Law 13); 12/15 platforms lack contracts (Law 3); AP audit entries not persisted; `plaidAccessToken` DB field (Law 14)
+- **Constitution Amendment**: v1.1 — corrected platform maturity labels, added validation section
+- **Brain**: Lesson 42 ("Validation gives constitution authority"), Principle #19 (Validation Gives Authority), evolution timeline entry
+
+### Phase 24.0 — Enterprise Foundation Implementation (Complete)
+- **Scope**: 5 shared enterprise capabilities that every platform inherits — Data Classification, Configuration, Secret Management, Capability Registry, Provider Runtime
+- **Files Created** (24 files in `src/server/foundation/`):
+  - **Data Classification** (`classification/`): types.ts (11 levels), registry.ts (ClassificationRegistry singleton, 10 default policies), validation.ts, index.ts
+  - **Configuration** (`config/`): types.ts, registry.ts (hierarchical resolution: Tenant > Environment > Global), feature-flags.ts (6 built-in flags), index.ts
+  - **Secret Management** (`secrets/`): types.ts, providers/environment.ts (env var adapter), manager.ts (SecretManager), index.ts
+  - **Capability Registry** (`capability-registry/`): types.ts (11 categories), registry.ts (discovery, health, events), index.ts
+  - **Provider Runtime** (`provider-runtime/`): types.ts, driver.ts (ProviderDriver abstract base class), circuit-breaker.ts, rate-limiter.ts (token bucket), retry.ts (exponential backoff + jitter), index.ts
+  - **Barrel** (`foundation/index.ts`)
+- **Documentation** (7 files): DATA_CLASSIFICATION_PLATFORM.md, CONFIGURATION_PLATFORM.md, SECRET_MANAGEMENT_PLATFORM.md, CAPABILITY_REGISTRY.md, PROVIDER_RUNTIME.md, PHASE24_IMPLEMENTATION_REPORT.md, EDP_24_0.md
+- **Law Compliance Impact**: Law 13 (Data Classification) 2/10 → functional; Law 3/14 (Capability Contracts/Events) improved via CapabilityRegistry; Law 2/4/11 (Provider SDKs/Replaceable/Observable) improved via ProviderDriver base class
+- **Brain**: Lesson 43 ("Shared capabilities before integrations"), Principle #20 (Every Shared Capability Implemented Once, Centrally), evolution timeline entry
+
+### Phase 24.0B — Runtime Platform (Complete)
+- **Scope**: AsyncLocalStorage-based Runtime Context + Prisma-backed Runtime Registry + Runtime Secrets/Capabilities
+- **Runtime Core** (`src/runtime/core/`): Runtime singleton, lifecycle management, startup/shutdown
+- **Runtime Context** (`src/runtime/context/`): AsyncLocalStorage propagation of tenant, request, trace, permission, financial, locale context — 16 zero-argument getters, concurrency-safe, backward-compatible
+- **Runtime Registry** (`src/runtime/configuration/`): Prisma-backed feature flags, service configuration, capability registry with health monitoring
+- **Runtime Secrets** (`src/runtime/secrets/`): Multi-provider secret management (Environment, Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
+- **Runtime Errors** (`src/runtime/errors/`): Typed error hierarchy with recovery strategies
+- **Prisma Migration**: `20260726100000_prt_runtime_services` — RuntimeConfiguration, RuntimeSecret, RuntimeCapability models
+- **Tests**: 63 runtime tests in `test/runtime.test.ts` — all passing
+- **Documentation**: `docs/architecture/RUNTIME_ARCHITECTURE.md`
+- **Brain**: Lesson 44 ("Context propagation is invisible architecture"), Principle #21 (Context Propagation Through AsyncLocalStorage), evolution timeline entry, ADR-021
+
+### Phase 25.0 — Brain Knowledge Platform Restructure (Complete)
+- **Scope**: Restructured the Brain from 16 loosely-organized folders to 20 formally-governed folders with constitutional authority
+- **Constitution** (`brain/00-Constitution/`): Knowledge Constitution (10 core laws), Page Standards (mandatory template), Knowledge Graph Guide (relationship types, metrics), Brain Architecture (20-folder design, 5 clusters), EDP-25.0
+- **Customer Intelligence** (`brain/03-Customer Intelligence/`): People profiles (Adeel Aslam, Mostafa, Aman), Interview templates, Pain Points (vendor invoice reconciliation, approval workflow delays), Validated Evidence (fragmented workflows), Product Hypotheses (AI cash forecasting), Competitive Signals (QuickBooks), CRM Alignment
+- **Content Migration**: 44 lessons → `17-Lessons/`, 22+ ADRs → `11-Decisions/`, engineering knowledge → `04-Engineering/`, 15 templates → `18-Templates/`
+- **Archived**: 9 empty root stubs, 4 canvas/base files, 10 old folder indexes — all to `19-Archive/`
+- **20 INDEX.md Entry Points**: Every folder has an entry point with frontmatter, purpose, content map, navigation, and cross-links
+- **Health Report**: `brain/BRAIN_HEALTH_REPORT.md` — 194 files, 16,177 lines, 1,315 wikilinks, 84% frontmatter coverage
+- **Brain**: Lesson 45 ("Knowledge structure enables knowledge growth"), Principle #22 (Knowledge Structure Enables Knowledge Growth), ADR-025, evolution timeline entry
+
+### Phase 25.5 — Enterprise Architecture Review & Readiness (Complete)
+- **Scope**: 10-workstream evidence-based architecture review across all platform capabilities
+- **Workstreams**: Architecture (5.5/10), Foundation (4.5/10), Constitution (7.0/10), Security (7.2/10), Data Architecture (6.5/10), Runtime (5.5/10), Integration Readiness (4.2/10 avg), Performance (5.5/10), Developer Experience (7.2/10), Product Readiness (4.5/10)
+- **Weighted Average Score**: 5.7/10 — NOT ready for platform expansion
+- **Critical Findings**: Foundation zero adoption (~1,500 lines dead code), in-memory stores (data loss on restart), 763 `as any` assertions, broken webhook signature, plaintext passwords in identity module, `ignoreBuildErrors: true`
+- **30 Architectural Debt Items**: 5 P0, 12 P1, 8 P2, 5 P3 (total ~56-77 person-weeks)
+- **20 Risks Cataloged**: 4 Critical, 11 High, 5 Medium
+- **12 Readiness Gates**: 0 PASS, 3 CONDITIONAL PASS, 7 FAIL
+- **Decision**: Phase 26 must be Foundation Wiring & Persistence, not platform expansion
+- **Documentation** (10 files): ENTERPRISE_ARCHITECTURE_REVIEW, ENTERPRISE_READINESS_SCORECARD, ARCHITECTURAL_RISK_REGISTER, ARCHITECTURAL_DEBT_REPORT, SECURITY_READINESS_REPORT, SCALABILITY_ASSESSMENT, PLATFORM_MATURITY_REPORT, PRODUCT_READINESS_REPORT, ENTERPRISE_READINESS_GATES, PHASE_25_5_EXECUTIVE_SUMMARY, EDP_25_5
+- **Brain**: Lesson 46 ("Architecture earns trust through continuous validation"), Principle #23 ("Every major platform expansion must be preceded by an evidence-based architecture readiness review"), ADR-026, evolution timeline entry
+
+### Phase 25.2A — Customer Intelligence Structural Readiness (Complete)
+- **Scope**: Made Brain's Customer Intelligence folder structurally ready for interview imports — no content fabricated
+- **Structure**: 32 files (INDEX, IMPORT guide, 11 People profiles, 10 interview placeholders, 9 synthesis pages, 1 lesson)
+- **People Profiles**: 11 created (1 populated from Adeel Aslam interview, 10 marked Pending Import)
+- **Interview Placeholders**: 10 created (all Pending Import with metadata templates)
+- **Synthesis Pages**: VALIDATED_MARKET_THEMES (6 themes), PRODUCT_PRINCIPLES (7 principles: 3 Working, 4 Hypothesis), WORKFLOW_RESEARCH_INDEX (8 workflows), ERP_OBSERVATIONS (5 ERP systems), DESIGN_PARTNER_PROGRAM (scoring framework), VOICE_OF_CUSTOMER (quote banks), PRODUCT_EVIDENCE_MATRIX (contact × claim), CUSTOMER_DISCOVERY_SUMMER_2026 (campaign summary), CRM_INDEX (19 CRM contacts mapped)
+- **Updated**: CUSTOMER_INTELLIGENCE_GUIDE (import workflow), CRM_ALIGNMENT (import procedure)
+- **Brain**: Lesson 47 ("Interview structure before content"), Principle #24 ("Structure before content — knowledge graphs must be architecturally ready before evidence arrives"), evolution timeline entry
+
+### Phase 26.0 — Foundation Activation & Security Remediation (In Progress)
+- **First Principle**: "Architecture has no value until every production code path depends upon it"
+- **Wave 1 — RuntimeContext Activation**:
+  - Created `src/server/http/init-runtime-context.ts` — bridge function reading proxy headers → RuntimeContext via AsyncLocalStorage
+  - `RouteTenantContext` / `RouteRuntimeContext` types bridge `role: string` → `role: CompanyRole` for backward compatibility
+  - Migrated 5 routes from `auth()` + `requireTenantContext()` to `withRuntimeContext()`:
+    1. `/api/executive/dashboard` (GET)
+    2. `/api/controller/journals` (GET + POST)
+    3. `/api/treasury/forecasts` (GET + POST)
+    4. `/api/v1/webhooks` (GET + POST + PATCH + DELETE)
+    5. `/api/agents/[id]/tasks` (GET + POST)
+  - RuntimeContext adoption: 0 → 5 routes (proof of concept)
+- **Security Fixes**:
+  - **CRIT-01** (webhook HMAC): Replaced FNV-1a hash with real HMAC-SHA256 via Node.js `crypto`. Added `crypto.timingSafeEqual` (replaced `===`). `webhook-platform.ts`
+  - **CRIT-02** (plaintext passwords): Rewrote `identity/authentication.ts` — `bcrypt.hash(password, 12)` for all password storage, async `bcrypt.compare()` for login/changePassword/resetPassword
+  - **CRIT-03** (Plaid verification): Replaced `institutionsGet` no-op with proper JWS/ES256 verification against Plaid production JWKS. `plaid-webhook-handler.ts`
+  - **HIGH** (admin bootstrap): Replaced SHA-256 (`createHash("sha256")` + 8-char salt) with `bcrypt.hash(password, 12)`. `administrator-bootstrap.ts`
+- **Impact**: 3 Critical → 0, 4 High → 3 resolved
+- **Files changed**: 10 (1 new, 9 modified)
+- **Brain**: Evolution timeline entry, Lesson 48, Principle #25
+
+### Phase 26.0A — Runtime Convergence & Canonical Execution Path (Complete)
+- **First Principle**: "There must be exactly one way for production code to execute"
+- **Migration**: 446 files migrated via codemod (`scripts/migrate-routes.mjs` v3) — 369 API routes + 77 Server Components
+- **Infrastructure Rewrites**:
+  - `require-permission.ts` — Now reads from RuntimeContext, keeps API key fallback
+  - `authenticate-request.ts` — Now reads from RuntimeContext, keeps API key fallback
+  - `procurement/api/middleware.ts` — `apAuth()` wraps `withRuntimeContext()` internally (67 AP routes)
+  - `automation-studio/actions.ts` — Server Actions use `headers()` + `withRuntimeContext()`
+  - Migrated `transfer`/`credit` routes and `companies/[id]` DELETE to `withRuntimeContext()`
+- **Deletions**:
+  - Deleted `requireTenantContext` function (kept `TenantContext` type for 242 module consumers)
+  - Deleted 13 dead runtime getters (reduced from 16 exports to 3)
+- **Verification**: TypeScript 0 errors, build passes, 52/52 AP tests, 60/60 runtime tests
+- **Metrics**: ~460 files modified, net -1,500 lines, dual execution paths: 2 → 1
+- **Brain**: Lesson 49, Principle #26, ADR-027, 8 deliverable documents at `docs/architecture/`
+
+### Phase 26.1 — Foundation Operationalization (Complete)
+- **Scope**: Eliminate gaps between architectural foundation and production operation
+- **Key Audit Corrections**: Encryption is production-grade AES-256-GCM (audit claim corrected); "73 in-memory stores" conflated dead code, by-design caches, in-process state, and persisted Runtime layer; AP event bus in-process is architecturally correct for transactional events
+- **Graceful Shutdown**: Wired SIGTERM/SIGINT with 4 ordered handlers (database → cache → secrets → capabilities), force exit after 60s
+- **Dead Code Eliminated**: Deleted `iam/session.ts` (0 consumers), `security/rate-limiter.ts` (superseded), cleaned barrel exports
+- **Event Bus Hardened**: Error isolation per handler, bounded history (1K max), Pino logging, published/error metrics
+- **Structured Pino Logging**: Added to 7 foundation files (classification, config, capabilities, secrets, identity facade, SSO handler, graceful shutdown)
+- **Console.log Replaced**: All `console.log`/`console.error` in `ha/graceful.ts` replaced with structured Pino
+- **Verification**: TypeScript 0 errors from modified files, 60/60 runtime tests, 139/139 AP tests
+- **Brain**: Lesson 50 (Audits correct more than they discover), Principle #27 (Audits produce hypotheses not conclusions), 6 deliverable documents at `docs/architecture/`
+
+### Phase 26.2 — Enterprise Foundation Certification (Complete)
+- **Scope**: Adversarial technical due diligence of foundation architecture across 25 certification domains
+- **Methodology**: 38 files read (~7,320 lines), 10-category adversarial search, integration trace, test verification, Constitution compliance
+- **25-Domain Scoring**: Architecture 7.2, Services 6.4, Security 6.8, Resilience 6.0, Quality 5.6 → **Weighted Average: 6.60/10**
+- **10 Strengths**: RuntimeContext (9.0), ProviderDriver (8.5), PgBoss (7.5), Graceful Shutdown (9.0), AP Event Bus (7.0), Security (7.0), MFA (7.0), Fail-Open Docs (7.0), Pino Logging (8.0), Config Cache (6.5)
+- **6 Weaknesses**: Singleton overwrite (CRITICAL), Cross-tenant audit leak (CRITICAL), Unbounded memory arrays (HIGH), Silent error swallowing (HIGH), Missing input validation (HIGH), Sandbox fallback secret (MEDIUM)
+- **Certification Decision**: **CERTIFIED WITH CONDITIONS** — 6 conditions (C-01 through C-06), 3-4 week remediation timeline
+- **Certificate-Blocking**: 5 AT-RISK domains exceed 2-domain threshold for full certification
+- **14 Risks Cataloged**: 3 Critical, 8 High, 3 Medium
+- **23 Debt Items**: 6 P0, 8 P1, 5 P2, 4 P3 (total ~10-15 weeks)
+- **Verification**: 60/60 runtime tests, 139/139 AP tests, TypeScript 0 errors
+- **Brain**: Lesson 51 (Strong platforms earn trust through independent verification), Principle #28 (Enterprise foundations are certified through evidence not confidence), ADR-028, 11 deliverable documents at `docs/architecture/`
+
+### Phase 26.3 — Enterprise Foundation Hardening (Complete)
+- **Scope**: Remediated all 6 certification conditions through class-level prevention, not just instance fixes
+- **First Principle**: "The best remediation eliminates the entire class of defects, not only the reported instance."
+- **C-01 Singleton Lifecycle**: 3 Runtime `create()` methods now async, call `shutdown()` before overwrite
+- **C-02 Cross-Tenant Audit**: `tenantId` required in `getAuditLog()` and `listSecrets()`
+- **C-03 Memory Bounds**: Created `BoundedRingBuffer<T>` utility (10K max, slice eviction). Replaced 5 unbounded arrays: config auditLog, secrets rotationHistory + auditLog, classification auditLog, capability eventLog
+- **C-04 Exception Discipline**: Fixed 25+ empty catch blocks across 10 files. Created ESLint rule `no-empty-catch` with auto-fix
+- **C-05 API Validation**: Added Zod schemas to 19 unvalidated API routes
+- **C-06 Secret Safety**: Removed "sandbox-fallback" default. Now throws on missing AUTH_SECRET
+- **Prevention Artifacts**: `BoundedRingBuffer<T>` utility, ESLint rule `no-empty-catch`, CI validation script (`foundation-validation.sh` — 7 checks)
+- **Verification**: 0 TypeScript errors (excluding pre-existing docs/site), 60/60 runtime + 52/52 AP = 112/112 tests, 7/7 CI checks pass
+- **Brain**: Lesson 52 (Prevention Outlasts Remediation), Principle #29 (Every recurring defect class must be addressed at the tooling or architectural level), ADR-029, 10 deliverable documents at `docs/architecture/`
+
+### Phase 27.0A — Enterprise Product Architecture & Workflow Design (Complete)
+- **Scope**: Enterprise Product Specification (EPS) for the AP Reference Workflow — the blueprint for every future financial workflow
+- **First Principle**: "The quality of enterprise software is determined by the quality of its workflows."
+- **13 Deliverable Documents** at `docs/product/` (~5,200 lines total):
+  - ENTERPRISE_PRODUCT_SPECIFICATION_AP.md — Master spec (508 lines)
+  - PRODUCT_PHILOSOPHY.md — Core beliefs (328 lines)
+  - PERIONYX_PRODUCT_PRINCIPLES.md — 15 principles (420 lines)
+  - AP_REFERENCE_WORKFLOW.md — 10 workflow stages (534 lines)
+  - WORKFLOW_STATE_MACHINE.md — 5 state machines (576 lines)
+  - PERSONA_GUIDE.md — 9 personas (567 lines)
+  - UX_INFORMATION_ARCHITECTURE.md — 25 screens (502 lines)
+  - AI_BEHAVIOUR_GUIDE.md — AI permission matrix (608 lines)
+  - DESIGN_SYSTEM_GUIDELINES.md — EDL application (581 lines)
+  - CUSTOMER_EVIDENCE_TRACEABILITY.md — Evidence matrix (200 lines)
+  - HYPOTHESIS_REGISTER.md — 14 hypotheses (280 lines)
+  - SUCCESS_METRICS.md — 12 metrics (300 lines)
+  - EDP_27_0A.md — Engineering decision packet
+- **Key Design Decisions**: AP is first workflow (evidence: T1, T2, P2), 10 stages (simplified from 14), AI explains but never decides, dedicated exception queue, immutable audit trail, batch payments as hypothesis
+- **Customer Evidence**: Adeel Aslam (E1), Ayman Shawky (E3), Muhammed Jamsheed (E4), Phase 20.0 validation, Phase 21.0 gap analysis
+- **Verification**: No production code written (by design). All 13 documents produced and reviewed.
+- **Brain**: Lesson 53 (Workflow Quality Determines Software Quality), Principle #30 (Every workflow must reduce cognitive effort for trusted financial decisions), ADR-030, 13 deliverable documents at `docs/product/`
+
+### Phase 27.0 — Customer Intelligence Platform Completion (Complete)
+- **Scope**: Complete the Customer Intelligence Platform as the canonical knowledge base for all customer-facing intelligence
+- **First Principle**: "Customer knowledge compounds when every conversation becomes structured evidence."
+- **39 People Profiles**: 17 LinkedIn contacts (9 existing enhanced, 8 created new), 19 CRM contacts mapped to Brain, 3 existing
+- **39 Interview Records**: 1 formal interview (Adeel Aslam), 18 CRM-sourced interaction records, 20 pending formal interviews
+- **9 Canonical Relationship Stages**: Prospect → Connected → Interview Scheduled → Interview Completed → Prototype Reviewer → Design Partner → Pilot Customer → Reference Customer → Strategic Advisor
+- **Knowledge Graph**: People → Companies (2), Pain Points (8 themes), Workflows (10 AP stages), Evidence (8 claims), Principles (9 product principles)
+- **Evidence Traceability**: P3 validated (3 sources), P1-P5 at Working level, P6-P9 as Hypotheses. T3 and T5 promoted to Validated with 3 CRM sources
+- **Design Partner Pipeline**: 7 pre-scored candidates — Khaleel Ur Rehman (HIGHEST), Ahmed Orabi (VERY HIGH), Muhammed Jamsheed (HIGH), Ayman Shawky (MEDIUM)
+- **CRM Health**: 0 duplicates, 0 broken links, 38 contacts pending formal interviews
+- **8 Deliverable Documents** at `docs/customer-intelligence/` (~2,625 lines):
+  1. CUSTOMER_INTELLIGENCE_COMPLETION_REPORT.md
+  2. CRM_HEALTH_REPORT.md
+  3. DESIGN_PARTNER_PIPELINE.md
+  4. CUSTOMER_EVIDENCE_INDEX.md
+  5. CUSTOMER_RELATIONSHIP_SCORECARD.md
+  6. INTERVIEW_COVERAGE_REPORT.md
+  7. CUSTOMER_INTELLIGENCE_GRAPH.md
+  8. EDP_27_0_CUSTOMER_INTELLIGENCE.md
+- **Brain**: Lesson 54 (Customer Knowledge Compounds), Principle #31 (Enterprise products evolve through evidence, not opinions), ADR-031, evolution timeline entry, 8 deliverable documents at `docs/customer-intelligence/`
+
+### Phase 27.1 — Enterprise Product Specification v2.0 (Complete)
+- **Scope**: 13 enhanced EPS documents at `docs/product/eps/` (~9,110 lines total)
+- **First Principle**: "The best enterprise software is designed around decisions, not transactions."
+- **Documents**: ENTERPRISE_PRODUCT_SPECIFICATION_AP.md (622 lines), REFERENCE_WORKFLOW_AP.md (698), USER_JOURNEY_LIBRARY.md (1,533), BUSINESS_RULE_LIBRARY.md (1,195), PRODUCT_PRINCIPLES.md (334), INFORMATION_ARCHITECTURE.md (775), AI_BEHAVIOUR_GUIDE.md (636), DESIGN_SYSTEM_GUIDE.md (684), CUSTOMER_VALIDATION_PLAN.md (852), OPEN_PRODUCT_HYPOTHESES.md (467), SUCCESS_METRICS.md (448), WORKFLOW_STATE_MACHINE.md (464), EDP_27_1.md (402)
+- **Key decisions**: 10-stage workflow redesigned around decision points, 5 state machines with decision-readiness guards, AI prepares evidence but never decides, 3 density modes, 65 business rules with evidence tags, 14 open hypotheses (3 red-zone risk), 12 success metrics
+- **Evidence**: Every decision traces to customer evidence (E1-E10) or is marked [HYPOTHESIS] (~30 tags)
+- **Brain**: Lesson 55, Principle #32, ADR-032, evolution timeline entry
+
+### Phase 27.1R — Enterprise Product Review & Readiness (Complete)
+- **Scope**: Independent product review of the EPS before any UX or engineering — 11 documents at `docs/product/review/` (~3,957 lines)
+- **First Principle**: "Enterprise products earn trust through independent review before implementation."
+- **Review Dimensions**: Workflow architecture, cognitive load, business rules, AI trust, customer evidence traceability, product philosophy, enterprise readiness, product debt
+- **Key Findings**: Readiness 6.75/10 (Conditionally Ready). 27 debt items (3 P0). 20 risks (2 Critical). 43% hypothesis rate in business rules. Only 1 formal interview supports entire spec. 6 missing rules (Critical: vendor bank change requires approval). Invoice Detail ~320 data points cognitive overload risk. Persona count inconsistent (9 vs 10).
+- **Documents**: PRODUCT_REVIEW_REPORT, PRODUCT_READINESS_SCORECARD, PRODUCT_RISK_REGISTER, PRODUCT_DEBT_REGISTER, COGNITIVE_LOAD_REVIEW, BUSINESS_RULE_AUDIT, AI_TRUST_REVIEW, CUSTOMER_TRACEABILITY_AUDIT, PRODUCT_SIMPLIFICATION_REPORT, PHASE_27_1R_EXECUTIVE_SUMMARY, EDP_27_1R
+- **Brain**: Lesson 56, Principle #33, ADR-033, evolution timeline entry
+
+### Recommended Next Phase
+
+**Phase 21B.0 — AP UI Wireframing** (6-8 weeks, AFTER PAB sign-off on Phase 27.1R decisions):
+
+The EPS is conditionally approved for prototyping. Before UI wireframing begins, the following must be resolved:
+1. PAB sign-off on 8 EDP_27_1R decisions (especially D-02: stage consolidation, D-05: business rule MVP)
+2. Expand customer evidence base — target 3+ formal AP interviews before UI implementation
+3. Resolve persona inconsistency (9 vs 10) across all documents
+4. Add missing Critical business rule: vendor bank detail change requires dual approval
+5. Define per-capability AI confidence thresholds (replace universal 70%)
+6. Reduce cognitive load in Invoice Detail screen
+
+**Phase 27.0B — AP Workflow Implementation** (8-12 weeks, deferred until wireframes validated):
+1. Wire invoice entry form to Prisma (Stage 1: Invoice Received)
+2. Implement evidence collection service (Stage 2: Evidence Collection)
+3. Wire matching engine to invoice/PO/GRN creation (Stage 3: Three-Way Match)
+4. Build exception queue UI with resolution actions (Stage 4: Exception Detection)
+5. Implement AI context building with explainability (Stage 5: AI Context Building)
+6. Build cross-department coordination (Stage 6: Coordination)
+7. Wire approval matrix to invoice workflow (Stage 7: Approval)
+8. Implement payment proposal generation (Stage 8: Payment Readiness)
+9. Wire payment execution to treasury (Stage 9: Payment)
+10. Implement GL posting and audit trail (Stage 10: Audit Completion)
+**Phase 27.0B — AP Workflow Implementation** (8-12 weeks):
+1. Wire invoice entry form to Prisma (Stage 1: Invoice Received)
+2. Implement evidence collection service (Stage 2: Evidence Collection)
+3. Wire matching engine to invoice/PO/GRN creation (Stage 3: Three-Way Match)
+4. Build exception queue UI with resolution actions (Stage 4: Exception Detection)
+5. Implement AI context building with explainability (Stage 5: AI Context Building)
+6. Build cross-department coordination (Stage 6: Coordination)
+7. Wire approval matrix to invoice workflow (Stage 7: Approval)
+8. Implement payment proposal generation (Stage 8: Payment Readiness)
+9. Wire payment execution to treasury (Stage 9: Payment)
+10. Implement GL posting and audit trail (Stage 10: Audit Completion)
+
+### Upcoming (Deferred until foundation is wired)
 1. **Phase 21B — AP Core Workflow**: Service rewrites, 3-way match wiring, approval routing, payment processing, GL integration
 2. **Phase 21C — AP Intelligence**: Exception queue UI, duplicate invoice detection, AP analytics dashboard
 3. **Phase 21D — AP Hardening**: Vendor statement reconciliation, audit trail, payment safety, multi-currency
@@ -781,10 +1069,43 @@ Every new feature, edit, or optimization MUST pass all 10 questions below. Docum
 - `docs/ap/AP_ENTERPRISE_SCORECARD.md` — Enterprise rubric scoring
 - `docs/ap/PHASE21_DECISION_PACKET.md` — Phase 21 decisions, trade-offs, risks
 
-### Brain — Lessons
-- `brain/05-Engineering/Lessons/32-domain-scaffolding-is-not-domain.md` — Domain scaffolding is not domain functionality
-- `brain/05-Engineering/Lessons/33-domain-architecture-precedes-implementation.md` — Domain architecture design precedes implementation
-- `brain/05-Engineering/Lessons/34-entity-classification-prevents-over-schema.md` — Entity classification prevents over-schema
-- `brain/05-Engineering/Lessons/35-command-handlers-encode-business-rules.md` — Command handlers encode business rules, not infrastructure
-- `brain/11-ADR/decision-network.md` — Principles 1-11 (Principle #8: Scaffolding ≠ functionality, Principle #9: Architecture before code, Principle #10: Entity classification before schema, Principle #11: Application services own business rules)
-- `brain/12-Roadmaps/evolution-timeline.md` — Phase 21.0 + 21A.0 + 21A.1 + 21A.2 entries
+### Brain — Knowledge Platform
+- `brain/00-Constitution/KNOWLEDGE_CONSTITUTION.md` — Supreme governing document (10 core laws, authority hierarchy)
+- `brain/00-Constitution/PAGE_STANDARDS.md` — Mandatory page template and quality requirements
+- `brain/00-Constitution/KNOWLEDGE_GRAPH_GUIDE.md` — Relationship types, graph metrics, 5 knowledge clusters
+- `brain/00-Constitution/BRAIN_ARCHITECTURE.md` — 20-folder design, page requirements, content lifecycle
+- `brain/00-Constitution/EDP_25_0.md` — Phase 25.0 engineering decision packet
+- `brain/03-Customer Intelligence/` — People, Companies, Interviews, Pain Points, Evidence, Hypotheses, Competitive Signals
+- `brain/03-Customer Intelligence/CUSTOMER_INTELLIGENCE_GUIDE.md` — Knowledge model, evidence confidence, CRM alignment
+- `brain/17-Lessons/` — 56 engineering/product lessons (01-56)
+- `brain/11-Decisions/decision-network.md` — Principles 1-33, ADRs 1-33
+- `brain/12-Roadmaps/evolution-timeline.md` — 28 phases documented (1,900+ lines)
+- `brain/BRAIN_HEALTH_REPORT.md` — ~195 files, ~17,000 lines, 84%+ frontmatter coverage
+
+### Enterprise Product Specification v2.0 (Phase 27.1)
+- `docs/product/eps/ENTERPRISE_PRODUCT_SPECIFICATION_AP.md` — Master spec v2.0 (622 lines)
+- `docs/product/eps/REFERENCE_WORKFLOW_AP.md` — 10-stage workflow (698 lines)
+- `docs/product/eps/USER_JOURNEY_LIBRARY.md` — 10 user journeys (1,533 lines)
+- `docs/product/eps/BUSINESS_RULE_LIBRARY.md` — 65 business rules (1,195 lines)
+- `docs/product/eps/PRODUCT_PRINCIPLES.md` — 10 canonical principles (334 lines)
+- `docs/product/eps/INFORMATION_ARCHITECTURE.md` — 20 screens (775 lines)
+- `docs/product/eps/AI_BEHAVIOUR_GUIDE.md` — 8 AI actions (636 lines)
+- `docs/product/eps/DESIGN_SYSTEM_GUIDE.md` — 3 density modes (684 lines)
+- `docs/product/eps/CUSTOMER_VALIDATION_PLAN.md` — Design partner program (852 lines)
+- `docs/product/eps/OPEN_PRODUCT_HYPOTHESES.md` — 14 open hypotheses (467 lines)
+- `docs/product/eps/SUCCESS_METRICS.md` — 12 success metrics (448 lines)
+- `docs/product/eps/WORKFLOW_STATE_MACHINE.md` — 5 state machines (464 lines)
+- `docs/product/eps/EDP_27_1.md` — Engineering decision packet (402 lines)
+
+### Enterprise Product Review (Phase 27.1R)
+- `docs/product/review/PRODUCT_REVIEW_REPORT.md` — Verdict: Conditionally approve for prototyping
+- `docs/product/review/PRODUCT_READINESS_SCORECARD.md` — 12-dimension scorecard (6.75/10)
+- `docs/product/review/PRODUCT_RISK_REGISTER.md` — 20 risks ranked (2 Critical)
+- `docs/product/review/PRODUCT_DEBT_REGISTER.md` — 27 debt items (3 P0)
+- `docs/product/review/COGNITIVE_LOAD_REVIEW.md` — 10 recommendations for cognitive load reduction
+- `docs/product/review/BUSINESS_RULE_AUDIT.md` — 65 rules audited (CONDITIONAL PASS)
+- `docs/product/review/AI_TRUST_REVIEW.md` — 8 AI actions reviewed (CONDITIONAL PASS)
+- `docs/product/review/CUSTOMER_TRACEABILITY_AUDIT.md` — Only 1 formal interview supports entire spec
+- `docs/product/review/PRODUCT_SIMPLIFICATION_REPORT.md` — MVP proposal: 65→25 rules
+- `docs/product/review/PHASE_27_1R_EXECUTIVE_SUMMARY.md` — Top 10 findings
+- `docs/product/review/EDP_27_1R.md` — 8 key decisions pending PAB sign-off

@@ -14,7 +14,7 @@ const typeConfig = {
 const severityBorder = {
   CRITICAL: "border-l-red-500",
   HIGH: "border-l-amber-500",
-  MEDIUM: "border-l-[#c9a84c]",
+  MEDIUM: "border-l-gold",
   LOW: "border-l-zinc-500",
 };
 

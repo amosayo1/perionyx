@@ -60,7 +60,7 @@ export default function FAKPIDashboard({ metrics }: FAKPIDashboardProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.25 }}
                 style={{
-                  background: "#1a1a2e",
+                  background: "#1a1a24",
                   borderRadius: 12,
                   borderTop: `3px solid ${statusColors[m.status] || "#888"}`,
                   padding: 20,

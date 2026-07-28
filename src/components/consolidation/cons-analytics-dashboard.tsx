@@ -19,7 +19,7 @@ export default function ConsAnalyticsDashboard({ metrics, aggregates }: ConsAnal
     { label: "Unmatched", value: aggregates.unmatchedTransactions.toString(), color: aggregates.unmatchedTransactions > 0 ? "#ef4444" : "#22c55e" },
     { label: "Pending Adjustments", value: aggregates.pendingAdjustments.toString(), color: aggregates.pendingAdjustments > 0 ? "#eab308" : "#22c55e" },
     { label: "Total CTA", value: formatCurrency(aggregates.totalCTA), color: aggregates.totalCTA >= 0 ? "#22c55e" : "#ef4444" },
-    { label: "Minority Interest", value: formatCurrency(aggregates.totalMinorityInterest), color: "#d4a843" },
+    { label: "Minority Interest", value: formatCurrency(aggregates.totalMinorityInterest), color: "#d4af37" },
     { label: "Total Goodwill", value: formatCurrency(aggregates.totalGoodwill), color: "#a855f7" },
     { label: "Avg Consolidation", value: `${aggregates.averageConsolidationDays.toFixed(1)}d`, color: "#14b8a6" },
     { label: "Board Reports", value: aggregates.boardReportsGenerated.toString(), color: "#e0e0e0" },
@@ -35,7 +35,7 @@ export default function ConsAnalyticsDashboard({ metrics, aggregates }: ConsAnal
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.03 }}
-            style={{ background: "#1a1a2e", borderRadius: 10, padding: 16, textAlign: "center", border: "1px solid #2a2a4a" }}
+            style={{ background: "#1a1a24", borderRadius: 10, padding: 16, textAlign: "center", border: "1px solid #2a2a4a" }}
           >
             <div style={{ color: "#94a3b8", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 20, fontWeight: 700, fontFamily: "ui-monospace, monospace" }}>{item.value}</div>
@@ -56,7 +56,7 @@ export default function ConsAnalyticsDashboard({ metrics, aggregates }: ConsAnal
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
                 style={{
-                  background: "#1a1a2e",
+                  background: "#1a1a24",
                   borderRadius: 8,
                   padding: 14,
                   border: "1px solid #2a2a4a",

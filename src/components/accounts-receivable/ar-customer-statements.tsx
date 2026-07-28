@@ -12,7 +12,7 @@ export function ARCustomerStatements({ statements }: ARStatementViewProps) {
     <div>
       {statements.length > 0 ? statements.map((s, i) => (
         <motion.div key={s.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-          style={{ background: "#1a1a2e", borderRadius: 8, marginBottom: 8, overflow: "hidden" }}>
+          style={{ background: "#1a1a24", borderRadius: 8, marginBottom: 8, overflow: "hidden" }}>
           <div onClick={() => setExpanded(expanded === s.id ? null : s.id)}
             style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, cursor: "pointer" }}>
             <div>
@@ -20,7 +20,7 @@ export function ARCustomerStatements({ statements }: ARStatementViewProps) {
               <div style={{ fontSize: 11, color: "#94a3b8", fontFamily: "ui-monospace, monospace" }}>{s.statementNumber}</div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#d4a843", fontFamily: "ui-monospace, monospace" }}>${s.endingBalance.toLocaleString()}</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#d4af37", fontFamily: "ui-monospace, monospace" }}>${s.endingBalance.toLocaleString()}</div>
               <span style={{ background: statusColors[s.status] + "22", color: statusColors[s.status], fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" }}>
                 {s.status}
               </span>
@@ -41,7 +41,7 @@ export function ARCustomerStatements({ statements }: ARStatementViewProps) {
                   {s.lines.map((line, li) => (
                     <div key={li} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #2a2a4a", fontSize: 12 }}>
                       <span style={{ color: "#e0e0e0" }}>{line.invoiceNumber} - {new Date(line.invoiceDate).toLocaleDateString()}</span>
-                      <span style={{ color: "#d4a843", fontFamily: "ui-monospace, monospace" }}>${line.outstanding.toLocaleString()}</span>
+                      <span style={{ color: "#d4af37", fontFamily: "ui-monospace, monospace" }}>${line.outstanding.toLocaleString()}</span>
                     </div>
                   ))}
                 </div>

@@ -53,7 +53,7 @@ export function DemoLayout({ children }: { children: React.ReactNode }) {
         <div className="mx-auto max-w-7xl px-6 py-3">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/30 flex items-center justify-center overflow-hidden">
+              <div className="w-6 h-6 rounded-lg bg-gold/20 border border-gold/30 flex items-center justify-center overflow-hidden">
                 <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
               </div>
               <span className="text-xs font-semibold text-white tracking-tight">PERIONYX Demo</span>
@@ -72,7 +72,7 @@ export function DemoLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="relative h-1 bg-white/[0.06] rounded-full overflow-hidden">
             <motion.div
-              className="absolute inset-y-0 left-0 bg-[#d4af37] rounded-full"
+              className="absolute inset-y-0 left-0 bg-gold rounded-full"
               initial={{ width: "0%" }}
               animate={{ width: `${((currentStep) / totalSteps) * 100}%` }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -85,9 +85,9 @@ export function DemoLayout({ children }: { children: React.ReactNode }) {
                 onClick={() => {}}
                 className={`text-[9px] font-medium transition-colors duration-300 ${
                   s.id === currentStep
-                    ? "text-[#d4af37]"
+                    ? "text-gold"
                     : s.id < currentStep
-                    ? "text-[#d4af37]/60"
+                    ? "text-gold/60"
                     : "text-zinc-700"
                 }`}
               >
@@ -110,7 +110,7 @@ export function DemoLayout({ children }: { children: React.ReactNode }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span className="text-[11px] font-mono text-[#d4af37]/60 font-medium mb-3 block">
+                <span className="text-[11px] font-mono text-gold/60 font-medium mb-3 block">
                   STEP {String(currentStep).padStart(2, "0")}
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight mb-3">
@@ -137,7 +137,7 @@ export function DemoLayout({ children }: { children: React.ReactNode }) {
                 disabled={!canGoNext}
                 className={`px-5 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
                   canGoNext
-                    ? "bg-[#d4af37] text-white hover:bg-[#d4af37] shadow-lg shadow-[#d4af37]/20"
+                    ? "bg-gold text-white hover:bg-gold shadow-lg shadow-gold/20"
                     : "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                 }`}
               >

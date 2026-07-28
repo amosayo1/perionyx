@@ -78,7 +78,7 @@ export const ReviewStep = memo(function ReviewStep({
               <button
                 type="button"
                 onClick={() => onEdit(i)}
-                className="ml-2 flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors shrink-0"
+                className="ml-2 flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium text-gold hover:bg-gold/10 transition-colors shrink-0"
               >
                 Edit
                 <ArrowRight className="h-3 w-3" />

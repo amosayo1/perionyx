@@ -122,7 +122,7 @@ export const WorkflowCanvas = memo(function WorkflowCanvas({
             variant="ghost"
             size="sm"
             onClick={() => setShowGrid(!showGrid)}
-            className={cn("h-6 w-6 p-0", showGrid ? "text-[#d4af37]" : "text-zinc-500 hover:text-white")}
+            className={cn("h-6 w-6 p-0", showGrid ? "text-gold" : "text-zinc-500 hover:text-white")}
             aria-label="Toggle grid"
           >
             <Grid3X3 className="h-3 w-3" />

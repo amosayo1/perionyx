@@ -224,8 +224,8 @@ export const ConversationWorkspace = forwardRef<{ createNewConversation: () => v
           <div className="flex-1 overflow-y-auto divide-y divide-white/[0.04] max-h-[700px]">
             {!activeId ? (
               <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                <div className="w-12 h-12 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center mb-4">
-                  <Send className="h-5 w-5 text-[#d4af37]" />
+                <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center mb-4">
+                  <Send className="h-5 w-5 text-gold" />
                 </div>
                 <p className="text-sm font-medium text-zinc-400 mb-1">No conversation selected</p>
                 <p className="text-xs text-zinc-600">Select a conversation, start a new one, or ask a question</p>
@@ -278,7 +278,7 @@ export const ConversationWorkspace = forwardRef<{ createNewConversation: () => v
                 size="sm"
                 disabled={streaming || !input.trim()}
                 onClick={handleSend}
-                className="h-9 w-9 rounded-lg bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20 flex items-center justify-center disabled:opacity-50"
+                className="h-9 w-9 rounded-lg bg-gold/10 text-gold border-gold/20 hover:bg-gold/20 flex items-center justify-center disabled:opacity-50"
               >
                 {streaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
@@ -342,7 +342,7 @@ export const ConversationWorkspace = forwardRef<{ createNewConversation: () => v
               size="sm"
               disabled={streaming || !input.trim()}
               onClick={handleSend}
-              className="h-9 w-9 rounded-lg bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20 flex items-center justify-center disabled:opacity-50"
+              className="h-9 w-9 rounded-lg bg-gold/10 text-gold border-gold/20 hover:bg-gold/20 flex items-center justify-center disabled:opacity-50"
             >
               {streaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>

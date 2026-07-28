@@ -13,7 +13,7 @@ const trendIconMap = {
 };
 
 const trendColorMap: Record<string, string> = {
-  up: "text-[#d4af37]",
+  up: "text-gold",
   down: "text-red-400",
   neutral: "text-zinc-500",
 };

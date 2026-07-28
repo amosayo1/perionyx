@@ -178,7 +178,8 @@ export async function getQueueStats() {
       }),
     );
     return { queues: stats };
-  } catch {
+  } catch (err) {
+    logger.error(err, "[Queue] Failed to get queue stats");
     return null;
   }
 }

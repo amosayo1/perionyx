@@ -15,7 +15,7 @@ export default function ConsEquityAccountingPanel({ records }: ConsEquityAccount
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.04 }}
-          style={{ background: "#1a1a2e", borderRadius: 10, padding: 16, border: "1px solid #2a2a4a", borderLeft: "3px solid #3b82f6" }}
+          style={{ background: "#1a1a24", borderRadius: 10, padding: 16, border: "1px solid #2a2a4a", borderLeft: "3px solid #3b82f6" }}
         >
           <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 12 }}>
             {r.entityId.slice(0, 8)} — Equity Method Investment
@@ -31,7 +31,7 @@ export default function ConsEquityAccountingPanel({ records }: ConsEquityAccount
             </div>
             <div>
               <div style={{ color: "#888", fontSize: 11, textTransform: "uppercase", marginBottom: 2 }}>Goodwill</div>
-              <div style={{ color: r.goodwill >= 0 ? "#d4a843" : "#ef4444", fontSize: 14, fontWeight: 600 }}>{formatCurrency(r.goodwill)}</div>
+              <div style={{ color: r.goodwill >= 0 ? "#d4af37" : "#ef4444", fontSize: 14, fontWeight: 600 }}>{formatCurrency(r.goodwill)}</div>
             </div>
             <div>
               <div style={{ color: "#888", fontSize: 11, textTransform: "uppercase", marginBottom: 2 }}>Fair Value Adj.</div>

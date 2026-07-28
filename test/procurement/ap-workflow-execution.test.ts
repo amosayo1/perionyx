@@ -1709,7 +1709,7 @@ describe("Cross-Cutting — Event Bus", () => {
     });
 
     const vendor = await onboardVendor();
-    await reconciliationSvc.importVendorStatement(
+    const importResult = await reconciliationSvc.importVendorStatement(
       {
         vendorId: vendor.id,
         period: "2026-01",
@@ -1730,6 +1730,12 @@ describe("Cross-Cutting — Event Bus", () => {
       },
       ctx(),
     );
+
+    // Events are now returned in CommandResult and published by the Unit of Work
+    // Simulate UoW publishing by publishing the returned events
+    if (importResult.events.length > 0) {
+      await apEventBus.publishAll(importResult.events);
+    }
 
     expect(received).toContain("reconciliation.imported");
     unsub();

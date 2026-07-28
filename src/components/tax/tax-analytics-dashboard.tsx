@@ -74,7 +74,7 @@ export const TaxAnalyticsDashboard = memo(function TaxAnalyticsDashboard({ kpis,
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="appearance-none rounded-md border border-zinc-700/50 bg-zinc-800/60 px-3 py-1.5 text-sm text-zinc-300 focus:border-[#d4af37]/40 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+          className="appearance-none rounded-md border border-zinc-700/50 bg-zinc-800/60 px-3 py-1.5 text-sm text-zinc-300 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/30"
         >
           {CATEGORY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>

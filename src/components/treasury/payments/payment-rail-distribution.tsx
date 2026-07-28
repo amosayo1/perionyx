@@ -50,7 +50,7 @@ export function PaymentRailDistribution({ className }: { className?: string }) {
     <div className={cn("rounded-lg border border-white/[0.06] bg-zinc-900/50", className)}>
       <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
         <div className="flex items-center gap-2">
-          <Route className="h-5 w-5 text-[#c9a84c]" />
+          <Route className="h-5 w-5 text-gold" />
           <h3 className="text-sm font-semibold text-white">Payment Rail Distribution</h3>
         </div>
         <div className="flex items-center gap-3 text-xs text-zinc-500">

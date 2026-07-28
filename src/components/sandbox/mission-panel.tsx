@@ -60,7 +60,7 @@ export function MissionPanel() {
       {/* Toggle button */}
       <button
         onClick={() => setMissionPanelOpen(!missionPanelOpen)}
-        className="fixed right-4 bottom-4 z-50 flex items-center gap-2 rounded-xl bg-[#d4af37] px-4 py-2.5 text-xs font-bold text-black shadow-lg transition-all hover:bg-[#d4af37]/90"
+        className="fixed right-4 bottom-4 z-50 flex items-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-xs font-bold text-black shadow-lg transition-all hover:bg-gold/90"
       >
         <Target className="h-4 w-4" />
         Missions
@@ -91,7 +91,7 @@ export function MissionPanel() {
             >
               <div className="sticky top-0 bg-zinc-900/95 backdrop-blur-xl border-b border-white/[0.06] p-4 flex items-center justify-between z-10">
                 <div className="flex items-center gap-2">
-                  <ListChecks className="h-5 w-5 text-[#d4af37]" />
+                  <ListChecks className="h-5 w-5 text-gold" />
                   <h2 className="text-sm font-semibold text-white">Missions</h2>
                 </div>
                 <button
@@ -113,7 +113,7 @@ export function MissionPanel() {
                   </div>
                   <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
                     <motion.div
-                      className="h-full rounded-full bg-[#d4af37]"
+                      className="h-full rounded-full bg-gold"
                       initial={{ width: 0 }}
                       animate={{ width: `${(taskCounts.done / taskCounts.total) * 100}%` }}
                     />
@@ -126,16 +126,16 @@ export function MissionPanel() {
                     onClick={() => {
                       addCompletedTask({ id: suggested.id, label: suggested.label, module: suggested.module });
                     }}
-                    className="flex items-center gap-3 w-full rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/5 p-3 mb-4 text-left transition-all hover:bg-[#d4af37]/10"
+                    className="flex items-center gap-3 w-full rounded-xl border border-gold/20 bg-gold/5 p-3 mb-4 text-left transition-all hover:bg-gold/10"
                   >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#d4af37]/10">
-                      <Sparkles className="h-4 w-4 text-[#d4af37]" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/10">
+                      <Sparkles className="h-4 w-4 text-gold" />
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="text-xs font-medium text-white truncate">Suggested Next</p>
                       <p className="text-[11px] text-zinc-400 truncate">{suggested.label}</p>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-[#d4af37] shrink-0" />
+                    <ArrowRight className="h-4 w-4 text-gold shrink-0" />
                   </button>
                 )}
 

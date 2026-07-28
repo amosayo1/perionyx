@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody, cacheHeaders, noCacheHeaders } from "@/server/http/handle-route";
 import { rbacService } from "@/modules/rbac/rbac.service";
 import { RecommendationEngine } from "@/modules/intelligence-platform";
 import { z } from "zod";
 import { zodErrorResponse } from "@/server/http/handle-route";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 const updateStatusSchema = z.object({
   id: z.string().optional(),
@@ -14,43 +13,43 @@ const updateStatusSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, "intelligence.read");
-
-    const category = request.nextUrl.searchParams.get("category") ?? undefined;
-    const status = request.nextUrl.searchParams.get("status") ?? undefined;
-    const priority = request.nextUrl.searchParams.get("priority") ?? undefined;
-
-    const items = await RecommendationEngine.list(ctx, { category, status, priority });
-    return NextResponse.json({ items }, { headers: { ...cacheHeaders(30) } });
-  } catch (error) {
-    return handleRouteError(error, request);
-  }
+  return withRuntimeContext(request, async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, "intelligence.read");
+  
+      const category = request.nextUrl.searchParams.get("category") ?? undefined;
+      const status = request.nextUrl.searchParams.get("status") ?? undefined;
+      const priority = request.nextUrl.searchParams.get("priority") ?? undefined;
+  
+      const items = await RecommendationEngine.list(ctx.tenant, { category, status, priority });
+      return NextResponse.json({ items }, { headers: { ...cacheHeaders(30) } });
+    } catch (error) {
+      return handleRouteError(error, request);
+    }
+  });
 }
 
 export async function PUT(request: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, "intelligence.read");
-
-    const body = await parseJsonBody<unknown>(request);
-    const parsed = updateStatusSchema.safeParse(body);
-    if (!parsed.success) return zodErrorResponse(parsed.error, request);
-
-    const { id, ids, status } = parsed.data;
-    if (id) {
-      const result = await RecommendationEngine.updateStatus(ctx, id, status);
-      return NextResponse.json({ updated: [result] }, { headers: { ...noCacheHeaders() } });
+  return withRuntimeContext(request, async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, "intelligence.read");
+  
+      const body = await parseJsonBody<unknown>(request);
+      const parsed = updateStatusSchema.safeParse(body);
+      if (!parsed.success) return zodErrorResponse(parsed.error, request);
+  
+      const { id, ids, status } = parsed.data;
+      if (id) {
+        const result = await RecommendationEngine.updateStatus(ctx.tenant, id, status);
+        return NextResponse.json({ updated: [result] }, { headers: { ...noCacheHeaders() } });
+      }
+      if (ids && ids.length > 0) {
+        const results = await Promise.all(ids.map((i) => RecommendationEngine.updateStatus(ctx.tenant, i, status)));
+        return NextResponse.json({ updated: results }, { headers: { ...noCacheHeaders() } });
+      }
+      return NextResponse.json({ error: { code: "VALIDATION", message: "Provide id or ids" } }, { status: 400 });
+    } catch (error) {
+      return handleRouteError(error, request);
     }
-    if (ids && ids.length > 0) {
-      const results = await Promise.all(ids.map((i) => RecommendationEngine.updateStatus(ctx, i, status)));
-      return NextResponse.json({ updated: results }, { headers: { ...noCacheHeaders() } });
-    }
-    return NextResponse.json({ error: { code: "VALIDATION", message: "Provide id or ids" } }, { status: 400 });
-  } catch (error) {
-    return handleRouteError(error, request);
-  }
+  });
 }

@@ -38,7 +38,7 @@ export const InvestmentFilters = memo(function InvestmentFilters({ portfolios, o
             placeholder="Search securities..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-3 text-sm text-white placeholder-zinc-500 focus:border-[#d4af37]/40 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+            className="w-full rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-3 text-sm text-white placeholder-zinc-500 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/30"
           />
         </div>
         <div className="relative">
@@ -46,7 +46,7 @@ export const InvestmentFilters = memo(function InvestmentFilters({ portfolios, o
           <select
             value={portfolioId}
             onChange={(e) => setPortfolioId(e.target.value)}
-            className="appearance-none rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-8 text-sm text-zinc-300 focus:border-[#d4af37]/40 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+            className="appearance-none rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-8 text-sm text-zinc-300 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/30"
           >
             <option value="">All Portfolios</option>
             {portfolios.map((p) => (
@@ -61,7 +61,7 @@ export const InvestmentFilters = memo(function InvestmentFilters({ portfolios, o
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="w-36 rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-3 text-sm text-zinc-300 focus:border-[#d4af37]/40 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+              className="w-36 rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-3 text-sm text-zinc-300 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/30"
             />
           </div>
           <span className="text-xs text-zinc-600">to</span>
@@ -71,13 +71,13 @@ export const InvestmentFilters = memo(function InvestmentFilters({ portfolios, o
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="w-36 rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-3 text-sm text-zinc-300 focus:border-[#d4af37]/40 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+              className="w-36 rounded-md border border-zinc-700/50 bg-zinc-800/60 py-2 pl-10 pr-3 text-sm text-zinc-300 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/30"
             />
           </div>
         </div>
         <button
           onClick={handleApply}
-          className="rounded-md bg-[#d4af37] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#c49f2e]"
+          className="rounded-md bg-gold px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#c49f2e]"
         >
           Apply
         </button>

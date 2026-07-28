@@ -66,7 +66,7 @@ export function ChartToolbar({
                 className={cn(
                   "rounded-md px-2 py-1 text-[11px] font-medium transition-colors",
                   period === p.value
-                    ? "bg-[#c9a84c]/10 text-[#c9a84c]"
+                    ? "bg-gold/10 text-gold"
                     : "text-zinc-500 hover:text-zinc-300",
                 )}
               >
@@ -85,7 +85,7 @@ export function ChartToolbar({
                 className={cn(
                   "rounded-md px-2 py-1 text-[11px] font-medium transition-colors whitespace-nowrap",
                   comparisonMode === c.value
-                    ? "bg-[#c9a84c]/10 text-[#c9a84c]"
+                    ? "bg-gold/10 text-gold"
                     : "text-zinc-500 hover:text-zinc-300",
                 )}
               >

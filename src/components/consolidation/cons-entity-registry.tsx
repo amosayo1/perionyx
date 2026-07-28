@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { ConsEntityRegistryProps } from "./cons-types";
 
 const entityTypeColors: Record<string, string> = {
-  holding: "#d4a843",
+  holding: "#d4af37",
   parent: "#3b82f6",
   subsidiary: "#22c55e",
   jointVenture: "#a855f7",
@@ -49,7 +49,7 @@ export default function ConsEntityRegistry({ entities }: ConsEntityRegistryProps
             gridTemplateColumns: "100px 1fr 100px 80px 80px 80px 80px",
             gap: 8,
             padding: "10px 16px",
-            background: "#1a1a2e",
+            background: "#1a1a24",
             borderRadius: 6,
             alignItems: "center",
             border: "1px solid #2a2a4a",

@@ -36,9 +36,9 @@ export function ConnectionStatusCard({ name, type, status, lastHealthCheckAt, la
           <div className="flex items-start gap-3 min-w-0">
             <div className={cn(
               "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border",
-              active ? "border-[#d4af37]/20 bg-[#d4af37]/10" : "border-white/[0.06] bg-zinc-900/40",
+              active ? "border-gold/20 bg-gold/10" : "border-white/[0.06] bg-zinc-900/40",
             )}>
-              <Plug className={cn("h-4 w-4", active ? "text-[#d4af37]" : "text-zinc-500")} />
+              <Plug className={cn("h-4 w-4", active ? "text-gold" : "text-zinc-500")} />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">

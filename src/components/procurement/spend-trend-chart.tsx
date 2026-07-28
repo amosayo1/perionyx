@@ -12,7 +12,7 @@ export function SpendTrendChart({ analytics }: SpendTrendChartProps) {
 
   if (sorted.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-6">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-6">
         <p className="text-xs text-gray-500">No trend data available</p>
       </div>
     );
@@ -21,7 +21,7 @@ export function SpendTrendChart({ analytics }: SpendTrendChartProps) {
   const maxSpend = Math.max(...sorted.map((a) => a.totalSpend), 1);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-200">Spend Trend</h3>
       <div className="space-y-2">
         {sorted.map((item, i) => {

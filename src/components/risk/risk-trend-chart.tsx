@@ -14,7 +14,7 @@ export function RiskTrendChart({ forecasts, title = "Risk Trend" }: RiskTrendCha
 
   if (forecasts.length === 0) {
     return (
-      <div className="flex h-[200px] items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] text-sm text-gray-500">
+      <div className="flex h-[200px] items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] text-sm text-gray-500">
         No forecast data available
       </div>
     );
@@ -49,7 +49,7 @@ export function RiskTrendChart({ forecasts, title = "Risk Trend" }: RiskTrendCha
   const areaPath = `${upperPath} ${lowerPath.split("").reverse().join("")}`;
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-300">{title}</h3>
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full max-w-full" style={{ maxHeight: height }}>
         <defs>

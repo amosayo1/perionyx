@@ -46,7 +46,7 @@ export function SidebarFavorites({ favorites, navItems, onToggle }: SidebarFavor
   return (
     <div className="space-y-1 px-4 py-3">
       <div className="flex items-center gap-1.5 px-4 py-1.5">
-        <Star className="h-3 w-3 text-[#d4af37]" />
+        <Star className="h-3 w-3 text-gold" />
         <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-500">Favorites</span>
       </div>
       {favItems.map(({ href, label, icon: Icon }) => {
@@ -64,7 +64,7 @@ export function SidebarFavorites({ favorites, navItems, onToggle }: SidebarFavor
             >
               <span className={cn(
                 "inline-flex h-7 w-7 items-center justify-center rounded-lg transition-all duration-150",
-                active ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500",
+                active ? "bg-gold/10 text-gold" : "text-zinc-500",
               )}>
                 <Icon className="h-3.5 w-3.5" />
               </span>

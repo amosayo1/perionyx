@@ -1,13 +1,28 @@
+import { z } from "zod";
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/server/security/require-permission";
 import { handleRouteError } from "@/server/http/handle-route";
 import { getAllSubscriptions } from "../register/route";
 
+const PushSendSchema = z.object({
+  title: z.string().max(256).optional().default("PERIONYX"),
+  body: z.string().max(4096).optional().default(""),
+  url: z.string().max(2048).optional().default("/"),
+});
+
 export async function POST(request: Request) {
   try {
     await requirePermission(request, "admin.security");
 
-    const { title, body, url } = await request.json();
+    const rawBody = await request.json();
+    const parsed = PushSendSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: { code: "VALIDATION", message: parsed.error.issues[0].message } },
+        { status: 400 }
+      );
+    }
+    const { title, body, url } = parsed.data;
 
     const subscriptions = getAllSubscriptions();
 

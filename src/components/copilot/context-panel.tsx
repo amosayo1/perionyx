@@ -5,13 +5,13 @@ import { CheckCircle, Clock, AlertCircle, Database } from "lucide-react";
 import { contextSources } from "./data";
 
 const statusIcons: Record<string, React.ReactNode> = {
-  connected: <CheckCircle className="h-3 w-3 text-[#d4af37]" />,
+  connected: <CheckCircle className="h-3 w-3 text-gold" />,
   syncing: <Clock className="h-3 w-3 text-amber-400" />,
   unavailable: <AlertCircle className="h-3 w-3 text-red-400" />,
 };
 
 const availabilityColors: Record<string, string> = {
-  live: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20",
+  live: "bg-gold/10 text-gold border-gold/20",
   cached: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   scheduled: "bg-blue-500/10 text-blue-400 border-blue-500/20",
 };

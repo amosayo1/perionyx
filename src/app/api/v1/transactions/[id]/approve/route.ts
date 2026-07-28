@@ -1,23 +1,22 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/server/auth/auth';
-import { requireTenantContext } from '@/server/context/tenant-context';
 import { ApprovalWorkflowEngine } from '@/modules/ledger/approval-workflow';
 import { handleRouteError } from '@/server/http/handle-route';
 import { rbacService } from "@/modules/rbac/rbac.service";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, context: RouteContext) {
-  const { params } = context;
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'approvals.approve');
-    const transactionId = (await params).id;
-    const res = await ApprovalWorkflowEngine.approveTransaction(transactionId, ctx.companyId, session?.user?.id ?? '', session?.user?.companyRole ?? '');
-    return NextResponse.json({ success: true, requirement: res });
-  } catch (err) {
-    return handleRouteError(err);
-  }
+  return withRuntimeContext(request, async (ctx) => {
+    const { params } = context;
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'approvals.approve');
+      const transactionId = (await params).id;
+      const res = await ApprovalWorkflowEngine.approveTransaction(transactionId, ctx.tenant.companyId, ctx.tenant.userId ?? '', ctx.tenant.role ?? '');
+      return NextResponse.json({ success: true, requirement: res });
+    } catch (err) {
+      return handleRouteError(err);
+    }
+  });
 }
 

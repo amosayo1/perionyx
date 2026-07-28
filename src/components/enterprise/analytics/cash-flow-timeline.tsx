@@ -79,8 +79,8 @@ export const CashFlowTimeline = memo(function CashFlowTimeline({
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="balance-area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#c9a84c" stopOpacity={0.15} />
-            <stop offset="100%" stopColor="#c9a84c" stopOpacity={0} />
+            <stop offset="0%" stopColor="#d4af37" stopOpacity={0.15} />
+            <stop offset="100%" stopColor="#d4af37" stopOpacity={0} />
           </linearGradient>
         </defs>
 
@@ -95,7 +95,7 @@ export const CashFlowTimeline = memo(function CashFlowTimeline({
         })}
 
         <polygon points={areaPath} fill="url(#balance-area)" />
-        <path d={balancePath} fill="none" stroke="#c9a84c" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+        <path d={balancePath} fill="none" stroke="#d4af37" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
 
         {bars.map((bar) => (
           <g key={bar.i}>

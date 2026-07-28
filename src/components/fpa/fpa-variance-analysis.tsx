@@ -45,7 +45,7 @@ export default function FPAVarianceAnalysis({ records }: FPAVarianceAnalysisProp
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
         {summaryItems.map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}
-            style={{ background: '#1a1a2e', borderRadius: 10, padding: 14, textAlign: 'center', border: '1px solid #2a2a4a' }}>
+            style={{ background: '#1a1a24', borderRadius: 10, padding: 14, textAlign: 'center', border: '1px solid #2a2a4a' }}>
             <div style={{ color: '#94a3b8', fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 18, fontWeight: 700, fontFamily: 'ui-monospace, monospace' }}>{item.value}</div>
           </motion.div>
@@ -70,7 +70,7 @@ export default function FPAVarianceAnalysis({ records }: FPAVarianceAnalysisProp
             const varColor = r.direction === 'favorable' ? '#22c55e' : r.direction === 'unfavorable' ? '#ef4444' : '#94a3b8'
             return (
               <motion.div key={r.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.02 }}
-                style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.5fr 0.7fr', gap: 8, padding: '10px 12px', background: '#1a1a2e', borderRadius: 6, alignItems: 'center', border: `1px solid ${isSig ? '#2a2a4a' : '#2a2a4a'}`, borderLeft: isSig ? `3px solid ${r.direction === 'favorable' ? '#eab308' : '#ef4444'}` : '3px solid transparent' }}>
+                style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.5fr 0.7fr', gap: 8, padding: '10px 12px', background: '#1a1a24', borderRadius: 6, alignItems: 'center', border: `1px solid ${isSig ? '#2a2a4a' : '#2a2a4a'}`, borderLeft: isSig ? `3px solid ${r.direction === 'favorable' ? '#eab308' : '#ef4444'}` : '3px solid transparent' }}>
                 <span style={{ color: '#e0e0e0', fontSize: 12, fontWeight: isSig ? 700 : 400 }}>{r.accountName}</span>
                 <span style={{ color: '#94a3b8', fontSize: 11 }}>{r.fiscalYear}.{r.fiscalPeriod}</span>
                 <span style={{ color: '#e0e0e0', fontSize: 11, fontFamily: 'ui-monospace, monospace' }}>{formatCurrency(r.actualAmount)}</span>

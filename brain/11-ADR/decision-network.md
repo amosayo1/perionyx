@@ -1,7 +1,7 @@
 ---
 title: "Decision Network"
 created: 2026-07-20
-updated: 2026-07-22 (Phase 21A.3)
+updated: 2026-07-26 (Phase 24.0B)
 tags:
   - type/network
   - domain/architecture
@@ -67,6 +67,7 @@ A map connecting all Architecture Decision Records. Every significant technical 
 | [[ADR-014-testing-strategy]] | 85% coverage, 18 test suites | Accepted | Phase 7F |
 | [[ADR-018-deployment-strategy]] | Docker multi-stage + Kubernetes | Accepted | Phase 7F |
 | [[ADR-019-observability]] | Prometheus + structured JSON + OTel bridge | Accepted | Phase 7F |
+| [[ADR-021-runtime-platform]] | Runtime: AsyncLocalStorage context + Prisma-backed config/secrets/capabilities | Accepted | Phase 24.0B |
 
 ### AI
 
@@ -182,6 +183,13 @@ Permanent rules governing architecture, security, and refactoring work. Codified
 | API Boundaries Are Trust Boundaries | Phase 21A.3 — Every API endpoint is a trust boundary: authentication proves identity, authorization proves permission, validation proves intent, idempotency proves uniqueness. The correlation ID ties the request lifecycle together. | Permanent |
 | Integration tests catch interaction bugs that unit tests miss | Phase 21A.4 — Approval cascade bug (SKIPPED treated as approved) and stale reference pattern in in-memory repos both only discovered through real service-to-service integration tests | Permanent |
 | Public communication is curated internal knowledge | Phase 22.0A — The website is a public-facing view of the Brain; never duplicate knowledge, always reference the source, and curate for external audiences while preserving internal truth | Permanent |
+| Deterministic seed data generators are schema validators | Phase 21B.2 — Writing seed generators for 10 Prisma models caught 5 schema inconsistencies (missing fields, invalid enums, type mismatches) that TypeScript's type checker missed due to `as any` casts | Permanent |
+| Visual consistency enforced through tokens | Phase 22.0B — Design audit found 4 background palettes, 3 gold hex codes, 6 font stacks, 3 motion systems; EDL establishes one canonical token source for every visual value | Permanent |
+| Architecture is enforced through tooling, not documentation | Phase 22.0B.5 — 12 ESLint rules, 5 CI scripts, auto-fixer, VS Code integration prevent new violations; documentation alone does not prevent drift | Permanent |
+| The Perionyx Platform Constitution is the highest engineering authority | Phase 23.0 — 32 documents, 15 Architectural Laws, 15 Platforms, canonical financial model, provider driver model; every implementation must conform to it | Permanent |
+| A constitution gains authority through successful validation | Phase 23.1 — Evidence-based validation of 15 Laws (7 PASS, 7 PARTIAL, 1 FAIL), 15 Platforms (avg maturity 1.4/4), AP reference implementation (7.4/10 CONDITIONAL); 17 debt items registered; Constitution corrected to match reality | Permanent |
+| Every shared capability is implemented once, centrally, and inherited by all platforms | Phase 24.0 — 5 foundation platforms (Data Classification, Configuration, Secret Management, Capability Registry, Provider Runtime) built before any new integrations; ProviderDriver base class eliminates per-provider retry/circuit-breaker/rate-limiting duplication | Permanent |
+| Context propagation through AsyncLocalStorage makes services automatically context-aware | Phase 24.0B — Runtime Context propagates tenant, request, trace, permission, financial, locale through every async call chain without parameter threading; 16 zero-argument getters, concurrency-safe, backward-compatible | Permanent |
 
 ---
 
@@ -258,6 +266,7 @@ A chronological record of every ADR with dates and status.
 | 23 | [[ADR-003]] (CRM Tenant Isolation) | 2026-07-19 | Phase 17 | Accepted |
 | 24 | [[ADR-004]] (Session Hybrid) | 2026-07-20 | Phase 17 | Accepted |
 | 25 | [[ADR-005]] (Error Disclosure) | 2026-07-20 | Phase 17 | Proposed |
+| 26 | [[ADR-021-runtime-platform]] (Runtime Platform) | 2026-07-26 | Phase 24.0B | Accepted |
 
 | 26 | [[EDP-21A_0-AP-Domain-Architecture\|AP Domain Architecture]] | 2026-07-21 | Phase 21A.0 | Accepted |
 | 27 | [[EDP_21A_1-AP-Prisma-Models\|AP Prisma Models]] | 2026-07-21 | Phase 21A.1 | Accepted |

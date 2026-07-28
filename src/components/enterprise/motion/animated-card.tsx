@@ -42,7 +42,7 @@ export function AnimatedCard({
       className={cn(
         "rounded-xl border border-white/[0.06] bg-zinc-900/40 transition-colors",
         onClick && "cursor-pointer",
-        selected && "border-[#d4af37]/50 shadow-lg shadow-black/30",
+        selected && "border-gold/50 shadow-lg shadow-black/30",
         className,
       )}
     >

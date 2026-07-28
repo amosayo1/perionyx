@@ -68,13 +68,13 @@ export function FCExecutiveInsights({ summary, periods, tasks, approvals, except
           { label: "Progress", value: `${summary.closeProgress}%`, color: summary.onTrack ? "#22c55e" : "#ef4444" },
         ].map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.04 }}
-            style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, textAlign: "center" }}>
+            style={{ background: "#1a1a24", borderRadius: 8, padding: 16, textAlign: "center" }}>
             <div style={{ color: "#94a3b8", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 24, fontWeight: 700, fontFamily: "ui-monospace, monospace" }}>{item.value}</div>
           </motion.div>
         ))}
       </div>
-      <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 20 }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, padding: 20 }}>
         <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>AI Insights</div>
         {insights.length === 0 ? (
           <div style={{ color: "#64748b", fontSize: 13 }}>All metrics within acceptable ranges.</div>

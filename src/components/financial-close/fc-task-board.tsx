@@ -79,7 +79,7 @@ export default function FCTaskBoard({ tasks }: FCTaskBoardProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.2 }}
                 style={{
-                  background: "#1a1a2e",
+                  background: "#1a1a24",
                   borderRadius: 8,
                   borderLeft: `3px solid ${g.color}`,
                   padding: "14px 16px",

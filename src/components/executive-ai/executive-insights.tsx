@@ -38,7 +38,7 @@ export const ExecutiveInsights = memo(function ExecutiveInsights({
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-          <Lightbulb className="h-4 w-4 text-[#d4af37]" />
+          <Lightbulb className="h-4 w-4 text-gold" />
           AI Recommendations ({recommendations.filter(r => r.status === "pending").length})
         </h2>
         {onViewAll && (

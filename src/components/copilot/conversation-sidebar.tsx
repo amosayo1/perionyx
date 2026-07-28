@@ -42,7 +42,7 @@ export function ConversationSidebar({
             className={cn(
               "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs transition-colors",
               c.id === activeId
-                ? "bg-[#d4af37]/10 text-[#d4af37]"
+                ? "bg-gold/10 text-gold"
                 : "text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300",
             )}
           >

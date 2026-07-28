@@ -10,7 +10,7 @@ interface GeneralLedgerGridProps {
 export function GeneralLedgerGrid({ balances, max = 30 }: GeneralLedgerGridProps) {
   const displayed = balances.slice(0, max);
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a1a]">
+    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a24]">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-800">

@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
+import { logger } from "@/lib/logger";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
 import { NotFoundError, ConflictError } from "@/lib/errors/app-error";
@@ -1329,7 +1330,8 @@ export class CFOAdvisorService {
       };
 
       return { totalCash, accounts: accounts.slice(0, 10), lowCashAccounts, liquidity };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Failed to fetch cash positions for briefing");
       return { totalCash: 0, accounts: [], lowCashAccounts: [], liquidity: {} };
     }
   }
@@ -1358,7 +1360,8 @@ export class CFOAdvisorService {
         entryCount: entries.length,
         period: "last_30_days",
       };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Failed to fetch revenue trend for briefing");
       return { totalAmount: 0, entryCount: 0, period: "last_30_days" };
     }
   }
@@ -1398,7 +1401,8 @@ export class CFOAdvisorService {
         activePolicies,
         activeFrameworks: frameworks,
       };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Failed to fetch compliance health for briefing");
       return {
         healthScore: 0,
         totalViolations: 0,
@@ -1436,7 +1440,8 @@ export class CFOAdvisorService {
           createdAt: t.createdAt.toISOString(),
         })),
       };
-    } catch {
+    } catch (err) {
+      logger.error(err, "Failed to fetch open approvals for briefing");
       return { total: 0, items: [] };
     }
   }
@@ -1478,7 +1483,8 @@ export class CFOAdvisorService {
       }
 
       return anomalies;
-    } catch {
+    } catch (err) {
+      logger.error(err, "Failed to fetch anomalies for briefing");
       return [];
     }
   }

@@ -68,7 +68,7 @@ export function ReportHeader() {
         <Button
           variant="default"
           size="sm"
-          className="gap-1.5 text-xs bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20"
+          className="gap-1.5 text-xs bg-gold/10 text-gold border-gold/20 hover:bg-gold/20"
           onClick={handleCreate}
         >
           <Plus className="h-3.5 w-3.5" />
@@ -80,7 +80,7 @@ export function ReportHeader() {
           className="gap-1.5 text-xs"
           onClick={toggleSchedule}
         >
-          {scheduled ? <CheckCircle2 className="h-3.5 w-3.5 text-[#d4af37]" /> : <Clock className="h-3.5 w-3.5" />}
+          {scheduled ? <CheckCircle2 className="h-3.5 w-3.5 text-gold" /> : <Clock className="h-3.5 w-3.5" />}
           {scheduled ? "Scheduled" : "Schedule"}
         </Button>
         <ExportButton type="reports" label="Export" size="sm" />

@@ -15,15 +15,15 @@ export function LimitMonitoringPanel({ limits, escalations }: LimitMonitoringPan
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-2">
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Within Limit</p>
           <p className="text-lg font-semibold text-emerald-400">{limits.filter((l) => l.status === "within-limit").length}</p>
         </div>
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Approaching</p>
           <p className="text-lg font-semibold text-amber-400">{approaching.length}</p>
         </div>
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Breached</p>
           <p className="text-lg font-semibold text-red-400">{breached.length}</p>
         </div>

@@ -25,7 +25,7 @@ const linkIcons: Record<string, React.ReactNode> = {
 
 const linkColors: Record<string, string> = {
   transaction: "text-blue-400",
-  approval: "text-[#d4af37]",
+  approval: "text-gold",
   workflow: "text-purple-400",
   ledger: "text-amber-400",
   audit: "text-zinc-400",

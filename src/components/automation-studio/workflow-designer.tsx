@@ -196,7 +196,7 @@ export function WorkflowDesigner({ definitionId }: Props) {
     return (
       <div className="flex h-[calc(100vh-100px)] items-center justify-center">
         <div className="flex items-center gap-3 text-zinc-500">
-          <div className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-600 border-t-[#d4af37]" />
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-600 border-t-gold" />
           <span className="text-sm">Loading workflow...</span>
         </div>
       </div>
@@ -226,7 +226,7 @@ export function WorkflowDesigner({ definitionId }: Props) {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex items-center gap-2">
-            <Workflow className="h-4 w-4 text-[#d4af37]" />
+            <Workflow className="h-4 w-4 text-gold" />
             <span className="text-sm font-medium text-white">{definitionId ? "Edit Workflow" : "New Workflow"}</span>
           </div>
         </div>
@@ -379,7 +379,7 @@ export function WorkflowDesigner({ definitionId }: Props) {
                       canvas.addStep(e.dataTransfer.getData("text/plain"));
                     }}
                   >
-                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d4af37]/10 text-[#d4af37]">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10 text-gold">
                       <Plus className="h-8 w-8" />
                     </div>
                     <h3 className="mb-1 text-base font-medium text-white">Add your first step</h3>
@@ -446,7 +446,7 @@ export function WorkflowDesigner({ definitionId }: Props) {
                                 initial={{ scale: 0.9 }}
                                 animate={{ scale: 1 }}
                                 transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="flex h-10 w-10 shrink-0 cursor-grab items-center justify-center rounded-full border-2 border-[#d4af37] bg-[#d4af37]/15 shadow-[0_0_20px_rgba(212,175,55,0.15)]"
+                                className="flex h-10 w-10 shrink-0 cursor-grab items-center justify-center rounded-full border-2 border-gold bg-gold/15 shadow-[0_0_20px_rgba(212,175,55,0.15)]"
                               >
                                 <div
                                   className="h-2.5 w-2.5 rounded-full"
@@ -457,7 +457,7 @@ export function WorkflowDesigner({ definitionId }: Props) {
                               <div
                                 className={`flex h-10 w-10 shrink-0 cursor-grab items-center justify-center rounded-full border-2 transition-all ${
                                   isDragOver
-                                    ? "border-[#d4af37]/60 bg-[#d4af37]/10"
+                                    ? "border-gold/60 bg-gold/10"
                                     : "border-zinc-700 bg-zinc-800/50 hover:border-zinc-500"
                                 }`}
                               >
@@ -467,16 +467,16 @@ export function WorkflowDesigner({ definitionId }: Props) {
                                 />
                               </div>
                             )}
-                            {!isLast && (<div className="h-3 w-0.5 bg-gradient-to-b from-[#d4af37]/30 to-transparent" />)}
+                            {!isLast && (<div className="h-3 w-0.5 bg-gradient-to-b from-gold/30 to-transparent" />)}
                           </div>
 
                           {/* Step card */}
                           <div
                             className={`flex-1 rounded-xl border p-4 transition-all ${
                               isSelected
-                                ? "border-[#d4af37]/50 bg-[#d4af37]/5 shadow-lg shadow-black/30"
+                                ? "border-gold/50 bg-gold/5 shadow-lg shadow-black/30"
                                 : isDragOver
-                                  ? "border-[#d4af37]/30 bg-[#d4af37]/5"
+                                  ? "border-gold/30 bg-gold/5"
                                   : "border-white/[0.06] bg-zinc-900/40 hover:bg-zinc-900/60 hover:border-white/[0.12]"
                             }`}
                           >

@@ -55,7 +55,7 @@ export function LiquidityAlertsPanel({ alerts, className }: { alerts: LiquidityA
                     <span>&bull;</span>
                     <span>{alert.entity}</span>
                   </div>
-                  <p className="mt-1 text-[11px] text-[#c9a84c]">→ {alert.suggestedAction}</p>
+                  <p className="mt-1 text-[11px] text-gold">→ {alert.suggestedAction}</p>
                 </div>
               </div>
             </div>

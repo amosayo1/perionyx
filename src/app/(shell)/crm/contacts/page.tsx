@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { CRMService } from "@/modules/crm";
 import { PageContainer } from "@/components/enterprise/page-container";
 import { EnterprisePageHeader } from "@/components/enterprise/enterprise-page-header";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 
 const crmService = new CRMService();
 
@@ -32,81 +32,80 @@ function StageBadge({ stage }: { stage: string }) {
 }
 
 export default async function CrmContactsPage() {
-  const session = await auth();
-  const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-  if (!ctx) redirect("/sign-in");
-
-  const contacts = await crmService.getAllContacts(ctx.companyId).catch(() => []);
-
-  return (
-    <PageContainer>
-      <EnterprisePageHeader
-        title="Contacts"
-        description="Relationship intelligence across your professional network"
-      />
-
-      <div className="rounded-2xl border border-white/[0.09] bg-[#101010]">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-white/[0.06]">
-                <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Name</th>
-                <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Role</th>
-                <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Company</th>
-                <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Stage</th>
-                <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Region</th>
-                <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Importance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contacts.map((contact) => (
-                <tr key={contact.id} className="border-b border-white/[0.04] transition-colors hover:bg-white/[0.02]">
-                  <td className="px-5 py-3.5">
-                    <div>
-                      <p className="font-medium text-white">{contact.name}</p>
-                      {contact.isStrategicAdvisor && (
-                        <span className="mt-0.5 inline-flex items-center gap-1 rounded bg-[#d4af37]/10 px-1.5 py-0.5 text-[10px] text-[#d4af37]">
-                          Strategic Advisor
+  return withRuntimeContext(await headers(), async (ctx) => {
+  
+    const contacts = await crmService.getAllContacts(ctx.tenant.companyId).catch(() => []);
+  
+    return (
+      <PageContainer>
+        <EnterprisePageHeader
+          title="Contacts"
+          description="Relationship intelligence across your professional network"
+        />
+  
+        <div className="rounded-2xl border border-white/[0.09] bg-[#101010]">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Name</th>
+                  <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Role</th>
+                  <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Company</th>
+                  <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Stage</th>
+                  <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Region</th>
+                  <th className="px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Importance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {contacts.map((contact) => (
+                  <tr key={contact.id} className="border-b border-white/[0.04] transition-colors hover:bg-white/[0.02]">
+                    <td className="px-5 py-3.5">
+                      <div>
+                        <p className="font-medium text-white">{contact.name}</p>
+                        {contact.isStrategicAdvisor && (
+                          <span className="mt-0.5 inline-flex items-center gap-1 rounded bg-[#d4af37]/10 px-1.5 py-0.5 text-[10px] text-[#d4af37]">
+                            Strategic Advisor
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 text-zinc-300">{contact.role}</td>
+                    <td className="px-5 py-3.5 text-zinc-400">{contact.company ?? "—"}</td>
+                    <td className="px-5 py-3.5">
+                      <StageBadge stage={contact.relationshipStage} />
+                    </td>
+                    <td className="px-5 py-3.5 text-zinc-400">{contact.region ?? "—"}</td>
+                    <td className="px-5 py-3.5">
+                      {contact.strategicImportance ? (
+                        <span className={`text-xs font-medium capitalize ${
+                          contact.strategicImportance === "critical" ? "text-rose-400" :
+                          contact.strategicImportance === "high" ? "text-amber-400" :
+                          contact.strategicImportance === "medium" ? "text-cyan-400" :
+                          "text-zinc-500"
+                        }`}>
+                          {contact.strategicImportance}
                         </span>
+                      ) : (
+                        <span className="text-zinc-600">—</span>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5 text-zinc-300">{contact.role}</td>
-                  <td className="px-5 py-3.5 text-zinc-400">{contact.company ?? "—"}</td>
-                  <td className="px-5 py-3.5">
-                    <StageBadge stage={contact.relationshipStage} />
-                  </td>
-                  <td className="px-5 py-3.5 text-zinc-400">{contact.region ?? "—"}</td>
-                  <td className="px-5 py-3.5">
-                    {contact.strategicImportance ? (
-                      <span className={`text-xs font-medium capitalize ${
-                        contact.strategicImportance === "critical" ? "text-rose-400" :
-                        contact.strategicImportance === "high" ? "text-amber-400" :
-                        contact.strategicImportance === "medium" ? "text-cyan-400" :
-                        "text-zinc-500"
-                      }`}>
-                        {contact.strategicImportance}
-                      </span>
-                    ) : (
-                      <span className="text-zinc-600">—</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {contacts.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center">
-                    <p className="text-sm text-zinc-500">No contacts found. Seed data to get started.</p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                    </td>
+                  </tr>
+                ))}
+                {contacts.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-5 py-12 text-center">
+                      <p className="text-sm text-zinc-500">No contacts found. Seed data to get started.</p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-3">
+            <p className="text-xs text-zinc-500">{contacts.length} contact{contacts.length !== 1 ? "s" : ""}</p>
+          </div>
         </div>
-        <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-3">
-          <p className="text-xs text-zinc-500">{contacts.length} contact{contacts.length !== 1 ? "s" : ""}</p>
-        </div>
-      </div>
-    </PageContainer>
-  );
+      </PageContainer>
+    );
+  });
 }

@@ -87,7 +87,7 @@ export function PaymentRecommendationsPanel({ className }: PaymentRecommendation
               id="rec-category-filter"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-[#c9a84c]/50"
+              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-gold/50"
               aria-label="Filter by category"
             >
               {CATEGORIES.map((c) => (
@@ -104,7 +104,7 @@ export function PaymentRecommendationsPanel({ className }: PaymentRecommendation
               id="rec-entity-filter"
               value={entityFilter}
               onChange={(e) => setEntityFilter(e.target.value)}
-              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-[#c9a84c]/50"
+              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-gold/50"
               aria-label="Filter by entity"
             >
               <option value="All">All Entities</option>
@@ -152,7 +152,7 @@ export function PaymentRecommendationsPanel({ className }: PaymentRecommendation
                 <p className="mt-2 text-sm font-medium text-white">{rec.title}</p>
                 <p className="mt-1 text-[13px] leading-relaxed text-zinc-400">{rec.description}</p>
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-                  <span className="text-[12px] font-semibold text-[#c9a84c]">{rec.impactLabel}</span>
+                  <span className="text-[12px] font-semibold text-gold">{rec.impactLabel}</span>
                   <span className="text-[12px] text-zinc-500">{rec.roi}</span>
                   <span className="text-[12px] text-zinc-500">{rec.entity}</span>
                 </div>

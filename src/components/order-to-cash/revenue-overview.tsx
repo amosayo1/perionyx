@@ -10,7 +10,7 @@ interface RevenueOverviewProps {
 export function RevenueOverview({ metrics }: RevenueOverviewProps) {
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Total Customers</p>
@@ -20,7 +20,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           <div className="text-gray-500"><Users className="h-4 w-4" /></div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Sales Orders</p>
@@ -30,7 +30,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           <div className="text-gray-500"><FileText className="h-4 w-4" /></div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Invoices</p>
@@ -40,7 +40,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           <div className="text-gray-500"><FileText className="h-4 w-4" /></div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Total AR</p>
@@ -49,7 +49,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           <div className="text-gray-500"><DollarSign className="h-4 w-4" /></div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Overdue AR</p>
@@ -61,7 +61,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           </div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">DSO</p>
@@ -70,7 +70,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           <div className="text-gray-500"><Clock className="h-4 w-4" /></div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Cash Collected</p>
@@ -79,7 +79,7 @@ export function RevenueOverview({ metrics }: RevenueOverviewProps) {
           <div className="text-gray-500"><CheckCircle className="h-4 w-4" /></div>
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400">Collection Cases</p>

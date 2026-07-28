@@ -23,7 +23,7 @@ const typeConfig = {
   critical: { icon: AlertCircle, color: "text-red-400", border: "border-l-red-500", bg: "bg-red-500/[0.03]" },
   warning: { icon: AlertTriangle, color: "text-amber-400", border: "border-l-amber-500", bg: "bg-amber-500/[0.02]" },
   info: { icon: Info, color: "text-blue-400", border: "border-l-blue-500", bg: "bg-blue-500/[0.02]" },
-  approval: { icon: Bell, color: "text-[#d4af37]", border: "border-l-[#d4af37]", bg: "bg-[#d4af37]/[0.02]" },
+  approval: { icon: Bell, color: "text-gold", border: "border-l-gold", bg: "bg-gold/[0.02]" },
   compliance: { icon: CheckCheck, color: "text-emerald-400", border: "border-l-emerald-500", bg: "bg-emerald-500/[0.02]" },
 };
 
@@ -55,13 +55,13 @@ export function NotificationCenter({
         <div className="flex gap-2">
           <button
             onClick={() => setFilter("all")}
-            className={cn("rounded-lg px-3 py-1.5 text-[11px] font-medium transition-colors", filter === "all" ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500")}
+            className={cn("rounded-lg px-3 py-1.5 text-[11px] font-medium transition-colors", filter === "all" ? "bg-gold/10 text-gold" : "text-zinc-500")}
           >
             All
           </button>
           <button
             onClick={() => setFilter("unread")}
-            className={cn("rounded-lg px-3 py-1.5 text-[11px] font-medium transition-colors", filter === "unread" ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500")}
+            className={cn("rounded-lg px-3 py-1.5 text-[11px] font-medium transition-colors", filter === "unread" ? "bg-gold/10 text-gold" : "text-zinc-500")}
           >
             Unread ({unreadCount})
           </button>
@@ -69,7 +69,7 @@ export function NotificationCenter({
         {unreadCount > 0 && (
           <button
             onClick={() => notifications.filter((n) => !n.isRead).forEach((n) => onMarkRead(n.id))}
-            className="text-[11px] text-[#d4af37] active:text-[#d4af37]/60"
+            className="text-[11px] text-gold active:text-gold/60"
           >
             Mark all read
           </button>
@@ -103,7 +103,7 @@ export function NotificationCenter({
                     <span className={cn("text-sm font-medium", n.isRead ? "text-zinc-400" : "text-zinc-200")}>
                       {n.title}
                     </span>
-                    {!n.isRead && <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#d4af37]" />}
+                    {!n.isRead && <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-gold" />}
                   </div>
                   <p className="mt-0.5 text-[12px] leading-relaxed text-zinc-500">{n.message}</p>
                   <span className="mt-1 block text-[9px] text-zinc-600">{n.timestamp}</span>
@@ -112,7 +112,7 @@ export function NotificationCenter({
                     {n.actionLabel && onAction && (
                       <button
                         onClick={() => onAction(n.id)}
-                        className="rounded-xl bg-[#d4af37]/10 px-3.5 py-1.5 text-[11px] font-medium text-[#d4af37] active:bg-[#d4af37]/20 min-h-[32px]"
+                        className="rounded-xl bg-gold/10 px-3.5 py-1.5 text-[11px] font-medium text-gold active:bg-gold/20 min-h-[32px]"
                       >
                         {n.actionLabel}
                       </button>
@@ -154,7 +154,7 @@ export function NotificationCenter({
           <Bell className="h-8 w-8 text-zinc-700" />
           <p className="text-sm text-zinc-600">No notifications</p>
           {filter === "unread" && (
-            <button onClick={() => setFilter("all")} className="text-[11px] text-[#d4af37]">
+            <button onClick={() => setFilter("all")} className="text-[11px] text-gold">
               View all notifications
             </button>
           )}

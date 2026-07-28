@@ -55,11 +55,11 @@ export function IntelligenceCenterEnhanced({ insights, recommendations, classNam
             {recommendations.slice(0, 2).map((r) => (
               <div
                 key={r.id}
-                className="group rounded-xl bg-[#d4af37]/[0.02] border border-[#d4af37]/10 p-3 transition-all hover:bg-[#d4af37]/[0.04] hover:border-[#d4af37]/20"
+                className="group rounded-xl bg-gold/[0.02] border border-gold/10 p-3 transition-all hover:bg-gold/[0.04] hover:border-gold/20"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <Lightbulb className="h-3.5 w-3.5 text-[#d4af37]" />
-                  <span className="text-[10px] text-[#d4af37]/80 font-medium">Recommendation</span>
+                  <Lightbulb className="h-3.5 w-3.5 text-gold" />
+                  <span className="text-[10px] text-gold/80 font-medium">Recommendation</span>
                   <StatusBadge status={severityVariant(r.severity)} label={r.severity} />
                 </div>
                 <p className="text-sm font-medium text-white">{r.title}</p>

@@ -27,7 +27,7 @@ export function ARAdjustmentList({ adjustments }: ARAdjustmentListProps) {
       </div>
       {filtered.map((adj, i) => (
         <motion.div key={adj.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-          style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${statusColors[adj.status]}` }}>
+          style={{ background: "#1a1a24", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${statusColors[adj.status]}` }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -41,7 +41,7 @@ export function ARAdjustmentList({ adjustments }: ARAdjustmentListProps) {
               <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>{adj.description}</div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: adj.type === "creditNote" || adj.type === "discount" ? "#22c55e" : "#d4a843", fontFamily: "ui-monospace, monospace" }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: adj.type === "creditNote" || adj.type === "discount" ? "#22c55e" : "#d4af37", fontFamily: "ui-monospace, monospace" }}>
                 {adj.type === "creditNote" || adj.type === "discount" ? "-" : "+"}${adj.amount.toLocaleString()}
               </div>
               <div style={{ display: "flex", gap: 4, marginTop: 8 }}>

@@ -67,7 +67,7 @@ export const FxImpactChart = memo(function FxImpactChart({ data, className, heig
         <path d={`M${toX(0)},${midY} L${points} L${toX(data.length - 1)},${midY} Z`} fill="url(#fxGradient)" opacity="0.3" />
 
         {data.map((d, i) => (
-          <circle key={i} cx={toX(i)} cy={toY(d.value)} r="3" fill={d.value >= 0 ? "#10b981" : "#ef4444"} stroke="#1a1a1a" strokeWidth="1.5">
+          <circle key={i} cx={toX(i)} cy={toY(d.value)} r="3" fill={d.value >= 0 ? "#10b981" : "#ef4444"} stroke="#1a1a24" strokeWidth="1.5">
             <title>{d.period}: ${(d.value / 1_000).toFixed(1)}K</title>
           </circle>
         ))}

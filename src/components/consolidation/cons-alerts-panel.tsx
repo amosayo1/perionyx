@@ -36,11 +36,11 @@ export function ConsAlertsPanel({ alerts }: ConsAlertsPanelProps) {
         ) : (
           filtered.map((alert, i) => (
             <motion.div key={alert.id} layout initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20, height: 0, marginBottom: 0, padding: 0 }} transition={{ duration: 0.2, delay: i * 0.02 }}
-              style={{ background: '#1a1a2e', borderRadius: 8, padding: 16, marginBottom: 8, overflow: 'hidden', borderLeft: `3px solid ${severityColors[alert.severity]}` }}>
+              style={{ background: '#1a1a24', borderRadius: 8, padding: 16, marginBottom: 8, overflow: 'hidden', borderLeft: `3px solid ${severityColors[alert.severity]}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    {!alert.isRead && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#d4a843' }} />}
+                    {!alert.isRead && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#d4af37' }} />}
                     <span style={{ background: severityColors[alert.severity] + '22', color: severityColors[alert.severity], fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, textTransform: 'uppercase' }}>{alert.severity}</span>
                     <span style={{ fontSize: 11, color: '#64748b' }}>{new Date(alert.createdAt).toLocaleString()}</span>
                   </div>

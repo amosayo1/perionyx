@@ -33,7 +33,7 @@ export const RecommendationsPanel = memo(function RecommendationsPanel({ recomme
     <div className={cn("space-y-2", className)}>
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-          <Lightbulb className="h-4 w-4 text-[#d4af37]" />
+          <Lightbulb className="h-4 w-4 text-gold" />
           Recommendations ({sorted.length})
         </h2>
       </div>
@@ -46,7 +46,7 @@ export const RecommendationsPanel = memo(function RecommendationsPanel({ recomme
             key={rec.id}
             className={cn(
               "rounded-lg border transition-colors",
-              isExpanded ? "border-[#d4af37]/20 bg-[#d4af37]/[0.02]" : "border-zinc-800/60 bg-zinc-900/40",
+              isExpanded ? "border-gold/20 bg-gold/[0.02]" : "border-zinc-800/60 bg-zinc-900/40",
               "hover:border-zinc-700/60"
             )}
           >
@@ -62,7 +62,7 @@ export const RecommendationsPanel = memo(function RecommendationsPanel({ recomme
                 <div className="flex items-center gap-1.5">
                   <div className="h-1.5 w-16 overflow-hidden rounded-full bg-zinc-700">
                     <div
-                      className="h-full rounded-full bg-[#d4af37]"
+                      className="h-full rounded-full bg-gold"
                       style={{ width: `${rec.confidence}%` }}
                     />
                   </div>

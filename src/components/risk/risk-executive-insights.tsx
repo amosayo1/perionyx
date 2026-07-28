@@ -25,7 +25,7 @@ export function RiskExecutiveInsights({ insights }: RiskExecutiveInsightsProps) 
       {Object.entries(grouped).map(([type, items]) => {
         if (items.length === 0) return null;
         return (
-          <div key={type} className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+          <div key={type} className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
             <h3 className="mb-3 text-sm font-medium text-gray-300">{typeLabels[type] || type}</h3>
             <div className="space-y-2">
               {items.slice(0, 3).map((insight) => (

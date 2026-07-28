@@ -225,7 +225,7 @@ export function AppShell({
         {/* Skip to main content — WCAG 2.4.1 */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:z-[100] focus:bg-zinc-900 focus:p-4 focus:text-sm focus:font-medium focus:text-white focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="sr-only focus:not-sr-only focus:fixed focus:z-[100] focus:bg-zinc-900 focus:p-4 focus:text-sm focus:font-medium focus:text-white focus:outline-none focus:ring-2 focus:ring-gold"
         >
           Skip to main content
         </a>
@@ -281,7 +281,7 @@ export function AppShell({
                       <DropdownMenuItem
                         key={row.company.id}
                         onClick={() => void switchCompany(row.company.id)}
-                        className={cn("text-[13px]", row.company.id === activeId && "bg-gold-500/10 text-[#c9a84c]")}
+                        className={cn("text-[13px]", row.company.id === activeId && "bg-gold-500/10 text-gold")}
                       >
                         <span className="truncate">{row.company.name}</span>
                         <span className="ml-auto text-[10px] text-zinc-600 capitalize">{row.role.toLowerCase()}</span>
@@ -345,7 +345,7 @@ export function AppShell({
                   href={href}
                   className={cn(
                     "flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] font-semibold transition duration-200",
-                    active ? "bg-gold-500/15 text-[#c9a84c]" : "text-zinc-400 hover:bg-zinc-800/50",
+                    active ? "bg-gold-500/15 text-gold" : "text-zinc-400 hover:bg-zinc-800/50",
                   )}
                 >
                   <Icon className="h-3.5 w-3.5" />

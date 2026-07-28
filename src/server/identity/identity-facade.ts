@@ -8,6 +8,9 @@ import { PermissionManager, permissionManager } from "./permission-manager"
 import { PolicyEngine, policyEngine } from "./policy-engine"
 import { AuditService, auditService } from "./audit-service"
 import { SSOHandler, ssoHandler } from "./sso-handler"
+import { logger } from "@/lib/logger"
+
+const log = logger.child({ module: "identity-facade" });
 
 export interface UserIdentitySummary {
   userId: string
@@ -60,6 +63,7 @@ export class IdentityFacade {
   }
 
   getUserIdentitySummary(userId: string, companyId: string): UserIdentitySummary {
+    log.debug({ userId, companyId }, "Getting user identity summary");
     const auditLogs = this.audit.getAuditLogsByUser(userId)
     const lastLoginEvent = auditLogs
       .filter((r) => r.eventType === "login.success")
@@ -122,6 +126,7 @@ export class IdentityFacade {
   }
 
   health(): { status: string; providerCount: number; userCount: number; sessionCount: number; auditCount: number } {
+    log.debug("Health check");
     return {
       status: "operational",
       providerCount: this.providers.countProviders(),

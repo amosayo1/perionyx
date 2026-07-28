@@ -149,7 +149,7 @@ export function ApprovalMatrixForm({ open, onOpenChange, onSave, editRule }: Pro
                   min={1} max={100}
                   value={form.priority}
                   onChange={(e) => update("priority", Number(e.target.value))}
-                  className="w-full accent-[#d4af37]"
+                  className="w-full accent-gold"
                 />
                 <span className="text-[11px] text-zinc-500">{form.priority}</span>
               </div>
@@ -191,7 +191,7 @@ export function ApprovalMatrixForm({ open, onOpenChange, onSave, editRule }: Pro
                   className={cn(
                     "flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
                     form.approvalMode === "sequential"
-                      ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30"
+                      ? "bg-gold/10 text-gold border border-gold/30"
                       : "bg-zinc-900/40 text-zinc-500 border border-white/[0.06]",
                   )}
                 >
@@ -203,7 +203,7 @@ export function ApprovalMatrixForm({ open, onOpenChange, onSave, editRule }: Pro
                   className={cn(
                     "flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
                     form.approvalMode === "parallel"
-                      ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30"
+                      ? "bg-gold/10 text-gold border border-gold/30"
                       : "bg-zinc-900/40 text-zinc-500 border border-white/[0.06]",
                   )}
                 >
@@ -222,7 +222,7 @@ export function ApprovalMatrixForm({ open, onOpenChange, onSave, editRule }: Pro
           >
             <div className="flex flex-wrap gap-1.5 mb-2">
               {form.approverRoles.map((role) => (
-                <span key={role} className="inline-flex items-center gap-1 rounded-md bg-[#d4af37]/10 px-2 py-0.5 text-[10px] text-[#d4af37]">
+                <span key={role} className="inline-flex items-center gap-1 rounded-md bg-gold/10 px-2 py-0.5 text-[10px] text-gold">
                   {role}
                   <button type="button" onClick={() => removeRole("approverRoles", role)} className="hover:text-red-400" aria-label="Remove role">
                     <X className="h-2.5 w-2.5" />
@@ -256,7 +256,7 @@ export function ApprovalMatrixForm({ open, onOpenChange, onSave, editRule }: Pro
               <button
                 type="button"
                 onClick={() => addRole("approverRoles", newRole)}
-                className="inline-flex items-center gap-1 rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1.5 text-[11px] font-medium text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors h-8 shrink-0"
+                className="inline-flex items-center gap-1 rounded-lg border border-gold/30 bg-gold/5 px-3 py-1.5 text-[11px] font-medium text-gold hover:bg-gold/10 transition-colors h-8 shrink-0"
               >
                 <Plus className="h-3 w-3" />
                 Add
@@ -309,7 +309,7 @@ export function ApprovalMatrixForm({ open, onOpenChange, onSave, editRule }: Pro
                       className={cn(
                         "rounded px-2 py-1 text-[10px] font-mono transition-colors",
                         form.thresholdOperator === op
-                          ? "bg-[#d4af37]/10 text-[#d4af37]"
+                          ? "bg-gold/10 text-gold"
                           : "bg-zinc-900/40 text-zinc-600 hover:text-zinc-300",
                       )}
                     >

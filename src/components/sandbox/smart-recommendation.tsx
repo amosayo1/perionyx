@@ -21,9 +21,9 @@ export function SmartRecommendation({ currentModule }: { currentModule?: string 
   if (suggestions.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-[#d4af37]/10 bg-gradient-to-r from-[#d4af37]/[0.04] to-transparent p-4">
+    <div className="rounded-xl border border-gold/10 bg-gradient-to-r from-gold/[0.04] to-transparent p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Sparkles className="h-4 w-4 text-[#d4af37]" />
+        <Sparkles className="h-4 w-4 text-gold" />
         <span className="text-xs font-semibold text-white">Recommended Next Steps</span>
       </div>
       <div className="space-y-1.5">
@@ -33,7 +33,7 @@ export function SmartRecommendation({ currentModule }: { currentModule?: string 
             onClick={() => addCompletedTask({ id: rec.id, label: rec.label, module: rec.module })}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-white/[0.04]"
           >
-            <ArrowRight className="h-3.5 w-3.5 shrink-0 text-[#d4af37]" />
+            <ArrowRight className="h-3.5 w-3.5 shrink-0 text-gold" />
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium text-zinc-200 truncate">{rec.label}</p>
               <p className="text-[10px] text-zinc-500 truncate">{rec.description}</p>

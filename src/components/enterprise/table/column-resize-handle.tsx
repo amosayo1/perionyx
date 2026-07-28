@@ -12,8 +12,8 @@ export function ColumnResizeHandle({ onResizeStart, className }: ColumnResizeHan
     <div
       className={cn(
         "absolute right-0 top-0 z-20 h-full w-1 cursor-col-resize",
-        "hover:w-1.5 hover:bg-[#d4af37]/40",
-        "active:w-1.5 active:bg-[#d4af37]/60",
+        "hover:w-1.5 hover:bg-gold/40",
+        "active:w-1.5 active:bg-gold/60",
         "transition-all duration-150",
         className,
       )}

@@ -28,7 +28,7 @@ export default function FPAWhatIfAnalysis({ analyses }: FPAWhatIfAnalysisProps) 
       ) : (
         analyses.map((a, i) => (
           <motion.div key={a.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            style={{ background: '#1a1a2e', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a' }}>
+            style={{ background: '#1a1a24', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
               <div>
                 <div style={{ fontSize: 16, fontWeight: 600, color: '#e0e0e0' }}>{a.name}</div>

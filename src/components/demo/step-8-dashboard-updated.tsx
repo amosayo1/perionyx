@@ -97,7 +97,7 @@ export function Step8DashboardUpdated() {
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#d4af37]/10 text-[#d4af37]"
+              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold"
             >
               Updated just now
             </motion.span>
@@ -116,7 +116,7 @@ export function Step8DashboardUpdated() {
                 className="rounded-xl border border-white/[0.06] bg-black/40 p-4 relative overflow-hidden"
               >
                 {/* Subtle background icon */}
-                <div className="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-[#d4af37]/[0.02]" />
+                <div className="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-gold/[0.02]" />
 
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] text-zinc-500">{m.label}</span>
@@ -142,7 +142,7 @@ export function Step8DashboardUpdated() {
                       initial={{ opacity: 0, x: -5 }}
                       animate={{ opacity: 1, x: 0 }}
                       className={`text-[10px] font-mono ${
-                        m.new_ < m.old ? "text-red-400" : "text-[#d4af37]"
+                        m.new_ < m.old ? "text-red-400" : "text-gold"
                       }`}
                     >
                       {m.new_ < m.old ? "↓" : "↑"} {Math.abs(m.new_ - m.old).toLocaleString()}
@@ -168,7 +168,7 @@ export function Step8DashboardUpdated() {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors"
                   >
                     <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                      a.type === "success" ? "bg-[#d4af37]" : "bg-zinc-500"
+                      a.type === "success" ? "bg-gold" : "bg-zinc-500"
                     }`} />
                     <span className="text-xs text-zinc-400">{a.text}</span>
                     <span className="text-[10px] text-zinc-600 ml-auto font-mono">{a.time}</span>
@@ -203,19 +203,19 @@ export function Step8DashboardUpdated() {
                       transition={{ delay: 0.8 + i * 0.15, duration: 0.4 }}
                       className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                         !n.read
-                          ? "bg-[#d4af37]/5 border border-[#d4af37]/10"
+                          ? "bg-gold/5 border border-gold/10"
                           : "bg-black/20 hover:bg-black/40 border border-transparent"
                       }`}
                     >
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
                         n.type === "payment" ? "bg-blue-500/10" :
-                        n.type === "audit" ? "bg-[#d4af37]/10" :
+                        n.type === "audit" ? "bg-gold/10" :
                         n.type === "system" ? "bg-amber-500/10" : "bg-zinc-800"
                       }`}>
                         {n.type === "payment" ? (
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400"><rect x="3" y="8" width="18" height="14" rx="2" /><line x1="3" y1="12" x2="21" y2="12" /></svg>
                         ) : n.type === "audit" ? (
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37]"><polyline points="20 6 9 17 4 12" /></svg>
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold"><polyline points="20 6 9 17 4 12" /></svg>
                         ) : (
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-400"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /></svg>
                         )}
@@ -224,7 +224,7 @@ export function Step8DashboardUpdated() {
                         <p className={`text-xs ${!n.read ? "text-zinc-300" : "text-zinc-500"}`}>{n.text}</p>
                         <span className="text-[10px] text-zinc-600 font-mono">{n.time}</span>
                       </div>
-                      {!n.read && <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] mt-1.5 shrink-0" />}
+                      {!n.read && <div className="w-1.5 h-1.5 rounded-full bg-gold mt-1.5 shrink-0" />}
                     </motion.div>
                   ))}
                 </div>
@@ -242,12 +242,12 @@ export function Step8DashboardUpdated() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.8, duration: 0.5 }}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#d4af37]/5 border border-[#d4af37]/10"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gold/5 border border-gold/10"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
               </svg>
-              <span className="text-xs text-[#d4af37]">
+              <span className="text-xs text-gold">
                 Dashboard fully updated — {notificationCount} new notification{notificationCount !== 1 ? "s" : ""}
               </span>
             </motion.div>

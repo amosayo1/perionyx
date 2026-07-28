@@ -52,7 +52,7 @@ export function Footer() {
         <div className="grid sm:grid-cols-2 md:grid-cols-5 gap-10 mb-14">
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/30 flex items-center justify-center overflow-hidden">
+              <div className="w-8 h-8 rounded-lg bg-gold/20 border border-gold/30 flex items-center justify-center overflow-hidden">
                 <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
               </div>
               <span className="text-sm font-bold text-white tracking-tight">PERIONYX</span>
@@ -61,7 +61,7 @@ export function Footer() {
               The enterprise treasury operating system. One platform for treasury, payments, governance, audit, risk, and AI-driven financial intelligence.
             </p>
             <div className="flex items-center gap-4 mt-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md bg-gold/10 text-gold border border-gold/20">
                 SOC 2
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md bg-zinc-800 text-zinc-400 border border-zinc-700">

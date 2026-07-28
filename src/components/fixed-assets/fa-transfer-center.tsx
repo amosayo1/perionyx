@@ -76,7 +76,7 @@ export default function FATransferCenter({ assets }: FATransferCenterProps) {
               gridTemplateColumns: "1fr 1fr 1fr 120px 100px 80px",
               gap: 8,
               alignItems: "center",
-              background: i % 2 === 0 ? "#1a1a2e" : "#1e1e32",
+              background: i % 2 === 0 ? "#1a1a24" : "#1e1e32",
               borderRadius: 6,
               padding: "12px 16px",
             }}

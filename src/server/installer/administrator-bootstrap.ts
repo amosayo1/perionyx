@@ -166,21 +166,13 @@ export class AdministratorBootstrap {
   }
 
   private async hashPassword(password: string): Promise<string> {
-    const { createHash } = await import("crypto")
-    const salt = Math.random().toString(36).slice(2, 10)
-    const hash = createHash("sha256").update(`${password}:${salt}`).digest("hex")
-    return `sha256:${salt}:${hash}`
+    const bcrypt = await import("bcryptjs")
+    return bcrypt.hash(password, 12)
   }
 
   private async verifyPassword(password: string, hash: string): Promise<boolean> {
-    if (!hash.startsWith("sha256:")) return false
-    const parts = hash.split(":")
-    if (parts.length !== 3) return false
-    const salt = parts[1]
-    const expected = parts[2]
-    const { createHash } = await import("crypto")
-    const actual = createHash("sha256").update(`${password}:${salt}`).digest("hex")
-    return actual === expected
+    const bcrypt = await import("bcryptjs")
+    return bcrypt.compare(password, hash)
   }
 
   private async createUserRecord(_user: AdminUser): Promise<void> {

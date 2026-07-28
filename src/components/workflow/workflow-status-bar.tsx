@@ -18,7 +18,7 @@ interface Props {
 
 function RiskBadge({ level }: { level: WorkflowStatus["riskLevel"] }) {
   const variants: Record<string, { label: string; className: string }> = {
-    low: { label: "Low Risk", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+    low: { label: "Low Risk", className: "bg-gold/10 text-gold border-gold/20" },
     medium: { label: "Medium Risk", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
     high: { label: "High Risk", className: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
     critical: { label: "Critical", className: "bg-red-500/10 text-red-400 border-red-500/20" },
@@ -40,8 +40,8 @@ export function WorkflowStatusBar({ status, compact = false }: Props) {
     )}>
       {/* Current Owner */}
       <div className="flex items-center gap-2 rounded-xl border border-white/[0.06] bg-zinc-900/40 px-3 py-2.5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/20 shrink-0">
-          <User className="h-3.5 w-3.5 text-[#d4af37]" />
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold/10 border border-gold/20 shrink-0">
+          <User className="h-3.5 w-3.5 text-gold" />
         </div>
         <div className="min-w-0">
           <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Owner</p>

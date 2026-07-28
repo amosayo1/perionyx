@@ -61,9 +61,9 @@ import type {
 function SortIcon({ active, direction, priority }: { active: boolean; direction: SortDirection; priority?: number }) {
   if (!active) return <ArrowUpDown className="ml-1 h-3 w-3 shrink-0 opacity-0 group-hover:opacity-40" />;
   return direction === "asc" ? (
-    <ArrowUp className="ml-1 h-3 w-3 shrink-0 text-[#d4af37]" />
+    <ArrowUp className="ml-1 h-3 w-3 shrink-0 text-gold" />
   ) : (
-    <ArrowDown className="ml-1 h-3 w-3 shrink-0 text-[#d4af37]" />
+    <ArrowDown className="ml-1 h-3 w-3 shrink-0 text-gold" />
   );
 }
 
@@ -238,8 +238,8 @@ function renderRow<T>(
       transition={{ duration: 0.2, delay: (index ?? 0) * 0.02 }}
       className={cn(
         "border-b border-white/[0.05] transition-colors hover:bg-white/[0.03] data-[state=selected]:bg-white/[0.05] cursor-pointer",
-        isSelected && "bg-[#d4af37]/5",
-        isFocused && "ring-2 ring-inset ring-[#d4af37]/40",
+        isSelected && "bg-gold/5",
+        isFocused && "ring-2 ring-inset ring-gold/40",
       )}
       onClick={() => {
         onRowClick?.(row);
@@ -277,8 +277,8 @@ function renderRow<T>(
             rowDensityClass,
             col.className,
             col.cellConfig?.type === "number" || col.cellConfig?.type === "currency" ? "text-right" : col.cellConfig?.align === "center" ? "text-center" : undefined,
-            col.pin === "left" && "sticky left-0 z-[11] bg-[#101010]",
-            col.pin === "right" && "sticky right-0 z-[11] bg-[#101010]",
+            col.pin === "left" && "sticky left-0 z-[10] bg-surface-raised",
+            col.pin === "right" && "sticky right-0 z-[10] bg-surface-raised",
           )}
         >
           {col.inlineEdit ? (
@@ -625,7 +625,7 @@ export function EnterpriseTable<T>({
 
       <div
         className={cn(
-          "relative w-full overflow-auto rounded-[28px] border border-[rgba(255,255,255,0.09)] bg-[linear-gradient(120deg,#101010_80%,rgba(212,175,55,0.03)_100%)] shadow-[0_24px_64px_rgba(0,0,0,0.22)]",
+          "relative w-full overflow-auto rounded-[28px] border border-[rgba(255,255,255,0.09)] bg-[linear-gradient(120deg,#111118_80%,rgba(212,175,55,0.03)_100%)] shadow-[0_24px_64px_rgba(0,0,0,0.22)]",
           stickyHeader && (maxHeight ?? "max-h-[70vh]"),
         )}
         style={maxHeight && !stickyHeader ? { maxHeight } : undefined}
@@ -658,8 +658,8 @@ export function EnterpriseTable<T>({
                       "group cursor-pointer select-none relative",
                       col.headerClassName,
                       col.cellConfig?.type === "number" || col.cellConfig?.type === "currency" ? "text-right" : col.cellConfig?.align === "center" ? "text-center" : undefined,
-                      col.pin === "left" && "sticky left-0 z-[11] bg-[#101010]",
-                      col.pin === "right" && "sticky right-0 z-[11] bg-[#101010]",
+                      col.pin === "left" && "sticky left-0 z-[10] bg-surface-raised",
+                      col.pin === "right" && "sticky right-0 z-[10] bg-surface-raised",
                     )}
                     style={col.width || colWidth ? { width: col.width ?? colWidth, minWidth: col.minWidth } : undefined}
                     onClick={() => handleSort(col)}

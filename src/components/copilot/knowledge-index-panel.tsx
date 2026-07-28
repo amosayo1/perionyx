@@ -44,7 +44,7 @@ export function KnowledgeIndexPanel() {
             className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-white/[0.02]"
           >
             {m.available
-              ? <CheckCircle className="h-3 w-3 shrink-0 text-[#d4af37]" />
+              ? <CheckCircle className="h-3 w-3 shrink-0 text-gold" />
               : <Clock className="h-3 w-3 shrink-0 text-zinc-600" />
             }
             <div className="min-w-0 flex-1">

@@ -1,43 +1,42 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { cacheHeaders, handleRouteError, zodErrorResponse, parseJsonBody } from "@/server/http/handle-route";
 import { getControlTestsSchema, createControlTestSchema } from "@/lib/validations/audit-specialist";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 export async function GET(req: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-
-    const { searchParams } = new URL(req.url);
-    const params = Object.fromEntries(searchParams.entries());
-
-    const parsed = getControlTestsSchema.safeParse(params);
-    if (!parsed.success) {
-      return zodErrorResponse(parsed.error, req);
+  return withRuntimeContext(req, async (ctx) => {
+    try {
+  
+      const { searchParams } = new URL(req.url);
+      const params = Object.fromEntries(searchParams.entries());
+  
+      const parsed = getControlTestsSchema.safeParse(params);
+      if (!parsed.success) {
+        return zodErrorResponse(parsed.error, req);
+      }
+  
+      const data = { tests: [], filters: parsed.data };
+      return NextResponse.json(data, { headers: cacheHeaders(15) });
+    } catch (err) {
+      return handleRouteError(err, req);
     }
-
-    const data = { tests: [], filters: parsed.data };
-    return NextResponse.json(data, { headers: cacheHeaders(15) });
-  } catch (err) {
-    return handleRouteError(err, req);
-  }
+  });
 }
 
 export async function POST(req: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-
-    const body = await parseJsonBody<unknown>(req);
-    const parsed = createControlTestSchema.safeParse(body);
-    if (!parsed.success) {
-      return zodErrorResponse(parsed.error, req);
+  return withRuntimeContext(req, async (ctx) => {
+    try {
+  
+      const body = await parseJsonBody<unknown>(req);
+      const parsed = createControlTestSchema.safeParse(body);
+      if (!parsed.success) {
+        return zodErrorResponse(parsed.error, req);
+      }
+  
+      const data = { id: crypto.randomUUID(), ...parsed.data, companyId: ctx.tenant.companyId, testedAt: new Date().toISOString() };
+      return NextResponse.json(data, { status: 201 });
+    } catch (err) {
+      return handleRouteError(err, req);
     }
-
-    const data = { id: crypto.randomUUID(), ...parsed.data, companyId: ctx.companyId, testedAt: new Date().toISOString() };
-    return NextResponse.json(data, { status: 201 });
-  } catch (err) {
-    return handleRouteError(err, req);
-  }
+  });
 }

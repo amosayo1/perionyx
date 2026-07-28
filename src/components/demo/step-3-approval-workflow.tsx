@@ -106,7 +106,7 @@ export function Step3ApprovalWorkflow() {
             animate={{ opacity: 1, y: 0 }}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl mb-4 border ${
               phase === "approved"
-                ? "bg-[#d4af37]/5 border-[#d4af37]/10"
+                ? "bg-gold/5 border-gold/10"
                 : phase === "waiting"
                 ? "bg-amber-500/5 border-amber-500/10"
                 : "bg-zinc-800/40 border-white/[0.06]"
@@ -124,10 +124,10 @@ export function Step3ApprovalWorkflow() {
               </>
             ) : (
               <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span className="text-xs text-[#d4af37] font-medium">Compliance approved — escalated to CFO</span>
+                <span className="text-xs text-gold font-medium">Compliance approved — escalated to CFO</span>
               </>
             )}
           </motion.div>
@@ -145,7 +145,7 @@ export function Step3ApprovalWorkflow() {
               {i < stages.length - 1 && (
                 <div className={`absolute left-[19px] top-10 bottom-0 w-px ${
                   stages[i].status === "approved" || (stages[i].status === "pending" && phase === "approved")
-                    ? "bg-[#d4af37]/40"
+                    ? "bg-gold/40"
                     : stages[i].status === "pending"
                     ? "bg-amber-500/30"
                     : "bg-white/[0.06]"
@@ -154,7 +154,7 @@ export function Step3ApprovalWorkflow() {
 
               {/* Avatar circle */}
               <div className={`relative z-10 w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 transition-all duration-500 ${
-                s.status === "approved" ? "bg-[#d4af37]/10 border-2 border-[#d4af37]/40" :
+                s.status === "approved" ? "bg-gold/10 border-2 border-gold/40" :
                 s.status === "pending" ? "bg-amber-500/10 border-2 border-amber-500/30" :
                 "bg-zinc-800 border-2 border-zinc-700"
               }`}>
@@ -165,7 +165,7 @@ export function Step3ApprovalWorkflow() {
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                     width="14" height="14" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="3" strokeLinecap="round"
-                    strokeLinejoin="round" className="text-[#d4af37]"
+                    strokeLinejoin="round" className="text-gold"
                   >
                     <polyline points="20 6 9 17 4 12" />
                   </motion.svg>
@@ -194,13 +194,13 @@ export function Step3ApprovalWorkflow() {
                   </div>
                   <div className="flex items-center gap-2">
                     {s.status === "approved" && (
-                      <span className="text-[10px] text-[#d4af37] font-mono">{s.time}</span>
+                      <span className="text-[10px] text-gold font-mono">{s.time}</span>
                     )}
                     {s.status === "pending" && (
                       <span className="text-[10px] text-zinc-600 font-mono">{currentTime}</span>
                     )}
                     <span className={`text-[11px] px-2 py-0.5 rounded-full ${
-                      s.status === "approved" ? "bg-[#d4af37]/10 text-[#d4af37]" :
+                      s.status === "approved" ? "bg-gold/10 text-gold" :
                       s.status === "pending" ? "bg-amber-500/10 text-amber-400" :
                       "bg-zinc-800 text-zinc-600"
                     }`}>
@@ -221,7 +221,7 @@ export function Step3ApprovalWorkflow() {
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Notifications</h4>
               {notifications.filter((n) => !n.read).length > 0 && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#d4af37]/10 text-[#d4af37] font-mono">
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-mono">
                   {notifications.filter((n) => !n.read).length} new
                 </span>
               )}
@@ -234,15 +234,15 @@ export function Step3ApprovalWorkflow() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.3, duration: 0.3 }}
                   className={`flex items-start gap-2.5 px-3 py-2 rounded-lg ${
-                    !n.read ? "bg-[#d4af37]/5 border border-[#d4af37]/10" : ""
+                    !n.read ? "bg-gold/5 border border-gold/10" : ""
                   }`}
                 >
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                    n.text.includes("approved") ? "bg-[#d4af37]/10" :
+                    n.text.includes("approved") ? "bg-gold/10" :
                     n.text.includes("notified") ? "bg-blue-500/10" : "bg-zinc-800"
                   }`}>
                     {n.text.includes("approved") ? (
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#d4af37]"><polyline points="20 6 9 17 4 12" /></svg>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gold"><polyline points="20 6 9 17 4 12" /></svg>
                     ) : (
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -262,7 +262,7 @@ export function Step3ApprovalWorkflow() {
                   animate={{ opacity: 1 }}
                   className="flex items-center gap-2 px-3 py-2"
                 >
-                  <div className="w-3 h-3 rounded-full border-2 border-zinc-600 border-t-[#d4af37] animate-spin" />
+                  <div className="w-3 h-3 rounded-full border-2 border-zinc-600 border-t-gold animate-spin" />
                   <span className="text-[11px] text-zinc-600">Notifying next approver...</span>
                 </motion.div>
               )}
@@ -315,12 +315,12 @@ export function Step3ApprovalWorkflow() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="mt-6 flex items-center gap-2 px-4 py-3 rounded-xl bg-[#d4af37]/5 border border-[#d4af37]/10"
+          className="mt-6 flex items-center gap-2 px-4 py-3 rounded-xl bg-gold/5 border border-gold/10"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
             <polyline points="20 6 9 17 4 12" />
           </svg>
-          <span className="text-xs text-[#d4af37]">Compliance approved — payment routed to CFO for final review</span>
+          <span className="text-xs text-gold">Compliance approved — payment routed to CFO for final review</span>
         </motion.div>
       )}
     </motion.div>

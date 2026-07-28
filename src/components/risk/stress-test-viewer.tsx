@@ -11,7 +11,7 @@ export function StressTestViewer({ tests, max = 8 }: StressTestViewerProps) {
   const completed = tests.filter((t) => t.status === "completed").slice(0, max);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-medium text-gray-300">Completed Stress Tests</h3>
         <span className="text-xs text-gray-500">{tests.filter((t) => t.status === "completed").length} total</span>

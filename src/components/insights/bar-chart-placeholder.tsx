@@ -14,7 +14,7 @@ export function BarChartPlaceholder({ data, className }: Props) {
           <div
             className={cn(
               "w-full rounded-t-sm transition-all",
-              item.color === "emerald" && "bg-[#d4af37]/30",
+              item.color === "emerald" && "bg-gold/30",
               item.color === "blue" && "bg-blue-500/30",
               item.color === "purple" && "bg-purple-500/30",
               item.color === "amber" && "bg-amber-500/30",

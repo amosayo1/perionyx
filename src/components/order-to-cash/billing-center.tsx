@@ -35,7 +35,7 @@ function getDaysOverdue(dueDate: Date | string): number {
 export function BillingCenter({ invoices, max = 20 }: BillingCenterProps) {
   const displayed = invoices.slice(0, max);
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a1a]">
+    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a24]">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-800">

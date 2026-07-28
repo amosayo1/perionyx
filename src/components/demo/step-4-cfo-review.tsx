@@ -45,7 +45,7 @@ export function Step4CfoReview() {
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#d4af37]/10 text-[#d4af37]"
+              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold"
             >
               Approved
             </motion.span>
@@ -97,7 +97,7 @@ export function Step4CfoReview() {
                 { name: "New Vendor Policy", detail: "First payment — Compliance Officer verified", by: "David Chen (Compliance)", status: "Approved" },
               ].map((p) => (
                 <div key={p.name} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-black/30 border border-white/[0.04]">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37] shrink-0">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold shrink-0">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                   <div className="flex-1">
@@ -105,7 +105,7 @@ export function Step4CfoReview() {
                     <p className="text-[11px] text-zinc-600 mt-0.5">{p.detail}</p>
                   </div>
                   <span className="text-[10px] text-zinc-500 shrink-0">{p.by}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#d4af37]/10 text-[#d4af37] shrink-0">{p.status}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold shrink-0">{p.status}</span>
                 </div>
               ))}
             </div>
@@ -116,7 +116,7 @@ export function Step4CfoReview() {
             <div className="flex items-center gap-3 pt-2">
               <button
                 onClick={handleApprove}
-                className="flex-1 px-5 py-3 text-sm font-medium rounded-xl bg-[#d4af37] text-white hover:bg-[#d4af37] transition-all duration-200 shadow-lg shadow-[#d4af37]/20"
+                className="flex-1 px-5 py-3 text-sm font-medium rounded-xl bg-gold text-white hover:bg-gold transition-all duration-200 shadow-lg shadow-gold/20"
               >
                 Approve & Sign Payment
               </button>
@@ -145,13 +145,13 @@ export function Step4CfoReview() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
-                    <span className="text-xs text-[#d4af37] font-medium">Signing...</span>
+                    <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                    <span className="text-xs text-gold font-medium">Signing...</span>
                   </div>
                 </div>
                 <div className="relative h-1 bg-white/[0.06] rounded-full overflow-hidden">
                   <motion.div
-                    className="absolute inset-y-0 left-0 bg-[#d4af37] rounded-full"
+                    className="absolute inset-y-0 left-0 bg-gold rounded-full"
                     initial={{ width: "0%" }}
                     animate={{ width: `${signatureProgress}%` }}
                     transition={{ duration: 0.3 }}
@@ -169,21 +169,21 @@ export function Step4CfoReview() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-4"
             >
-              <div className="flex items-center gap-4 px-5 py-4 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/20">
-                <div className="w-12 h-12 rounded-full bg-[#d4af37]/20 flex items-center justify-center">
+              <div className="flex items-center gap-4 px-5 py-4 rounded-xl bg-gold/10 border border-gold/20">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center">
                   <motion.svg
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                    strokeLinejoin="round" className="text-[#d4af37]"
+                    strokeLinejoin="round" className="text-gold"
                   >
                     <polyline points="20 6 9 17 4 12" />
                   </motion.svg>
                 </div>
                 <div>
-                  <span className="text-base font-semibold text-[#d4af37]">Payment Approved</span>
+                  <span className="text-base font-semibold text-gold">Payment Approved</span>
                   <p className="text-xs text-zinc-500 mt-0.5">Proceeding to ledger posting...</p>
                 </div>
               </div>

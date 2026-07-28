@@ -47,7 +47,7 @@ export default function ConsICEliminationCenter({ records }: ConsICEliminationCe
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {Object.entries(grouped).map(([type, items], gi) => (
         <div key={type}>
-          <div style={{ color: "#d4a843", fontWeight: 600, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8, paddingLeft: 4 }}>
+          <div style={{ color: "#d4af37", fontWeight: 600, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8, paddingLeft: 4 }}>
             {typeLabels[type] || type} ({items.length})
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -84,7 +84,7 @@ export default function ConsICEliminationCenter({ records }: ConsICEliminationCe
                   gridTemplateColumns: "1fr 1fr 120px 120px 100px 100px",
                   gap: 8,
                   padding: "8px 12px",
-                  background: "#1a1a2e",
+                  background: "#1a1a24",
                   borderRadius: 4,
                   alignItems: "center",
                   border: "1px solid #2a2a4a",
@@ -128,7 +128,7 @@ export default function ConsICEliminationCenter({ records }: ConsICEliminationCe
           fontSize: 13,
           fontWeight: 700,
           color: "#e0e0e0",
-          borderTop: "2px solid #d4a843",
+          borderTop: "2px solid #d4af37",
         }}
       >
         <span>Total</span>

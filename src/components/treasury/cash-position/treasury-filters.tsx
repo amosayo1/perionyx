@@ -38,7 +38,7 @@ export function TreasuryFilters({ className }: TreasuryFiltersProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg border border-white/[0.06] bg-zinc-800/50 px-3 py-2 text-[13px] text-zinc-200 outline-none focus:border-[#c9a84c]/50 focus:ring-1 focus:ring-[#c9a84c]/20"
+        className="rounded-lg border border-white/[0.06] bg-zinc-800/50 px-3 py-2 text-[13px] text-zinc-200 outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20"
         aria-label={`Filter by ${label.toLowerCase()}`}
       >
         {options.map((opt) => (
@@ -59,7 +59,7 @@ export function TreasuryFilters({ className }: TreasuryFiltersProps) {
         <Filter className="h-4 w-4" />
         Filters
         {activeFilters > 0 && (
-          <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#c9a84c]/20 text-[11px] text-[#c9a84c]">
+          <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold/20 text-[11px] text-gold">
             {activeFilters}
           </span>
         )}

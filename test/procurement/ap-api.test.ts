@@ -4,8 +4,17 @@ vi.mock("@/server/auth/auth", () => ({
   auth: vi.fn(),
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockLogger: any = {
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+  debug: vi.fn(),
+  child: vi.fn(function () { return mockLogger; }),
+};
+
 vi.mock("@/lib/logger", () => ({
-  logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+  logger: mockLogger,
 }));
 
 import {

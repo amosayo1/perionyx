@@ -1,22 +1,17 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError } from "@/server/http/handle-route";
 import { ExternalBankingService } from "@/modules/treasury/external-banking.service";
 import { rbacService } from "@/modules/rbac/rbac.service";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 export async function GET() {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(
-      session?.user?.id,
-      session?.user?.activeCompanyId,
-      session?.user?.companyRole,
-    );
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'treasury.read');
-    const items = await ExternalBankingService.listConnectedInstitutions(ctx);
-    return NextResponse.json({ items });
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  return withRuntimeContext(new Headers(), async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'treasury.read');
+      const items = await ExternalBankingService.listConnectedInstitutions(ctx.tenant);
+      return NextResponse.json({ items });
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  });
 }

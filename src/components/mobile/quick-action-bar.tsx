@@ -51,7 +51,7 @@ export function QuickActionBar({
           className={cn(
             "flex shrink-0 flex-col items-center gap-1 rounded-xl px-4 py-3",
             action.primary
-              ? "bg-[#d4af37]/10 text-[#d4af37] active:bg-[#d4af37]/20"
+              ? "bg-gold/10 text-gold active:bg-gold/20"
               : "bg-zinc-900/60 text-zinc-400 active:bg-zinc-800 active:text-zinc-300",
           )}
         >

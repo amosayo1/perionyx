@@ -13,15 +13,15 @@ export function ARCashApplicationCenter({ applications, receipts, invoices }: AR
         {[
           { label: "Total Unapplied", value: "$" + totalUnapplied.toLocaleString(), color: totalUnapplied > 0 ? "#eab308" : "#22c55e" },
           { label: "Matching Rate", value: matchingRate.toFixed(0) + "%", color: matchingRate >= 90 ? "#22c55e" : matchingRate >= 70 ? "#eab308" : "#ef4444" },
-          { label: "Pending Receipts", value: unappliedReceipts.length.toString(), color: unappliedReceipts.length > 0 ? "#d4a843" : "#22c55e" },
+          { label: "Pending Receipts", value: unappliedReceipts.length.toString(), color: unappliedReceipts.length > 0 ? "#d4af37" : "#22c55e" },
         ].map((item, i) => (
-          <div key={i} style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, borderLeft: `3px solid ${item.color}` }}>
+          <div key={i} style={{ background: "#1a1a24", borderRadius: 8, padding: 16, borderLeft: `3px solid ${item.color}` }}>
             <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 6 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 24, fontWeight: 700, fontFamily: "ui-monospace, monospace" }}>{item.value}</div>
           </div>
         ))}
       </div>
-      <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 16 }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, padding: 16 }}>
         <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 12 }}>Unapplied Receipts</div>
         {unappliedReceipts.length > 0 ? unappliedReceipts.map((r, i) => (
           <motion.div key={r.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
@@ -31,7 +31,7 @@ export function ARCashApplicationCenter({ applications, receipts, invoices }: AR
               <div style={{ fontSize: 12, color: "#94a3b8" }}>{r.customerName} - {new Date(r.receiptDate).toLocaleDateString()}</div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: "#d4a843", fontFamily: "ui-monospace, monospace" }}>${r.amount.toLocaleString()}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#d4af37", fontFamily: "ui-monospace, monospace" }}>${r.amount.toLocaleString()}</div>
               <div style={{ fontSize: 11, color: "#94a3b8" }}>{r.paymentMethod}</div>
             </div>
           </motion.div>

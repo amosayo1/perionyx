@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, Minus, Lightbulb } from "lucide-react";
 import type { StrategicHighlight } from "./types";
 
 const impactConfig = {
-  positive: { icon: TrendingUp, color: "text-[#d4af37]", bg: "bg-[#d4af37]/10" },
+  positive: { icon: TrendingUp, color: "text-gold", bg: "bg-gold/10" },
   negative: { icon: TrendingDown, color: "text-red-400", bg: "bg-red-500/10" },
   neutral: { icon: Minus, color: "text-zinc-400", bg: "bg-zinc-800" },
 };

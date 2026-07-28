@@ -95,7 +95,7 @@ export function TimelineView({
                 transition={{ duration: 0.2, delay: 0.05 }}
                 className={cn(
                   "group relative flex gap-4 px-2 py-2.5 rounded-lg transition-colors",
-                  isActive ? "bg-[#d4af37]/5" : "hover:bg-white/[0.02]",
+                  isActive ? "bg-gold/5" : "hover:bg-white/[0.02]",
                   stepMode && onStepChange ? "cursor-pointer" : "",
                 )}
                 onClick={() => stepMode && onStepChange?.(i)}
@@ -104,7 +104,7 @@ export function TimelineView({
                 <div className="relative z-10 mt-1">
                   <div className={cn(
                     "h-[10px] w-[10px] rounded-full border-2 border-zinc-900",
-                    isActive ? "ring-2 ring-[#d4af37]/40" : "",
+                    isActive ? "ring-2 ring-gold/40" : "",
                     color,
                   )} />
                 </div>
@@ -132,7 +132,7 @@ export function TimelineView({
                         <a
                           key={lr.href}
                           href={lr.href}
-                          className="text-[10px] text-[#d4af37] underline decoration-dotted underline-offset-2 hover:text-[#d4af37]/80"
+                          className="text-[10px] text-gold underline decoration-dotted underline-offset-2 hover:text-gold/80"
                         >
                           {lr.label}
                         </a>

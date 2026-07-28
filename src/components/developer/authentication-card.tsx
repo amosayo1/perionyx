@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import type { AuthMethod } from "./types";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  recommended: { label: "Recommended", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+  recommended: { label: "Recommended", className: "bg-gold/10 text-gold border-gold/20" },
   available: { label: "Available", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
   legacy: { label: "Legacy", className: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20" },
 };

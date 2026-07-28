@@ -73,7 +73,7 @@ export function GlobalCashForecastDashboard({ className }: { className?: string 
             className={cn(
               "px-4 py-2.5 text-[13px] font-medium capitalize whitespace-nowrap border-b-2 transition-colors",
               activeTab === tab
-                ? "border-[#c9a84c] text-white"
+                ? "border-gold text-white"
                 : "border-transparent text-zinc-400 hover:text-zinc-200",
             )}
           >

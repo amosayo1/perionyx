@@ -49,7 +49,7 @@ export const MaturityLadder = memo(function MaturityLadder({ ladder, className }
     <div className={cn("space-y-4", className)}>
       <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4">
         <div className="mb-4 flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-[#d4af37]" />
+          <Calendar className="h-4 w-4 text-gold" />
           <h3 className="text-sm font-semibold text-white">Maturity Ladder</h3>
           <span className="ml-auto text-[11px] text-zinc-500">Total: {formatCurrency(totalValue)}</span>
         </div>

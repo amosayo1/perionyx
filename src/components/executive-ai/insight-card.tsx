@@ -10,7 +10,7 @@ const CATEGORY_CONFIG: Record<string, { icon: React.ReactNode; color: string }> 
   operational: { icon: <Activity className="h-4 w-4" />, color: "text-blue-400" },
   risk: { icon: <AlertTriangle className="h-4 w-4" />, color: "text-red-400" },
   compliance: { icon: <Scale className="h-4 w-4" />, color: "text-purple-400" },
-  treasury: { icon: <Shield className="h-4 w-4" />, color: "text-[#d4af37]" },
+  treasury: { icon: <Shield className="h-4 w-4" />, color: "text-gold" },
   tax: { icon: <FileText className="h-4 w-4" />, color: "text-amber-400" },
   investments: { icon: <TrendingUp className="h-4 w-4" />, color: "text-cyan-400" },
   revenue: { icon: <TrendingUp className="h-4 w-4" />, color: "text-emerald-400" },
@@ -18,7 +18,7 @@ const CATEGORY_CONFIG: Record<string, { icon: React.ReactNode; color: string }> 
   fraud: { icon: <AlertTriangle className="h-4 w-4" />, color: "text-red-500" },
   anomaly: { icon: <Activity className="h-4 w-4" />, color: "text-amber-400" },
   forecast: { icon: <TrendingUp className="h-4 w-4" />, color: "text-blue-400" },
-  recommendation: { icon: <Lightbulb className="h-4 w-4" />, color: "text-[#d4af37]" },
+  recommendation: { icon: <Lightbulb className="h-4 w-4" />, color: "text-gold" },
 };
 
 const CONFIDENCE_COLORS: Record<string, string> = {
@@ -95,7 +95,7 @@ export const InsightCard = memo(function InsightCard({ insight, onAcknowledge, o
               <p className="text-[11px] font-medium text-zinc-500">Recommendations:</p>
               {insight.recommendations.map((r, i) => (
                 <p key={i} className="flex items-start gap-1.5 text-[11px] text-zinc-400">
-                  <span className="mt-0.5 text-[#d4af37]">•</span>
+                  <span className="mt-0.5 text-gold">•</span>
                   {r}
                 </p>
               ))}

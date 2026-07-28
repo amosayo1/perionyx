@@ -58,7 +58,7 @@ export const DashboardCard = memo(function DashboardCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h3 className="text-[13px] font-semibold text-zinc-200">{title}</h3>
-            {pinned && <Pin className="h-3 w-3 fill-[#c9a84c] text-[#c9a84c]" />}
+            {pinned && <Pin className="h-3 w-3 fill-gold text-gold" />}
           </div>
           {description && (
             <p className="mt-0.5 text-[11px] text-zinc-500">{description}</p>
@@ -81,7 +81,7 @@ export const DashboardCard = memo(function DashboardCard({
               className={cn(
                 "flex h-7 w-7 items-center justify-center rounded-md transition-all",
                 pinned
-                  ? "text-[#c9a84c] opacity-100"
+                  ? "text-gold opacity-100"
                   : "text-zinc-600 opacity-0 hover:bg-zinc-800 hover:text-zinc-300 group-hover:opacity-100",
               )}
               aria-label={pinned ? "Unpin" : "Pin"}

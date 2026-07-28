@@ -23,7 +23,7 @@ export function SearchToolbar({ value, onChange, placeholder = "Search...", filt
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="h-10 w-full rounded-lg border border-white/[0.1] bg-white/[0.03] pl-10 pr-4 text-sm text-white shadow-sm placeholder:text-zinc-500 transition-all duration-200 ease-out focus:border-[#d4af37]/40 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/20"
+          className="h-10 w-full rounded-lg border border-white/[0.1] bg-white/[0.03] pl-10 pr-4 text-sm text-white shadow-sm placeholder:text-zinc-500 transition-all duration-200 ease-out focus:border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/20"
         />
       </div>
       {filters && <div className="flex items-center gap-2">{filters}</div>}

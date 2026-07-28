@@ -18,7 +18,7 @@ export function RiskAlertsPanel({ alerts, max = 10 }: RiskAlertsPanelProps) {
   };
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-medium text-gray-300">Active Alerts</h3>
         <span className="text-xs text-gray-500">{alerts.filter(a => a.status === "active").length} active</span>

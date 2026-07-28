@@ -5,14 +5,14 @@ import { motion } from "framer-motion";
 import type { HeatmapRow } from "./types";
 
 const levelColors: Record<string, string> = {
-  low: "bg-[#d4af37]/15 text-[#d4af37] border-[#d4af37]/20",
+  low: "bg-gold/15 text-gold border-gold/20",
   medium: "bg-amber-500/15 text-amber-400 border-amber-500/20",
   high: "bg-orange-500/15 text-orange-400 border-orange-500/20",
   critical: "bg-red-500/15 text-red-400 border-red-500/20",
 };
 
 const levelBgs: Record<string, string> = {
-  low: "bg-[#d4af37]/8",
+  low: "bg-gold/8",
   medium: "bg-amber-500/8",
   high: "bg-orange-500/10",
   critical: "bg-red-500/12",

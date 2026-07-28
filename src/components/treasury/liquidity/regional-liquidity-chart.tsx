@@ -26,7 +26,7 @@ export function RegionalLiquidityChart({ className }: { className?: string }) {
                 </div>
               </div>
               <div className="h-2 rounded-full bg-zinc-800">
-                <div className="h-full rounded-full bg-gradient-to-r from-zinc-500/70 to-[#c9a84c]/70"
+                <div className="h-full rounded-full bg-gradient-to-r from-zinc-500/70 to-gold/70"
                   style={{ width: `${w}%` }} role="progressbar" aria-valuenow={w} aria-valuemin={0} aria-valuemax={100} />
               </div>
             </div>

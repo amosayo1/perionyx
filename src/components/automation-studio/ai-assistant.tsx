@@ -334,7 +334,7 @@ Return only the response text and suggestions, no markdown formatting.`,
               )}
               <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
                 msg.role === "user"
-                  ? "bg-[#d4af37]/10 text-zinc-200"
+                  ? "bg-gold/10 text-zinc-200"
                   : "bg-zinc-900/60 text-zinc-300"
               }`}>
                 {msg.content === "Thinking..." ? (
@@ -351,7 +351,7 @@ Return only the response text and suggestions, no markdown formatting.`,
                 )}
               </div>
               {msg.role === "user" && (
-                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#d4af37]/20 text-[#d4af37]">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/20 text-gold">
                   <User className="h-3.5 w-3.5" />
                 </div>
               )}
@@ -382,12 +382,12 @@ Return only the response text and suggestions, no markdown formatting.`,
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             placeholder="Ask AI about workflows..."
-            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#d4af37]/50"
+            className="flex-1 rounded-lg border border-white/[0.1] bg-white/[0.03] px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/50"
           />
           <button
             onClick={handleSendMessage}
             disabled={!input.trim() || isLoading}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#d4af37] text-black transition-opacity hover:opacity-90 disabled:opacity-30"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold text-black transition-opacity hover:opacity-90 disabled:opacity-30"
           >
             <Send className="h-4 w-4" />
           </button>

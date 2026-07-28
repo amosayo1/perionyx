@@ -2,6 +2,7 @@ import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { WorkflowEngine } from "@/modules/workflow/engine";
 import { OperationsService } from "@/modules/operations/operations.service";
+import { logger } from "@/lib/logger";
 import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import type {
   WorkflowAnalytics,
@@ -58,7 +59,7 @@ export class WorkflowAnalyticsService {
           instance: { select: { definition: { select: { name: true } } } },
         },
       }),
-      OperationsService.getQueueStatus().catch(() => [] as { queueName: string; queued: number; active: number; failed: number; scheduled: number }[]),
+      OperationsService.getQueueStatus().catch((err) => { logger.error(err, "Failed to fetch queue status"); return [] as { queueName: string; queued: number; active: number; failed: number; scheduled: number }[]; }),
       this.computeMostUsedWorkflows(ctx),
     ]);
 

@@ -22,7 +22,7 @@ export function RiskMatrix({ risks }: RiskMatrixProps) {
     risks.filter((r) => likelihoodOrder.indexOf(r.score.likelihood) === lIdx && impactOrder.indexOf(r.score.impact) === iIdx).length;
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-300">Risk Matrix (5×5)</h3>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[300px] text-xs">

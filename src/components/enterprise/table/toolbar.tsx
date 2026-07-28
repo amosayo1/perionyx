@@ -97,7 +97,7 @@ function ColumnVisibilityMenu<T>({
               {hidden.has(col.id) ? (
                 <EyeOff className="mr-2 h-3.5 w-3.5 text-zinc-600" />
               ) : (
-                <Eye className="mr-2 h-3.5 w-3.5 text-[#d4af37]" />
+                <Eye className="mr-2 h-3.5 w-3.5 text-gold" />
               )}
               {col.header}
             </DropdownMenuItem>
@@ -129,7 +129,7 @@ function DensityMenu({ density, onChange }: { density: Density; onChange: (d: De
           <DropdownMenuItem
             key={d}
             onClick={() => onChange(d)}
-            className={cn("text-sm capitalize", density === d && "text-[#d4af37]")}
+            className={cn("text-sm capitalize", density === d && "text-gold")}
           >
             {d === "ultra-compact" ? "Ultra Compact" : d}
           </DropdownMenuItem>
@@ -478,7 +478,7 @@ export function Toolbar<T>({
             value={searchValue}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
-            className="h-9 w-full rounded-lg border border-white/[0.1] bg-white/[0.03] pl-10 pr-4 text-sm text-white shadow-sm placeholder:text-zinc-500 transition-all duration-200 ease-out focus:border-[#d4af37]/40 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/20"
+            className="h-9 w-full rounded-lg border border-white/[0.1] bg-white/[0.03] pl-10 pr-4 text-sm text-white shadow-sm placeholder:text-zinc-500 transition-all duration-200 ease-out focus:border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/20"
           />
         </div>
 
@@ -490,13 +490,13 @@ export function Toolbar<T>({
               onClick={() => setFiltersOpen(!filtersOpen)}
               className={cn(
                 "gap-1.5 text-xs",
-                filtersOpen ? "text-[#d4af37]" : "text-zinc-400 hover:text-white",
+                filtersOpen ? "text-gold" : "text-zinc-400 hover:text-white",
               )}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               Filters
               {filterValues.filter((v) => v.value.trim()).length > 0 && (
-                <span className="ml-0.5 text-[#d4af37]">({filterValues.filter((v) => v.value.trim()).length})</span>
+                <span className="ml-0.5 text-gold">({filterValues.filter((v) => v.value.trim()).length})</span>
               )}
             </Button>
           )}

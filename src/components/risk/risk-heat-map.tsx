@@ -42,7 +42,7 @@ export function RiskHeatMap({ risks }: RiskHeatMapProps) {
   const maxCount = getMaxCount();
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-300">Risk Heat Map</h3>
       <table className="w-full text-xs">
         <thead>

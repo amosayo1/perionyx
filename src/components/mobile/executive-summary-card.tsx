@@ -18,7 +18,7 @@ export function ExecutiveSummaryCard({ title, children, action, className }: Exe
         {action && (
           <button
             onClick={action.onClick}
-            className="flex items-center gap-0.5 text-[11px] text-[#d4af37] hover:text-[#d4af37]/80 active:text-[#d4af37]/60"
+            className="flex items-center gap-0.5 text-[11px] text-gold hover:text-gold/80 active:text-gold/60"
           >
             {action.label}
             <ChevronRight className="h-3 w-3" />

@@ -48,7 +48,7 @@ export function Step5LedgerPosting() {
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#d4af37]/10 text-[#d4af37]"
+              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold"
             >
               {balanced ? "Balanced & Posted" : "Posted"}
             </motion.span>
@@ -62,9 +62,9 @@ export function Step5LedgerPosting() {
               <h3 className="text-sm font-semibold text-white">Journal Entry JE-2026-0421</h3>
               <p className="text-xs text-zinc-500 mt-0.5">Infrastructure vendor payment — Stratum Security</p>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#d4af37]/5 border border-[#d4af37]/10">
-              <div className={`w-1.5 h-1.5 rounded-full ${posted ? "bg-[#d4af37]" : "bg-amber-400 animate-pulse"}`} />
-              <span className="text-[11px] font-medium text-[#d4af37]">{posted ? "Posted" : "Posting..."}</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/5 border border-gold/10">
+              <div className={`w-1.5 h-1.5 rounded-full ${posted ? "bg-gold" : "bg-amber-400 animate-pulse"}`} />
+              <span className="text-[11px] font-medium text-gold">{posted ? "Posted" : "Posting..."}</span>
             </div>
           </div>
 
@@ -88,13 +88,13 @@ export function Step5LedgerPosting() {
                   onClick={() => setExpandedRow(expandedRow === i ? null : i)}
                   className={`w-full grid grid-cols-12 gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     expandedRow === i
-                      ? "bg-[#d4af37]/5 border border-[#d4af37]/20"
+                      ? "bg-gold/5 border border-gold/20"
                       : "bg-black/40 border border-white/[0.04] hover:bg-black/60 hover:border-white/[0.08]"
                   }`}
                 >
                   <span className="col-span-4 text-sm text-white font-medium flex items-center gap-2">
                     {expandedRow === i ? (
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37] shrink-0">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold shrink-0">
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     ) : (
@@ -106,7 +106,7 @@ export function Step5LedgerPosting() {
                   </span>
                   <span className="col-span-2 text-xs text-zinc-500 font-mono">{entry.accountCode}</span>
                   <span className={`col-span-2 text-sm font-mono ${
-                    entry.type === "DEBIT" ? "text-[#d4af37]" : "text-amber-400"
+                    entry.type === "DEBIT" ? "text-gold" : "text-amber-400"
                   }`}>
                     {entry.side}
                   </span>
@@ -166,13 +166,13 @@ export function Step5LedgerPosting() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center justify-between px-4 py-3 rounded-xl bg-[#d4af37]/5 border border-[#d4af37]/10"
+              className="flex items-center justify-between px-4 py-3 rounded-xl bg-gold/5 border border-gold/10"
             >
               <div className="flex items-center gap-2">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span className="text-xs text-[#d4af37] font-medium">Ledger Balanced</span>
+                <span className="text-xs text-gold font-medium">Ledger Balanced</span>
               </div>
               <span className="text-xs text-zinc-500 font-mono">$340,000.00 DR = $340,000.00 CR</span>
             </motion.div>

@@ -61,7 +61,7 @@ export function ExecutiveInsights({ kpis, dso, overdueAR, cashCollected, totalAR
   }
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <Lightbulb className="h-4 w-4 text-amber-400" />
         <h3 className="text-sm font-medium text-gray-200">Executive Insights</h3>

@@ -95,7 +95,7 @@ export function AdaptiveNavigation({ badgeCounts, className }: AdaptiveNavigatio
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
                         isActive
-                          ? "bg-[#d4af37]/10 text-[#d4af37]"
+                          ? "bg-gold/10 text-gold"
                           : "text-zinc-400 active:bg-zinc-800 active:text-zinc-200",
                       )}
                     >

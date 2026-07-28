@@ -33,7 +33,7 @@ function RuleCard({ rule, onEdit, onDelete }: { rule: ApprovalMatrixRule; onEdit
     >
       <div className="flex items-start justify-between p-4">
         <button type="button" onClick={onEdit} className="flex items-start gap-3 flex-1 text-left" aria-label={`Edit ${rule.name}`}>
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#d4af37]/10 text-[#d4af37]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/10 text-gold">
             <ShieldCheck className="h-4 w-4" aria-hidden="true" />
           </div>
           <div>

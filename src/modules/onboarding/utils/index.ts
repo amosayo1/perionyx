@@ -24,7 +24,7 @@ export function getStatusOrder(status: string): number {
 
 export function getStepCategoryColor(category: string): string {
   const colors: Record<string, string> = {
-    core: "text-[#d4af37] border-[#d4af37]/20 bg-[#d4af37]/10",
+    core: "text-gold border-gold/20 bg-gold/10",
     integration: "text-blue-400 border-blue-500/20 bg-blue-500/10",
     governance: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
     automation: "text-purple-400 border-purple-500/20 bg-purple-500/10",

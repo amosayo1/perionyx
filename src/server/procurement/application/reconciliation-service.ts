@@ -32,7 +32,7 @@ import type {
 } from "./types";
 import { ok, fail } from "./types";
 import { reconciliationEvents } from "../domain/events/event-types";
-import { apEventBus } from "../domain/events/event-bus";
+
 import { toDecimal, sumDecimals } from "@/lib/financial-precision";
 
 const IMPORTED = "IN_PROGRESS" as ReconciliationResultStatus;
@@ -184,8 +184,6 @@ export class ReconciliationApplicationService {
       period: cmd.period,
       lineCount: cmd.lines.length,
     });
-
-    await apEventBus.publish(event);
 
     const audit: AuditEntry = {
       action: "reconciliation.imported",
@@ -361,8 +359,6 @@ export class ReconciliationApplicationService {
       variance: totalVariance.toNumber(),
     });
 
-    await apEventBus.publish(event);
-
     const audit: AuditEntry = {
       action: "reconciliation.run",
       resourceType: "Reconciliation",
@@ -488,8 +484,6 @@ export class ReconciliationApplicationService {
       totalAdjustment: totalAdjustment.toNumber(),
     });
 
-    await apEventBus.publish(event);
-
     const audit: AuditEntry = {
       action: "reconciliation.adjusted",
       resourceType: "Reconciliation",
@@ -570,8 +564,6 @@ export class ReconciliationApplicationService {
       period: statement?.periodEnd ?? "",
       finalVariance: 0,
     });
-
-    await apEventBus.publish(event);
 
     const audit: AuditEntry = {
       action: "reconciliation.completed",

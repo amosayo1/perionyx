@@ -82,7 +82,7 @@ export function IntelligenceQuestions({
           onClick={() => onSelect(q)}
           className="group flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-[11px] text-zinc-500 transition-all hover:bg-white/[0.03] hover:text-zinc-300"
         >
-          <Sparkles className="h-3 w-3 shrink-0 text-zinc-600 group-hover:text-[#d4af37] transition-colors" />
+          <Sparkles className="h-3 w-3 shrink-0 text-zinc-600 group-hover:text-gold transition-colors" />
           <span className="leading-snug">{q}</span>
         </button>
       ))}

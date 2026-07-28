@@ -48,7 +48,7 @@ export const ExecutiveSummary = memo(function ExecutiveSummary({
             {totalRisks} risks
           </span>
           <span className="flex items-center gap-1">
-            <Lightbulb className="h-3 w-3 text-[#c9a84c]/70" />
+            <Lightbulb className="h-3 w-3 text-gold/70" />
             {totalRecommendations} recommendations
           </span>
         </div>

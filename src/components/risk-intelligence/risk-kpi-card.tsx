@@ -6,12 +6,12 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { RiskKpi } from "./types";
 
 const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
-const trendColors: Record<string, string> = { up: "text-[#d4af37]", down: "text-red-400", neutral: "text-zinc-500" };
+const trendColors: Record<string, string> = { up: "text-gold", down: "text-red-400", neutral: "text-zinc-500" };
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   critical: { label: "Critical", className: "bg-red-500/10 text-red-400 border-red-500/20" },
   warning: { label: "Warning", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  healthy: { label: "Healthy", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+  healthy: { label: "Healthy", className: "bg-gold/10 text-gold border-gold/20" },
   info: { label: "Info", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
 };
 
@@ -42,7 +42,7 @@ export function RiskKpiCard({ kpi }: { kpi: RiskKpi }) {
         {kpi.sparklineData.map((point, i) => {
           const max = Math.max(...kpi.sparklineData, 1);
           return (
-            <div key={i} className="w-[3px] rounded-full bg-[#d4af37]/40" style={{ height: Math.max((point / max) * 22, 3) }} />
+            <div key={i} className="w-[3px] rounded-full bg-gold/40" style={{ height: Math.max((point / max) * 22, 3) }} />
           );
         })}
       </div>

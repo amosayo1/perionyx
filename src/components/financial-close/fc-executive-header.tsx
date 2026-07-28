@@ -66,7 +66,7 @@ export default function FCExecutiveHeader({ summary }: FCExecutiveHeaderProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08, duration: 0.3 }}
           style={{
-            background: "#1a1a2e",
+            background: "#1a1a24",
             borderRadius: 12,
             borderLeft: `4px solid ${m.color}`,
             padding: "20px 24px",

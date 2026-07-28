@@ -151,7 +151,7 @@ export function PaymentCalendar({ className }: { className?: string }) {
     <div className={cn("rounded-lg border border-white/[0.06] bg-zinc-900/50", className)}>
       <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
         <div className="flex items-center gap-2">
-          <CalendarDays className="h-5 w-5 text-[#c9a84c]" />
+          <CalendarDays className="h-5 w-5 text-gold" />
           <h3 className="text-sm font-semibold text-white">Payment Calendar</h3>
           <span className="ml-2 rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] text-zinc-400">
             {visibleEvents.length} events
@@ -201,7 +201,7 @@ export function PaymentCalendar({ className }: { className?: string }) {
                 className={cn(
                   "flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
                   view === key
-                    ? "bg-[#c9a84c]/20 text-[#c9a84c]"
+                    ? "bg-gold/20 text-gold"
                     : "text-zinc-400 hover:text-white",
                 )}
                 aria-pressed={view === key}
@@ -229,13 +229,13 @@ export function PaymentCalendar({ className }: { className?: string }) {
                 <div
                   className={cn(
                     "sticky top-0 flex items-center gap-2 bg-zinc-900/95 px-5 py-2 backdrop-blur-sm",
-                    isToday && "border-y border-[#c9a84c]/20",
+                    isToday && "border-y border-gold/20",
                   )}
                 >
                   <span
                     className={cn(
                       "text-xs font-semibold",
-                      isToday ? "text-[#c9a84c]" : "text-zinc-400",
+                      isToday ? "text-gold" : "text-zinc-400",
                     )}
                   >
                     {formatDateHeader(date)}
@@ -244,7 +244,7 @@ export function PaymentCalendar({ className }: { className?: string }) {
                     {date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </span>
                   {isToday && (
-                    <span className="rounded bg-[#c9a84c]/20 px-1.5 py-0.5 text-[10px] text-[#c9a84c]">
+                    <span className="rounded bg-gold/20 px-1.5 py-0.5 text-[10px] text-gold">
                       Today
                     </span>
                   )}

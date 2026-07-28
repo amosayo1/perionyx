@@ -128,8 +128,8 @@ export function AgentTasksClient({ tasks, stats }: { tasks: TaskRow[]; stats: St
             className={cn(
               "rounded-xl border p-3 text-left transition-colors",
               statusFilter === s
-                ? "border-[#d4af37]/30 bg-[#d4af37]/5"
-                : "border-white/[0.09] bg-[#101010] hover:border-white/[0.14]",
+                ? "border-gold/30 bg-gold/5"
+                : "border-white/[0.09] bg-[#111118] hover:border-white/[0.14]",
             )}
           >
             <p className="text-[11px] text-zinc-500">{s.replace(/_/g, " ")}</p>
@@ -162,7 +162,7 @@ export function AgentTasksClient({ tasks, stats }: { tasks: TaskRow[]; stats: St
         ))}
       </div>
 
-      <div className="rounded-2xl border border-white/[0.09] bg-[#101010]">
+      <div className="rounded-2xl border border-white/[0.09] bg-[#111118]">
         {tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <Clock className="mb-3 h-6 w-6 text-zinc-500" />

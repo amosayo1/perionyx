@@ -40,7 +40,7 @@ export function QuickActionGroup({ title, actions, className }: QuickActionGroup
               )}
             >
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-zinc-700/50 bg-zinc-800/50">
-                <Icon className="h-4 w-4 text-zinc-400 group-hover:text-[#c9a84c]" />
+                <Icon className="h-4 w-4 text-zinc-400 group-hover:text-gold" />
               </div>
               <div className="min-w-0">
                 <p className="text-[13px] font-medium text-zinc-200 group-hover:text-white">{action.label}</p>

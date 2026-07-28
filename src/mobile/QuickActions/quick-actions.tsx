@@ -16,7 +16,7 @@ export interface QuickAction {
 }
 
 const colorMap = {
-  gold: "bg-[#d4af37]/10 text-[#d4af37] active:bg-[#d4af37]/20 border-[#d4af37]/15",
+  gold: "bg-gold/10 text-gold active:bg-gold/20 border-gold/15",
   emerald: "bg-emerald-500/10 text-emerald-400 active:bg-emerald-500/20 border-emerald-500/15",
   blue: "bg-blue-500/10 text-blue-400 active:bg-blue-500/20 border-blue-500/15",
   amber: "bg-amber-500/10 text-amber-400 active:bg-amber-500/20 border-amber-500/15",

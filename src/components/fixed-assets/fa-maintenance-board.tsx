@@ -75,7 +75,7 @@ export default function FAMaintenanceBoard({ assets }: FAMaintenanceBoardProps) 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.2 }}
                 style={{
-                  background: "#1a1a2e",
+                  background: "#1a1a24",
                   borderRadius: 8,
                   borderLeft: `3px solid ${g.color}`,
                   padding: "14px 16px",
@@ -114,7 +114,7 @@ export default function FAMaintenanceBoard({ assets }: FAMaintenanceBoardProps) 
                   <span>{new Date(m.scheduledDate).toLocaleDateString()}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
-                  <span style={{ color: "#d4a843", fontWeight: 600, fontFamily: "monospace" }}>
+                  <span style={{ color: "#d4af37", fontWeight: 600, fontFamily: "monospace" }}>
                     {formatCurrency(m.cost)}
                   </span>
                   {m.assignedTo && (
@@ -124,7 +124,7 @@ export default function FAMaintenanceBoard({ assets }: FAMaintenanceBoardProps) 
               </motion.div>
             ))}
             {g.items.length === 0 && (
-              <div style={{ color: "#555", fontSize: 13, textAlign: "center", padding: 24, background: "#1a1a2e", borderRadius: 8 }}>
+              <div style={{ color: "#555", fontSize: 13, textAlign: "center", padding: 24, background: "#1a1a24", borderRadius: 8 }}>
                 No {g.label.toLowerCase()} items
               </div>
             )}

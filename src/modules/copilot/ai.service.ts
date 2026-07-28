@@ -5,6 +5,7 @@ import { generateExecutiveBriefing } from "./executive-briefing";
 import { traceTransactionLifecycle } from "./timeline-engine";
 import { buildKnowledgeIndex } from "./knowledge-index";
 import { getCommandCenterProfile, type PersonaRole } from "./command-center";
+import { logger } from "@/lib/logger";
 import { promptExecutionService } from "@/modules/ai-provider/prompt-execution";
 import { aiProviderRegistry } from "@/modules/ai-provider/registry";
 import type { ChatMessage } from "@/modules/ai-provider/types";
@@ -148,7 +149,8 @@ export async function generateTitle(
     );
 
     return (result.content || "New conversation").trim();
-  } catch {
+  } catch (err) {
+    logger.error(err, "Failed to generate conversation title");
     return "New conversation";
   }
 }

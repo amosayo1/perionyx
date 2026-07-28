@@ -71,7 +71,7 @@ export const PerformanceCharts = memo(function PerformanceCharts({ performances,
 
       <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4">
         <div className="mb-3 flex items-center gap-2">
-          <PieChart className="h-4 w-4 text-[#d4af37]" />
+          <PieChart className="h-4 w-4 text-gold" />
           <h3 className="text-sm font-semibold text-white">Performance by Period</h3>
         </div>
         <div className="flex items-end gap-3">

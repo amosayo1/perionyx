@@ -15,7 +15,7 @@ const config: Record<IncidentStatus, string> = {
   investigating: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   awaiting_info: "bg-blue-500/10 text-blue-400 border-blue-500/20",
   fix_in_progress: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  resolved: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20",
+  resolved: "bg-gold/10 text-gold border-gold/20",
   closed: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
 };
 

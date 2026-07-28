@@ -1,4 +1,5 @@
 import { prisma } from "@/server/db/prisma";
+import { logger } from "@/lib/logger";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { evaluatorRegistry } from "./engine";
 import { TreasuryDecisionEvaluator } from "./evaluators/treasury-evaluator";
@@ -165,7 +166,8 @@ export class DecisionService {
         },
       });
       return true;
-    } catch {
+    } catch (err) {
+      logger.error(err, "Failed to update decision status for %s", decisionId);
       return false;
     }
   }

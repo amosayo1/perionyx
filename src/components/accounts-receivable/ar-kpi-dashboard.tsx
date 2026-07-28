@@ -10,7 +10,7 @@ export function ARKPIDashboard({ kpis }: ARKPIDashboardProps) {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
       {kpis.map((kpi, i) => (
         <motion.div key={kpi.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-          style={{ background: "#1a1a2e", borderRadius: 8, padding: 20, borderTop: `3px solid ${statusColors[kpi.status]}` }}>
+          style={{ background: "#1a1a24", borderRadius: 8, padding: 20, borderTop: `3px solid ${statusColors[kpi.status]}` }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
             <div style={{ color: "#94a3b8", fontSize: 13, fontWeight: 500 }}>{kpi.name}</div>
             <span style={{ background: statusColors[kpi.status] + "22", color: statusColors[kpi.status], fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" }}>

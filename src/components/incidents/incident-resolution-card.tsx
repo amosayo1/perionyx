@@ -34,9 +34,9 @@ export function IncidentResolutionCard({ incident }: { incident: Incident }) {
                 <div
                   className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold transition-colors ${
                     isCurrent
-                      ? "bg-[#d4af37] text-white"
+                      ? "bg-gold text-white"
                       : isPast
-                        ? "bg-[#d4af37]/20 text-[#d4af37]"
+                        ? "bg-gold/20 text-gold"
                         : "bg-zinc-800 text-zinc-600"
                   }`}
                 >
@@ -44,7 +44,7 @@ export function IncidentResolutionCard({ incident }: { incident: Incident }) {
                 </div>
                 <span
                   className={`text-[9px] font-medium text-center leading-tight ${
-                    isCurrent ? "text-[#d4af37]" : isPast ? "text-zinc-400" : "text-zinc-700"
+                    isCurrent ? "text-gold" : isPast ? "text-zinc-400" : "text-zinc-700"
                   }`}
                 >
                   {step.label}
@@ -53,7 +53,7 @@ export function IncidentResolutionCard({ incident }: { incident: Incident }) {
               {idx < steps.length - 1 && (
                 <div
                   className={`h-px flex-1 ${
-                    idx < currentIdx ? "bg-[#d4af37]/40" : "bg-zinc-800"
+                    idx < currentIdx ? "bg-gold/40" : "bg-zinc-800"
                   }`}
                 />
               )}

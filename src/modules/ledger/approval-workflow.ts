@@ -7,6 +7,7 @@ import { rbacService, RBACService } from "@/modules/rbac/rbac.service";
 import { ApprovalAuthorityService } from "@/modules/rbac/approval-authority.service";
 import { RuleEvaluationEngine, type TransactionContext } from "@/modules/rbac/rule-evaluation.engine";
 import { recordAudit } from "@/modules/audit/audit.service";
+import { logger } from "@/lib/logger";
 import type { LedgerLineDraft } from "@/modules/ledger/ledger.service";
 import { assertBalancedLedger } from "@/modules/ledger/ledger.service";
 import { postingEngine } from "@/modules/ledger/posting-engine";
@@ -308,7 +309,7 @@ export class ApprovalWorkflowEngine {
       message: `You approved transaction #${transactionId.slice(0, 8)}`,
       link: `/transactions/${transactionId}`,
       metadata: { transactionId, action: "approved" },
-    }).catch(() => {});
+    }).catch((err) => { logger.error(err, "Failed to send approval completed notification"); });
 
     return this.getApprovalRequirements(transactionId, companyId);
   }
@@ -399,7 +400,7 @@ export class ApprovalWorkflowEngine {
       message: `Transaction #${transactionId.slice(0, 8)} was rejected. Reason: ${reason}`,
       link: `/transactions/${transactionId}`,
       metadata: { transactionId, reason, rejectedBy: approvingUserId },
-    }).catch(() => {});
+    }).catch((err) => { logger.error(err, "Failed to send approval rejected notification"); });
   }
 
   /**
@@ -521,7 +522,7 @@ export class ApprovalWorkflowEngine {
       await prisma.transaction.update({
         where: { id: transactionId },
         data: { status: TransactionStatus.FAILED },
-      }).catch(() => {});
+      }).catch((err) => { logger.error(err, "Failed to mark transaction as FAILED"); });
       return { completed: false, error: message };
     }
   }

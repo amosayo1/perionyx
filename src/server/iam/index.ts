@@ -5,8 +5,6 @@ export { EnterpriseRoles } from "./roles";
 
 export { ABACEvaluator, ABACPolicyEngine, abacEvaluator, abacPolicyEngine, ABAC_ATTRIBUTE_DEFINITIONS } from "./abac";
 
-export { EnterpriseSessionManager, enterpriseSessionManager } from "./session";
-
 export { MFAService, mfaService } from "./mfa";
 export type { TOTPEnrollment, MFAStatus } from "./mfa";
 
@@ -27,8 +25,6 @@ export type {
   MFAConfig,
   MFAMethod,
   MFAVerification,
-  SessionConfig,
-  SessionInfo,
   EnterpriseRoleDefinition,
   UserPermissionQuery,
   RoleAssignment,

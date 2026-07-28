@@ -8,7 +8,7 @@ import { SandboxEntryButton } from "./sandbox-entry-button";
 export function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#d4af37]/3 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gold/3 via-transparent to-transparent pointer-events-none" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 text-center">
         <motion.div
@@ -17,7 +17,7 @@ export function Hero() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mb-8"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37]">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] rounded-full border border-gold/20 bg-gold/5 text-gold">
             Enterprise Treasury Operating System
           </span>
         </motion.div>
@@ -30,7 +30,7 @@ export function Hero() {
         >
           One Platform.
           <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] via-[#c7a961] to-[#d4af37]">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-[#c7a961] to-gold">
             Total Financial Control.
           </span>
         </motion.h1>
@@ -53,7 +53,7 @@ export function Hero() {
           <div className="flex flex-col items-center gap-1">
             <Link
               href="/request-demo"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold rounded-xl bg-[#d4af37] text-black hover:bg-[#c7a961] transition-all duration-200 shadow-lg shadow-[#d4af37]/20"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold rounded-xl bg-gold text-black hover:bg-[#c7a961] transition-all duration-200 shadow-lg shadow-gold/20"
             >
               Request a Demo
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -97,7 +97,7 @@ export function Hero() {
                 key={label}
                 className="flex flex-col items-center justify-center gap-2 bg-black/40 px-3 py-6 transition-colors hover:bg-white/[0.03]"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]/40" />
+                <span className="w-1.5 h-1.5 rounded-full bg-gold/40" />
                 <span className="text-[11px] font-medium text-zinc-500">{label}</span>
               </div>
             ))}

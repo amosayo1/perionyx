@@ -22,7 +22,7 @@ const AUTH_STYLES: Record<SigningAuthority, string> = {
   any_three: "bg-teal-500/15 text-teal-400 border-teal-500/25",
   manager: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
   director: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-  cfo: "bg-[#c9a84c]/15 text-[#c9a84c] border-[#c9a84c]/25",
+  cfo: "bg-gold/15 text-gold border-gold/25",
   ceo: "bg-red-500/15 text-red-400 border-red-500/25",
 };
 
@@ -176,7 +176,7 @@ export function AuthorizedSignatoriesGrid() {
       {!showAll && (
         <button
           onClick={() => setShowAll(true)}
-          className="rounded-lg border border-[#c9a84c]/20 bg-[#c9a84c]/10 px-4 py-2 text-[12px] font-medium text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/20"
+          className="rounded-lg border border-gold/20 bg-gold/10 px-4 py-2 text-[12px] font-medium text-gold transition-colors hover:bg-gold/20"
           aria-label={`View all ${MOCK_SIGNATORIES.length} signatories`}
         >
           View All {MOCK_SIGNATORIES.length.toLocaleString()} Signatories

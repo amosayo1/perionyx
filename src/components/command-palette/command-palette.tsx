@@ -190,7 +190,7 @@ export function CommandPalette() {
                   return (
                     <button key={`${group.heading}-${item.id}`} onClick={() => navigateTo(item.href)}
                       className={cn("flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors",
-                        globalIdx === selectedIndex ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-300 hover:bg-white/[0.04] hover:text-white"
+                        globalIdx === selectedIndex ? "bg-gold/10 text-gold" : "text-zinc-300 hover:bg-white/[0.04] hover:text-white"
                       )}>
                       <span className="shrink-0">{item.icon}</span>
                       <div className="min-w-0 flex-1">

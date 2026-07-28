@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { QueueData } from "./types";
 
 const healthConfig: Record<string, { label: string; className: string }> = {
-  healthy: { label: "Healthy", className: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20" },
+  healthy: { label: "Healthy", className: "bg-gold/10 text-gold border-gold/20" },
   warning: { label: "Warning", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   critical: { label: "Critical", className: "bg-red-500/10 text-red-400 border-red-500/20" },
 };

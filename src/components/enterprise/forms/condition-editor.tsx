@@ -77,7 +77,7 @@ export const ConditionEditor = memo(function ConditionEditor({
               onClick={() => onLogicChange("AND")}
               className={cn(
                 "px-2.5 py-1 text-[10px] font-medium transition-colors",
-                logic === "AND" ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 hover:text-zinc-300",
+                logic === "AND" ? "bg-gold/10 text-gold" : "text-zinc-500 hover:text-zinc-300",
               )}
             >
               ALL
@@ -87,7 +87,7 @@ export const ConditionEditor = memo(function ConditionEditor({
               onClick={() => onLogicChange("OR")}
               className={cn(
                 "px-2.5 py-1 text-[10px] font-medium border-l border-white/[0.06] transition-colors",
-                logic === "OR" ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 hover:text-zinc-300",
+                logic === "OR" ? "bg-gold/10 text-gold" : "text-zinc-500 hover:text-zinc-300",
               )}
             >
               ANY
@@ -126,7 +126,7 @@ export const ConditionEditor = memo(function ConditionEditor({
                   className={cn(
                     "px-1.5 py-1 text-[10px] font-mono transition-colors leading-none",
                     cond.operator === op.value
-                      ? "bg-[#d4af37]/10 text-[#d4af37]"
+                      ? "bg-gold/10 text-gold"
                       : "text-zinc-600 hover:text-zinc-300",
                   )}
                 >

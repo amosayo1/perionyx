@@ -29,13 +29,13 @@ interface ApprovalQuickViewProps {
 
 const priorityStyles = {
   high: "border-l-red-500/60 bg-red-500/[0.03]",
-  medium: "border-l-[#d4af37]/60 bg-[#d4af37]/[0.02]",
+  medium: "border-l-gold/60 bg-gold/[0.02]",
   low: "border-l-zinc-600 bg-transparent",
 };
 
 const priorityDot = {
   high: "bg-red-500",
-  medium: "bg-[#d4af37]",
+  medium: "bg-gold",
   low: "bg-zinc-500",
 };
 

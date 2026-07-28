@@ -201,7 +201,7 @@ export function AuditCalendar() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#1a1a1a] border border-white/10 rounded-xl p-6 w-full max-w-md space-y-4"
+              className="bg-[#1a1a24] border border-white/10 rounded-xl p-6 w-full max-w-md space-y-4"
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-white">Add Event</h3>

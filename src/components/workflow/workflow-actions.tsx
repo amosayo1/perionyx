@@ -172,7 +172,7 @@ export function WorkflowActions({
                   value={docDesc}
                   onChange={(e) => setDocDesc(e.target.value)}
                   placeholder="e.g. Signed PO, invoice copy, bank confirmation..."
-                  className="w-full rounded-xl border border-white/[0.08] bg-zinc-900 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/20 resize-none"
+                  className="w-full rounded-xl border border-white/[0.08] bg-zinc-900 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-gold/20 resize-none"
                 />
               </div>
               <DialogFooter>
@@ -208,7 +208,7 @@ export function WorkflowActions({
                   value={noteBody}
                   onChange={(e) => setNoteBody(e.target.value)}
                   placeholder="Type your note..."
-                  className="w-full rounded-xl border border-white/[0.08] bg-zinc-900 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#d4af37]/20 resize-none"
+                  className="w-full rounded-xl border border-white/[0.08] bg-zinc-900 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-gold/20 resize-none"
                 />
               </div>
               <DialogFooter>

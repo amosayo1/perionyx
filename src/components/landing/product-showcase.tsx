@@ -16,7 +16,7 @@ const views = [
             <div className="text-2xl font-bold text-white">$6,410,000</div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#d4af37]" />
+            <div className="w-2 h-2 rounded-full bg-gold" />
             <span className="text-xs text-zinc-500">All accounts healthy</span>
           </div>
         </div>
@@ -50,7 +50,7 @@ const views = [
             </div>
             <div className="text-right">
               <div className="text-xs text-zinc-200 font-medium">{a.amount}</div>
-              <div className={`text-[11px] ${a.status === "Approved" ? "text-[#d4af37]" : "text-amber-400"}`}>{a.status}</div>
+              <div className={`text-[11px] ${a.status === "Approved" ? "text-gold" : "text-amber-400"}`}>{a.status}</div>
             </div>
           </div>
         ))}
@@ -75,7 +75,7 @@ const views = [
             <span className={`text-[11px] font-medium px-2 py-0.5 rounded ${
               p.action === "Block" ? "bg-red-500/10 text-red-400" :
               p.action === "Flag" ? "bg-amber-500/10 text-amber-400" :
-              "bg-[#d4af37]/10 text-[#d4af37]"
+              "bg-gold/10 text-gold"
             }`}>
               {p.action}
             </span>
@@ -95,7 +95,7 @@ const views = [
           { action: "Payment initiated — John D.", time: "2:14 PM", id: "TXN-0421" },
         ].map((e) => (
           <div key={e.time} className="flex items-center gap-3 rounded-lg border border-white/[0.04] bg-black/30 p-2.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37]/60 shrink-0" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gold/60 shrink-0" />
             <div className="flex-1">
               <span className="text-xs text-zinc-300">{e.action}</span>
             </div>
@@ -132,7 +132,7 @@ export function ProductShowcase() {
               onClick={() => setActive(v.id)}
               className={`px-4 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
                 active === v.id
-                  ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/20"
+                  ? "bg-gold/10 text-gold border border-gold/20"
                   : "text-zinc-500 hover:text-zinc-300 border border-transparent"
               }`}
             >
@@ -159,13 +159,13 @@ export function ProductShowcase() {
             </div>
             {views.find((v) => v.id === active)?.content}
           </motion.div>
-          <div className="absolute -inset-4 bg-[#d4af37]/3 rounded-full blur-3xl -z-10" />
+          <div className="absolute -inset-4 bg-gold/3 rounded-full blur-3xl -z-10" />
         </div>
 
         <div className="mt-10 text-center">
           <Link
             href="/demo"
-            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-[#d4af37] transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-gold transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="5 3 19 12 5 21 5 3" />

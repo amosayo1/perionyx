@@ -23,9 +23,9 @@ const ROLE_CONFIG: Record<Message["role"], { icon: typeof Bot; label: string; bg
   agent: {
     icon: Bot,
     label: "Agent",
-    bg: "bg-[#d4af37]/10",
-    text: "text-[#d4af37]",
-    border: "border-[#d4af37]/20",
+    bg: "bg-gold/10",
+    text: "text-gold",
+    border: "border-gold/20",
   },
   user: {
     icon: User,
@@ -53,7 +53,7 @@ export function AgentConversation({ messages, className }: AgentConversationProp
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 overflow-y-auto rounded-2xl border border-white/[0.09] bg-[#101010] p-4",
+        "flex flex-col gap-3 overflow-y-auto rounded-2xl border border-white/[0.09] bg-[#111118] p-4",
         "max-h-[600px] min-h-[300px]",
         className,
       )}

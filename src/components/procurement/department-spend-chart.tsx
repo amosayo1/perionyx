@@ -12,7 +12,7 @@ export function DepartmentSpendChart({ analytics }: DepartmentSpendChartProps) {
 
   if (deptData.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-6">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-6">
         <p className="text-xs text-gray-500">No department spend data available</p>
       </div>
     );
@@ -21,7 +21,7 @@ export function DepartmentSpendChart({ analytics }: DepartmentSpendChartProps) {
   const sorted = [...deptData].sort((a, b) => b.totalSpend - a.totalSpend);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-200">Department Spend</h3>
       <div className="space-y-3">
         {sorted.map((item) => {

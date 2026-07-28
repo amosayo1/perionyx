@@ -32,7 +32,7 @@ const bucketBgColors: Record<string, string> = {
 export function AgingAnalysisChart({ data }: AgingAnalysisChartProps) {
   const total = data.reduce((sum, d) => sum + d.totalAmount, 0);
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <Clock className="h-4 w-4 text-gray-500" />
         <h3 className="text-sm font-medium text-gray-200">Aging Analysis</h3>

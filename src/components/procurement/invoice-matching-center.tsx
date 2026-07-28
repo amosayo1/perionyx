@@ -27,7 +27,7 @@ const invStatusStyles: Record<string, string> = {
 export function InvoiceMatchingCenter({ invoices }: InvoiceMatchingCenterProps) {
   if (invoices.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No invoices found</p>
       </div>
     );
@@ -36,7 +36,7 @@ export function InvoiceMatchingCenter({ invoices }: InvoiceMatchingCenterProps) 
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-800">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-gray-800 bg-[#1a1a1a]">
+        <thead className="border-b border-gray-800 bg-[#1a1a24]">
           <tr className="text-xs text-gray-500">
             <th className="px-4 py-3 font-medium">Invoice Number</th>
             <th className="px-4 py-3 font-medium">Vendor</th>
@@ -48,7 +48,7 @@ export function InvoiceMatchingCenter({ invoices }: InvoiceMatchingCenterProps) 
             <th className="px-4 py-3 font-medium">Due Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800 bg-[#1a1a1a]">
+        <tbody className="divide-y divide-gray-800 bg-[#1a1a24]">
           {invoices.map((inv) => {
             const matchStyle = matchStyles[inv.matchStatus] || matchStyles.pending;
             const invStatusStyle = invStatusStyles[inv.status] || invStatusStyles.draft;

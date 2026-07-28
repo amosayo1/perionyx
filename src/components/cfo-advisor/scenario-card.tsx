@@ -59,7 +59,7 @@ export function ScenarioCard({ scenario, onRun, onView, className }: ScenarioCar
       whileHover={{ y: -2, boxShadow: "0 8px 30px rgba(0,0,0,0.3)" }}
       transition={{ duration: 0.15 }}
       className={cn(
-        "rounded-2xl border border-white/[0.09] bg-[#101010] p-5 transition-colors",
+        "rounded-2xl border border-white/[0.09] bg-[#111118] p-5 transition-colors",
         className,
       )}
     >
@@ -155,7 +155,7 @@ export function ScenarioCard({ scenario, onRun, onView, className }: ScenarioCar
                           scenario.results!.confidence >= 80
                             ? "bg-emerald-400"
                             : scenario.results!.confidence >= 50
-                              ? "bg-[#d4af37]"
+                              ? "bg-gold"
                               : "bg-red-400",
                         )}
                       />
@@ -172,7 +172,7 @@ export function ScenarioCard({ scenario, onRun, onView, className }: ScenarioCar
         {onRun && (scenario.status === "idle" || scenario.status === "paused") && (
           <button
             onClick={onRun}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/10 px-3 py-1.5 text-xs font-medium text-[#d4af37] hover:bg-[#d4af37]/20 transition-colors"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gold/30 bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold hover:bg-gold/20 transition-colors"
           >
             <Play className="h-3 w-3" />
             Run

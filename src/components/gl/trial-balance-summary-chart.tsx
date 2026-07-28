@@ -62,7 +62,7 @@ export const TrialBalanceSummaryChart = memo(function TrialBalanceSummaryChart({
 
       <div className="mt-3 flex items-center justify-center gap-4">
         <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-[#d4af37]" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-gold" />
           <span className="text-[11px] text-zinc-400">Debit</span>
         </div>
         <div className="flex items-center gap-1.5">

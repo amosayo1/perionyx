@@ -24,7 +24,7 @@ export function RiskDistributionChart({ risks }: RiskDistributionChartProps) {
   const sorted = Object.entries(byCategory).sort(([, a], [, b]) => b - a);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <h3 className="mb-3 text-sm font-medium text-gray-300">Risk Distribution by Category</h3>
       <div className="space-y-2">
         {sorted.map(([cat, count]) => {

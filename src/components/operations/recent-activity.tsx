@@ -17,10 +17,10 @@ import {
 } from "lucide-react";
 
 const eventIcons: Record<string, React.ReactNode> = {
-  approved: <CheckCircle2 className="h-3.5 w-3.5 text-[#d4af37]" />,
+  approved: <CheckCircle2 className="h-3.5 w-3.5 text-gold" />,
   policy: <Shield className="h-3.5 w-3.5 text-amber-400" />,
   posted: <BookOpen className="h-3.5 w-3.5 text-blue-400" />,
-  treasury: <Landmark className="h-3.5 w-3.5 text-[#d4af37]" />,
+  treasury: <Landmark className="h-3.5 w-3.5 text-gold" />,
   audit: <ScrollText className="h-3.5 w-3.5 text-zinc-400" />,
   risk: <AlertTriangle className="h-3.5 w-3.5 text-orange-400" />,
   exception: <Activity className="h-3.5 w-3.5 text-red-400" />,

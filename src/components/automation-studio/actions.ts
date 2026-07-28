@@ -1,17 +1,17 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 import { WorkflowEngine } from "@/modules/workflow/engine";
 import type { StepDefinition } from "@/modules/workflow/types";
 
 const engine = WorkflowEngine.getInstance();
 
 async function getContext() {
-  const session = await auth();
-  const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-  return ctx;
+  return withRuntimeContext(await headers(), async (ctx) => {
+    return ctx.tenant;
+  });
 }
 
 export async function createWorkflowDefinition(data: {

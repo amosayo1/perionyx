@@ -1,5 +1,30 @@
 {
     "chat.tools.terminal.autoApprove": {
         "npx tsc": true
+    },
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "editor.rulers": [120],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": [
+        "typescript",
+        "typescriptreact"
+    ],
+    "eslint.rules.customizations": [
+        { "rule": "edl/*", "severity": "warn", "fixable": true }
+    ],
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.classAttributes": ["class", "className"],
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.next": true,
+        "**/dist": true,
+        "**/tools/design-governance/edl-eslint-plugin": false
     }
 }

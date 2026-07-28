@@ -3,8 +3,8 @@ import { Shield, AlertTriangle, XCircle } from "lucide-react";
 import type { ComplianceOverviewData } from "./types";
 
 function Gauge({ value, label }: { value: number; label: string }) {
-  const color = value >= 98 ? "text-[#d4af37]" : value >= 95 ? "text-amber-400" : "text-red-400";
-  const barColor = value >= 98 ? "bg-[#d4af37]" : value >= 95 ? "bg-amber-500" : "bg-red-500";
+  const color = value >= 98 ? "text-gold" : value >= 95 ? "text-amber-400" : "text-red-400";
+  const barColor = value >= 98 ? "bg-gold" : value >= 95 ? "bg-amber-500" : "bg-red-500";
 
   return (
     <div className="rounded-lg border border-white/[0.06] bg-zinc-900/40 p-3">
@@ -36,10 +36,10 @@ export function ComplianceOverview({ data }: { data: ComplianceOverviewData }) {
 
         <div className="rounded-lg border border-white/[0.06] bg-zinc-900/40 p-3">
           <div className="flex items-center gap-2">
-            <Shield className="h-3.5 w-3.5 text-[#d4af37]" />
+            <Shield className="h-3.5 w-3.5 text-gold" />
             <span className="text-[11px] text-zinc-500">Risk Exposure</span>
           </div>
-          <span className="text-lg font-semibold text-[#d4af37] mt-1 block">{data.riskExposure}</span>
+          <span className="text-lg font-semibold text-gold mt-1 block">{data.riskExposure}</span>
           <p className="text-[10px] text-zinc-600 mt-1">Low — all metrics nominal</p>
         </div>
 

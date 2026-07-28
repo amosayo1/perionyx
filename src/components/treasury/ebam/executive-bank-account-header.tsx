@@ -37,7 +37,7 @@ export function ExecutiveBankAccountHeader({
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenAccount}
-            className="flex items-center gap-2 rounded-lg bg-[#c9a84c]/90 px-4 py-2 text-[13px] font-medium text-black transition-colors hover:bg-[#c9a84c]"
+            className="flex items-center gap-2 rounded-lg bg-gold/90 px-4 py-2 text-[13px] font-medium text-black transition-colors hover:bg-gold"
             aria-label="Open new bank account"
           >
             <Plus className="h-4 w-4" />

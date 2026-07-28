@@ -36,7 +36,7 @@ export const Zone6TreasuryCommand = memo(function Zone6TreasuryCommand({
   };
 
   const metrics = [
-    { label: "Total Cash", value: formatCurrency(totalCash), icon: DollarSign, color: "text-[#c9a84c] bg-gold-500/10" },
+    { label: "Total Cash", value: formatCurrency(totalCash), icon: DollarSign, color: "text-gold bg-gold-500/10" },
     { label: "Bank Accounts", value: bankCount.toString(), icon: Landmark, color: "text-blue-400 bg-blue-500/10" },
     { label: "Liquidity Ratio", value: liquidityRatio.toFixed(1) + "x", icon: RefreshCw, color: "text-emerald-400 bg-emerald-500/10" },
     { label: "FX Exposure", value: `${fxExposure.toFixed(1)}%`, icon: TrendingDown, color: "text-amber-400 bg-amber-500/10" },

@@ -49,7 +49,7 @@ function AuthFields({ authMethod }: { authMethod: string }) {
         <div className="relative">
           <input
             type={showSecret ? "text" : "password"}
-            className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none"
+            className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none"
             placeholder="Enter API key"
           />
           <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
@@ -64,10 +64,10 @@ function AuthFields({ authMethod }: { authMethod: string }) {
     return (
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400">Username</label>
-        <input type="text" className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none" placeholder="Enter username" />
+        <input type="text" className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none" placeholder="Enter username" />
         <label className="text-xs font-medium text-zinc-400 mt-2 block">Password</label>
         <div className="relative">
-          <input type={showSecret ? "text" : "password"} className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none" placeholder="Enter password" />
+          <input type={showSecret ? "text" : "password"} className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none" placeholder="Enter password" />
           <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
             {showSecret ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
           </button>
@@ -81,7 +81,7 @@ function AuthFields({ authMethod }: { authMethod: string }) {
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400">Access Token</label>
         <div className="relative">
-          <input type={showSecret ? "text" : "password"} className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none" placeholder="Enter access token" />
+          <input type={showSecret ? "text" : "password"} className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none" placeholder="Enter access token" />
           <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
             {showSecret ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
           </button>
@@ -94,16 +94,16 @@ function AuthFields({ authMethod }: { authMethod: string }) {
     return (
       <div className="space-y-2">
         <label className="text-xs font-medium text-zinc-400">Client ID</label>
-        <input type="text" className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none" placeholder="OAuth client ID" />
+        <input type="text" className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none" placeholder="OAuth client ID" />
         <label className="text-xs font-medium text-zinc-400 mt-2 block">Client Secret</label>
         <div className="relative">
-          <input type={showSecret ? "text" : "password"} className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none" placeholder="OAuth client secret" />
+          <input type={showSecret ? "text" : "password"} className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none" placeholder="OAuth client secret" />
           <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
             {showSecret ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
           </button>
         </div>
         <label className="text-xs font-medium text-zinc-400 mt-2 block">Token URL</label>
-        <input type="text" className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none" placeholder="https://provider.com/oauth/token" />
+        <input type="text" className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none" placeholder="https://provider.com/oauth/token" />
       </div>
     );
   }
@@ -199,7 +199,7 @@ export function IntegrationHeader({ providers }: { providers: ConnectorKindSumma
         <Button
           variant="default"
           size="sm"
-          className="gap-1.5 text-xs bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20"
+          className="gap-1.5 text-xs bg-gold/10 text-gold border-gold/20 hover:bg-gold/20"
           onClick={() => setDialogOpen(true)}
         >
           <Plus className="h-3.5 w-3.5" />
@@ -244,7 +244,7 @@ export function IntegrationHeader({ providers }: { providers: ConnectorKindSumma
                   type="text"
                   value={connectorName}
                   onChange={(e) => setConnectorName(e.target.value)}
-                  className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-[#d4af37]/40 focus:outline-none"
+                  className="w-full rounded-lg border border-white/[0.08] bg-zinc-900/60 px-3 py-2 text-xs text-white placeholder-zinc-600 focus:border-gold/40 focus:outline-none"
                   placeholder={selectedProvider.label}
                 />
               </div>

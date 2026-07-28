@@ -14,8 +14,8 @@ function YieldCard({ label, value, icon }: { label: string; value: string; icon:
   return (
     <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/10">
-          <div className="h-5 w-5 text-[#d4af37]">{icon}</div>
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-gold/20 bg-gold/10">
+          <div className="h-5 w-5 text-gold">{icon}</div>
         </div>
         <div>
           <p className="text-xs text-zinc-500">{label}</p>

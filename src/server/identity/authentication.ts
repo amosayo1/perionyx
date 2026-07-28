@@ -1,9 +1,13 @@
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
 import type { AuthenticatedUser, AuthenticationMethod, LoginAttempt } from "./types"
+
+const BCRYPT_ROUNDS = 12;
 
 let loginAttemptIdCounter = 0
 
 export class AuthenticationService {
-  private users: Map<string, { id: string; email: string; name: string; password: string; roles: string[]; permissions: string[]; mfaVerified: boolean; companyId: string; locked: boolean; passkeys: { id: string; publicKey: string }[] }> = new Map()
+  private users: Map<string, { id: string; email: string; name: string; passwordHash: string; roles: string[]; permissions: string[]; mfaVerified: boolean; companyId: string; locked: boolean; passkeys: { id: string; publicKey: string }[] }> = new Map()
   private loginAttempts: LoginAttempt[] = []
   private resetTokens: Map<string, { email: string; expiresAt: Date }> = new Map()
 
@@ -11,13 +15,14 @@ export class AuthenticationService {
     return `user_${this.users.size + 1}_${Date.now()}`
   }
 
-  registerUser(email: string, password: string, name: string, companyId: string): string {
+  async registerUser(email: string, password: string, name: string, companyId: string): Promise<string> {
     const id = this.generateId()
+    const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS)
     this.users.set(id, {
       id,
       email,
       name,
-      password,
+      passwordHash,
       roles: [],
       permissions: [],
       mfaVerified: false,
@@ -28,10 +33,16 @@ export class AuthenticationService {
     return id
   }
 
-  login(email: string, password: string, ipAddress: string, userAgent: string): AuthenticatedUser {
+  async login(email: string, password: string, ipAddress: string, userAgent: string): Promise<AuthenticatedUser> {
     const user = Array.from(this.users.values()).find((u) => u.email === email)
-    if (!user || user.password !== password || user.locked) {
+    if (!user || user.locked) {
+      if (user) await bcrypt.compare(password, user.passwordHash);
       this.recordAttempt({ email, ipAddress, userAgent, success: false, method: "password", failureReason: user ? (user.locked ? "account_locked" : "invalid_password") : "user_not_found" })
+      throw new Error("Invalid credentials or account locked")
+    }
+    const passwordValid = await bcrypt.compare(password, user.passwordHash)
+    if (!passwordValid) {
+      this.recordAttempt({ email, ipAddress, userAgent, success: false, method: "password", failureReason: "invalid_password" })
       throw new Error("Invalid credentials or account locked")
     }
     this.recordAttempt({ email, ipAddress, userAgent, success: true, method: "password", userId: user.id })
@@ -48,7 +59,8 @@ export class AuthenticationService {
   }
 
   loginWithSSO(provider: string, token: string, ipAddress: string, userAgent: string): AuthenticatedUser {
-    const user = Array.from(this.users.values()).find((u) => u.email.includes(token.substring(0, 8)))
+    const tokenPrefix = token.substring(0, 8)
+    const user = Array.from(this.users.values()).find((u) => u.email.startsWith(tokenPrefix) || u.email.includes(tokenPrefix))
     if (!user) {
       this.recordAttempt({ email: `sso_${provider}`, ipAddress, userAgent, success: false, method: "sso_oidc", failureReason: "sso_user_not_found" })
       throw new Error("SSO authentication failed")
@@ -110,21 +122,23 @@ export class AuthenticationService {
     return true
   }
 
-  resetPassword(token: string, newPassword: string): boolean {
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
     const entry = this.resetTokens.get(token)
     if (!entry || entry.expiresAt < new Date()) return false
     const user = Array.from(this.users.values()).find((u) => u.email === entry.email)
     if (!user) return false
-    user.password = newPassword
+    user.passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS)
     this.users.set(user.id, user)
     this.resetTokens.delete(token)
     return true
   }
 
-  changePassword(userId: string, currentPassword: string, newPassword: string): boolean {
+  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<boolean> {
     const user = this.users.get(userId)
-    if (!user || user.password !== currentPassword) return false
-    user.password = newPassword
+    if (!user) return false
+    const valid = await bcrypt.compare(currentPassword, user.passwordHash)
+    if (!valid) return false
+    user.passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS)
     this.users.set(userId, user)
     return true
   }

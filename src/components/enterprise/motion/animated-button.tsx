@@ -15,7 +15,7 @@ interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<string, string> = {
-  primary: "bg-[#d4af37] text-black hover:bg-[#c7a961]",
+  primary: "bg-gold text-black hover:bg-[#c7a961]",
   secondary: "border border-white/[0.1] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]",
   ghost: "text-zinc-400 hover:text-white hover:bg-white/[0.04]",
   danger: "bg-red-600 text-white hover:bg-red-700",
@@ -39,7 +39,7 @@ export function AnimatedButton({
     <button
       className={cn(
         "relative inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-150",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
         "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
         variantStyles[variant],
         className,

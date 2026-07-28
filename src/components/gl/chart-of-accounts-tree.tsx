@@ -85,7 +85,7 @@ function TreeNodeRow({ node, expanded, onToggle }: { node: TreeNode; expanded: S
           )}
         </div>
         {hasChildren && (
-          <FolderOpen className={cn("h-4 w-4", isExpanded ? "text-[#d4af37]" : "text-zinc-500")} />
+          <FolderOpen className={cn("h-4 w-4", isExpanded ? "text-gold" : "text-zinc-500")} />
         )}
         <span className="min-w-[80px] text-xs font-mono text-zinc-500">{node.account.accountNumber}</span>
         <span className="flex-1 text-sm text-white truncate">{node.account.name}</span>
@@ -127,7 +127,7 @@ export const ChartOfAccountsTree = memo(function ChartOfAccountsTree({ accounts,
     <div className={cn("rounded-lg border border-zinc-800/60 bg-zinc-900/40", className)}>
       <div className="border-b border-zinc-800/60 px-4 py-3">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-          <FolderOpen className="h-4 w-4 text-[#d4af37]" />
+          <FolderOpen className="h-4 w-4 text-gold" />
           Chart of Accounts ({accounts.length})
         </h3>
       </div>

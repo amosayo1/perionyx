@@ -71,7 +71,7 @@ export const NotificationPreview = memo(function NotificationPreview({
       >
         <Bell className="h-4 w-4" />
         {unreadCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[14px] items-center justify-center rounded-full bg-[#c9a84c] px-1 text-[9px] font-bold text-black">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[14px] items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-black">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -92,7 +92,7 @@ export const NotificationPreview = memo(function NotificationPreview({
               <div className="flex items-center gap-2">
                 <span className="text-[12px] font-semibold text-zinc-200">Notifications</span>
                 {unreadCount > 0 && (
-                  <span className="rounded-full bg-gold-500/10 px-1.5 py-0.5 text-[10px] text-[#c9a84c]">{unreadCount}</span>
+                  <span className="rounded-full bg-gold-500/10 px-1.5 py-0.5 text-[10px] text-gold">{unreadCount}</span>
                 )}
               </div>
               <div className="flex items-center gap-2">

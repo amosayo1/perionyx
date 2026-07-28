@@ -17,29 +17,29 @@ export function LiquidityRiskDashboard({ liquidityData }: LiquidityRiskDashboard
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Avg LCR</p>
           <p className={`text-lg font-semibold ${avgLcr >= 100 ? "text-emerald-400" : "text-red-400"}`}>{avgLcr.toFixed(0)}%</p>
         </div>
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Total Funding Gap</p>
           <p className={`text-lg font-semibold ${totalGap >= 0 ? "text-emerald-400" : "text-red-400"}`}>${(totalGap / 1e6).toFixed(0)}M</p>
         </div>
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Liquidity Buffer</p>
           <p className="text-lg font-semibold text-white">${(totalBuffer / 1e6).toFixed(0)}M</p>
         </div>
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Refinancing Risk</p>
           <p className="text-lg font-semibold text-white">{(avgRefi * 100).toFixed(1)}%</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Emergency Liquidity</p>
           <p className="text-lg font-semibold text-white">${(totalEmergency / 1e6).toFixed(0)}M</p>
         </div>
-        <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+        <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
           <p className="text-xs text-gray-500">Cash Reserve</p>
           <p className="text-lg font-semibold text-white">${(totalReserve / 1e6).toFixed(0)}M</p>
         </div>

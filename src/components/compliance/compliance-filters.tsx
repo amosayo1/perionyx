@@ -11,7 +11,7 @@ export const ComplianceFilters = memo(function ComplianceFilters() {
         <input
           type="text"
           placeholder="Search compliance records..."
-          className="w-full rounded-lg border border-zinc-800/60 bg-zinc-900/60 py-2 pl-10 pr-4 text-sm text-white placeholder-zinc-500 focus:border-[#d4af37]/40 focus:outline-none focus:ring-1 focus:ring-[#d4af37]/20"
+          className="w-full rounded-lg border border-zinc-800/60 bg-zinc-900/60 py-2 pl-10 pr-4 text-sm text-white placeholder-zinc-500 focus:border-gold/40 focus:outline-none focus:ring-1 focus:ring-gold/20"
         />
       </div>
       <button className="flex items-center gap-2 rounded-lg border border-zinc-800/60 bg-zinc-900/60 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-zinc-700/60 hover:text-zinc-300">

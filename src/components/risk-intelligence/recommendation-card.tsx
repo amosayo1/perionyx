@@ -8,11 +8,11 @@ const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
 const impactColors: Record<string, string> = {
   high: "border-l-red-500/40",
   medium: "border-l-amber-500/40",
-  low: "border-l-[#d4af37]/40",
+  low: "border-l-gold/40",
 };
-const trendColors: Record<string, string> = { up: "text-red-400", down: "text-[#d4af37]", neutral: "text-zinc-500" };
+const trendColors: Record<string, string> = { up: "text-red-400", down: "text-gold", neutral: "text-zinc-500" };
 const categoryColors: Record<string, string> = {
-  Process: "text-blue-400", Vendor: "text-purple-400", Policy: "text-[#d4af37]",
+  Process: "text-blue-400", Vendor: "text-purple-400", Policy: "text-gold",
   Geographic: "text-amber-400", Operations: "text-orange-400",
 };
 
@@ -34,7 +34,7 @@ export function RecommendationCard({ rec }: { rec: Recommendation }) {
           </div>
           <p className="text-[11px] text-zinc-500 leading-relaxed mt-1">{rec.description}</p>
           <div className="flex items-center gap-2 mt-2">
-            <span className={cn("text-[10px] font-semibold uppercase", rec.impact === "high" ? "text-red-400" : rec.impact === "medium" ? "text-amber-400" : "text-[#d4af37]")}>
+            <span className={cn("text-[10px] font-semibold uppercase", rec.impact === "high" ? "text-red-400" : rec.impact === "medium" ? "text-amber-400" : "text-gold")}>
               {rec.impact} Impact
             </span>
             <span className="text-zinc-700">·</span>

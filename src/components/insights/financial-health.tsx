@@ -28,7 +28,7 @@ function MetricTile({
         <span
           className={cn(
             "flex items-center gap-0.5 text-[11px] font-medium",
-            trend === "up" && "text-[#d4af37]",
+            trend === "up" && "text-gold",
             trend === "down" && "text-red-400",
             trend === "neutral" && "text-zinc-500",
           )}

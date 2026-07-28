@@ -37,7 +37,7 @@ export const FinancialStatementViewer = memo(function FinancialStatementViewer({
               className={cn(
                 "px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors",
                 activeTab === tab.key
-                  ? "border-b-2 border-[#d4af37] text-[#d4af37]"
+                  ? "border-b-2 border-gold text-gold"
                   : "text-zinc-500 hover:text-zinc-300",
               )}
             >
@@ -56,9 +56,9 @@ export const FinancialStatementViewer = memo(function FinancialStatementViewer({
           <>
             {current.totalAssets !== undefined && (
               <div className="mb-4 grid grid-cols-3 gap-3">
-                <div className="rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/5 p-3 text-center">
+                <div className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-center">
                   <p className="text-[11px] text-zinc-500">Total Assets</p>
-                  <p className="text-lg font-bold text-[#d4af37]">{formatCurrency(current.totalAssets ?? 0)}</p>
+                  <p className="text-lg font-bold text-gold">{formatCurrency(current.totalAssets ?? 0)}</p>
                 </div>
                 <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-center">
                   <p className="text-[11px] text-zinc-500">Total Liabilities</p>

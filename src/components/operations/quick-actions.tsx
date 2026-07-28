@@ -45,7 +45,7 @@ export function QuickActions() {
               className={cn(
                 "group flex items-center gap-3 rounded-xl border p-3 transition-all duration-200",
                 action.variant === "primary"
-                  ? "border-[#d4af37]/20 bg-[#d4af37]/5 hover:bg-[#d4af37]/10 hover:border-[#d4af37]/30"
+                  ? "border-gold/20 bg-gold/5 hover:bg-gold/10 hover:border-gold/30"
                   : "border-white/[0.06] bg-zinc-900/40 hover:bg-zinc-900/60 hover:border-white/[0.1]",
               )}
             >
@@ -53,7 +53,7 @@ export function QuickActions() {
                 className={cn(
                   "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
                   action.variant === "primary"
-                    ? "bg-[#d4af37]/10 text-[#d4af37]"
+                    ? "bg-gold/10 text-gold"
                     : "bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700",
                 )}
               >
@@ -61,7 +61,7 @@ export function QuickActions() {
               </div>
 
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-white group-hover:text-[#d4af37] transition-colors">
+                <p className="text-xs font-medium text-white group-hover:text-gold transition-colors">
                   {action.label}
                 </p>
                 <p className="text-[10px] text-zinc-600 leading-relaxed">

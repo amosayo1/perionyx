@@ -1,33 +1,32 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
 import { ConnectorRunService } from "@/modules/connectors";
 import { rbacService } from "@/modules/rbac/rbac.service";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 export async function GET(request: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'connectors.read');
-    const { searchParams } = new URL(request.url);
-    const runId = searchParams.get("runId") ?? undefined;
-    const connectorId = searchParams.get("connectorId") ?? undefined;
-    const result = await ConnectorRunService.listEvents(ctx, { runId, connectorId });
-    return NextResponse.json(result);
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  return withRuntimeContext(request, async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'connectors.read');
+      const { searchParams } = new URL(request.url);
+      const runId = searchParams.get("runId") ?? undefined;
+      const connectorId = searchParams.get("connectorId") ?? undefined;
+      const result = await ConnectorRunService.listEvents(ctx.tenant, { runId, connectorId });
+      return NextResponse.json(result);
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  });
 }
 
 export async function POST(request: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    const body = await parseJsonBody<{ runId: string; type?: string; message?: string; metadata?: unknown }>(request);
-    const result = await ConnectorRunService.addEvent(ctx, body.runId, { type: body.type ?? "", message: body.message ?? "", metadata: body.metadata as Record<string, any> | undefined });
-    return NextResponse.json(result, { status: 201 });
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  return withRuntimeContext(request, async (ctx) => {
+    try {
+      const body = await parseJsonBody<{ runId: string; type?: string; message?: string; metadata?: unknown }>(request);
+      const result = await ConnectorRunService.addEvent(ctx.tenant, body.runId, { type: body.type ?? "", message: body.message ?? "", metadata: body.metadata as Record<string, any> | undefined });
+      return NextResponse.json(result, { status: 201 });
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  });
 }

@@ -41,7 +41,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 export function AlertsPanel({ alerts, max = 10, onDismiss }: AlertsPanelProps) {
   const displayed = alerts.slice(0, max);
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <AlertTriangle className="h-4 w-4 text-amber-400" />
         <h3 className="text-sm font-medium text-gray-200">Alerts</h3>

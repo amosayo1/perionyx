@@ -76,7 +76,7 @@ export function MobileNavigationBar({
               "rounded-xl px-3 py-1.5",
               "transition-colors duration-150",
               active
-                ? "text-[#d4af37]"
+                ? "text-gold"
                 : "text-zinc-500 active:text-zinc-300",
             )}
             role="tab"
@@ -86,7 +86,7 @@ export function MobileNavigationBar({
             {active && (
               <motion.div
                 layoutId="mobile-nav-indicator"
-                className="absolute -top-1.5 left-1/2 h-0.5 w-8 -translate-x-1/2 rounded-full bg-[#d4af37]"
+                className="absolute -top-1.5 left-1/2 h-0.5 w-8 -translate-x-1/2 rounded-full bg-gold"
                 transition={{ type: "spring", stiffness: 500, damping: 35 }}
               />
             )}
@@ -98,7 +98,7 @@ export function MobileNavigationBar({
                 </span>
               )}
             </div>
-            <span className={cn("text-[9px] font-semibold uppercase tracking-[0.08em]", active ? "text-[#d4af37]" : "text-zinc-500")}>
+            <span className={cn("text-[9px] font-semibold uppercase tracking-[0.08em]", active ? "text-gold" : "text-zinc-500")}>
               {tab.label}
             </span>
           </button>

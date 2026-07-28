@@ -25,7 +25,7 @@ interface MetricCardEnhancedProps {
 }
 
 const COLOR_CONFIG: Record<MetricColor, { text: string; bg: string; border: string; glow: string }> = {
-  gold: { text: "text-[#d4af37]", bg: "bg-[#d4af37]/10", border: "border-[#d4af37]/20", glow: "shadow-[#d4af37]/10" },
+  gold: { text: "text-gold", bg: "bg-gold/10", border: "border-gold/20", glow: "shadow-gold/10" },
   emerald: { text: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", glow: "shadow-emerald-500/10" },
   blue: { text: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", glow: "shadow-blue-500/10" },
   purple: { text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20", glow: "shadow-purple-500/10" },

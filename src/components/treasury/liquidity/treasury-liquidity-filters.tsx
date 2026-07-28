@@ -25,7 +25,7 @@ export function TreasuryLiquidityFilters({ className }: { className?: string }) 
     <div className="flex flex-col gap-1">
       <label className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">{label}</label>
       <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg border border-white/[0.06] bg-zinc-800/50 px-3 py-2 text-[13px] text-zinc-200 outline-none focus:border-[#c9a84c]/50 focus:ring-1 focus:ring-[#c9a84c]/20" aria-label={`Filter by ${label.toLowerCase()}`}>
+        className="rounded-lg border border-white/[0.06] bg-zinc-800/50 px-3 py-2 text-[13px] text-zinc-200 outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20" aria-label={`Filter by ${label.toLowerCase()}`}>
         {options.map((o) => <option key={o} value={o} className="bg-zinc-800">{o}</option>)}
       </select>
     </div>
@@ -37,7 +37,7 @@ export function TreasuryLiquidityFilters({ className }: { className?: string }) 
         className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 hover:border-zinc-600 hover:text-white lg:hidden"
         aria-label={isOpen ? "Hide filters" : "Show filters"} aria-expanded={isOpen}>
         <Filter className="h-4 w-4" /> Filters
-        {active > 0 && <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#c9a84c]/20 text-[11px] text-[#c9a84c]">{active}</span>}
+        {active > 0 && <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold/20 text-[11px] text-gold">{active}</span>}
       </button>
       <div className={cn("flex flex-wrap items-end gap-3", !isOpen && "hidden lg:flex")}>
         <Select label="Region" options={REGIONS} value={region} onChange={setRegion} />

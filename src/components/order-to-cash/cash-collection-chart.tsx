@@ -18,7 +18,7 @@ export function CashCollectionChart({ data, max = 12 }: CashCollectionChartProps
   const displayed = data.slice(0, max);
   const maxValue = Math.max(...displayed.map((d) => Math.max(d.invoiced, d.collected, d.outstanding)), 1);
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <BarChart3 className="h-4 w-4 text-gray-500" />
         <h3 className="text-sm font-medium text-gray-200">Cash Collection</h3>

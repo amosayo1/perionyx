@@ -17,7 +17,7 @@ interface MobileMetricCardProps {
 }
 
 const colorMap = {
-  gold: { accent: "text-[#d4af37]", bg: "bg-[#d4af37]/5", border: "border-[#d4af37]/15" },
+  gold: { accent: "text-gold", bg: "bg-gold/5", border: "border-gold/15" },
   red: { accent: "text-red-400", bg: "bg-red-500/5", border: "border-red-500/15" },
   green: { accent: "text-emerald-400", bg: "bg-emerald-500/5", border: "border-emerald-500/15" },
   blue: { accent: "text-blue-400", bg: "bg-blue-500/5", border: "border-blue-500/15" },

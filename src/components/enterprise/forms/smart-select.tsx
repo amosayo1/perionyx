@@ -105,7 +105,7 @@ export function SmartSelect({
         onClick={() => !disabled && setOpen(!open)}
         className={cn(
           "flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all",
-          open ? "border-[#d4af37]/40 ring-2 ring-[#d4af37]/20" : "border-white/[0.1]",
+          open ? "border-gold/40 ring-2 ring-gold/20" : "border-white/[0.1]",
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-white/[0.2]",
           "bg-white/[0.03]",
         )}
@@ -125,7 +125,7 @@ export function SmartSelect({
             return (
               <span
                 key={v}
-                className="inline-flex items-center gap-1 rounded-md bg-[#d4af37]/10 px-2 py-0.5 text-[10px] text-[#d4af37]"
+                className="inline-flex items-center gap-1 rounded-md bg-gold/10 px-2 py-0.5 text-[10px] text-gold"
               >
                 {opt?.label || v}
                 <button type="button" onClick={() => removeValue(v)} className="hover:text-red-400" aria-label={`Remove ${opt?.label || v}`}>
@@ -147,7 +147,7 @@ export function SmartSelect({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search..."
-                  className="w-full rounded-md border border-white/[0.06] bg-zinc-800 py-1.5 pl-8 pr-3 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#d4af37]/30"
+                  className="w-full rounded-md border border-white/[0.06] bg-zinc-800 py-1.5 pl-8 pr-3 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-gold/30"
                   autoFocus
                 />
               </div>
@@ -168,7 +168,7 @@ export function SmartSelect({
                     className={cn(
                       "flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-xs transition-colors",
                       isSelected(opt.value)
-                        ? "bg-[#d4af37]/10 text-[#d4af37]"
+                        ? "bg-gold/10 text-gold"
                         : "text-zinc-300 hover:bg-white/[0.04]",
                     )}
                   >
@@ -196,7 +196,7 @@ export function SmartSelect({
                       className={cn(
                         "flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-xs transition-colors",
                         isSelected(opt.value)
-                          ? "bg-[#d4af37]/10 text-[#d4af37]"
+                          ? "bg-gold/10 text-gold"
                           : "text-zinc-300 hover:bg-white/[0.04]",
                       )}
                     >

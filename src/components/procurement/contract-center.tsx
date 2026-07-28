@@ -18,7 +18,7 @@ const statusStyles: Record<string, { badge: string }> = {
 export function ContractCenter({ contracts }: ContractCenterProps) {
   if (contracts.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No contracts found</p>
       </div>
     );
@@ -27,7 +27,7 @@ export function ContractCenter({ contracts }: ContractCenterProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-800">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-gray-800 bg-[#1a1a1a]">
+        <thead className="border-b border-gray-800 bg-[#1a1a24]">
           <tr className="text-xs text-gray-500">
             <th className="px-4 py-3 font-medium">Contract Number</th>
             <th className="px-4 py-3 font-medium">Title</th>
@@ -39,7 +39,7 @@ export function ContractCenter({ contracts }: ContractCenterProps) {
             <th className="px-4 py-3 font-medium">Days to Expiry</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800 bg-[#1a1a1a]">
+        <tbody className="divide-y divide-gray-800 bg-[#1a1a24]">
           {contracts.map((ctr) => {
             const style = statusStyles[ctr.status] || statusStyles.draft;
             const now = new Date();

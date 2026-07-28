@@ -44,7 +44,7 @@ export default function FAUtilizationDashboard({ reports }: FAUtilizationDashboa
       {sorted.length === 0 ? (
         <div style={{ color: '#64748b', fontSize: 13, textAlign: 'center', padding: 40 }}>No utilization data available</div>
       ) : (
-        <div style={{ background: '#1a1a2e', borderRadius: 8, overflow: 'hidden', border: '1px solid #2a2a4a' }}>
+        <div style={{ background: '#1a1a24', borderRadius: 8, overflow: 'hidden', border: '1px solid #2a2a4a' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
               <tr style={{ background: '#16213e', borderBottom: '1px solid #2a2a4a' }}>

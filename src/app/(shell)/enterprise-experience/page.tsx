@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/server/auth/auth";
 import { prisma } from "@/server/db/prisma";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { PageContainer } from "@/components/enterprise/page-container";
 import { EnterprisePageHeader } from "@/components/enterprise/enterprise-page-header";
 import {
@@ -10,6 +8,8 @@ import {
   UserCircle, Compass, Sparkles, ArrowRight,
   type LucideIcon,
 } from "lucide-react";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 
 interface QuickLink {
   title: string;
@@ -31,112 +31,112 @@ const QUICK_LINKS: QuickLink[] = [
 ];
 
 export default async function EnterpriseExperiencePage() {
-  const session = await auth();
-  if (!session?.user?.activeCompanyId) redirect("/onboarding");
-  const ctx = requireTenantContext(session.user.id, session.user.activeCompanyId, session.user.companyRole);
-
-  const [latestScore, implementationMilestones, adoptionScore] = await Promise.all([
-    prisma.adoptionScore.findFirst({
-      where: { companyId: ctx.companyId },
-      orderBy: { createdAt: "desc" },
-      select: { overallScore: true, activeUsers: true, totalUsers: true },
-    }),
-    prisma.implementationMilestone.count({
-      where: { companyId: ctx.companyId },
-    }),
-    prisma.adoptionScore.findFirst({
-      where: { companyId: ctx.companyId },
-      orderBy: { createdAt: "desc" },
-      select: { overallScore: true },
-    }),
-  ]);
-
-  const totalMilestones = implementationMilestones;
-  const completedMilestones = await prisma.implementationProgress.count({
-    where: { companyId: ctx.companyId, status: "completed" },
+  return withRuntimeContext(await headers(), async (ctx) => {
+    if (!ctx.tenant.companyId) redirect("/onboarding");
+  
+    const [latestScore, implementationMilestones, adoptionScore] = await Promise.all([
+      prisma.adoptionScore.findFirst({
+        where: { companyId: ctx.tenant.companyId },
+        orderBy: { createdAt: "desc" },
+        select: { overallScore: true, activeUsers: true, totalUsers: true },
+      }),
+      prisma.implementationMilestone.count({
+        where: { companyId: ctx.tenant.companyId },
+      }),
+      prisma.adoptionScore.findFirst({
+        where: { companyId: ctx.tenant.companyId },
+        orderBy: { createdAt: "desc" },
+        select: { overallScore: true },
+      }),
+    ]);
+  
+    const totalMilestones = implementationMilestones;
+    const completedMilestones = await prisma.implementationProgress.count({
+      where: { companyId: ctx.tenant.companyId, status: "completed" },
+    });
+    const implementationPercent =
+      totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
+    const score = adoptionScore?.overallScore ?? 0;
+  
+    return (
+      <PageContainer>
+        <EnterprisePageHeader
+          title="Enterprise Experience"
+          description="Your central hub for platform adoption, guidance, and success"
+        />
+  
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Link
+            href="/implementation-center"
+            className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
+          >
+            <p className="text-xs text-zinc-500">Implementation</p>
+            <p className="mt-1 text-3xl font-bold text-white">{implementationPercent}%</p>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
+              <div
+                className="h-full rounded-full bg-amber-400 transition-all"
+                style={{ width: `${implementationPercent}%` }}
+              />
+            </div>
+            <p className="mt-1 text-xs text-zinc-500">
+              {completedMilestones} of {totalMilestones} milestones
+            </p>
+          </Link>
+  
+          <Link
+            href="/adoption-analytics"
+            className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
+          >
+            <p className="text-xs text-zinc-500">Adoption Score</p>
+            <p className="mt-1 text-3xl font-bold text-amber-400">{score}%</p>
+            <p className="mt-1 text-xs text-zinc-500">
+              {latestScore?.activeUsers ?? 0} active of {latestScore?.totalUsers ?? 0} users
+            </p>
+          </Link>
+  
+          <Link
+            href="/morning-briefing"
+            className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
+          >
+            <p className="text-xs text-zinc-500">Start Your Day</p>
+            <p className="mt-1 text-lg font-semibold text-white">Morning Briefing</p>
+            <div className="mt-2 flex items-center gap-1 text-xs text-zinc-500 group-hover:text-amber-400">
+              View briefing <ArrowRight className="h-3 w-3" />
+            </div>
+          </Link>
+  
+          <Link
+            href="/guidance"
+            className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
+          >
+            <p className="text-xs text-zinc-500">Learn the Platform</p>
+            <p className="mt-1 text-lg font-semibold text-white">Interactive Tours</p>
+            <div className="mt-2 flex items-center gap-1 text-xs text-zinc-500 group-hover:text-amber-400">
+              Start a tour <ArrowRight className="h-3 w-3" />
+            </div>
+          </Link>
+        </div>
+  
+        <h3 className="text-sm font-medium uppercase tracking-wider text-zinc-500">Modules</h3>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {QUICK_LINKS.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30 hover:bg-zinc-900/60"
+              >
+                <Icon className={`mb-3 h-6 w-6 ${link.color}`} />
+                <h4 className="text-sm font-semibold text-white group-hover:text-amber-400">
+                  {link.title}
+                </h4>
+                <p className="mt-1 text-xs text-zinc-500">{link.description}</p>
+              </Link>
+            );
+          })}
+        </div>
+      </PageContainer>
+    );
   });
-  const implementationPercent =
-    totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
-  const score = adoptionScore?.overallScore ?? 0;
-
-  return (
-    <PageContainer>
-      <EnterprisePageHeader
-        title="Enterprise Experience"
-        description="Your central hub for platform adoption, guidance, and success"
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Link
-          href="/implementation-center"
-          className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
-        >
-          <p className="text-xs text-zinc-500">Implementation</p>
-          <p className="mt-1 text-3xl font-bold text-white">{implementationPercent}%</p>
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
-            <div
-              className="h-full rounded-full bg-amber-400 transition-all"
-              style={{ width: `${implementationPercent}%` }}
-            />
-          </div>
-          <p className="mt-1 text-xs text-zinc-500">
-            {completedMilestones} of {totalMilestones} milestones
-          </p>
-        </Link>
-
-        <Link
-          href="/adoption-analytics"
-          className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
-        >
-          <p className="text-xs text-zinc-500">Adoption Score</p>
-          <p className="mt-1 text-3xl font-bold text-amber-400">{score}%</p>
-          <p className="mt-1 text-xs text-zinc-500">
-            {latestScore?.activeUsers ?? 0} active of {latestScore?.totalUsers ?? 0} users
-          </p>
-        </Link>
-
-        <Link
-          href="/morning-briefing"
-          className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
-        >
-          <p className="text-xs text-zinc-500">Start Your Day</p>
-          <p className="mt-1 text-lg font-semibold text-white">Morning Briefing</p>
-          <div className="mt-2 flex items-center gap-1 text-xs text-zinc-500 group-hover:text-amber-400">
-            View briefing <ArrowRight className="h-3 w-3" />
-          </div>
-        </Link>
-
-        <Link
-          href="/guidance"
-          className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30"
-        >
-          <p className="text-xs text-zinc-500">Learn the Platform</p>
-          <p className="mt-1 text-lg font-semibold text-white">Interactive Tours</p>
-          <div className="mt-2 flex items-center gap-1 text-xs text-zinc-500 group-hover:text-amber-400">
-            Start a tour <ArrowRight className="h-3 w-3" />
-          </div>
-        </Link>
-      </div>
-
-      <h3 className="text-sm font-medium uppercase tracking-wider text-zinc-500">Modules</h3>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {QUICK_LINKS.map((link) => {
-          const Icon = link.icon;
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="group rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4 transition-all hover:border-amber-400/30 hover:bg-zinc-900/60"
-            >
-              <Icon className={`mb-3 h-6 w-6 ${link.color}`} />
-              <h4 className="text-sm font-semibold text-white group-hover:text-amber-400">
-                {link.title}
-              </h4>
-              <p className="mt-1 text-xs text-zinc-500">{link.description}</p>
-            </Link>
-          );
-        })}
-      </div>
-    </PageContainer>
-  );
 }

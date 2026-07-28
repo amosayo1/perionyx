@@ -37,7 +37,7 @@ export default function ConsExecutiveHeader({ summary }: ConsExecutiveHeaderProp
     {
       label: "Total Equity",
       value: formatCurrency(summary.totalEquity),
-      color: "#d4a843",
+      color: "#d4af37",
       detail: `Minority: ${formatCurrency(summary.totalMinorityInterest)}`,
     },
     {
@@ -57,7 +57,7 @@ export default function ConsExecutiveHeader({ summary }: ConsExecutiveHeaderProp
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08, duration: 0.3 }}
           style={{
-            background: "#1a1a2e",
+            background: "#1a1a24",
             borderRadius: 12,
             borderLeft: `4px solid ${m.color}`,
             padding: "20px 24px",

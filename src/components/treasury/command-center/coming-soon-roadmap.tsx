@@ -35,9 +35,9 @@ export function ComingSoonRoadmap({ className }: { className?: string }) {
               </div>
               <h3 className="text-sm font-semibold text-white">{mod.title}</h3>
               <p className="mt-1 text-[12px] text-zinc-500 leading-relaxed">{mod.description}</p>
-              <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 px-3 py-1">
-                <span className="text-[10px] font-medium text-[#c9a84c]">ETA</span>
-                <span className="text-[10px] font-semibold text-[#c9a84c]">{mod.eta}</span>
+              <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gold/10 border border-gold/20 px-3 py-1">
+                <span className="text-[10px] font-medium text-gold">ETA</span>
+                <span className="text-[10px] font-semibold text-gold">{mod.eta}</span>
               </div>
             </motion.div>
           );

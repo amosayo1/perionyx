@@ -16,7 +16,7 @@ import {
 import { MOCK_VAR } from "./data";
 import type { VaRCalculation } from "./types";
 
-const GOLD = "#c9a84c";
+const GOLD = "#d4af37";
 const LATEST_VAR = MOCK_VAR[MOCK_VAR.length - 1];
 const PREVIOUS_VAR = MOCK_VAR.length > 1 ? MOCK_VAR[MOCK_VAR.length - 2] : null;
 

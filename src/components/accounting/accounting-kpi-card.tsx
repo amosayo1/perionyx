@@ -11,7 +11,7 @@ interface AccountingKPICardProps {
 
 export function AccountingKPICard({ title, value, subtitle, trend, status, icon }: AccountingKPICardProps) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-gray-400">{title}</p>

@@ -63,7 +63,7 @@ export const IntelligenceDashboard = memo(function IntelligenceDashboard({
     <div className={cn("space-y-4", className)}>
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-          <Brain className="h-4 w-4 text-[#d4af37]" />
+          <Brain className="h-4 w-4 text-gold" />
           Executive Intelligence ({filtered.length})
         </h2>
         <div className="relative">
@@ -73,7 +73,7 @@ export const IntelligenceDashboard = memo(function IntelligenceDashboard({
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search insights..."
-            className="w-48 rounded-md border border-zinc-800/60 bg-zinc-900/60 py-1.5 pl-8 pr-3 text-xs text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-[#d4af37]/40"
+            className="w-48 rounded-md border border-zinc-800/60 bg-zinc-900/60 py-1.5 pl-8 pr-3 text-xs text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-gold/40"
           />
         </div>
       </div>

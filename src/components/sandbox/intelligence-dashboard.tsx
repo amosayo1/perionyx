@@ -123,7 +123,7 @@ export function IntelligenceDashboard() {
             >
               <div className="sticky top-0 bg-zinc-900/95 backdrop-blur-xl border-b border-white/[0.06] p-4 flex items-center justify-between z-10">
                 <div className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-[#d4af37]" />
+                  <Brain className="h-5 w-5 text-gold" />
                   <h2 className="text-sm font-semibold text-white">Enterprise Intelligence</h2>
                 </div>
                 <button
@@ -150,9 +150,9 @@ export function IntelligenceDashboard() {
 
                 {briefing && !loading && (
                   <>
-                    <div className="rounded-xl border border-[#d4af37]/15 bg-[#d4af37]/5 p-4">
+                    <div className="rounded-xl border border-gold/15 bg-gold/5 p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <FileText className="h-4 w-4 text-[#d4af37]" />
+                        <FileText className="h-4 w-4 text-gold" />
                         <span className="text-xs font-semibold text-white">AI Briefing</span>
                         <span className="text-[10px] text-zinc-500 ml-auto">
                           {new Date(briefing.createdAt).toLocaleDateString()}
@@ -165,7 +165,7 @@ export function IntelligenceDashboard() {
                         <div className="space-y-2">
                           {briefing.sections.slice(0, 4).map((section, i) => (
                             <div key={i} className="rounded-lg bg-white/[0.03] p-2.5">
-                              <p className="text-[11px] font-medium text-[#d4af37]/80 uppercase tracking-wider mb-1">
+                              <p className="text-[11px] font-medium text-gold/80 uppercase tracking-wider mb-1">
                                 {section.title}
                               </p>
                               <p className="text-[11px] text-zinc-400 leading-relaxed">{section.summary}</p>
@@ -179,7 +179,7 @@ export function IntelligenceDashboard() {
                           <p className="text-[10px] font-semibold text-white uppercase tracking-wider">Recommendations</p>
                           {briefing.recommendations.slice(0, 3).map((rec, i) => (
                             <div key={i} className="flex items-start gap-2 text-[11px] text-zinc-400">
-                              <Zap className="h-3 w-3 shrink-0 mt-0.5 text-[#d4af37]" />
+                              <Zap className="h-3 w-3 shrink-0 mt-0.5 text-gold" />
                               <span>{rec}</span>
                             </div>
                           ))}
@@ -195,7 +195,7 @@ export function IntelligenceDashboard() {
                     <p className="text-sm text-zinc-400 mb-4">No intelligence data yet</p>
                     <button
                       onClick={generateBriefing}
-                      className="inline-flex items-center gap-2 rounded-lg bg-[#d4af37] px-4 py-2 text-xs font-semibold text-black hover:bg-[#d4af37]/90 transition-colors"
+                      className="inline-flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-black hover:bg-gold/90 transition-colors"
                     >
                       Generate AI Briefing
                     </button>

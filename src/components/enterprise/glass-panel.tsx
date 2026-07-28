@@ -15,7 +15,7 @@ const VARIANT_STYLES: Record<string, string> = {
   default: "bg-zinc-900/60 backdrop-blur-sm border border-white/[0.06]",
   elevated: "bg-zinc-900/80 backdrop-blur-xl border border-white/[0.08] shadow-2xl",
   subtle: "bg-white/[0.02] backdrop-blur-sm border border-white/[0.04]",
-  gold: "bg-[#d4af37]/[0.03] backdrop-blur-sm border border-[#d4af37]/15",
+  gold: "bg-gold/[0.03] backdrop-blur-sm border border-gold/15",
 };
 
 const BLUR_MAP: Record<string, string> = {

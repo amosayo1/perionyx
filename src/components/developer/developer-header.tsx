@@ -31,7 +31,7 @@ export function DeveloperHeader() {
         <Button
           variant="default"
           size="sm"
-          className="gap-1.5 text-xs bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20"
+          className="gap-1.5 text-xs bg-gold/10 text-gold border-gold/20 hover:bg-gold/20"
           onClick={() => setDialogOpen(true)}
         >
           <Key className="h-3.5 w-3.5" />
@@ -54,7 +54,7 @@ export function DeveloperHeader() {
             <DialogDescription>Copy this key now. You won&apos;t be able to see it again.</DialogDescription>
           </DialogHeader>
           <div className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/60 px-3 py-2">
-            <code className="flex-1 font-mono text-xs text-[#d4af37] truncate">{generatedKey}</code>
+            <code className="flex-1 font-mono text-xs text-gold truncate">{generatedKey}</code>
             <button
               type="button"
               onClick={() => {

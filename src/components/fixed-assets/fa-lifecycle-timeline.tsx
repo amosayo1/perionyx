@@ -19,14 +19,14 @@ export default function FALifecycleTimeline({ currentStatus }: FALifecycleTimeli
   const currentIdx = useMemo(() => STAGES.indexOf(currentStatus as typeof STAGES[number]), [currentStatus])
 
   return (
-    <div style={{ background: '#1a1a2e', borderRadius: 8, padding: '28px 20px', border: '1px solid #2a2a4a', overflow: 'hidden' }}>
+    <div style={{ background: '#1a1a24', borderRadius: 8, padding: '28px 20px', border: '1px solid #2a2a4a', overflow: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 0, position: 'relative', minWidth: 'max-content' }}>
         <div style={{ position: 'absolute', top: '50%', left: 20, right: 20, height: 2, background: '#2a2a4a', transform: 'translateY(-50%)', zIndex: 0 }} />
         {STAGES.map((stage, i) => {
           const isCompleted = currentIdx > i
           const isActive = currentIdx === i
           const isFuture = currentIdx < i
-          const circleColor = isActive ? '#d4a843' : isCompleted ? '#22c55e' : '#2a2a4a'
+          const circleColor = isActive ? '#d4af37' : isCompleted ? '#22c55e' : '#2a2a4a'
           const lineColor = isCompleted ? '#22c55e' : '#2a2a4a'
 
           return (
@@ -35,17 +35,17 @@ export default function FALifecycleTimeline({ currentStatus }: FALifecycleTimeli
               <div style={{ width: 14, height: 14, borderRadius: '50%', background: circleColor, border: `2px solid ${circleColor}`, boxShadow: isActive ? '0 0 8px rgba(212, 168, 67, 0.5)' : 'none', position: 'relative', zIndex: 2, transition: 'all 0.3s ease' }} />
               {isActive && (
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }}
-                  style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid #d4a843', position: 'absolute', top: -5, zIndex: 1, opacity: 0.5 }} />
+                  style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid #d4af37', position: 'absolute', top: -5, zIndex: 1, opacity: 0.5 }} />
               )}
               <div style={{
                 fontSize: 9, marginTop: 8, textAlign: 'center', fontWeight: isActive ? 700 : 500,
-                color: isActive ? '#d4a843' : isCompleted ? '#22c55e' : '#555',
+                color: isActive ? '#d4af37' : isCompleted ? '#22c55e' : '#555',
                 transition: 'color 0.3s ease', whiteSpace: 'nowrap',
               }}>
                 {stageLabels[stage]}
               </div>
               {isActive && currentIdx >= 0 && (
-                <div style={{ fontSize: 8, marginTop: 2, color: '#d4a843', fontWeight: 600, textTransform: 'uppercase' }}>Current</div>
+                <div style={{ fontSize: 8, marginTop: 2, color: '#d4af37', fontWeight: 600, textTransform: 'uppercase' }}>Current</div>
               )}
             </motion.div>
           )

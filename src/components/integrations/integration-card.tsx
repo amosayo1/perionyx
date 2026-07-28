@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { ConnectedIntegration } from "./types";
 
 const statusConfig: Record<string, { label: string; dot: string }> = {
-  connected: { label: "Connected", dot: "bg-[#d4af37]" },
+  connected: { label: "Connected", dot: "bg-gold" },
   warning: { label: "Warning", dot: "bg-amber-500" },
   disconnected: { label: "Disconnected", dot: "bg-red-500" },
 };
@@ -10,7 +10,7 @@ const statusConfig: Record<string, { label: string; dot: string }> = {
 const categoryColors: Record<string, string> = {
   banking: "text-blue-400",
   erp: "text-purple-400",
-  accounting: "text-[#d4af37]",
+  accounting: "text-gold",
   identity: "text-amber-400",
   communication: "text-sky-400",
   developer: "text-zinc-400",
@@ -40,7 +40,7 @@ export function IntegrationCard({ integration }: { integration: ConnectedIntegra
         </div>
         <div className="flex items-center gap-1.5">
           <div className={cn("h-2 w-2 rounded-full", cfg.dot)} />
-          <span className="text-[10px] font-semibold text-[#d4af37]">
+          <span className="text-[10px] font-semibold text-gold">
             {cfg.label}
           </span>
         </div>

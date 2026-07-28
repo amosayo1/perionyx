@@ -47,7 +47,7 @@ const PERIOD_STATUS_STYLES: Record<string, string> = {
 };
 
 const COLORS = {
-  gold: { icon: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+  gold: { icon: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
   emerald: { icon: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
   amber: { icon: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/10" },
   red: { icon: "text-red-400", border: "border-red-500/20", bg: "bg-red-500/10" },
@@ -141,7 +141,7 @@ export const GeneralLedgerDashboard = memo(function GeneralLedgerDashboard({
                             {j.status}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right text-sm text-[#d4af37]">{formatCurrency(j.totalDebit)}</td>
+                        <td className="px-4 py-3 text-right text-sm text-gold">{formatCurrency(j.totalDebit)}</td>
                         <td className="px-4 py-3 text-right text-sm text-zinc-300">{formatCurrency(j.totalCredit)}</td>
                         <td className="px-4 py-3 text-right text-sm text-zinc-500">{formatDate(j.postingDate ?? j.createdAt)}</td>
                       </tr>

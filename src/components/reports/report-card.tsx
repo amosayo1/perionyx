@@ -8,7 +8,7 @@ import { ReportBuilderDialog } from "./report-builder-dialog";
 import type { Report, ReportTemplate } from "./types";
 
 const categoryColors: Record<string, string> = {
-  Treasury: "text-[#d4af37]", Payments: "text-blue-400", Approvals: "text-purple-400",
+  Treasury: "text-gold", Payments: "text-blue-400", Approvals: "text-purple-400",
   Policy: "text-amber-400", Risk: "text-red-400", Audit: "text-zinc-400",
   Ledger: "text-sky-400", Settlement: "text-indigo-400", Executive: "text-rose-400",
   Operations: "text-orange-400", Incidents: "text-red-400", Platform: "text-cyan-400",

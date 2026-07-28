@@ -11,7 +11,7 @@ export function CompliancePanel({ violations, max = 10 }: CompliancePanelProps) 
   const open = violations.filter((v) => v.status !== "compliant").slice(0, max);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-medium text-gray-300">Policy Violations</h3>
         <span className="text-xs text-gray-500">{violations.filter((v) => v.status !== "compliant").length} open</span>

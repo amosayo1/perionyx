@@ -30,7 +30,7 @@ export function ARAlertsPanel({ alerts }: ARAlertsPanelProps) {
       <AnimatePresence>
         {filtered.map((alert, i) => (
           <motion.div key={alert.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} transition={{ delay: i * 0.02 }}
-            style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${severityColors[alert.severity]}` }}>
+            style={{ background: "#1a1a24", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${severityColors[alert.severity]}` }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

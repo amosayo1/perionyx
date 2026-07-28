@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/server/security/require-permission";
 import { handleRouteError } from "@/server/http/handle-route";
@@ -10,6 +11,14 @@ interface PushSubscriptionData {
   };
 }
 
+const PushSubscriptionSchema = z.object({
+  endpoint: z.string().url("endpoint must be a valid URL").max(2048),
+  keys: z.object({
+    p256dh: z.string().min(1, "p256dh key is required").max(512),
+    auth: z.string().min(1, "auth key is required").max(256),
+  }),
+});
+
 const subscriptions = new Map<string, PushSubscriptionData>();
 
 export function getAllSubscriptions(): PushSubscriptionData[] {
@@ -20,14 +29,15 @@ export async function POST(request: Request) {
   try {
     await requireAuth(request);
 
-    const body = (await request.json()) as PushSubscriptionData;
-
-    if (!body.endpoint || !body.keys?.p256dh || !body.keys?.auth) {
+    const rawBody = await request.json();
+    const parsed = PushSubscriptionSchema.safeParse(rawBody);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid subscription object" },
+        { error: { code: "VALIDATION", message: parsed.error.issues[0].message } },
         { status: 400 }
       );
     }
+    const body = parsed.data as PushSubscriptionData;
 
     subscriptions.set(body.endpoint, body);
 

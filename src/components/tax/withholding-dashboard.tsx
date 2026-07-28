@@ -123,7 +123,7 @@ export const WithholdingDashboard = memo(function WithholdingDashboard({ records
                 <td className="px-4 py-3 text-sm text-zinc-300">{r.withholdingType}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{formatCurrency(r.grossAmount)}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{r.withholdingRate}%</td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{formatCurrency(r.withholdingAmount)}</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{formatCurrency(r.withholdingAmount)}</td>
                 <td className="px-4 py-3 text-center">
                   <span className={cn("inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-medium", STATUS_STYLES[r.status] ?? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
                     {r.status}

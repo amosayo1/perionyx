@@ -5,9 +5,9 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { EnterpriseInsight } from "./types";
 
 const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
-const trendColors: Record<string, string> = { up: "text-[#d4af37]", down: "text-red-400", neutral: "text-zinc-500" };
+const trendColors: Record<string, string> = { up: "text-gold", down: "text-red-400", neutral: "text-zinc-500" };
 const categoryColors: Record<string, string> = {
-  Approvals: "text-blue-400", Treasury: "text-[#d4af37]", Risk: "text-amber-400",
+  Approvals: "text-blue-400", Treasury: "text-gold", Risk: "text-amber-400",
   Platform: "text-cyan-400", Operations: "text-orange-400", Compliance: "text-purple-400",
 };
 

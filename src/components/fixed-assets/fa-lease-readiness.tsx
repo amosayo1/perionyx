@@ -22,7 +22,7 @@ export default function FALeaseReadiness({ assets }: FALeaseReadinessProps) {
 
             return (
               <motion.div key={asset.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                style={{ background: '#1a1a2e', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a', borderLeft: `3px solid ${isFinance ? '#a855f7' : '#3b82f6'}` }}>
+                style={{ background: '#1a1a24', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a', borderLeft: `3px solid ${isFinance ? '#a855f7' : '#3b82f6'}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#e0e0e0' }}>{asset.name}</div>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import type { TrendPeriod } from "./types";
 
 const colorMap: Record<string, string> = {
-  emerald: "bg-[#d4af37]",
+  emerald: "bg-gold",
   amber: "bg-amber-500",
   red: "bg-red-500",
 };
@@ -27,7 +27,7 @@ export function TrendChartPlaceholder({ period }: { period: TrendPeriod }) {
         {period.data.map((point, i) => (
           <div key={i} className="flex flex-1 flex-col items-center gap-1">
             <div
-              className={cn("w-full rounded-sm", colorMap[point.color ?? "emerald"] ?? "bg-[#d4af37]")}
+              className={cn("w-full rounded-sm", colorMap[point.color ?? "emerald"] ?? "bg-gold")}
               style={{ height: `${Math.max((point.value / max) * 72, 6)}px`, opacity: 0.7 }}
             />
           </div>

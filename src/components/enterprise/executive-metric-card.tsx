@@ -71,7 +71,7 @@ export const ExecutiveMetricCard = memo(function ExecutiveMetricCard({
                 .map((v, i) => `${i === 0 ? "M" : "L"}${i} ${32 - (v / Math.max(...sparkline)) * 28 - 2}`)
                 .join(" ")}
               fill="none"
-              stroke={gold ? "#c9a84c" : "#808080"}
+              stroke={gold ? "#d4af37" : "#808080"}
               strokeWidth="1.5"
               vectorEffect="non-scaling-stroke"
             />

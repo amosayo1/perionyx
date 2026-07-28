@@ -12,7 +12,7 @@ export function AllocationManager({ rules, runs }: AllocationManagerProps) {
   const activeRules = rules.filter((r) => r.isActive);
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a]">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24]">
         <div className="border-b border-gray-800 px-4 py-3">
           <h3 className="text-sm font-medium text-gray-200">Allocation Rules</h3>
         </div>
@@ -41,7 +41,7 @@ export function AllocationManager({ rules, runs }: AllocationManagerProps) {
           )}
         </div>
       </div>
-      <div className="rounded-lg border border-gray-800 bg-[#1a1a1a]">
+      <div className="rounded-lg border border-gray-800 bg-[#1a1a24]">
         <div className="border-b border-gray-800 px-4 py-3">
           <h3 className="text-sm font-medium text-gray-200">Recent Allocation Runs</h3>
         </div>

@@ -24,7 +24,7 @@ export function SpendAnalyticsDashboard({ analytics }: SpendAnalyticsDashboardPr
 
   if (analytics.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No spend analytics available</p>
       </div>
     );
@@ -33,7 +33,7 @@ export function SpendAnalyticsDashboard({ analytics }: SpendAnalyticsDashboardPr
   return (
     <div className="space-y-4">
       {Object.entries(grouped).map(([dimension, items]) => (
-        <div key={dimension} className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+        <div key={dimension} className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
           <div className="mb-3 flex items-center gap-2">
             <div className="text-gray-500">{dimIcons[dimension] || <BarChart3 className="h-4 w-4" />}</div>
             <h3 className="text-sm font-medium capitalize text-gray-200">{dimension.replace("-", " ")} Analytics</h3>

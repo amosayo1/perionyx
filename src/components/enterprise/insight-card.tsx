@@ -15,7 +15,7 @@ interface InsightCardProps {
 }
 
 const TYPE_STYLES: Record<string, { icon: LucideIcon; color: string; border: string; bg: string }> = {
-  insight: { icon: Lightbulb, color: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+  insight: { icon: Lightbulb, color: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
   warning: { icon: AlertTriangle, color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/10" },
   recommendation: { icon: TrendingUp, color: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
   alert: { icon: ShieldAlert, color: "text-red-400", border: "border-red-500/20", bg: "bg-red-500/10" },
@@ -39,7 +39,7 @@ export function InsightCard({ title, description, type = "insight", icon, action
             {action && (
               <button
                 onClick={action.onClick}
-                className="mt-2 text-xs font-medium text-[#d4af37] hover:text-[#c7a961]"
+                className="mt-2 text-xs font-medium text-gold hover:text-[#c7a961]"
               >
                 {action.label}
               </button>

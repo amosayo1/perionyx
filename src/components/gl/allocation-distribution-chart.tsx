@@ -54,7 +54,7 @@ export const AllocationDistributionChart = memo(function AllocationDistributionC
 
           return (
             <g key={i}>
-              <path d={path} fill={PIE_COLORS[i % PIE_COLORS.length]} opacity="0.85" stroke="#1a1a1a" strokeWidth="1.5">
+              <path d={path} fill={PIE_COLORS[i % PIE_COLORS.length]} opacity="0.85" stroke="#1a1a24" strokeWidth="1.5">
                 <title>{seg.label}: ${(seg.value / 1_000).toFixed(1)}K ({((seg.value / total) * 100).toFixed(1)}%)</title>
               </path>
               {angle > 15 && (

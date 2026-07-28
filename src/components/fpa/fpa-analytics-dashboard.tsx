@@ -32,7 +32,7 @@ export default function FPAnalyticsDashboard({ metrics, aggregates }: FPAnalytic
     { label: 'Approved Plans', value: aggregates.approvedPlans.toString(), color: '#3b82f6' },
     { label: 'Revenue Budget', value: formatCurrency(aggregates.totalRevenueBudget), color: '#22c55e' },
     { label: 'Expense Budget', value: formatCurrency(aggregates.totalExpenseBudget), color: '#ef4444' },
-    { label: 'Capital Budget', value: formatCurrency(aggregates.totalCapitalBudget), color: '#d4a843' },
+    { label: 'Capital Budget', value: formatCurrency(aggregates.totalCapitalBudget), color: '#d4af37' },
     { label: 'Total Forecasts', value: aggregates.totalForecasts.toString(), color: '#e0e0e0' },
     { label: 'Total Scenarios', value: aggregates.totalScenarios.toString(), color: '#a855f7' },
     { label: 'Total What-If', value: aggregates.totalWhatIfAnalyses.toString(), color: '#f97316' },
@@ -50,7 +50,7 @@ export default function FPAnalyticsDashboard({ metrics, aggregates }: FPAnalytic
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
         {aggregateItems.map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.02 }}
-            style={{ background: '#1a1a2e', borderRadius: 10, padding: 14, textAlign: 'center', border: '1px solid #2a2a4a' }}>
+            style={{ background: '#1a1a24', borderRadius: 10, padding: 14, textAlign: 'center', border: '1px solid #2a2a4a' }}>
             <div style={{ color: '#94a3b8', fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 18, fontWeight: 700, fontFamily: 'ui-monospace, monospace' }}>{item.value}</div>
           </motion.div>
@@ -66,7 +66,7 @@ export default function FPAnalyticsDashboard({ metrics, aggregates }: FPAnalytic
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}>
               {catMetrics.map((m, i) => (
                 <motion.div key={m.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                  style={{ background: '#1a1a2e', borderRadius: 8, padding: 14, border: '1px solid #2a2a4a', borderTop: `3px solid ${m.status === 'exceeding' ? '#22c55e' : m.status === 'onTrack' ? '#3b82f6' : m.status === 'atRisk' ? '#eab308' : '#ef4444'}` }}>
+                  style={{ background: '#1a1a24', borderRadius: 8, padding: 14, border: '1px solid #2a2a4a', borderTop: `3px solid ${m.status === 'exceeding' ? '#22c55e' : m.status === 'onTrack' ? '#3b82f6' : m.status === 'atRisk' ? '#eab308' : '#ef4444'}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{ color: '#888', fontSize: 12 }}>{m.name}</span>
                     <span style={{ color: '#94a3b8', fontSize: 10, textTransform: 'capitalize' }}>{m.trend}</span>

@@ -16,7 +16,7 @@ const SCENARIO_TYPES: ScenarioType[] = [
 ];
 
 const TYPE_BADGE: Record<string, string> = {
-  base: "bg-[#c9a84c]/10 text-[#c9a84c] border-[#c9a84c]/20",
+  base: "bg-gold/10 text-gold border-gold/20",
   optimistic: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   pessimistic: "bg-red-500/10 text-red-400 border-red-500/20",
   expansion: "bg-blue-500/10 text-blue-400 border-blue-500/20",
@@ -86,7 +86,7 @@ export function ScenarioPlanningCenter({ className }: { className?: string }) {
               aria-label="Filter by scenario type"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-[#c9a84c]/50"
+              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-gold/50"
             >
               <option value="all">All Types</option>
               {SCENARIO_TYPES.map((t) => (
@@ -99,7 +99,7 @@ export function ScenarioPlanningCenter({ className }: { className?: string }) {
               aria-label="Filter by entity"
               value={entityFilter}
               onChange={(e) => setEntityFilter(e.target.value)}
-              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-[#c9a84c]/50"
+              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-gold/50"
             >
               <option value="all">All Entities</option>
               {MOCK_ENTITIES.map((e) => (
@@ -147,7 +147,7 @@ export function ScenarioPlanningCenter({ className }: { className?: string }) {
             key={s.id}
             className={cn(
               "rounded-lg border bg-zinc-900/50 p-4 transition-colors hover:border-white/[0.1]",
-              s.type === "base" ? "border-[#c9a84c]/40" : "border-white/[0.06]",
+              s.type === "base" ? "border-gold/40" : "border-white/[0.06]",
             )}
             role="article"
             aria-label={`${s.name} scenario`}

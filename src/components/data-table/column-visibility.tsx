@@ -48,7 +48,7 @@ export function ColumnVisibility<T>({ columns, hidden, onChange }: Props<T>) {
               {hidden.has(col.id) ? (
                 <EyeOff className="mr-2 h-3.5 w-3.5 text-zinc-600" />
               ) : (
-                <Eye className="mr-2 h-3.5 w-3.5 text-[#d4af37]" />
+                <Eye className="mr-2 h-3.5 w-3.5 text-gold" />
               )}
               {col.header}
             </DropdownMenuItem>

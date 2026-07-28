@@ -11,13 +11,13 @@ export function ARWriteOffCenter({ writeOffs }: ARWriteOffCenterProps) {
   return (
     <div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
-        <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 20 }}>
+        <div style={{ background: "#1a1a24", borderRadius: 8, padding: 20 }}>
           <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Write-offs by Reason</div>
           {Object.entries(totalByReason).map(([reason, amount]) => (
             <div key={reason} style={{ marginBottom: 10 }}>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
                 <span style={{ color: "#e0e0e0", textTransform: "capitalize" }}>{reason}</span>
-                <span style={{ color: "#d4a843", fontFamily: "ui-monospace, monospace" }}>${amount.toLocaleString()}</span>
+                <span style={{ color: "#d4af37", fontFamily: "ui-monospace, monospace" }}>${amount.toLocaleString()}</span>
               </div>
               <div style={{ background: "#2a2a4a", height: 6, borderRadius: 3, overflow: "hidden" }}>
                 <div style={{ width: (amount / maxReason) * 100 + "%", height: "100%", background: "#ef4444", borderRadius: 3 }} />
@@ -25,7 +25,7 @@ export function ARWriteOffCenter({ writeOffs }: ARWriteOffCenterProps) {
             </div>
           ))}
         </div>
-        <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 20 }}>
+        <div style={{ background: "#1a1a24", borderRadius: 8, padding: 20 }}>
           <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 12 }}>Summary</div>
           {[
             { label: "Total Write-offs", value: "$" + writeOffs.reduce((s, w) => s + w.writeOffAmount, 0).toLocaleString() },
@@ -39,7 +39,7 @@ export function ARWriteOffCenter({ writeOffs }: ARWriteOffCenterProps) {
           ))}
         </div>
       </div>
-      <div style={{ background: "#1a1a2e", borderRadius: 8, overflow: "hidden" }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, overflow: "hidden" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 80px", gap: 8, padding: "12px 16px", background: "#16213e", borderBottom: "1px solid #2a2a4a", color: "#94a3b8", fontSize: 12, fontWeight: 600, textTransform: "uppercase" }}>
           <span>Customer</span><span>Invoice</span><span>Amount</span><span>Reason</span><span>Status</span>
         </div>
@@ -48,7 +48,7 @@ export function ARWriteOffCenter({ writeOffs }: ARWriteOffCenterProps) {
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 80px", gap: 8, padding: "12px 16px", borderBottom: "1px solid #2a2a4a", alignItems: "center", fontSize: 13, color: "#e0e0e0" }}>
             <div>{w.customerName}</div>
             <div style={{ fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>{w.invoiceNumber}</div>
-            <div style={{ fontFamily: "ui-monospace, monospace", color: "#d4a843" }}>${w.writeOffAmount.toLocaleString()}</div>
+            <div style={{ fontFamily: "ui-monospace, monospace", color: "#d4af37" }}>${w.writeOffAmount.toLocaleString()}</div>
             <div style={{ fontSize: 12, color: "#94a3b8", textTransform: "capitalize" }}>{w.reason}</div>
             <span style={{ background: statusColors[w.status] + "22", color: statusColors[w.status], fontSize: 10, fontWeight: 600, padding: "2px 6px", borderRadius: 10, textAlign: "center" }}>
               {w.status}

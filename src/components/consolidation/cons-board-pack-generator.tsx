@@ -27,7 +27,7 @@ export default function ConsBoardPackGenerator({ reports }: ConsBoardPackGenerat
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: ri * 0.06 }}
-          style={{ background: "#1a1a2e", borderRadius: 12, padding: 20, border: "1px solid #2a2a4a" }}
+          style={{ background: "#1a1a24", borderRadius: 12, padding: 20, border: "1px solid #2a2a4a" }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <div>
@@ -43,7 +43,7 @@ export default function ConsBoardPackGenerator({ reports }: ConsBoardPackGenerat
 
           {report.sections.map((section, si) => (
             <div key={si} style={{ marginBottom: 12, padding: 12, background: "#16213e", borderRadius: 8 }}>
-              <div style={{ color: "#d4a843", fontWeight: 600, fontSize: 13, marginBottom: 8 }}>{section.title}</div>
+              <div style={{ color: "#d4af37", fontWeight: 600, fontSize: 13, marginBottom: 8 }}>{section.title}</div>
               <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5, marginBottom: 8 }}>{section.content}</div>
               {section.metrics.length > 0 && (
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -51,7 +51,7 @@ export default function ConsBoardPackGenerator({ reports }: ConsBoardPackGenerat
                     <div
                       key={mi}
                       style={{
-                        background: "#1a1a2e",
+                        background: "#1a1a24",
                         borderRadius: 6,
                         padding: "6px 12px",
                         display: "flex",

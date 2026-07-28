@@ -31,7 +31,7 @@ export function FCExceptionCenter({ exceptions }: FCExceptionCenterProps) {
       ) : (
         filtered.map((e, i) => (
           <motion.div key={e.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-            style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${severityColors[e.severity]}` }}>
+            style={{ background: "#1a1a24", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${severityColors[e.severity]}` }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
               <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                 <span style={{ background: severityColors[e.severity] + "22", color: severityColors[e.severity], fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" }}>

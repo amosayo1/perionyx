@@ -72,7 +72,7 @@ export const FXRevaluationCenter = memo(function FXRevaluationCenter({ rates, re
                   <tr key={r.id} className="transition-colors hover:bg-zinc-800/40">
                     <td className="px-4 py-3 text-sm font-mono text-white">{r.fromCurrency}</td>
                     <td className="px-4 py-3 text-sm font-mono text-white">{r.toCurrency}</td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-[#d4af37]">{r.rate.toFixed(6)}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-gold">{r.rate.toFixed(6)}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={cn("rounded-md border px-2 py-0.5 text-[10px] font-medium capitalize", RATE_TYPE_COLORS[r.rateType] ?? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
                         {r.rateType}

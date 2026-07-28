@@ -38,7 +38,7 @@ function TreeNode({ node, depth = 0 }: { node: AccountTreeNode; depth?: number }
 
 export function ChartOfAccountsTree({ tree }: ChartOfAccountsTreeProps) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-2">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-2">
       {tree.map((node) => <TreeNode key={node.account.id} node={node} />)}
     </div>
   );

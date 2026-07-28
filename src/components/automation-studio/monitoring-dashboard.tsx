@@ -168,7 +168,7 @@ export function MonitoringDashboardClient({ metrics, running, waiting, failed, c
           </div>
           <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4">
             <p className="text-xs text-zinc-500">Completed</p>
-            <p className="text-2xl font-bold text-[#d4af37]">{metrics.completedInstances}</p>
+            <p className="text-2xl font-bold text-gold">{metrics.completedInstances}</p>
           </div>
           <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4">
             <p className="text-xs text-zinc-500">Success Rate</p>
@@ -200,14 +200,14 @@ export function MonitoringDashboardClient({ metrics, running, waiting, failed, c
                     onClick={() => setActiveTab(tab.key)}
                     className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-[#d4af37]/10 text-[#d4af37] shadow-sm"
+                        ? "bg-gold/10 text-gold shadow-sm"
                         : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
                     {tab.label}
                     <span className={`ml-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
-                      isActive ? "bg-[#d4af37]/20 text-[#d4af37]" : "bg-zinc-800 text-zinc-500"
+                      isActive ? "bg-gold/20 text-gold" : "bg-zinc-800 text-zinc-500"
                     }`}>
                       {tab.count}
                     </span>

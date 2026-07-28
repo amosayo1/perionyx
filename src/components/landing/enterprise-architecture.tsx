@@ -32,7 +32,7 @@ export function EnterpriseArchitecture() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37] mb-6">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-gold/20 bg-gold/5 text-gold mb-6">
             Enterprise Architecture
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
@@ -65,7 +65,7 @@ export function EnterpriseArchitecture() {
                       key={item}
                       className="flex items-center gap-2.5 text-sm text-zinc-400"
                     >
-                      <span className="w-1 h-1 rounded-full bg-[#d4af37]/40 shrink-0" />
+                      <span className="w-1 h-1 rounded-full bg-gold/40 shrink-0" />
                       {item}
                     </div>
                   ))}

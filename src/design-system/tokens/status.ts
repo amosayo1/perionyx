@@ -30,10 +30,10 @@ export const status = {
     dot: "#808080",
   },
   gold: {
-    text: "#c9a84c",
+    text: "#d4af37",
     bg: "rgba(201, 168, 76, 0.1)",
     border: "rgba(201, 168, 76, 0.3)",
-    dot: "#c9a84c",
+    dot: "#d4af37",
   },
 } as const;
 

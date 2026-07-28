@@ -30,8 +30,8 @@ export const Zone4AiBrief = memo(function Zone4AiBrief({
       <div className="space-y-4">
         <div className="rounded-lg bg-gradient-to-r from-gold-500/5 to-transparent p-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-[#c9a84c]" />
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#c9a84c]">Today&apos;s Summary</span>
+            <Sparkles className="h-4 w-4 text-gold" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-gold">Today&apos;s Summary</span>
           </div>
           <p className="mt-1.5 text-[12px] leading-relaxed text-zinc-300">{todaySummary}</p>
         </div>
@@ -68,13 +68,13 @@ export const Zone4AiBrief = memo(function Zone4AiBrief({
 
         <div>
           <div className="flex items-center gap-1.5 mb-2">
-            <Lightbulb className="h-3.5 w-3.5 text-[#c9a84c]" />
+            <Lightbulb className="h-3.5 w-3.5 text-gold" />
             <span className="text-[11px] font-semibold text-zinc-400">Suggested Actions</span>
           </div>
           <ul className="space-y-1">
             {suggestedActions.map((action, i) => (
               <li key={i} className="flex items-start gap-2 text-[12px] text-zinc-400">
-                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#c9a84c]/60" />
+                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold/60" />
                 {action}
               </li>
             ))}

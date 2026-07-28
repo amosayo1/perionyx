@@ -89,7 +89,7 @@ export function ExecutivePaymentsHeader({
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={onNewPayment}
-            className="flex items-center gap-2 rounded-lg bg-[#c9a84c] px-4 py-2 text-[13px] font-medium text-black transition-colors hover:bg-[#d4b85a]"
+            className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-[13px] font-medium text-black transition-colors hover:bg-[#d4b85a]"
             aria-label="Create new payment"
           >
             <Plus className="h-4 w-4" />

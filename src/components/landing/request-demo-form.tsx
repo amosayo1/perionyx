@@ -123,7 +123,7 @@ export function RequestDemoForm() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#d4af37]/10 border border-[#d4af37]/20 mb-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gold/10 border border-gold/20 mb-8">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
@@ -135,7 +135,7 @@ export function RequestDemoForm() {
 
         <div className="max-w-sm mx-auto mb-8 space-y-3 text-left">
           <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-3 flex items-start gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#d4af37]/10 text-[10px] font-bold text-[#d4af37]">1</span>
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/10 text-[10px] font-bold text-gold">1</span>
             <div>
               <p className="text-xs font-medium text-white">Request reviewed</p>
               <p className="text-[11px] text-zinc-500">Our team reviews your requirements</p>
@@ -167,7 +167,7 @@ export function RequestDemoForm() {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-[#d4af37] transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-gold transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5" /><path d="m12 19-7-7 7-7" />
@@ -186,7 +186,7 @@ export function RequestDemoForm() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="mb-10">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37]">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] rounded-full border border-gold/20 bg-gold/5 text-gold">
           Enterprise Demo
         </span>
         <h1 className="mt-6 text-3xl md:text-4xl font-bold tracking-tight text-white leading-[1.1]">
@@ -200,7 +200,7 @@ export function RequestDemoForm() {
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label htmlFor="name" className="text-xs font-medium text-zinc-400">Full name <span className="text-[#d4af37]">*</span></label>
+            <label htmlFor="name" className="text-xs font-medium text-zinc-400">Full name <span className="text-gold">*</span></label>
             <input
               id="name"
               required
@@ -210,13 +210,13 @@ export function RequestDemoForm() {
               className={`w-full h-10 rounded-lg border px-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-all ${
                 getFieldError("name")
                   ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
-                  : "border-white/[0.08] bg-white/[0.03] focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20"
+                  : "border-white/[0.08] bg-white/[0.03] focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
               }`}
             />
             {getFieldError("name") && <p className="text-[11px] text-red-400">{getFieldError("name")}</p>}
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="email" className="text-xs font-medium text-zinc-400">Business email <span className="text-[#d4af37]">*</span></label>
+            <label htmlFor="email" className="text-xs font-medium text-zinc-400">Business email <span className="text-gold">*</span></label>
             <input
               id="email"
               type="email"
@@ -227,7 +227,7 @@ export function RequestDemoForm() {
               className={`w-full h-10 rounded-lg border px-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-all ${
                 getFieldError("email")
                   ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
-                  : "border-white/[0.08] bg-white/[0.03] focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20"
+                  : "border-white/[0.08] bg-white/[0.03] focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
               }`}
             />
             {getFieldError("email") && <p className="text-[11px] text-red-400">{getFieldError("email")}</p>}
@@ -246,13 +246,13 @@ export function RequestDemoForm() {
               className={`w-full h-10 rounded-lg border px-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-all ${
                 getFieldError("phone")
                   ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
-                  : "border-white/[0.08] bg-white/[0.03] focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20"
+                  : "border-white/[0.08] bg-white/[0.03] focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
               }`}
             />
             {getFieldError("phone") && <p className="text-[11px] text-red-400">{getFieldError("phone")}</p>}
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="company" className="text-xs font-medium text-zinc-400">Company <span className="text-[#d4af37]">*</span></label>
+            <label htmlFor="company" className="text-xs font-medium text-zinc-400">Company <span className="text-gold">*</span></label>
             <input
               id="company"
               required
@@ -262,7 +262,7 @@ export function RequestDemoForm() {
               className={`w-full h-10 rounded-lg border px-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none transition-all ${
                 getFieldError("company")
                   ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
-                  : "border-white/[0.08] bg-white/[0.03] focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20"
+                  : "border-white/[0.08] bg-white/[0.03] focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
               }`}
             />
             {getFieldError("company") && <p className="text-[11px] text-red-400">{getFieldError("company")}</p>}
@@ -271,7 +271,7 @@ export function RequestDemoForm() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label htmlFor="role" className="text-xs font-medium text-zinc-400">Role <span className="text-[#d4af37]">*</span></label>
+            <label htmlFor="role" className="text-xs font-medium text-zinc-400">Role <span className="text-gold">*</span></label>
             <select
               id="role"
               required
@@ -280,7 +280,7 @@ export function RequestDemoForm() {
               className={`w-full h-10 rounded-lg border px-3 text-sm text-white focus:outline-none transition-all appearance-none ${
                 getFieldError("role")
                   ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
-                  : "border-white/[0.08] bg-white/[0.03] focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20"
+                  : "border-white/[0.08] bg-white/[0.03] focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
               } ${!role ? "text-zinc-600" : "text-white"}`}
             >
               <option value="" disabled className="bg-[#090909]">Select your role</option>
@@ -296,7 +296,7 @@ export function RequestDemoForm() {
               id="companySize"
               value={companySize}
               onChange={(e) => setCompanySize(e.target.value)}
-              className={`w-full h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-sm focus:outline-none focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20 transition-all appearance-none ${!companySize ? "text-zinc-600" : "text-white"}`}
+              className={`w-full h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-sm focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all appearance-none ${!companySize ? "text-zinc-600" : "text-white"}`}
             >
               <option value="" disabled className="bg-[#090909]">Select company size</option>
               {companySizes.map((s) => (
@@ -313,7 +313,7 @@ export function RequestDemoForm() {
               id="country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className={`w-full h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-sm focus:outline-none focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20 transition-all appearance-none ${!country ? "text-zinc-600" : "text-white"}`}
+              className={`w-full h-10 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-sm focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all appearance-none ${!country ? "text-zinc-600" : "text-white"}`}
             >
               <option value="" disabled className="bg-[#090909]">Select country</option>
               {countries.map((c) => (
@@ -333,7 +333,7 @@ export function RequestDemoForm() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Tell us about your treasury operations or what you'd like to see in the demo."
-            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20 transition-all resize-none"
+            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all resize-none"
           />
         </div>
 
@@ -344,7 +344,7 @@ export function RequestDemoForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-11 rounded-lg bg-[#d4af37] text-sm font-semibold text-black hover:bg-[#c7a961] transition-all duration-200 shadow-lg shadow-[#d4af37]/10 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-11 rounded-lg bg-gold text-sm font-semibold text-black hover:bg-[#c7a961] transition-all duration-200 shadow-lg shadow-gold/10 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Submitting..." : "Request a Demo"}
         </button>

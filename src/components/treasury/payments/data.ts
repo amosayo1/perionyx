@@ -546,5 +546,5 @@ export const MOCK_PAYMENT_METRICS: PaymentMetrics = {
 export const MOCK_ANALYTICS_SERIES: AnalyticsSeries[] = [
   { name: "Incoming", data: MOCK_TREND_DATA.cashMovement.map((d) => ({ ...d, value: d.value * 1.15 })), color: "#22c55e" },
   { name: "Outgoing", data: MOCK_TREND_DATA.cashMovement.map((d) => ({ ...d, value: d.value * 0.85 })), color: "#ef4444" },
-  { name: "Net", data: MOCK_TREND_DATA.cashMovement, color: "#c9a84c" },
+  { name: "Net", data: MOCK_TREND_DATA.cashMovement, color: "#d4af37" },
 ];

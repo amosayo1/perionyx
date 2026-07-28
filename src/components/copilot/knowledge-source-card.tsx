@@ -5,7 +5,7 @@ import { CheckCircle, Clock, AlertCircle } from "lucide-react";
 import type { KnowledgeSource } from "./types";
 
 const statusIcons: Record<string, React.ReactNode> = {
-  synced: <CheckCircle className="h-3 w-3 text-[#d4af37]" />,
+  synced: <CheckCircle className="h-3 w-3 text-gold" />,
   syncing: <Clock className="h-3 w-3 text-amber-400" />,
   pending: <AlertCircle className="h-3 w-3 text-zinc-500" />,
 };

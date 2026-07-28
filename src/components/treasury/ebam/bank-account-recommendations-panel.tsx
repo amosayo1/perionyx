@@ -74,7 +74,7 @@ export function BankAccountRecommendationsPanel({ className }: { className?: str
         <p className="text-[12px] text-zinc-500">AI-powered recommendations for account optimization</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <select
-            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-[#c9a84c]/50"
+            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-gold/50"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             aria-label="Filter by recommendation category"
@@ -86,7 +86,7 @@ export function BankAccountRecommendationsPanel({ className }: { className?: str
             ))}
           </select>
           <select
-            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-[#c9a84c]/50"
+            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-gold/50"
             value={entityFilter}
             onChange={(e) => setEntityFilter(e.target.value)}
             aria-label="Filter by entity"
@@ -142,7 +142,7 @@ export function BankAccountRecommendationsPanel({ className }: { className?: str
                   <p className="mt-1 text-[12px] text-zinc-400">{rec.description}</p>
                 </div>
                 <div className="shrink-0 text-right">
-                  <p className="text-sm font-semibold text-[#c9a84c]">{rec.impact}</p>
+                  <p className="text-sm font-semibold text-gold">{rec.impact}</p>
                   <p className="text-[11px] text-zinc-500">{rec.roi}</p>
                 </div>
               </div>

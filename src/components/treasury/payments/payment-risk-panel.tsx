@@ -74,7 +74,7 @@ function RiskCard({ item }: { item: PaymentRiskItem }) {
       <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
         <span className="text-[12px] text-zinc-500">{item.entity}</span>
         <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold text-[#c9a84c]">{formatCurrency(item.value)}</span>
+          <span className="text-sm font-semibold text-gold">{formatCurrency(item.value)}</span>
           <span className={cn(
             "inline-flex min-w-[28px] items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-medium",
             styles.bg,

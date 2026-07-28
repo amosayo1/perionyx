@@ -27,7 +27,7 @@ export function AIBrief({ className }: { className?: string }) {
     <div className={cn("mx-auto max-w-lg space-y-4 px-4 pb-32 pt-2", className)}>
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-[#d4af37]" />
+          <Sparkles className="h-5 w-5 text-gold" />
           <h1 className="text-xl font-bold text-white">{t("mobile.aiBriefTitle")}</h1>
         </div>
         <p className="mt-0.5 text-[11px] text-zinc-500">{t("mobile.aiBriefSubtitle")}</p>
@@ -74,7 +74,7 @@ export function AIBrief({ className }: { className?: string }) {
           <Mic className="h-4 w-4" />
         </button>
         {query && (
-          <button className="rounded-xl bg-[#d4af37]/10 p-2 text-[#d4af37] active:bg-[#d4af37]/20" aria-label={t("mobile.send")}>
+          <button className="rounded-xl bg-gold/10 p-2 text-gold active:bg-gold/20" aria-label={t("mobile.send")}>
             <Send className="h-4 w-4" />
           </button>
         )}

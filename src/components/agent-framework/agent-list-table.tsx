@@ -60,9 +60,9 @@ function getAgentValue(agent: AgentListTableProps["agents"][number], key: SortKe
 function SortIcon({ active, direction }: { active: boolean; direction: SortDir }) {
   if (!active) return <ArrowUpDown className="ml-1 h-3 w-3 shrink-0 opacity-0 group-hover:opacity-40" />;
   return direction === "asc" ? (
-    <ArrowUp className="ml-1 h-3 w-3 shrink-0 text-[#d4af37]" />
+    <ArrowUp className="ml-1 h-3 w-3 shrink-0 text-gold" />
   ) : (
-    <ArrowDown className="ml-1 h-3 w-3 shrink-0 text-[#d4af37]" />
+    <ArrowDown className="ml-1 h-3 w-3 shrink-0 text-gold" />
   );
 }
 
@@ -119,7 +119,7 @@ export function AgentListTable({ agents, onRowClick, className }: AgentListTable
 
   if (agents.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#101010] py-16 text-center">
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#111118] py-16 text-center">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.03]">
           <Inbox className="h-6 w-6 text-zinc-500" />
         </div>
@@ -131,7 +131,7 @@ export function AgentListTable({ agents, onRowClick, className }: AgentListTable
 
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="overflow-hidden rounded-2xl border border-white/[0.09] bg-[#101010]">
+      <div className="overflow-hidden rounded-2xl border border-white/[0.09] bg-[#111118]">
         <Table>
           <TableHeader>
             <TableRow>
@@ -167,8 +167,8 @@ export function AgentListTable({ agents, onRowClick, className }: AgentListTable
               >
                 <TableCell>
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/10">
-                      <Bot className="h-4 w-4 text-[#d4af37]" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-gold/20 bg-gold/10">
+                      <Bot className="h-4 w-4 text-gold" />
                     </div>
                     <span className="text-sm font-medium text-white">{agent.name}</span>
                   </div>

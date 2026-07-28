@@ -26,9 +26,9 @@ function EventIcon({ type }: { type: string }) {
   const size = "h-3.5 w-3.5";
   switch (type) {
     case "created":
-      return <Send className={cn(size, "text-[#d4af37]")} />;
+      return <Send className={cn(size, "text-gold")} />;
     case "approved":
-      return <CheckCircle2 className={cn(size, "text-[#d4af37]")} />;
+      return <CheckCircle2 className={cn(size, "text-gold")} />;
     case "rejected":
       return <XCircle className={cn(size, "text-red-400")} />;
     case "escalated":

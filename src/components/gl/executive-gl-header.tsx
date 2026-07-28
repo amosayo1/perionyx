@@ -20,18 +20,18 @@ function KpiCard({ label, value, icon, color, gold }: KpiCardProps) {
   return (
     <div className={cn(
       "rounded-lg border p-4 transition-colors duration-200",
-      gold ? "border-[#d4af37]/20 bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/40" : "border-zinc-800/60 bg-zinc-900/40",
+      gold ? "border-gold/20 bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/40" : "border-zinc-800/60 bg-zinc-900/40",
       "hover:border-zinc-700/60 hover:bg-zinc-900/60",
     )}>
-      {gold && <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#d4af37]/5 blur-3xl" />}
+      {gold && <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gold/5 blur-3xl" />}
       <div className="relative space-y-2">
         <div className="flex items-center gap-2">
-          <div className={cn("flex h-8 w-8 items-center justify-center rounded-md border", color === "gold" ? "border-[#d4af37]/20 bg-[#d4af37]/10" : `border-${color}-500/20 bg-${color}-500/10`)}>
+          <div className={cn("flex h-8 w-8 items-center justify-center rounded-md border", color === "gold" ? "border-gold/20 bg-gold/10" : `border-${color}-500/20 bg-${color}-500/10`)}>
             {icon}
           </div>
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">{label}</span>
         </div>
-        <p className={cn("text-2xl font-bold tracking-tight", gold ? "text-[#d4af37]" : "text-white")}>{value}</p>
+        <p className={cn("text-2xl font-bold tracking-tight", gold ? "text-gold" : "text-white")}>{value}</p>
       </div>
     </div>
   );
@@ -39,7 +39,7 @@ function KpiCard({ label, value, icon, color, gold }: KpiCardProps) {
 
 export const ExecutiveGLHeader = memo(function ExecutiveGLHeader(props: ExecutiveGLHeaderProps) {
   const cards = [
-    { label: "Total Accounts", value: props.totalAccounts.toLocaleString(), icon: <BookOpen className="h-4 w-4 text-[#d4af37]" />, color: "gold" as const, gold: true },
+    { label: "Total Accounts", value: props.totalAccounts.toLocaleString(), icon: <BookOpen className="h-4 w-4 text-gold" />, color: "gold" as const, gold: true },
     { label: "Total Journals", value: props.totalJournals.toLocaleString(), icon: <FileText className="h-4 w-4 text-emerald-400" />, color: "emerald" as const },
     { label: "Posted Journals", value: props.totalPostedJournals.toLocaleString(), icon: <CheckSquare className="h-4 w-4 text-blue-400" />, color: "blue" as const },
     { label: "Open Periods", value: props.totalOpenPeriods.toLocaleString(), icon: <Calendar className="h-4 w-4 text-amber-400" />, color: "amber" as const },

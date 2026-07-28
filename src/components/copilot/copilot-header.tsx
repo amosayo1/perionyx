@@ -36,8 +36,8 @@ export function CopilotHeader({ onNewConversation }: { onNewConversation?: () =>
     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <div className="flex items-center gap-2.5 mb-1">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/20">
-            <Sparkles className="h-4 w-4 text-[#d4af37]" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10 border border-gold/20">
+            <Sparkles className="h-4 w-4 text-gold" />
           </span>
           <h1 className="text-2xl font-semibold tracking-tight text-white">Copilot</h1>
         </div>
@@ -49,7 +49,7 @@ export function CopilotHeader({ onNewConversation }: { onNewConversation?: () =>
         <Button
           variant="default"
           size="sm"
-          className="gap-1.5 text-xs bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20"
+          className="gap-1.5 text-xs bg-gold/10 text-gold border-gold/20 hover:bg-gold/20"
           onClick={handleNewConversation}
           disabled={creating}
         >

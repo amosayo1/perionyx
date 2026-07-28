@@ -19,7 +19,7 @@ function formatCurrency(value: number): string {
 
 function SummaryCard({ label, value, icon, color }: { label: string; value: string; icon: React.ReactNode; color: string }) {
   const c = {
-    gold: { icon: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+    gold: { icon: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
     emerald: { icon: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
     red: { icon: "text-red-400", border: "border-red-500/20", bg: "bg-red-500/10" },
     blue: { icon: "text-blue-400", border: "border-blue-500/20", bg: "bg-blue-500/10" },
@@ -89,7 +89,7 @@ export const IndirectTaxDashboard = memo(function IndirectTaxDashboard({ transac
                 </td>
                 <td className="px-4 py-3 text-sm text-zinc-300">{t.description || "—"}</td>
                 <td className="px-4 py-3 text-right text-sm font-medium text-white">{formatCurrency(t.taxableAmount)}</td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{formatCurrency(t.outputTax)}</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{formatCurrency(t.outputTax)}</td>
                 <td className="px-4 py-3 text-right text-sm font-medium text-zinc-300">{formatCurrency(t.netTax)}</td>
               </tr>
             ))}

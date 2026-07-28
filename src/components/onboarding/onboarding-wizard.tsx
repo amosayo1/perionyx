@@ -106,7 +106,7 @@ function StatusIcon({ status }: { status: string }) {
     case "COMPLETED":
       return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
     case "IN_PROGRESS":
-      return <Play className="h-4 w-4 text-[#d4af37]" />;
+      return <Play className="h-4 w-4 text-gold" />;
     case "FAILED":
       return <AlertCircle className="h-4 w-4 text-red-400" />;
     case "SKIPPED":
@@ -170,7 +170,7 @@ export function OnboardingWizard({ progress, readiness, summary }: WizardProps) 
   if (summary.hasCompleted && readiness) {
     return (
       <div className="space-y-8">
-        <Card className="border-[#d4af37]/20 bg-gradient-to-b from-emerald-900/20 to-black/40">
+        <Card className="border-gold/20 bg-gradient-to-b from-emerald-900/20 to-black/40">
           <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20">
               <CheckCircle2 className="h-8 w-8 text-emerald-400" />
@@ -202,8 +202,8 @@ export function OnboardingWizard({ progress, readiness, summary }: WizardProps) 
           hideStepBar
         >
           <div className="flex flex-col items-center gap-6 py-8 text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#d4af37]/10">
-              <Settings className="h-10 w-10 text-[#d4af37]" />
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gold/10">
+              <Settings className="h-10 w-10 text-gold" />
             </div>
             <div>
               <CardTitle className="text-xl text-white">Welcome to Enterprise Setup</CardTitle>
@@ -232,7 +232,7 @@ export function OnboardingWizard({ progress, readiness, summary }: WizardProps) 
 
   if (!progress) {
     return (
-      <Card className="border-[#d4af37]/12 bg-perionyx-bg-panel">
+      <Card className="border-gold/12 bg-perionyx-bg-panel">
         <CardContent className="py-10 text-center">
           <AlertCircle className="mx-auto h-8 w-8 text-zinc-500" />
           <p className="mt-3 text-sm text-zinc-400">Unable to load setup progress</p>
@@ -345,7 +345,7 @@ export function OnboardingWizard({ progress, readiness, summary }: WizardProps) 
               </EnterpriseSection>
             </EnterpriseForm>
           ) : (
-            <Card className="border-[#d4af37]/12 bg-perionyx-bg-panel">
+            <Card className="border-gold/12 bg-perionyx-bg-panel">
               <CardContent className="py-10 text-center">
                 <FileCheck className="mx-auto h-8 w-8 text-emerald-400" />
                 <p className="mt-3 text-sm font-medium text-white">All steps complete</p>

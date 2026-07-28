@@ -43,7 +43,7 @@ export function RecommendationsPanel({ className }: { className?: string }) {
               <p className="mt-1 text-[12px] text-zinc-400 leading-relaxed">{rec.description}</p>
               <div className="mt-3 pt-2 border-t border-white/[0.06]">
                 <span className="text-[10px] font-medium text-zinc-500">Impact: </span>
-                <span className="text-[11px] font-medium text-[#c9a84c]">{rec.impact}</span>
+                <span className="text-[11px] font-medium text-gold">{rec.impact}</span>
               </div>
             </motion.div>
           );

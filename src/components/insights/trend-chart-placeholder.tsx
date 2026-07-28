@@ -10,7 +10,7 @@ export function TrendChartPlaceholder({ className }: { className?: string }) {
       {points.map((p, i) => (
         <div
           key={i}
-          className="flex-1 rounded-t-sm bg-[#d4af37]/20 group-hover:bg-[#d4af37]/30 transition-colors"
+          className="flex-1 rounded-t-sm bg-gold/20 group-hover:bg-gold/30 transition-colors"
           style={{ height: `${(p / max) * 100}%` }}
         />
       ))}

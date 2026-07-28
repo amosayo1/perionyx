@@ -56,7 +56,7 @@ export function ExecutiveHeader({
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-1.5">
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center rounded-md border border-gold-500/20 bg-gold-500/10 px-2 py-0.5 text-[11px] font-medium tracking-wide text-[#c9a84c] uppercase">
+            <span className="inline-flex items-center rounded-md border border-gold-500/20 bg-gold-500/10 px-2 py-0.5 text-[11px] font-medium tracking-wide text-gold uppercase">
               {badge}
             </span>
             {ec && (

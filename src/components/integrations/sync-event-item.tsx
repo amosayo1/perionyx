@@ -3,7 +3,7 @@ import { CheckCircle2, AlertTriangle, XCircle, RefreshCw } from "lucide-react";
 import type { SyncEvent } from "./types";
 
 const statusConfig: Record<string, { icon: React.ReactNode; color: string }> = {
-  success: { icon: <CheckCircle2 className="h-3 w-3" />, color: "text-[#d4af37]" },
+  success: { icon: <CheckCircle2 className="h-3 w-3" />, color: "text-gold" },
   failed: { icon: <XCircle className="h-3 w-3" />, color: "text-red-400" },
   "in-progress": { icon: <RefreshCw className="h-3 w-3 animate-spin" />, color: "text-amber-400" },
 };

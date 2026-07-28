@@ -20,7 +20,7 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 const healthColor: Record<string, string> = {
-  connected: "text-[#d4af37]",
+  connected: "text-gold",
   available: "text-zinc-500",
   warning: "text-amber-400",
 };

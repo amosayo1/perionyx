@@ -35,7 +35,7 @@ const impactStyles: Record<string, string> = {
 export function RecommendationsPanel({ recommendations }: RecommendationsPanelProps) {
   if (recommendations.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-6">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-6">
         <p className="text-xs text-gray-500">No recommendations available</p>
       </div>
     );
@@ -44,7 +44,7 @@ export function RecommendationsPanel({ recommendations }: RecommendationsPanelPr
   return (
     <div className="space-y-2">
       {recommendations.map((rec) => (
-        <div key={rec.id} className={`rounded-lg border p-3 ${rec.implemented ? "border-emerald-900/30 bg-emerald-950/10" : "border-gray-800 bg-[#1a1a1a]"}`}>
+        <div key={rec.id} className={`rounded-lg border p-3 ${rec.implemented ? "border-emerald-900/30 bg-emerald-950/10" : "border-gray-800 bg-[#1a1a24]"}`}>
           <div className="flex items-start gap-3">
             <div className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-900 text-gray-400`}>
               {typeIcons[rec.type] || <Lightbulb className="h-4 w-4" />}

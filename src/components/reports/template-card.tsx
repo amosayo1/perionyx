@@ -5,7 +5,7 @@ import { ArrowRight, FileText } from "lucide-react";
 import type { ReportTemplate } from "./types";
 
 const categoryColors: Record<string, string> = {
-  Executive: "text-rose-400", Finance: "text-[#d4af37]", Treasury: "text-blue-400",
+  Executive: "text-rose-400", Finance: "text-gold", Treasury: "text-blue-400",
   Operations: "text-orange-400", Audit: "text-zinc-400", Compliance: "text-amber-400",
   Risk: "text-red-400", Platform: "text-cyan-400", Developer: "text-purple-400",
 };

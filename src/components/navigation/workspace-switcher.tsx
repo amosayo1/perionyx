@@ -42,7 +42,7 @@ export function WorkspaceSwitcher({ companies, activeCompanyId, onSwitch, collap
             className="flex w-full items-center justify-center rounded-lg p-2 text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-white"
             aria-label={active?.company.name ?? "Switch workspace"}
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold-500/10 text-[#c9a84c]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold-500/10 text-gold">
               <span className="text-xs font-bold">
                 {active ? active.company.name.charAt(0).toUpperCase() : "?"}
               </span>
@@ -58,7 +58,7 @@ export function WorkspaceSwitcher({ companies, activeCompanyId, onSwitch, collap
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button className="flex w-full items-center gap-3 rounded-lg border border-zinc-800/60 bg-zinc-900/40 px-3 py-2.5 text-left transition-colors hover:bg-zinc-800/40">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold-500/10 text-[#c9a84c]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold-500/10 text-gold">
             <span className="text-xs font-bold">
               {active ? active.company.name.charAt(0).toUpperCase() : "?"}
             </span>
@@ -109,7 +109,7 @@ function WorkspaceContent({
             onClick={() => onSelect(row.company.id)}
             className={cn(
               "flex items-center gap-3 px-4 py-2.5 text-[13px]",
-              row.company.id === activeCompanyId && "bg-gold-500/10 text-[#c9a84c]",
+              row.company.id === activeCompanyId && "bg-gold-500/10 text-gold",
             )}
           >
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-zinc-800 text-[10px] font-bold text-zinc-400">
@@ -120,7 +120,7 @@ function WorkspaceContent({
               <span className="text-[10px] text-zinc-600 capitalize">{row.role.toLowerCase()}</span>
             </div>
             {row.company.id === activeCompanyId && (
-              <div className="h-1.5 w-1.5 rounded-full bg-[#c9a84c]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-gold" />
             )}
           </DropdownMenuItem>
         ))

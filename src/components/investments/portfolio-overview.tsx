@@ -26,7 +26,7 @@ const TYPE_COLORS: Record<string, string> = {
   "capital-preservation": "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
   income: "text-amber-400 border-amber-500/20 bg-amber-500/10",
   growth: "text-blue-400 border-blue-500/20 bg-blue-500/10",
-  corporate: "text-[#d4af37] border-[#d4af37]/20 bg-[#d4af37]/10",
+  corporate: "text-gold border-gold/20 bg-gold/10",
   regional: "text-red-400 border-red-500/20 bg-red-500/10",
   "investment-strategy": "text-purple-400 border-purple-500/20 bg-purple-500/10",
 };
@@ -58,7 +58,7 @@ export const PortfolioOverview = memo(function PortfolioOverview({ portfolios, h
                   <Building2 className="h-5 w-5 text-zinc-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white group-hover:text-[#d4af37]">{portfolio.name}</p>
+                  <p className="text-sm font-semibold text-white group-hover:text-gold">{portfolio.name}</p>
                   <div className="mt-1 flex items-center gap-2">
                     <span className={cn("rounded-md border px-1.5 py-0.5 text-[10px] font-medium", typeColor)}>
                       {portfolio.type.replace(/-/g, " ")}

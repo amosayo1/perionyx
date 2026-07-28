@@ -24,7 +24,7 @@ function ScoreBar({ value, label }: { value: number; label: string }) {
 export function VendorPerformanceDashboard({ performances }: VendorPerformanceDashboardProps) {
   if (performances.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No performance data available</p>
       </div>
     );
@@ -36,7 +36,7 @@ export function VendorPerformanceDashboard({ performances }: VendorPerformanceDa
         const overallColor = perf.overallScore >= 90 ? "text-emerald-400" : perf.overallScore >= 70 ? "text-amber-400" : "text-red-400";
         const overallBarColor = perf.overallScore >= 90 ? "bg-emerald-500" : perf.overallScore >= 70 ? "bg-amber-500" : "bg-red-500";
         return (
-          <div key={perf.id} className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+          <div key={perf.id} className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
             <div className="mb-3 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-200">Vendor Performance</p>

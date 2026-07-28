@@ -34,7 +34,7 @@ const actionStyles: Record<string, string> = {
 export function CollectionsDashboard({ cases, max = 20 }: CollectionsDashboardProps) {
   const displayed = cases.slice(0, max);
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a1a]">
+    <div className="overflow-x-auto rounded-lg border border-gray-800 bg-[#1a1a24]">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-800">

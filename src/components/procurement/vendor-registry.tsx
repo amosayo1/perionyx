@@ -22,7 +22,7 @@ const riskColors: Record<string, string> = {
 export function VendorRegistry({ vendors }: VendorRegistryProps) {
   if (vendors.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No vendors found</p>
       </div>
     );
@@ -31,7 +31,7 @@ export function VendorRegistry({ vendors }: VendorRegistryProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-800">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-gray-800 bg-[#1a1a1a]">
+        <thead className="border-b border-gray-800 bg-[#1a1a24]">
           <tr className="text-xs text-gray-500">
             <th className="px-4 py-3 font-medium">Code</th>
             <th className="px-4 py-3 font-medium">Name</th>
@@ -43,7 +43,7 @@ export function VendorRegistry({ vendors }: VendorRegistryProps) {
             <th className="px-4 py-3 font-medium text-right">Rating</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800 bg-[#1a1a1a]">
+        <tbody className="divide-y divide-gray-800 bg-[#1a1a24]">
           {vendors.map((vendor) => {
             const style = statusStyles[vendor.status] || statusStyles.inactive;
             return (

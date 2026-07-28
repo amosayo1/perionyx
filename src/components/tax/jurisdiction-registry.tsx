@@ -41,7 +41,7 @@ export const JurisdictionRegistry = memo(function JurisdictionRegistry({ jurisdi
           placeholder="Search jurisdictions..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-zinc-800/60 bg-zinc-900/40 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#d4af37]/40 focus:ring-1 focus:ring-[#d4af37]/20"
+          className="w-full rounded-lg border border-zinc-800/60 bg-zinc-900/40 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
         />
       </div>
 
@@ -93,7 +93,7 @@ export const JurisdictionRegistry = memo(function JurisdictionRegistry({ jurisdi
                     )}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{j.standardRate}%</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{j.standardRate}%</td>
                 <td className="px-4 py-3 text-center">
                   <span className={cn("inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-medium", j.isActive ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400" : "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
                     <span className={cn("h-1.5 w-1.5 rounded-full", j.isActive ? "bg-emerald-500" : "bg-zinc-500")} />

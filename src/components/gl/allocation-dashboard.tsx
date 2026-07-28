@@ -104,7 +104,7 @@ export const AllocationDashboard = memo(function AllocationDashboard({ rules, ru
                       <span className="text-xs text-zinc-400">{formatDate(run.createdAt)}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="text-[#d4af37]">{formatCurrency(run.totalAmount)}</span>
+                      <span className="text-gold">{formatCurrency(run.totalAmount)}</span>
                       <span className={cn("rounded border px-1 py-0.5 text-[9px] font-medium capitalize", run.status === "posted" ? "border-emerald-500/20 text-emerald-400" : "border-amber-500/20 text-amber-400")}>
                         {run.status}
                       </span>

@@ -55,7 +55,7 @@ export function TablePagination({
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="h-7 rounded border border-white/[0.06] bg-zinc-900/60 px-1.5 text-xs text-zinc-400 outline-none focus:border-[#d4af37]/40"
+              className="h-7 rounded border border-white/[0.06] bg-zinc-900/60 px-1.5 text-xs text-zinc-400 outline-none focus:border-gold/40"
             >
               {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
@@ -91,7 +91,7 @@ export function TablePagination({
               className={cn(
                 "h-7 min-w-[28px] text-xs",
                 page === currentPage
-                  ? "bg-[#d4af37]/10 text-[#d4af37]"
+                  ? "bg-gold/10 text-gold"
                   : "text-zinc-400 hover:text-white",
               )}
             >

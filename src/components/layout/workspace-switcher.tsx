@@ -64,13 +64,13 @@ export function WorkspaceSwitcher({ companies, activeCompanyId, onSwitch, classN
               onClick={() => onSwitch(row.company.id)}
               className={cn(
                 "flex items-center justify-between",
-                row.company.id === activeCompanyId && "bg-[#d4af37]/10 text-[#d4af37]",
+                row.company.id === activeCompanyId && "bg-gold/10 text-gold",
               )}
             >
               <span className="truncate">{row.company.name}</span>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-zinc-600 uppercase">{row.role}</span>
-                {row.company.id === activeCompanyId && <Check className="h-3.5 w-3.5 text-[#d4af37]" />}
+                {row.company.id === activeCompanyId && <Check className="h-3.5 w-3.5 text-gold" />}
               </div>
             </DropdownMenuItem>
           ))

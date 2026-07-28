@@ -132,7 +132,7 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
                     onClick={() => setRuleType(rt.value)}
                     className={`flex-1 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                       ruleType === rt.value
-                        ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30"
+                        ? "bg-gold/10 text-gold border border-gold/30"
                         : "bg-zinc-900/40 text-zinc-500 border border-white/[0.06] hover:text-zinc-300"
                     }`}
                     title={rt.hint}
@@ -182,7 +182,7 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
                 max={100}
                 value={priority}
                 onChange={(e) => setPriority(Number(e.target.value))}
-                className="w-full accent-[#d4af37]"
+                className="w-full accent-gold"
               />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 text-[11px]">
@@ -263,7 +263,7 @@ export function BusinessRulesForm({ open, onOpenChange, onSave, editRule }: Prop
               <button
                 type="button"
                 onClick={addConfigEntry}
-                className="inline-flex items-center gap-1 rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1.5 text-[11px] font-medium text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors h-8 shrink-0"
+                className="inline-flex items-center gap-1 rounded-lg border border-gold/30 bg-gold/5 px-3 py-1.5 text-[11px] font-medium text-gold hover:bg-gold/10 transition-colors h-8 shrink-0"
               >
                 <Plus className="h-3 w-3" />
                 Add

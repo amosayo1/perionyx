@@ -21,7 +21,7 @@ const statusStyles: Record<string, { badge: string; icon: React.ReactNode }> = {
 export function PurchaseOrderGrid({ orders }: PurchaseOrderGridProps) {
   if (orders.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No purchase orders found</p>
       </div>
     );
@@ -30,7 +30,7 @@ export function PurchaseOrderGrid({ orders }: PurchaseOrderGridProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-800">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-gray-800 bg-[#1a1a1a]">
+        <thead className="border-b border-gray-800 bg-[#1a1a24]">
           <tr className="text-xs text-gray-500">
             <th className="px-4 py-3 font-medium">PO Number</th>
             <th className="px-4 py-3 font-medium">Type</th>
@@ -41,7 +41,7 @@ export function PurchaseOrderGrid({ orders }: PurchaseOrderGridProps) {
             <th className="px-4 py-3 font-medium">Expected Delivery</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800 bg-[#1a1a1a]">
+        <tbody className="divide-y divide-gray-800 bg-[#1a1a24]">
           {orders.map((po) => {
             const style = statusStyles[po.status] || statusStyles.draft;
             const receivedColor = po.receivedPercent >= 100 ? "text-emerald-400" : po.receivedPercent > 0 ? "text-amber-400" : "text-gray-400";

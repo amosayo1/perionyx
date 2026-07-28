@@ -6,7 +6,7 @@ import type { FPADriverPlanningProps } from './fpa-types'
 const categoryColors: Record<string, string> = {
   revenue: '#22c55e',
   volume: '#3b82f6',
-  pricing: '#d4a843',
+  pricing: '#d4af37',
   headcount: '#a855f7',
   salary: '#f97316',
   utilization: '#06b6d4',
@@ -60,7 +60,7 @@ export default function FPADriverPlanning({ drivers }: FPADriverPlanningProps) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04, duration: 0.2 }}
                     style={{
-                      background: '#1a1a2e',
+                      background: '#1a1a24',
                       borderRadius: 10,
                       border: `1px solid #2a2a3e`,
                       borderLeft: `3px solid ${catColor}`,

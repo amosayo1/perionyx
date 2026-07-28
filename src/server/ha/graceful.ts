@@ -1,5 +1,8 @@
 import { healthEndpoint } from "./health";
 import http from "http";
+import { logger } from "@/lib/logger";
+
+const log = logger.child({ module: "graceful" });
 
 export interface ShutdownHandler {
   name: string;
@@ -24,10 +27,10 @@ export class GracefulShutdown {
     if (this.shuttingDown) return;
     this.shuttingDown = true;
 
-    console.log(`\n[GracefulShutdown] Received ${signal}, starting graceful shutdown...`);
+    log.info({ signal }, "Received shutdown signal, starting graceful shutdown...");
 
     const forceExit = setTimeout(() => {
-      console.error(`[GracefulShutdown] Forced shutdown after ${this.shutdownTimeoutMs}ms`);
+      log.fatal({ timeoutMs: this.shutdownTimeoutMs }, "Forced shutdown after timeout");
       process.exit(1);
     }, this.shutdownTimeoutMs);
 
@@ -39,14 +42,14 @@ export class GracefulShutdown {
             setTimeout(() => reject(new Error(`${name} shutdown timed out after ${timeout}ms`)), timeout),
           ),
         ]);
-        console.log(`[GracefulShutdown] ✓ ${name}`);
+        log.info({ handler: name }, "Shutdown handler completed");
       } catch (err) {
-        console.error(`[GracefulShutdown] ✗ ${name}:`, err instanceof Error ? err.message : err);
+        log.error({ err, handler: name }, "Shutdown handler failed");
       }
     }
 
     clearTimeout(forceExit);
-    console.log("[GracefulShutdown] Shutdown complete");
+    log.info("Shutdown complete");
     process.exit(0);
   }
 
@@ -54,6 +57,7 @@ export class GracefulShutdown {
     for (const signal of signalHandlers) {
       process.on(signal, () => this.shutdown(signal));
     }
+    log.info({ signals: signalHandlers }, "Signal handlers registered");
   }
 }
 
@@ -97,7 +101,7 @@ export class GracefulStartup {
         } catch {}
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
-      logger.info(`[GracefulStartup] ✓ ${dep.name}`);
+      log.info({ dependency: dep.name }, "Dependency ready");
     }
   }
 
@@ -135,12 +139,10 @@ export class ConnectionDrainer {
       Promise.all(promises),
       new Promise((_, reject) => setTimeout(() => reject(new Error("Drain timeout")), timeoutMs)),
     ]).catch((err) => {
-      console.error("[ConnectionDrainer] Drain error:", err);
+      log.error({ err }, "Connection drain error");
     });
   }
 }
-
-import { logger } from "@/lib/logger";
 
 export const gracefulShutdown = new GracefulShutdown();
 export const gracefulStartup = new GracefulStartup();

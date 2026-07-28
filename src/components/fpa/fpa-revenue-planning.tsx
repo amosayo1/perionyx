@@ -55,7 +55,7 @@ export default function FPARevenuePlanning({ revenues }: FPARevenuePlanningProps
                   <span style={{ background: '#2a2a3e', color: '#94a3b8', padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 500 }}>{typeLabels[r.revenueType] || r.revenueType}</span>
                 </td>
                 <td style={{ padding: '10px 12px', color: '#aaa' }}>{r.volume.toLocaleString()}</td>
-                <td style={{ padding: '10px 12px', color: '#d4a843', fontWeight: 600 }}>{formatCurrency(r.unitPrice)}</td>
+                <td style={{ padding: '10px 12px', color: '#d4af37', fontWeight: 600 }}>{formatCurrency(r.unitPrice)}</td>
                 <td style={{ padding: '10px 12px', color: '#22c55e', fontWeight: 600 }}>{formatCurrency(r.revenue)}</td>
                 <td style={{ padding: '10px 12px', color: '#ef4444', fontWeight: 600 }}>{formatCurrency(r.costOfGoodsSold)}</td>
                 <td style={{ padding: '10px 12px', color: r.grossMargin >= 0 ? '#22c55e' : '#ef4444', fontWeight: 600 }}>{formatCurrency(r.grossMargin)}</td>
@@ -71,8 +71,8 @@ export default function FPARevenuePlanning({ revenues }: FPARevenuePlanningProps
             ))}
           </tbody>
           <tfoot>
-            <tr style={{ borderTop: '2px solid #d4a843' }}>
-              <td style={{ padding: '10px 12px', color: '#d4a843', fontWeight: 700, fontSize: 12 }}>TOTAL</td>
+            <tr style={{ borderTop: '2px solid #d4af37' }}>
+              <td style={{ padding: '10px 12px', color: '#d4af37', fontWeight: 700, fontSize: 12 }}>TOTAL</td>
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px' }} />

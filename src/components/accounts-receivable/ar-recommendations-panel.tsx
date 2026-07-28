@@ -31,7 +31,7 @@ export function RecommendationsPanel({ recommendations }: ARRecommendationsPanel
       </div>
       {filtered.map((rec, i) => (
         <motion.div key={rec.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-          style={{ background: "#1a1a2e", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${priorityColors[rec.priority]}` }}>
+          style={{ background: "#1a1a24", borderRadius: 8, padding: 16, marginBottom: 8, borderLeft: `3px solid ${priorityColors[rec.priority]}` }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
             <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: priorityColors[rec.priority] + "22", display: "flex", alignItems: "center", justifyContent: "center", color: priorityColors[rec.priority], fontSize: 14, fontWeight: 700 }}>
@@ -46,7 +46,7 @@ export function RecommendationsPanel({ recommendations }: ARRecommendationsPanel
               <span style={{ background: priorityColors[rec.priority] + "22", color: priorityColors[rec.priority], fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase" }}>
                 {rec.priority}
               </span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "#d4a843", fontFamily: "ui-monospace, monospace" }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "#d4af37", fontFamily: "ui-monospace, monospace" }}>
                 ${rec.impact.toLocaleString()}
               </span>
               <span style={{ fontSize: 11, color: "#64748b", textTransform: "capitalize" }}>{rec.effort} effort</span>

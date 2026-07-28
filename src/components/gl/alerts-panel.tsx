@@ -37,7 +37,7 @@ export const AlertsPanel = memo(function AlertsPanel({ alerts, onDismiss, classN
   return (
     <div className={cn("space-y-2", className)}>
       <h2 className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-        <AlertOctagon className="h-4 w-4 text-[#d4af37]" />
+        <AlertOctagon className="h-4 w-4 text-gold" />
         Alerts ({sorted.length})
       </h2>
       {sorted.map((alert) => {

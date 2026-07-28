@@ -86,12 +86,12 @@ function TabButton({ active, icon: Icon, label, onClick }: { active: boolean; ic
       onClick={onClick}
       className={`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
         active
-          ? "bg-[#d4af37]/10 text-[#d4af37] shadow-sm"
+          ? "bg-gold/10 text-gold shadow-sm"
           : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
       }`}
     >
       {active && (
-        <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-[#d4af37]/20" />
+        <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-gold/20" />
       )}
       <Icon className="h-4 w-4" />
       {label}
@@ -123,11 +123,11 @@ export function ModernDashboardClient({ wallets, transactions, audits, approvalM
             <rect width="400" height="200" fill="url(#grid)" />
           </svg>
         </div>
-        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[#d4af37] opacity-[0.03] blur-3xl" />
+        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gold opacity-[0.03] blur-3xl" />
         <div className="relative flex items-start justify-between">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d4af37]/80">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
+            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/80">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
               Enterprise Command Center
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-white lg:text-4xl">Executive Overview</h1>
@@ -191,7 +191,7 @@ export function ModernDashboardClient({ wallets, transactions, audits, approvalM
               value={`${currency} ${Number(totalBal).toLocaleString()}`}
               trend="up"
               icon={DollarSign}
-              color="text-[#d4af37]"
+              color="text-gold"
               subtitle="Across all wallets"
             />
             <StatCard
@@ -222,8 +222,8 @@ export function ModernDashboardClient({ wallets, transactions, audits, approvalM
             {/* Treasury Balance Card */}
             <div className="lg:col-span-4">
               <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-zinc-900/80 via-zinc-900/40 to-black/50 p-6 lg:p-8">
-                <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-[#d4af37] opacity-[0.02] blur-3xl" />
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/20 to-transparent" />
+                <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-gold opacity-[0.02] blur-3xl" />
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
                 <div className="relative space-y-6">
                   <div>
                     <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.15em] text-zinc-500">
@@ -255,7 +255,7 @@ export function ModernDashboardClient({ wallets, transactions, audits, approvalM
 
                   <div className="flex items-center gap-3">
                     <Link href="/transactions">
-                      <Button size="sm" className="gap-2 bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20 hover:bg-[#d4af37]/90 hover:shadow-[#d4af37]/30">
+                      <Button size="sm" className="gap-2 bg-gold text-black shadow-lg shadow-gold/20 hover:bg-gold/90 hover:shadow-gold/30">
                         <ArrowUpRight className="h-4 w-4" />
                         New Transaction
                       </Button>
@@ -284,7 +284,7 @@ export function ModernDashboardClient({ wallets, transactions, audits, approvalM
                 <div className="space-y-2.5">
                   {[
                     { label: "Pending Approvals", value: approvalMetrics?.pendingApprovals ?? 0, color: "text-amber-400" },
-                    { label: "Approval Value", value: approvalMetrics?.pendingValue ?? "—", color: "text-[#d4af37]" },
+                    { label: "Approval Value", value: approvalMetrics?.pendingValue ?? "—", color: "text-gold" },
                     { label: "Total Wallets", value: wallets.length, color: "text-emerald-400" },
                     { label: "Transaction Count", value: totalTransactions?.total ?? transactions.length, color: "text-blue-400" },
                   ].map((s) => (
@@ -364,17 +364,17 @@ export function ModernDashboardClient({ wallets, transactions, audits, approvalM
                     <Link
                       key={w.id}
                       href={`/wallets/${w.id}`}
-                      className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-gradient-to-b from-zinc-900/50 to-black/30 p-4 transition-all duration-200 hover:border-[#d4af37]/30 hover:shadow-lg hover:shadow-black/30"
+                      className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-gradient-to-b from-zinc-900/50 to-black/30 p-4 transition-all duration-200 hover:border-gold/30 hover:shadow-lg hover:shadow-black/30"
                     >
-                      <div className={`absolute right-0 top-0 h-20 w-20 translate-x-6 -translate-y-6 rounded-full opacity-[0.03] blur-2xl ${i % 2 === 0 ? "bg-[#d4af37]" : "bg-emerald-400"}`} />
+                      <div className={`absolute right-0 top-0 h-20 w-20 translate-x-6 -translate-y-6 rounded-full opacity-[0.03] blur-2xl ${i % 2 === 0 ? "bg-gold" : "bg-emerald-400"}`} />
                       <div className="relative flex items-start gap-3">
                         <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                          i % 2 === 0 ? "bg-[#d4af37]/10 text-[#d4af37]" : "bg-emerald-500/10 text-emerald-400"
+                          i % 2 === 0 ? "bg-gold/10 text-gold" : "bg-emerald-500/10 text-emerald-400"
                         }`}>
                           <Wallet className="h-5 w-5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-white group-hover:text-[#d4af37] transition-colors truncate">{w.name}</p>
+                          <p className="text-sm font-medium text-white group-hover:text-gold transition-colors truncate">{w.name}</p>
                           <p className="text-xs text-zinc-500 mt-0.5">{w.currency} &middot; {w.kind === "STANDARD" ? "Standard" : "System"}</p>
                           <p className="mt-2 text-lg font-bold text-white tabular-nums">
                             {Number(w.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

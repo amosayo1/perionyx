@@ -51,13 +51,13 @@ export function IncidentSlaCard({ incident }: { incident: Incident }) {
               <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
             )}
             {incident.slaRespondedAt && !responseBreached && (
-              <CheckCircle2 className="h-3.5 w-3.5 text-[#d4af37]" />
+              <CheckCircle2 className="h-3.5 w-3.5 text-gold" />
             )}
             <span
               className={cn(
                 "text-xs font-medium",
                 responseBreached && "text-red-400",
-                responseRemaining === "Completed" && "text-[#d4af37]",
+                responseRemaining === "Completed" && "text-gold",
                 !responseBreached && responseRemaining !== "Completed" && "text-zinc-400",
               )}
             >
@@ -73,7 +73,7 @@ export function IncidentSlaCard({ incident }: { incident: Incident }) {
                 ? "bg-red-500"
                 : responseProgress > 80
                   ? "bg-amber-500"
-                  : "bg-[#d4af37]",
+                  : "bg-gold",
             )}
             style={{ width: `${Math.min(responseProgress, 100)}%` }}
           />
@@ -92,13 +92,13 @@ export function IncidentSlaCard({ incident }: { incident: Incident }) {
               <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
             )}
             {incident.slaResolvedAt && !resolutionBreached && (
-              <CheckCircle2 className="h-3.5 w-3.5 text-[#d4af37]" />
+              <CheckCircle2 className="h-3.5 w-3.5 text-gold" />
             )}
             <span
               className={cn(
                 "text-xs font-medium",
                 resolutionBreached && "text-red-400",
-                resolutionRemaining === "Completed" && "text-[#d4af37]",
+                resolutionRemaining === "Completed" && "text-gold",
                 !resolutionBreached && resolutionRemaining !== "Completed" && "text-zinc-400",
               )}
             >
@@ -114,7 +114,7 @@ export function IncidentSlaCard({ incident }: { incident: Incident }) {
                 ? "bg-red-500"
                 : resolutionProgress > 80
                   ? "bg-amber-500"
-                  : "bg-[#d4af37]",
+                  : "bg-gold",
             )}
             style={{ width: `${Math.min(resolutionProgress, 100)}%` }}
           />

@@ -23,7 +23,7 @@ export default function ConsCurrencyTranslation({ translations }: ConsCurrencyTr
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.04 }}
-          style={{ background: "#1a1a2e", borderRadius: 10, padding: 16, border: "1px solid #2a2a4a", display: "flex", alignItems: "center", gap: 16 }}
+          style={{ background: "#1a1a24", borderRadius: 10, padding: 16, border: "1px solid #2a2a4a", display: "flex", alignItems: "center", gap: 16 }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 100 }}>
             <span style={{ color: "#e0e0e0", fontWeight: 700, fontSize: 18 }}>{t.sourceCurrency}</span>

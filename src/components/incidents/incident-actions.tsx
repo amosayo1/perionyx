@@ -41,7 +41,7 @@ export function IncidentActions() {
             size="sm"
             className={`gap-1.5 text-xs ${
               isWarning ? "border-amber-500/20 text-amber-400 hover:bg-amber-500/10" : ""
-            } ${isPrimary ? "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20 hover:bg-[#d4af37]/20" : ""}`}
+            } ${isPrimary ? "bg-gold/10 text-gold border-gold/20 hover:bg-gold/20" : ""}`}
             disabled={loading === action.id}
             onClick={() => handleAction(action.id)}
           >

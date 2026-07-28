@@ -48,15 +48,15 @@ export const AccountActivityGrid = memo(function AccountActivityGrid({ account, 
           </div>
           <div className="text-right">
             <p className="text-xs text-zinc-500">Natural Balance</p>
-            <p className={cn("text-sm font-semibold capitalize", account.naturalBalance === "debit" ? "text-[#d4af37]" : "text-zinc-300")}>
+            <p className={cn("text-sm font-semibold capitalize", account.naturalBalance === "debit" ? "text-gold" : "text-zinc-300")}>
               {account.naturalBalance}
             </p>
           </div>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/5 p-3">
+          <div className="rounded-lg border border-gold/20 bg-gold/5 p-3">
             <p className="text-[11px] text-zinc-500">Total Debits</p>
-            <p className="text-lg font-bold text-[#d4af37]">{formatCurrency(totalDebit)}</p>
+            <p className="text-lg font-bold text-gold">{formatCurrency(totalDebit)}</p>
           </div>
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-3">
             <p className="text-[11px] text-zinc-500">Total Credits</p>
@@ -90,7 +90,7 @@ export const AccountActivityGrid = memo(function AccountActivityGrid({ account, 
                   <tr key={e.id} className="transition-colors hover:bg-zinc-800/40">
                     <td className="px-4 py-3 text-xs text-zinc-500">{formatDate(e.createdAt)}</td>
                     <td className="px-4 py-3 text-sm text-zinc-300">{e.description ?? "—"}</td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-[#d4af37]">{e.debit > 0 ? formatCurrency(e.debit) : "—"}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-gold">{e.debit > 0 ? formatCurrency(e.debit) : "—"}</td>
                     <td className="px-4 py-3 text-right text-sm font-mono text-zinc-400">{e.credit > 0 ? formatCurrency(e.credit) : "—"}</td>
                     <td className="px-4 py-3 text-xs text-zinc-600">{e.reference ?? "—"}</td>
                   </tr>

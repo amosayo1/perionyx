@@ -38,13 +38,13 @@ function scoreRing(score: number, size: number) {
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="shrink-0">
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
       <motion.circle
-        cx={cx} cy={cy} r={r} fill="none" stroke="#c9a84c" strokeWidth="6" strokeLinecap="round"
+        cx={cx} cy={cy} r={r} fill="none" stroke="#d4af37" strokeWidth="6" strokeLinecap="round"
         strokeDasharray={circumference}
         initial={{ strokeDashoffset: circumference }}
         animate={{ strokeDashoffset: offset }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       />
-      <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fill="#c9a84c" fontSize="16" fontWeight="bold">
+      <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fill="#d4af37" fontSize="16" fontWeight="bold">
         {score}
       </text>
     </svg>
@@ -61,8 +61,8 @@ export function TreasuryHealthOverview({ className }: { className?: string }) {
         <div className="flex items-center gap-3">
           <span className="text-[11px] text-zinc-500">Overall Score</span>
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-[#c9a84c]">{health.overall}</span>
-            <span className="rounded-full bg-[#c9a84c]/10 border border-[#c9a84c]/20 px-2 py-0.5 text-[10px] font-medium text-[#c9a84c] uppercase tracking-wider">
+            <span className="text-2xl font-bold text-gold">{health.overall}</span>
+            <span className="rounded-full bg-gold/10 border border-gold/20 px-2 py-0.5 text-[10px] font-medium text-gold uppercase tracking-wider">
               {health.label}
             </span>
           </div>

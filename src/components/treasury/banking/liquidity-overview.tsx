@@ -60,7 +60,7 @@ export function LiquidityOverview({ liquidity, className }: LiquidityOverviewPro
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
                 <div
-                  className="h-full rounded-full bg-[#c9a84c]"
+                  className="h-full rounded-full bg-gold"
                   style={{ width: `${r.percentage}%` }}
                 />
               </div>
@@ -101,7 +101,7 @@ function CurrencyBar({ currency }: { currency: CurrencyHolding }) {
       <div className="flex-1">
         <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
           <div
-            className="h-full rounded-full bg-[#c9a84c]"
+            className="h-full rounded-full bg-gold"
             style={{ width: `${currency.percentage}%` }}
           />
         </div>

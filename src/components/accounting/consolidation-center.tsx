@@ -10,7 +10,7 @@ interface ConsolidationCenterProps {
 export function ConsolidationCenter({ consolidations }: ConsolidationCenterProps) {
   const sorted = [...consolidations].sort((a, b) => b.calculatedAt.getTime() - a.calculatedAt.getTime());
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a]">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24]">
       <div className="border-b border-gray-800 px-4 py-3">
         <h3 className="text-sm font-medium text-gray-200">Consolidation Center</h3>
       </div>

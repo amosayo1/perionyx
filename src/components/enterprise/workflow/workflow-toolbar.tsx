@@ -90,7 +90,7 @@ export const WorkflowToolbar = memo(function WorkflowToolbar({
           variant="ghost"
           size="sm"
           onClick={onToggleMinimap}
-          className={cn("h-7 px-2", showMinimap ? "text-[#d4af37]" : "text-zinc-500 hover:text-white")}
+          className={cn("h-7 px-2", showMinimap ? "text-gold" : "text-zinc-500 hover:text-white")}
           aria-label="Toggle minimap"
         >
           {showMinimap ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}

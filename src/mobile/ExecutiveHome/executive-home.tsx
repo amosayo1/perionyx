@@ -100,7 +100,7 @@ export function ExecutiveHome({ className }: { className?: string }) {
           className="rounded-2xl border border-white/[0.06] bg-zinc-900/40 p-4"
         >
           <div className="mb-2 flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-[#d4af37]" />
+            <Sparkles className="h-4 w-4 text-gold" />
             <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">AI Executive Summary</span>
           </div>
           <p className="text-[13px] leading-relaxed text-zinc-300">{MOCK.aiSummary}</p>
@@ -109,10 +109,10 @@ export function ExecutiveHome({ className }: { className?: string }) {
         <div className="rounded-2xl border border-white/[0.06] bg-zinc-900/40 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Bell className="h-4 w-4 text-[#d4af37]" />
+              <Bell className="h-4 w-4 text-gold" />
               <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Pending Approvals</span>
             </div>
-            <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-[#d4af37]/15 px-2 text-[11px] font-bold text-[#d4af37]">
+            <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-gold/15 px-2 text-[11px] font-bold text-gold">
               {MOCK.pendingApprovals}
             </span>
           </div>

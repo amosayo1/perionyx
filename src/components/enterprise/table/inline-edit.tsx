@@ -91,7 +91,7 @@ export function InlineEdit<T>({ value, row, config, onSave, onCancel, className 
         onClick={handleStart}
         className={cn(
           "w-full text-left hover:bg-white/[0.04] rounded px-1 -mx-1 cursor-pointer transition-colors",
-          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/40",
+          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold/40",
           className,
         )}
         aria-label={`Edit ${value}`}
@@ -110,7 +110,7 @@ export function InlineEdit<T>({ value, row, config, onSave, onCancel, className 
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="h-7 w-full rounded border border-[#d4af37]/30 bg-zinc-900 px-2 pr-6 text-xs text-white outline-none focus:border-[#d4af37]/60"
+            className="h-7 w-full rounded border border-gold/30 bg-zinc-900 px-2 pr-6 text-xs text-white outline-none focus:border-gold/60"
             disabled={saving}
           >
             {config.options.map((opt) => (
@@ -142,8 +142,8 @@ export function InlineEdit<T>({ value, row, config, onSave, onCancel, className 
         step={config.type === "currency" ? "0.01" : undefined}
         placeholder={config.placeholder}
         className={cn(
-          "h-7 w-full rounded border border-[#d4af37]/30 bg-zinc-900 px-2 text-xs text-white outline-none",
-          "focus:border-[#d4af37]/60",
+          "h-7 w-full rounded border border-gold/30 bg-zinc-900 px-2 text-xs text-white outline-none",
+          "focus:border-gold/60",
           error && "border-red-400/50",
         )}
         disabled={saving}

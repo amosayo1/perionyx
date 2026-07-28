@@ -28,7 +28,7 @@ export default function FCCalendar({ entries }: FCCalendarProps) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      style={{ background: "#1a1a2e", borderRadius: 12, padding: 24, display: "flex", flexDirection: "column", gap: 16 }}
+      style={{ background: "#1a1a24", borderRadius: 12, padding: 24, display: "flex", flexDirection: "column", gap: 16 }}
     >
       <h3 style={{ color: "#e0e0e0", fontSize: 18, fontWeight: 700, margin: 0 }}>Close Calendar</h3>
       {sorted.length === 0 && (

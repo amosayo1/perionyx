@@ -28,7 +28,7 @@ export default function FPAStrategicPlanning({ plans }: FPAStrategicPlanningProp
 
   const summaryItems = [
     { label: 'Total Plans', value: plans.length.toString(), color: '#e0e0e0' },
-    { label: 'Total Investment', value: formatCurrency(totalInvestment), color: '#d4a843' },
+    { label: 'Total Investment', value: formatCurrency(totalInvestment), color: '#d4af37' },
     { label: 'Projected Revenue', value: formatCurrency(totalRevenue), color: '#22c55e' },
     { label: 'Avg ROI', value: `${avgROI.toFixed(1)}%`, color: avgROI >= 0 ? '#22c55e' : '#ef4444' },
   ]
@@ -38,7 +38,7 @@ export default function FPAStrategicPlanning({ plans }: FPAStrategicPlanningProp
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
         {summaryItems.map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}
-            style={{ background: '#1a1a2e', borderRadius: 10, padding: 16, textAlign: 'center', border: '1px solid #2a2a4a' }}>
+            style={{ background: '#1a1a24', borderRadius: 10, padding: 16, textAlign: 'center', border: '1px solid #2a2a4a' }}>
             <div style={{ color: '#94a3b8', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 20, fontWeight: 700, fontFamily: 'ui-monospace, monospace' }}>{item.value}</div>
           </motion.div>
@@ -50,7 +50,7 @@ export default function FPAStrategicPlanning({ plans }: FPAStrategicPlanningProp
       ) : (
         plans.map((p, i) => (
           <motion.div key={p.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            style={{ background: '#1a1a2e', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a' }}>
+            style={{ background: '#1a1a24', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
               <div>
                 <div style={{ fontSize: 16, fontWeight: 600, color: '#e0e0e0' }}>{p.name}</div>
@@ -73,7 +73,7 @@ export default function FPAStrategicPlanning({ plans }: FPAStrategicPlanningProp
               </div>
               <div style={{ background: '#16213e', borderRadius: 6, padding: 12, textAlign: 'center' }}>
                 <div style={{ color: '#64748b', fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Investment</div>
-                <span style={{ color: '#d4a843', fontSize: 14, fontWeight: 600, fontFamily: 'ui-monospace, monospace' }}>{formatCurrency(p.totalInvestment)}</span>
+                <span style={{ color: '#d4af37', fontSize: 14, fontWeight: 600, fontFamily: 'ui-monospace, monospace' }}>{formatCurrency(p.totalInvestment)}</span>
               </div>
               <div style={{ background: '#16213e', borderRadius: 6, padding: 12, textAlign: 'center' }}>
                 <div style={{ color: '#64748b', fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Projected ROI</div>

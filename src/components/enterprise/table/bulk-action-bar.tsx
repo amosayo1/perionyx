@@ -15,7 +15,7 @@ export function BulkActionBar<T>({ selectedCount, actions, selectedRows, onClear
   if (selectedCount === 0) return null;
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/5 px-4 py-2.5">
+    <div className="flex items-center gap-3 rounded-lg border border-gold/20 bg-gold/5 px-4 py-2.5">
       <button
         onClick={onClear}
         className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white/10"

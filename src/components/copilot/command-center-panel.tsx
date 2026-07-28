@@ -40,13 +40,13 @@ export function CommandCenterPanel({
             className={cn(
               "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-all",
               active
-                ? "bg-[#d4af37]/10 text-[#d4af37]"
+                ? "bg-gold/10 text-gold"
                 : "text-zinc-400 hover:bg-white/[0.03] hover:text-zinc-200",
             )}
           >
             <span className={cn(
               "shrink-0 flex items-center justify-center",
-              active ? "text-[#d4af37]" : "text-zinc-500",
+              active ? "text-gold" : "text-zinc-500",
             )}>
               {cfg.icon}
             </span>

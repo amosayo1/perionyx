@@ -95,7 +95,7 @@ export const JournalEntryBoard = memo(function JournalEntryBoard({ journals, ent
                         {j.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-[#d4af37]">{formatCurrency(j.totalDebit)}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-gold">{formatCurrency(j.totalDebit)}</td>
                     <td className="px-4 py-3 text-right text-sm font-mono text-zinc-300">{formatCurrency(j.totalCredit)}</td>
                     <td className="px-4 py-3 text-right text-sm text-zinc-500">{formatDate(j.postingDate ?? j.createdAt)}</td>
                   </tr>

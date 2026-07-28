@@ -140,7 +140,7 @@ export function VersionHistoryPanel({ entityType, entityId, className, maxHeight
                 onClick={() => setSelectedVersion(isSelected ? null : version.id)}
                 className={cn(
                   "flex w-full items-start gap-3 px-3 py-2.5 text-left transition-colors hover:bg-white/[0.04]",
-                  isSelected && "bg-[#d4af37]/5",
+                  isSelected && "bg-gold/5",
                 )}
               >
                 <div className={cn("mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold", changeTypeColors[version.changeType] ?? "text-zinc-500 border-zinc-600 bg-zinc-800")}>
@@ -192,7 +192,7 @@ export function VersionHistoryPanel({ entityType, entityId, className, maxHeight
       {diffView && diffData && (
         <div className="border-t border-white/[0.06] p-3">
           <div className="mb-2 flex items-center gap-2">
-            <Eye className="h-3.5 w-3.5 text-[#d4af37]" />
+            <Eye className="h-3.5 w-3.5 text-gold" />
             <span className="text-[11px] font-medium text-white">Difference View</span>
             <button
               onClick={() => { setDiffView(null); setDiffData(null); }}

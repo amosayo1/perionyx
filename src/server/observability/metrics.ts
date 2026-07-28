@@ -75,14 +75,25 @@ class GaugeImpl implements Gauge {
 }
 
 class HistogramImpl implements Histogram {
-  private values: number[] = [];
+  private buckets = new Map<string, number[]>();
 
-  observe(value: number, _labels?: MetricLabel): void {
-    this.values.push(value);
+  observe(value: number, labels?: MetricLabel): void {
+    const key = this.labelKey(labels);
+    const arr = this.buckets.get(key);
+    if (arr) {
+      arr.push(value);
+    } else {
+      this.buckets.set(key, [value]);
+    }
   }
 
   get(): HistogramSnapshot {
-    const sorted = [...this.values].sort((a, b) => a - b);
+    // Aggregate all buckets into a single snapshot
+    const allValues: number[] = [];
+    for (const values of this.buckets.values()) {
+      allValues.push(...values);
+    }
+    const sorted = allValues.sort((a, b) => a - b);
     const count = sorted.length;
     if (count === 0) return { count: 0, sum: 0, min: 0, max: 0, avg: 0, p50: 0, p95: 0, p99: 0 };
     const sum = sorted.reduce((a, b) => a + b, 0);
@@ -98,7 +109,34 @@ class HistogramImpl implements Histogram {
     };
   }
 
-  reset(): void { this.values = []; }
+  getLabels(): string[] {
+    return Array.from(this.buckets.keys());
+  }
+
+  getByLabel(labelKey: string): HistogramSnapshot {
+    const values = this.buckets.get(labelKey) ?? [];
+    const sorted = [...values].sort((a, b) => a - b);
+    const count = sorted.length;
+    if (count === 0) return { count: 0, sum: 0, min: 0, max: 0, avg: 0, p50: 0, p95: 0, p99: 0 };
+    const sum = sorted.reduce((a, b) => a + b, 0);
+    return {
+      count,
+      sum,
+      min: sorted[0],
+      max: sorted[count - 1],
+      avg: Math.round((sum / count) * 100) / 100,
+      p50: sorted[Math.floor(count * 0.5)],
+      p95: sorted[Math.floor(count * 0.95)],
+      p99: sorted[Math.floor(count * 0.99)],
+    };
+  }
+
+  reset(): void { this.buckets.clear(); }
+
+  private labelKey(labels?: MetricLabel): string {
+    if (!labels || Object.keys(labels).length === 0) return '__default';
+    return Object.entries(labels).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${k}=${v}`).join(',');
+  }
 }
 
 export class MetricsRegistry {

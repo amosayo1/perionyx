@@ -21,7 +21,7 @@ import {
 import { MOCK_STRESS_SCENARIOS } from "./data";
 import type { StressScenario, StressCategory, RiskSeverity } from "./types";
 
-const GOLD = "#c9a84c";
+const GOLD = "#d4af37";
 
 const STRESS_TYPES: (StressCategory | "all")[] = [
   "all", "fx_shock", "interest_shock", "liquidity_crisis", "bank_failure",

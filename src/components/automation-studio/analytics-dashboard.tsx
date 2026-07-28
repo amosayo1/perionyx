@@ -94,11 +94,11 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
         <AnimatedStatCard label="Running" value={analytics.running} icon={Activity} color="text-emerald-400" />
-        <AnimatedStatCard label="Completed" value={analytics.completed} icon={CheckCircle2} color="text-[#d4af37]" />
+        <AnimatedStatCard label="Completed" value={analytics.completed} icon={CheckCircle2} color="text-gold" />
         <AnimatedStatCard label="Failed" value={analytics.failed} icon={AlertTriangle} color="text-red-400" />
         <AnimatedStatCard label="Waiting" value={analytics.waiting} icon={Clock} color="text-amber-400" />
         <AnimatedStatCard label="Success Rate" value={analytics.successRate} icon={TrendingUp} color="text-emerald-400" />
-        <AnimatedStatCard label="Avg Duration" value={Math.round(analytics.averageExecutionTimeMs / 1000)} icon={Timer} color="text-[#d4af37]" />
+        <AnimatedStatCard label="Avg Duration" value={Math.round(analytics.averageExecutionTimeMs / 1000)} icon={Timer} color="text-gold" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -127,7 +127,7 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
                       </div>
                       <div className="relative h-2 rounded-full bg-zinc-800">
                         <div
-                          className="absolute left-0 top-0 h-2 rounded-full bg-[#d4af37]/60"
+                          className="absolute left-0 top-0 h-2 rounded-full bg-gold/60"
                           style={{ width: `${width}%` }}
                         />
                       </div>
@@ -309,7 +309,7 @@ export function AnalyticsDashboardClient({ analytics }: Props) {
                     <p className="text-sm text-white truncate">{w.name}</p>
                     <div className="flex items-center gap-2">
                       <Gauge className="h-3.5 w-3.5 text-zinc-600" />
-                      <span className="text-sm font-medium text-[#d4af37]">{w.executionCount}</span>
+                      <span className="text-sm font-medium text-gold">{w.executionCount}</span>
                     </div>
                   </Link>
                 ))}

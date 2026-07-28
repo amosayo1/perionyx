@@ -25,17 +25,17 @@ export function OperationalPerformance({ data }: { data: OperationalPerformanceD
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-3">
           <p className="text-[11px] text-zinc-500">Avg Approval Time</p>
           <span className="text-xl font-semibold text-white mt-0.5 block">{data.avgApprovalTime}</span>
-          <p className="text-[10px] text-[#d4af37] mt-1">-14% vs last month</p>
+          <p className="text-[10px] text-gold mt-1">-14% vs last month</p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-3">
           <p className="text-[11px] text-zinc-500">Avg Resolution Time</p>
           <span className="text-xl font-semibold text-white mt-0.5 block">{data.avgIncidentResolution}</span>
-          <p className="text-[10px] text-[#d4af37] mt-1">-8% vs last month</p>
+          <p className="text-[10px] text-gold mt-1">-8% vs last month</p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-3">
           <p className="text-[11px] text-zinc-500">Failed Transactions</p>
           <span className="text-xl font-semibold text-white mt-0.5 block">{data.failedTransactions}</span>
-          <p className="text-[10px] text-[#d4af37] mt-1">-67% vs last month</p>
+          <p className="text-[10px] text-gold mt-1">-67% vs last month</p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-3">
           <p className="text-[11px] text-zinc-500">Policy Exceptions</p>
@@ -44,8 +44,8 @@ export function OperationalPerformance({ data }: { data: OperationalPerformanceD
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-3">
           <p className="text-[11px] text-zinc-500">Reconciliation Success</p>
-          <span className="text-xl font-semibold text-[#d4af37] mt-0.5 block">{data.reconciliationSuccess}</span>
-          <p className="text-[10px] text-[#d4af37] mt-1">+0.3pp improvement</p>
+          <span className="text-xl font-semibold text-gold mt-0.5 block">{data.reconciliationSuccess}</span>
+          <p className="text-[10px] text-gold mt-1">+0.3pp improvement</p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-3">
           <p className="text-[11px] text-zinc-500">Operational Efficiency</p>
@@ -54,7 +54,7 @@ export function OperationalPerformance({ data }: { data: OperationalPerformanceD
             <div
               className={cn(
                 "h-full rounded-full",
-                data.operationalEfficiency >= 90 && "bg-[#d4af37]",
+                data.operationalEfficiency >= 90 && "bg-gold",
                 data.operationalEfficiency >= 80 && data.operationalEfficiency < 90 && "bg-amber-500",
                 data.operationalEfficiency < 80 && "bg-red-500",
               )}

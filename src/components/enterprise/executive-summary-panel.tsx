@@ -30,7 +30,7 @@ export function ExecutiveSummaryPanel({
   return (
     <div className={cn("rounded-lg border border-zinc-800/60 bg-zinc-900/30 p-5", className)}>
       <div className="mb-4 flex items-center gap-2">
-        <span className="inline-flex items-center rounded-md border border-gold-500/20 bg-gold-500/10 px-2 py-0.5 text-[11px] font-medium tracking-wide text-[#c9a84c] uppercase">
+        <span className="inline-flex items-center rounded-md border border-gold-500/20 bg-gold-500/10 px-2 py-0.5 text-[11px] font-medium tracking-wide text-gold uppercase">
           {title}
         </span>
       </div>

@@ -16,7 +16,7 @@ export function FinalCTA() {
           <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-[1.1] mb-6">
             Money Should Never
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] via-[#d4af37] to-[#d4af37]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-gold to-gold">
               Move Without Trust.
             </span>
           </h2>
@@ -27,7 +27,7 @@ export function FinalCTA() {
           <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link
             href="/request-demo"
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold rounded-xl bg-[#d4af37] text-black hover:bg-[#c7a961] transition-colors duration-200 shadow-lg shadow-[#d4af37]/20"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 text-sm font-semibold rounded-xl bg-gold text-black hover:bg-[#c7a961] transition-colors duration-200 shadow-lg shadow-gold/20"
           >
             Request a Demo
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

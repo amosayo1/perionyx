@@ -24,8 +24,8 @@ interface ReadinessProps {
 }
 
 function ScoreRing({ score }: { score: number }) {
-  const color = score >= 80 ? "text-emerald-400" : score >= 60 ? "text-[#d4af37]" : "text-red-400";
-  const bgColor = score >= 80 ? "border-emerald-500/30" : score >= 60 ? "border-[#d4af37]/30" : "border-red-500/30";
+  const color = score >= 80 ? "text-emerald-400" : score >= 60 ? "text-gold" : "text-red-400";
+  const bgColor = score >= 80 ? "border-emerald-500/30" : score >= 60 ? "border-gold/30" : "border-red-500/30";
 
   return (
     <div className={cn("flex h-20 w-20 items-center justify-center rounded-full border-4", bgColor)}>
@@ -39,7 +39,7 @@ function StatusIcon({ status }: { status: string }) {
     case "PASS":
       return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
     case "WARN":
-      return <AlertTriangle className="h-4 w-4 text-[#d4af37]" />;
+      return <AlertTriangle className="h-4 w-4 text-gold" />;
     case "FAIL":
       return <XCircle className="h-4 w-4 text-red-400" />;
     default:
@@ -53,11 +53,11 @@ export function OnboardingReadiness({ readiness }: ReadinessProps) {
     : "Setup Incomplete";
 
   const levelColor = readiness.overallScore >= 80 ? "text-emerald-400"
-    : readiness.overallScore >= 60 ? "text-[#d4af37]"
+    : readiness.overallScore >= 60 ? "text-gold"
     : "text-red-400";
 
   return (
-    <Card className="border-[#d4af37]/12 bg-perionyx-bg-panel">
+    <Card className="border-gold/12 bg-perionyx-bg-panel">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -73,7 +73,7 @@ export function OnboardingReadiness({ readiness }: ReadinessProps) {
                 {readiness.summary.passed} passed
               </div>
               <div className="flex items-center gap-1.5 text-xs text-zinc-500">
-                <AlertTriangle className="h-3.5 w-3.5 text-[#d4af37]" />
+                <AlertTriangle className="h-3.5 w-3.5 text-gold" />
                 {readiness.summary.warned} warned
               </div>
               <div className="flex items-center gap-1.5 text-xs text-zinc-500">
@@ -97,7 +97,7 @@ export function OnboardingReadiness({ readiness }: ReadinessProps) {
               className={cn(
                 "flex items-center gap-3 rounded-lg border px-3 py-2.5",
                 check.status === "PASS" && "border-emerald-500/20 bg-emerald-500/5",
-                check.status === "WARN" && "border-[#d4af37]/20 bg-[#d4af37]/5",
+                check.status === "WARN" && "border-gold/20 bg-gold/5",
                 check.status === "FAIL" && "border-red-500/20 bg-red-500/5",
               )}
             >
@@ -108,7 +108,7 @@ export function OnboardingReadiness({ readiness }: ReadinessProps) {
                   <span className={cn(
                     "text-xs font-semibold",
                     check.score >= 80 && "text-emerald-400",
-                    check.score >= 60 && check.score < 80 && "text-[#d4af37]",
+                    check.score >= 60 && check.score < 80 && "text-gold",
                     check.score < 60 && "text-red-400",
                   )}>
                     {check.score}%
@@ -125,15 +125,15 @@ export function OnboardingReadiness({ readiness }: ReadinessProps) {
         </div>
 
         {readiness.suggestions.length > 0 && (
-          <div className="rounded-lg border border-[#d4af37]/10 bg-[#d4af37]/5 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#d4af37]">
+          <div className="rounded-lg border border-gold/10 bg-gold/5 px-4 py-3">
+            <div className="flex items-center gap-2 text-sm font-medium text-gold">
               <Lightbulb className="h-4 w-4" />
               Suggestions
             </div>
             <ul className="mt-2 space-y-1">
               {readiness.suggestions.map((suggestion, i) => (
                 <li key={i} className="flex items-start gap-2 text-xs text-zinc-400">
-                  <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]/50" />
+                  <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-gold/50" />
                   {suggestion}
                 </li>
               ))}

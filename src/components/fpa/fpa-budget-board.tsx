@@ -15,7 +15,7 @@ const statusColors: Record<string, string> = {
 }
 
 const planTypeColors: Record<string, { bg: string; color: string }> = {
-  annual: { bg: '#d4a84322', color: '#d4a843' },
+  annual: { bg: '#d4af3722', color: '#d4af37' },
   quarterly: { bg: '#94a3b822', color: '#94a3b8' },
   rolling: { bg: '#3b82f622', color: '#3b82f6' },
   monthly: { bg: '#a855f722', color: '#a855f7' },
@@ -72,15 +72,15 @@ export default function FPABudgetBoard({ plans }: FPABudgetBoardProps) {
             })}
           </tbody>
           <tfoot>
-            <tr style={{ borderTop: '2px solid #d4a843' }}>
-              <td style={{ padding: '10px 12px', color: '#d4a843', fontWeight: 700, fontSize: 12 }}>TOTAL</td>
+            <tr style={{ borderTop: '2px solid #d4af37' }}>
+              <td style={{ padding: '10px 12px', color: '#d4af37', fontWeight: 700, fontSize: 12 }}>TOTAL</td>
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px' }} />
               <td style={{ padding: '10px 12px', color: '#22c55e', fontWeight: 700 }}>{formatCurrency(totalRevenue)}</td>
               <td style={{ padding: '10px 12px', color: '#ef4444', fontWeight: 700 }}>{formatCurrency(totalExpenses)}</td>
               <td style={{ padding: '10px 12px', color: totalNetIncome >= 0 ? '#22c55e' : '#ef4444', fontWeight: 700 }}>{formatCurrency(totalNetIncome)}</td>
-              <td style={{ padding: '10px 12px', color: '#d4a843', fontWeight: 700 }}>{totalHeadcount}</td>
+              <td style={{ padding: '10px 12px', color: '#d4af37', fontWeight: 700 }}>{totalHeadcount}</td>
             </tr>
           </tfoot>
         </table>

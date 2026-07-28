@@ -9,15 +9,15 @@ export function SandboxEnvironment() {
         <p className="text-xs text-zinc-500 mt-0.5">Test and develop with a fully isolated sandbox</p>
       </div>
 
-      <div className="rounded-xl border border-[#d4af37]/10 bg-[#d4af37]/[0.03] p-4">
+      <div className="rounded-xl border border-gold/10 bg-gold/[0.03] p-4">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#d4af37]/10">
-              <FlaskConical className="h-4 w-4 text-[#d4af37]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10">
+              <FlaskConical className="h-4 w-4 text-gold" />
             </div>
             <div>
               <span className="text-sm font-medium text-white">Sandbox Status</span>
-              <span className="block text-xs text-[#d4af37]">Active and Operational</span>
+              <span className="block text-xs text-gold">Active and Operational</span>
             </div>
           </div>
           <Button variant="outline" size="sm" className="gap-1.5 text-xs">

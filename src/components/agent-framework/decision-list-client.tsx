@@ -75,7 +75,7 @@ function formatTime(iso: string | null): string {
 export function DecisionListClient({ decisions, page, total }: DecisionListClientProps) {
   if (decisions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#101010] py-16 text-center">
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#111118] py-16 text-center">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.03]">
           <GitBranch className="h-6 w-6 text-zinc-500" />
         </div>
@@ -96,7 +96,7 @@ export function DecisionListClient({ decisions, page, total }: DecisionListClien
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: i * 0.02 }}
-            className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4 transition-colors hover:border-white/[0.14]"
+            className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4 transition-colors hover:border-white/[0.14]"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
@@ -109,7 +109,7 @@ export function DecisionListClient({ decisions, page, total }: DecisionListClien
                 </div>
                 <p className="mt-1 line-clamp-2 text-xs text-zinc-400">{d.recommendation}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px]">
-                  <Link href={`/agents/registry?id=${d.agentId}`} className="text-[#d4af37] hover:underline">
+                  <Link href={`/agents/registry?id=${d.agentId}`} className="text-gold hover:underline">
                     {d.agentName}
                   </Link>
                   <span className="text-zinc-600">{d.agentRole.replace("_", " ")}</span>

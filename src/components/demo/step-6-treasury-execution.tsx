@@ -57,7 +57,7 @@ export function Step6TreasuryExecution() {
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#d4af37]/10 text-[#d4af37]"
+              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold"
             >
               Confirmed
             </motion.span>
@@ -122,13 +122,13 @@ export function Step6TreasuryExecution() {
                     <div key={label} className="flex flex-col items-center gap-1.5">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
                         isDone
-                          ? "bg-[#d4af37]/10 border border-[#d4af37]/30"
+                          ? "bg-gold/10 border border-gold/30"
                           : isActive
                           ? "bg-amber-500/10 border border-amber-500/30"
                           : "bg-zinc-800 border border-zinc-700"
                       }`}>
                         {isDone ? (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                         ) : isActive ? (
@@ -138,7 +138,7 @@ export function Step6TreasuryExecution() {
                         )}
                       </div>
                       <span className={`text-[10px] font-medium ${
-                        isDone ? "text-[#d4af37]" : isActive ? "text-amber-400" : "text-zinc-600"
+                        isDone ? "text-gold" : isActive ? "text-amber-400" : "text-zinc-600"
                       }`}>
                         {label}
                       </span>
@@ -150,7 +150,7 @@ export function Step6TreasuryExecution() {
               {/* Progress bar */}
               <div className="relative h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                 <motion.div
-                  className="absolute inset-y-0 left-0 bg-[#d4af37] rounded-full"
+                  className="absolute inset-y-0 left-0 bg-gold rounded-full"
                   initial={{ width: "0%" }}
                   animate={{ width: `${((statusIndex + 1) / statusLabels.length) * 100}%` }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -166,12 +166,12 @@ export function Step6TreasuryExecution() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#d4af37]/5 border border-[#d4af37]/10">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gold/5 border border-gold/10">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
                 <div>
-                  <span className="text-xs text-[#d4af37] font-medium">Wire Confirmed — Funds Sent</span>
+                  <span className="text-xs text-gold font-medium">Wire Confirmed — Funds Sent</span>
                   <p className="text-[11px] text-zinc-500">$340,000.00 debited from Operating Account (••••4829)</p>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export function Step6TreasuryExecution() {
             </div>
             <div>
               <span className="text-zinc-500">Status:</span>
-              <span className={statusIndex === 3 ? "text-[#d4af37] ml-2" : "text-amber-400 ml-2"}>
+              <span className={statusIndex === 3 ? "text-gold ml-2" : "text-amber-400 ml-2"}>
                 {statusLabels[statusIndex]}
               </span>
             </div>

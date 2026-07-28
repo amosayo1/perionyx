@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/server/auth/auth";
 import { prisma } from "@/server/db/prisma";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { PageContainer } from "@/components/enterprise/page-container";
 import { EnterprisePageHeader } from "@/components/enterprise/enterprise-page-header";
 import {
   Landmark, CalendarCheck, BarChart3, SearchCheck,
   ShoppingCart, Wallet, Building2, type LucideIcon,
 } from "lucide-react";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Landmark,
@@ -60,43 +60,43 @@ function WorkspaceCard({
 }
 
 export default async function WorkspacesPage() {
-  const session = await auth();
-  if (!session?.user?.activeCompanyId) redirect("/onboarding");
-  const ctx = requireTenantContext(session.user.id, session.user.activeCompanyId, session.user.companyRole);
-
-  const workspaces = await prisma.workspace.findMany({
-    where: { companyId: ctx.companyId },
-    orderBy: { order: "asc" },
+  return withRuntimeContext(await headers(), async (ctx) => {
+    if (!ctx.tenant.companyId) redirect("/onboarding");
+  
+    const workspaces = await prisma.workspace.findMany({
+      where: { companyId: ctx.tenant.companyId },
+      orderBy: { order: "asc" },
+    });
+  
+    return (
+      <PageContainer>
+        <EnterprisePageHeader
+          title="Workspaces"
+          description="Navigate to your financial workspaces"
+        />
+  
+        {workspaces.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-white/[0.06] bg-zinc-900/40 p-12 text-center">
+            <Building2 className="mb-3 h-12 w-12 text-zinc-600" />
+            <p className="text-lg font-medium text-zinc-400">No workspaces configured</p>
+            <p className="mt-1 text-sm text-zinc-500">Workspaces will appear here once configured by your administrator.</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {workspaces.map((ws: any) => (
+              <WorkspaceCard
+                key={ws.id}
+                slug={ws.slug}
+                name={ws.name}
+                description={ws.description}
+                iconName={ws.icon}
+                order={ws.order}
+                isActive={ws.isActive}
+              />
+            ))}
+          </div>
+        )}
+      </PageContainer>
+    );
   });
-
-  return (
-    <PageContainer>
-      <EnterprisePageHeader
-        title="Workspaces"
-        description="Navigate to your financial workspaces"
-      />
-
-      {workspaces.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-white/[0.06] bg-zinc-900/40 p-12 text-center">
-          <Building2 className="mb-3 h-12 w-12 text-zinc-600" />
-          <p className="text-lg font-medium text-zinc-400">No workspaces configured</p>
-          <p className="mt-1 text-sm text-zinc-500">Workspaces will appear here once configured by your administrator.</p>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {workspaces.map((ws: any) => (
-            <WorkspaceCard
-              key={ws.id}
-              slug={ws.slug}
-              name={ws.name}
-              description={ws.description}
-              iconName={ws.icon}
-              order={ws.order}
-              isActive={ws.isActive}
-            />
-          ))}
-        </div>
-      )}
-    </PageContainer>
-  );
 }

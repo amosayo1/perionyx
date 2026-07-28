@@ -16,7 +16,7 @@ export default function FARevaluationDashboard({ revaluations }: FARevaluationDa
         ) : (
           sorted.map((r, i) => (
             <motion.div key={r.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              style={{ background: '#1a1a2e', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a', borderTop: `3px solid ${r.revaluationType === 'upward' ? '#22c55e' : '#ef4444'}` }}>
+              style={{ background: '#1a1a24', borderRadius: 8, padding: 20, border: '1px solid #2a2a4a', borderTop: `3px solid ${r.revaluationType === 'upward' ? '#22c55e' : '#ef4444'}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: '#e0e0e0' }}>Revaluation {r.revaluationType === 'upward' ? 'Upward' : 'Downward'}</div>

@@ -10,7 +10,7 @@ interface IntercompanyDashboardProps {
 export function IntercompanyDashboard({ journals }: IntercompanyDashboardProps) {
   const unsettled = journals.filter((j) => j.status !== "settled");
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a]">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24]">
       <div className="border-b border-gray-800 px-4 py-3">
         <h3 className="text-sm font-medium text-gray-200">Intercompany Dashboard</h3>
       </div>

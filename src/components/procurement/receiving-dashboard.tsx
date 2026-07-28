@@ -17,7 +17,7 @@ const statusStyles: Record<string, string> = {
 export function ReceivingDashboard({ receipts }: ReceivingDashboardProps) {
   if (receipts.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No receipts found</p>
       </div>
     );
@@ -26,7 +26,7 @@ export function ReceivingDashboard({ receipts }: ReceivingDashboardProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-800">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-gray-800 bg-[#1a1a1a]">
+        <thead className="border-b border-gray-800 bg-[#1a1a24]">
           <tr className="text-xs text-gray-500">
             <th className="px-4 py-3 font-medium">Receipt Number</th>
             <th className="px-4 py-3 font-medium">Type</th>
@@ -37,7 +37,7 @@ export function ReceivingDashboard({ receipts }: ReceivingDashboardProps) {
             <th className="px-4 py-3 font-medium text-right">Items</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800 bg-[#1a1a1a]">
+        <tbody className="divide-y divide-gray-800 bg-[#1a1a24]">
           {receipts.map((receipt) => (
             <tr key={receipt.id} className="hover:bg-gray-800/50">
               <td className="px-4 py-3 font-mono text-xs text-gray-400">{receipt.receiptNumber}</td>

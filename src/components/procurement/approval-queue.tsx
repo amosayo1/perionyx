@@ -30,7 +30,7 @@ const statusStyles: Record<string, { badge: string; icon: React.ReactNode }> = {
 export function ApprovalQueue({ approvals }: ApprovalQueueProps) {
   if (approvals.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-8">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-8">
         <p className="text-sm text-gray-500">No approval requests found</p>
       </div>
     );
@@ -44,7 +44,7 @@ export function ApprovalQueue({ approvals }: ApprovalQueueProps) {
         const isApproved = apr.status === "approved";
         const isRejected = apr.status === "rejected";
         return (
-          <div key={apr.id} className={`rounded-lg border ${isOverdue ? "border-red-900/50 bg-red-950/10" : "border-gray-800 bg-[#1a1a1a]"} p-4`}>
+          <div key={apr.id} className={`rounded-lg border ${isOverdue ? "border-red-900/50 bg-red-950/10" : "border-gray-800 bg-[#1a1a24]"} p-4`}>
             <div className="flex items-start gap-3">
               <div className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 bg-gray-900 ${entityColors[apr.entityType] || "text-gray-400"}`}>
                 {entityIcons[apr.entityType] || <DollarSign className="h-4 w-4" />}

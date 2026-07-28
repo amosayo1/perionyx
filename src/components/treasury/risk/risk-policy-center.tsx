@@ -22,7 +22,7 @@ import {
 import { MOCK_POLICIES, MOCK_BREACHES } from "./data";
 import type { RiskPolicy, PolicyStatus, RiskBreach } from "./types";
 
-const GOLD = "#c9a84c";
+const GOLD = "#d4af37";
 
 const CATEGORIES = ["FX", "Interest Rate", "Credit", "Liquidity", "Concentration", "Operational"];
 

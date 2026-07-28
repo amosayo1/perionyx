@@ -19,7 +19,7 @@ interface ForecastDashboardProps {
 
 function ForecastRow({ label, value, icon, variant }: { label: string; value: string; icon: React.ReactNode; variant: "gold" | "emerald" | "blue" | "amber" | "purple" | "cyan" }) {
   const COLORS: Record<string, { icon: string; border: string; bg: string }> = {
-    gold: { icon: "text-[#d4af37]", border: "border-[#d4af37]/20", bg: "bg-[#d4af37]/10" },
+    gold: { icon: "text-gold", border: "border-gold/20", bg: "bg-gold/10" },
     emerald: { icon: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/10" },
     blue: { icon: "text-blue-400", border: "border-blue-500/20", bg: "bg-blue-500/10" },
     amber: { icon: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/10" },
@@ -69,7 +69,7 @@ export const ForecastDashboard = memo(function ForecastDashboard({ forecasts, cl
       <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Target className="h-4 w-4 text-[#d4af37]" />
+            <Target className="h-4 w-4 text-gold" />
             <h3 className="text-sm font-semibold text-white">Forecast Confidence</h3>
           </div>
           <span className="text-sm font-bold text-white">{(latest.confidence * 100).toFixed(0)}%</span>

@@ -26,7 +26,7 @@ export function StepFinal() {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#d4af37]/10 border border-[#d4af37]/20 mb-8"
+        className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gold/10 border border-gold/20 mb-8"
       >
         <motion.svg
           initial={{ pathLength: 0 }}
@@ -34,7 +34,7 @@ export function StepFinal() {
           transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           width="32" height="32" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-          strokeLinejoin="round" className="text-[#d4af37]"
+          strokeLinejoin="round" className="text-gold"
         >
           <polyline points="20 6 9 17 4 12" />
         </motion.svg>
@@ -49,7 +49,7 @@ export function StepFinal() {
       >
         Money Moved.
         <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#d4af37]">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-gold">
           Governance Preserved.
         </span>
       </motion.h2>
@@ -95,7 +95,7 @@ export function StepFinal() {
       >
         <Link
           href="/request-demo"
-          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-xl bg-[#d4af37] text-white hover:bg-[#d4af37] transition-colors duration-200 shadow-lg shadow-[#d4af37]/20"
+          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-xl bg-gold text-white hover:bg-gold transition-colors duration-200 shadow-lg shadow-gold/20"
         >
           Request a Demo
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

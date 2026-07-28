@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCompanyMembershipForUser, updateCompany } from "@/modules/companies";
 import { requireSession } from "@/server/auth/require-session";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 import { ForbiddenError } from "@/lib/errors/app-error";
 import { cacheHeaders, handleRouteError, parseJsonBody, zodErrorResponse } from "@/server/http/handle-route";
 import { prisma } from "@/server/db/prisma";
@@ -92,16 +91,16 @@ export async function PATCH(request: Request, context: RouteContext) {
 }
 
 export async function DELETE(_request: Request, context: RouteContext) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'admin.settings');
-    if (ctx.role !== "OWNER") {
-      throw new ForbiddenError("Only company owners can delete the company.");
+  return withRuntimeContext(_request, async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'admin.settings');
+      if (ctx.tenant.role !== "OWNER") {
+        throw new ForbiddenError("Only company owners can delete the company.");
+      }
+      await prisma.company.deleteMany({ where: { id: ctx.tenant.companyId } });
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      return handleRouteError(error);
     }
-    await prisma.company.deleteMany({ where: { id: ctx.companyId } });
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  });
 }

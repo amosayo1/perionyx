@@ -13,7 +13,7 @@ export function RiskRecommendationsPanel({ recommendations, max = 8 }: RiskRecom
   const sorted = [...open].sort((a, b) => (priorityOrder[a.priority] ?? 99) - (priorityOrder[b.priority] ?? 99));
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-medium text-gray-300">Recommendations</h3>
         <span className="text-xs text-gray-500">{open.length} open</span>

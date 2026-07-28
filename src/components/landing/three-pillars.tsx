@@ -43,10 +43,10 @@ const pillars = [
 
 const accentMap: Record<string, { border: string; bg: string; text: string; dot: string }> = {
   emerald: {
-    border: "border-[#d4af37]/20",
-    bg: "bg-[#d4af37]/5",
-    text: "text-[#d4af37]",
-    dot: "bg-[#d4af37]",
+    border: "border-gold/20",
+    bg: "bg-gold/5",
+    text: "text-gold",
+    dot: "bg-gold",
   },
   blue: {
     border: "border-blue-500/20",

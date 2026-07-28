@@ -105,7 +105,7 @@ export function ScenarioPanel() {
 
   return (
     <div className="space-y-3">
-      <p className="text-[10px] font-semibold uppercase tracking-widest text-[#d4af37]/70">Sample Scenarios</p>
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-gold/70">Sample Scenarios</p>
 
       {loading && (
         <div className="flex items-center gap-2 py-4 text-zinc-500 text-xs">
@@ -131,11 +131,11 @@ export function ScenarioPanel() {
                     className="group flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left transition-colors hover:bg-white/[0.04] disabled:opacity-50"
                   >
                     {isRunning ? (
-                      <Loader2 className="h-3.5 w-3.5 shrink-0 mt-0.5 animate-spin text-[#d4af37]" />
+                      <Loader2 className="h-3.5 w-3.5 shrink-0 mt-0.5 animate-spin text-gold" />
                     ) : isDone ? (
                       statusIcon(result!.status)
                     ) : (
-                      <Play className="h-3.5 w-3.5 shrink-0 mt-0.5 text-zinc-500 group-hover:text-[#d4af37]" />
+                      <Play className="h-3.5 w-3.5 shrink-0 mt-0.5 text-zinc-500 group-hover:text-gold" />
                     )}
                     <div className="min-w-0 flex-1">
                       <p className="text-xs text-zinc-300 group-hover:text-white truncate">{scenario.title}</p>

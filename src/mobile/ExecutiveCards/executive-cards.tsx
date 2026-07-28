@@ -22,7 +22,7 @@ export interface ExecutiveCardProps {
 }
 
 const accentMap = {
-  gold: "border-l-[#d4af37] bg-[#d4af37]/[0.03]",
+  gold: "border-l-gold bg-gold/[0.03]",
   emerald: "border-l-emerald-500 bg-emerald-500/[0.03]",
   red: "border-l-red-500 bg-red-500/[0.03]",
   blue: "border-l-blue-500 bg-blue-500/[0.03]",
@@ -31,7 +31,7 @@ const accentMap = {
 };
 
 const accentTextMap = {
-  gold: "text-[#d4af37]",
+  gold: "text-gold",
   emerald: "text-emerald-400",
   red: "text-red-400",
   blue: "text-blue-400",
@@ -140,7 +140,7 @@ export function ExecutiveHealthScore({
             style={{ transition: "stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
         </svg>
-        <span className={cn("absolute text-lg font-bold", pct >= 80 ? "text-emerald-400" : pct >= 50 ? "text-[#d4af37]" : "text-red-400")}>
+        <span className={cn("absolute text-lg font-bold", pct >= 80 ? "text-emerald-400" : pct >= 50 ? "text-gold" : "text-red-400")}>
           {score}
         </span>
       </div>

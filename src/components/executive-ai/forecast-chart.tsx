@@ -74,7 +74,7 @@ export const ForecastChart = memo(function ForecastChart({ forecast, className }
             <span className="h-2 w-2 rounded-full bg-blue-400" /> Historical
           </span>
           <span className="flex items-center gap-1 text-zinc-500">
-            <span className="h-2 w-2 rounded-full bg-[#d4af37]" /> Forecast
+            <span className="h-2 w-2 rounded-full bg-gold" /> Forecast
           </span>
         </div>
       </div>

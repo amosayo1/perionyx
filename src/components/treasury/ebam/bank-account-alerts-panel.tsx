@@ -85,7 +85,7 @@ export function BankAccountAlertsPanel({ className }: { className?: string }) {
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <select
-            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-[#c9a84c]/50"
+            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-gold/50"
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
             aria-label="Filter by severity"
@@ -97,7 +97,7 @@ export function BankAccountAlertsPanel({ className }: { className?: string }) {
             ))}
           </select>
           <select
-            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-[#c9a84c]/50"
+            className="rounded-md border border-white/[0.06] bg-zinc-800 px-2.5 py-1.5 text-[12px] text-zinc-300 outline-none focus:ring-1 focus:ring-gold/50"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             aria-label="Filter by category"
@@ -176,7 +176,7 @@ export function BankAccountAlertsPanel({ className }: { className?: string }) {
                       {alert.category}
                     </span>
                   </div>
-                  <p className="mt-1 text-[11px] text-[#c9a84c]">&rarr; {alert.suggestedAction}</p>
+                  <p className="mt-1 text-[11px] text-gold">&rarr; {alert.suggestedAction}</p>
                 </div>
               </div>
             </div>

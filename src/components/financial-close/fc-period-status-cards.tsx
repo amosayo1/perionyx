@@ -9,7 +9,7 @@ const statusConfig: Record<string, { label: string; color: string; bg: string }>
   review: { label: "Review", color: "#eab308", bg: "#eab30820" },
   approved: { label: "Approved", color: "#22c55e", bg: "#22c55e20" },
   locked: { label: "Locked", color: "#888", bg: "#2a2a3e" },
-  archived: { label: "Archived", color: "#555", bg: "#1a1a2e" },
+  archived: { label: "Archived", color: "#555", bg: "#1a1a24" },
   reopened: { label: "Reopened", color: "#a855f7", bg: "#a855f720" },
 };
 
@@ -26,7 +26,7 @@ export default function FCPeriodStatusCards({ periods }: FCPeriodStatusCardsProp
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.04, duration: 0.25 }}
             style={{
-              background: "#1a1a2e",
+              background: "#1a1a24",
               borderRadius: 12,
               padding: 20,
               minWidth: 200,

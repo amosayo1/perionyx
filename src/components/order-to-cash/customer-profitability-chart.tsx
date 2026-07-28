@@ -20,7 +20,7 @@ interface CustomerProfitabilityChartProps {
 export function CustomerProfitabilityChart({ customers, max = 15 }: CustomerProfitabilityChartProps) {
   const displayed = customers.slice(0, max);
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <TrendingUp className="h-4 w-4 text-gray-500" />
         <h3 className="text-sm font-medium text-gray-200">Customer Profitability</h3>

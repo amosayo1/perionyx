@@ -52,7 +52,7 @@ export const ForecastDashboard = memo(function ForecastDashboard({ forecasts, cl
             className={cn(
               "w-full rounded-lg border px-3 py-2 text-left transition-colors",
               activeForecast?.id === f.id
-                ? "border-[#d4af37]/30 bg-[#d4af37]/10"
+                ? "border-gold/30 bg-gold/10"
                 : "border-zinc-800/60 bg-zinc-900/40 hover:border-zinc-700/60"
             )}
           >

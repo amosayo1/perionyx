@@ -225,7 +225,7 @@ function ToggleRow({
       <span
         className={cn(
           "relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors",
-          enabled ? "bg-[#d4af37]" : "bg-zinc-700",
+          enabled ? "bg-gold" : "bg-zinc-700",
         )}
       >
         <span
@@ -256,7 +256,7 @@ function SelectRow({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg bg-zinc-800 px-2 py-1 text-xs text-zinc-200 focus:outline-none focus:ring-1 focus:ring-[#d4af37]"
+        className="rounded-lg bg-zinc-800 px-2 py-1 text-xs text-zinc-200 focus:outline-none focus:ring-1 focus:ring-gold"
         aria-label={label}
       >
         {options.map((opt) => (

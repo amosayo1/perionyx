@@ -9,6 +9,15 @@ import {
   type ReactNode,
 } from 'react'
 
+const EDL = {
+  surfaces: { raised: '#111118', elevated: '#1a1a24', floating: '#222230' },
+  text: { primary: '#f7f6f2', secondary: '#a1a1aa', tertiary: '#71717a' },
+  borders: { default: 'rgba(255,255,255,0.08)', strong: 'rgba(255,255,255,0.12)' },
+  gold: '#d4af37',
+  space: { 1: 4, 2: 8, 3: 12, 4: 16 },
+  radius: { sm: 4, lg: 8 },
+} as const
+
 export interface VirtualizedTableProps<T> {
   data: T[]
   columns: {
@@ -38,10 +47,10 @@ function SkeletonBar({ width }: { width: string }) {
   return (
     <div
       style={{
-        height: 12,
+        height: EDL.space[3],
         width,
-        borderRadius: 4,
-        background: 'linear-gradient(90deg, #2a2a4a 25%, #3a3a5a 50%, #2a2a4a 75%)',
+        borderRadius: EDL.radius.sm,
+        background: `linear-gradient(90deg, ${EDL.surfaces.elevated} 25%, ${EDL.surfaces.floating} 50%, ${EDL.surfaces.elevated} 75%)`,
         backgroundSize: '200% 100%',
         animation: 'vt-shimmer 1.2s ease-in-out infinite',
       }}
@@ -123,7 +132,7 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
     (key: string) => {
       if (sortColumn !== key) return null
       return (
-        <span style={{ color: '#d4a843', marginLeft: 4 }}>
+        <span style={{ color: EDL.gold, marginLeft: EDL.space[1] }}>
           {sortDirection === 'asc' ? '\u25B2' : '\u25BC'}
         </span>
       )
@@ -135,8 +144,8 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
     <div
       style={{
         maxHeight,
-        borderRadius: 8,
-        border: '1px solid #2a2a4a',
+        borderRadius: EDL.radius.lg,
+        border: `1px solid ${EDL.borders.default}`,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -144,9 +153,9 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
     >
       <style>{`
         .vt-container::-webkit-scrollbar { width: 6px; }
-        .vt-container::-webkit-scrollbar-track { background: #1a1a2e; }
-        .vt-container::-webkit-scrollbar-thumb { background: #3a3a5a; border-radius: 3px; }
-        .vt-container::-webkit-scrollbar-thumb:hover { background: #4a4a6a; }
+        .vt-container::-webkit-scrollbar-track { background: ${EDL.surfaces.elevated}; }
+        .vt-container::-webkit-scrollbar-thumb { background: ${EDL.surfaces.floating}; border-radius: 3px; }
+        .vt-container::-webkit-scrollbar-thumb:hover { background: ${EDL.borders.strong}; }
         @keyframes vt-shimmer {
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }
@@ -157,8 +166,8 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
         style={{
           display: 'flex',
           height: HEADER_H,
-          backgroundColor: '#16213e',
-          borderBottom: '2px solid #d4a843',
+          backgroundColor: EDL.surfaces.raised,
+          borderBottom: `2px solid ${EDL.gold}`,
           flexShrink: 0,
         }}
       >
@@ -169,18 +178,18 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
             style={{
               flex: col.width ? `0 0 ${col.width}px` : 1,
               minWidth: col.width ?? 100,
-              padding: '0 16px',
+              padding: `0 ${EDL.space[4]}px`,
               display: 'flex',
               alignItems: 'center',
-              gap: 4,
-              color: sortColumn === col.key ? '#d4a843' : '#e0e0e0',
+              gap: EDL.space[1],
+              color: sortColumn === col.key ? EDL.gold : EDL.text.primary,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: '0.06em',
-              textTransform: 'uppercase',
+              textTransform: 'uppercase' as const,
               cursor: onSort ? 'pointer' : 'default',
-              userSelect: 'none',
-              whiteSpace: 'nowrap',
+              userSelect: 'none' as const,
+              whiteSpace: 'nowrap' as const,
             }}
           >
             {col.label}
@@ -196,7 +205,7 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
         style={{
           flex: 1,
           overflowY: 'auto',
-          backgroundColor: '#1a1a2e',
+          backgroundColor: EDL.surfaces.elevated,
           position: 'relative',
           minHeight: 0,
         }}
@@ -221,8 +230,8 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
                     display: 'flex',
                     height: rowHeight,
                     alignItems: 'center',
-                    borderBottom: '1px solid #2a2a4a',
-                    backgroundColor: '#1a1a2e',
+                    borderBottom: `1px solid ${EDL.borders.default}`,
+                    backgroundColor: EDL.surfaces.elevated,
                   }}
                 >
                   {columns.map((col) => (
@@ -231,12 +240,12 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
                       style={{
                         flex: col.width ? `0 0 ${col.width}px` : 1,
                         minWidth: col.width ?? 100,
-                        padding: '0 16px',
-                        color: '#e0e0e0',
+                        padding: `0 ${EDL.space[4]}px`,
+                        color: EDL.text.primary,
                         fontSize: 13,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
+                        whiteSpace: 'nowrap' as const,
                       }}
                     >
                       <SkeletonBar
@@ -258,16 +267,16 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
                     display: 'flex',
                     height: rowHeight,
                     alignItems: 'center',
-                    borderBottom: '1px solid #2a2a4a',
-                    backgroundColor: '#1a1a2e',
+                    borderBottom: `1px solid ${EDL.borders.default}`,
+                    backgroundColor: EDL.surfaces.elevated,
                     cursor: onRowClick ? 'pointer' : 'default',
                     transition: 'background-color 0.12s ease',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#2a2a4a'
+                    e.currentTarget.style.backgroundColor = EDL.surfaces.floating
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#1a1a2e'
+                    e.currentTarget.style.backgroundColor = EDL.surfaces.elevated
                   }}
                 >
                   {columns.map((col) => (
@@ -276,12 +285,12 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
                       style={{
                         flex: col.width ? `0 0 ${col.width}px` : 1,
                         minWidth: col.width ?? 100,
-                        padding: '0 16px',
-                        color: '#e0e0e0',
+                        padding: `0 ${EDL.space[4]}px`,
+                        color: EDL.text.primary,
                         fontSize: 13,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
+                        whiteSpace: 'nowrap' as const,
                       }}
                     >
                       {cellValue(item._data, col)}
@@ -299,7 +308,7 @@ export function VirtualizedTable<T extends Record<string, unknown>>({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#888',
+              color: EDL.text.tertiary,
               fontSize: 14,
               pointerEvents: 'none',
             }}

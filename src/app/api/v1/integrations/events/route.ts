@@ -1,48 +1,47 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError, parseJsonBody } from "@/server/http/handle-route";
 import { ConnectorRunService } from "@/modules/connectors";
 import { rbacService } from "@/modules/rbac/rbac.service";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 export async function GET(req: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'connectors.sync');
-
-    const { searchParams } = new URL(req.url);
-    const runId = searchParams.get("runId") ?? undefined;
-    const connectorId = searchParams.get("connectorId") ?? undefined;
-    const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!) : undefined;
-
-    const events = await ConnectorRunService.listEvents(ctx, { runId, connectorId, limit });
-    return NextResponse.json({ items: events });
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  return withRuntimeContext(req, async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'connectors.sync');
+  
+      const { searchParams } = new URL(req.url);
+      const runId = searchParams.get("runId") ?? undefined;
+      const connectorId = searchParams.get("connectorId") ?? undefined;
+      const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!) : undefined;
+  
+      const events = await ConnectorRunService.listEvents(ctx.tenant, { runId, connectorId, limit });
+      return NextResponse.json({ items: events });
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  });
 }
 
 export async function POST(req: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-
-    const body = await parseJsonBody<{
-      runId: string;
-      type: string;
-      message: string;
-      metadata?: Record<string, unknown>;
-    }>(req);
-
-    const event = await ConnectorRunService.addEvent(ctx, body.runId, {
-      type: body.type,
-      message: body.message,
-      metadata: body.metadata,
-    });
-
-    return NextResponse.json(event, { status: 201 });
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  return withRuntimeContext(req, async (ctx) => {
+    try {
+  
+      const body = await parseJsonBody<{
+        runId: string;
+        type: string;
+        message: string;
+        metadata?: Record<string, unknown>;
+      }>(req);
+  
+      const event = await ConnectorRunService.addEvent(ctx.tenant, body.runId, {
+        type: body.type,
+        message: body.message,
+        metadata: body.metadata,
+      });
+  
+      return NextResponse.json(event, { status: 201 });
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  });
 }

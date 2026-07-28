@@ -109,11 +109,11 @@ function SessionContextSummary({ context }: { context: Record<string, unknown> }
 
 function ActiveSessionCard({ session }: { session: ActiveSession }) {
   return (
-    <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4 transition-colors hover:border-white/[0.14]">
+    <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4 transition-colors hover:border-white/[0.14]">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d4af37]/10">
-            <Bot className="h-4 w-4 text-[#d4af37]" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10">
+            <Bot className="h-4 w-4 text-gold" />
           </div>
           <div>
             <p className="text-sm font-medium text-white">{session.agent.name}</p>
@@ -194,7 +194,7 @@ export function AgentSessionsClient({
           { label: "Failed", value: stats.failed, color: "text-red-400" },
           { label: "Terminated", value: stats.terminated, color: "text-zinc-500" },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-white/[0.09] bg-[#101010] p-3">
+          <div key={s.label} className="rounded-xl border border-white/[0.09] bg-[#111118] p-3">
             <p className="text-[11px] text-zinc-500">{s.label}</p>
             <p className={cn("text-lg font-bold", s.color)}>{s.value}</p>
           </div>
@@ -219,7 +219,7 @@ export function AgentSessionsClient({
       {tab === "active" && (
         <div className="space-y-3">
           {activeSessions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#101010] py-16 text-center">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#111118] py-16 text-center">
               <Loader2 className="mb-3 h-6 w-6 text-zinc-500" />
               <p className="text-sm text-zinc-400">No active sessions</p>
               <p className="mt-1 text-xs text-zinc-600">Sessions appear here when agents are running</p>
@@ -231,7 +231,7 @@ export function AgentSessionsClient({
       )}
 
       {tab === "recent" && (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010]">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118]">
           {recentSessions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Clock className="mb-3 h-6 w-6 text-zinc-500" />

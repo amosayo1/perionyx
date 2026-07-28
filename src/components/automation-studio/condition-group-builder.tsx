@@ -79,7 +79,7 @@ export function ConditionGroupBuilder({ group, onChange, depth = 0 }: ConditionG
             <button
               onClick={() => updateLogic("AND")}
               className={`px-2 py-1 text-[10px] font-medium ${
-                group.logic === "AND" ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 hover:text-zinc-300"
+                group.logic === "AND" ? "bg-gold/10 text-gold" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               AND
@@ -87,7 +87,7 @@ export function ConditionGroupBuilder({ group, onChange, depth = 0 }: ConditionG
             <button
               onClick={() => updateLogic("OR")}
               className={`px-2 py-1 text-[10px] font-medium border-x border-white/[0.06] ${
-                group.logic === "OR" ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 hover:text-zinc-300"
+                group.logic === "OR" ? "bg-gold/10 text-gold" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               OR
@@ -115,7 +115,7 @@ export function ConditionGroupBuilder({ group, onChange, depth = 0 }: ConditionG
                         onClick={() => updateItem(idx, { ...item, operator: op.value })}
                         className={`px-1.5 py-1 text-[10px] leading-none whitespace-nowrap ${
                           item.operator === op.value
-                            ? "bg-[#d4af37]/10 text-[#d4af37]"
+                            ? "bg-gold/10 text-gold"
                             : "text-zinc-500 hover:text-zinc-300"
                         }`}
                       >

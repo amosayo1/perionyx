@@ -25,7 +25,7 @@ const RISK_STYLES: Record<RiskRating, string> = {
 };
 
 const SERVICE_STYLES: Record<string, string> = {
-  premium: "bg-[#c9a84c]/15 text-[#c9a84c] border-[#c9a84c]/25",
+  premium: "bg-gold/15 text-gold border-gold/25",
   standard: "bg-blue-500/15 text-blue-400 border-blue-500/25",
   basic: "bg-zinc-500/15 text-zinc-400 border-zinc-500/25",
 };
@@ -61,7 +61,7 @@ export function BankRelationshipCenter() {
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/50 p-4">
           <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Avg Relationship Score</p>
-          <p className="mt-1 text-2xl font-semibold text-[#c9a84c]">{summary.avgScore}/100</p>
+          <p className="mt-1 text-2xl font-semibold text-gold">{summary.avgScore}/100</p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/50 p-4">
           <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-500">Highest Risk Bank</p>
@@ -81,7 +81,7 @@ export function BankRelationshipCenter() {
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#c9a84c]/10 text-[#c9a84c]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/10 text-gold">
                   <Building2 className="h-5 w-5" />
                 </div>
                 <div>

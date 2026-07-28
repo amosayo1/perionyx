@@ -112,7 +112,7 @@ function EventRow({ event, index, visible }: { event: AuditEvent; index: number;
         onClick={() => setExpanded(!expanded)}
         className={`w-full grid grid-cols-5 gap-2 px-3 py-2.5 rounded-lg transition-all duration-200 ${
           expanded
-            ? "bg-[#d4af37]/5 border border-[#d4af37]/20"
+            ? "bg-gold/5 border border-gold/20"
             : "hover:bg-white/[0.02] border border-transparent"
         }`}
       >
@@ -120,7 +120,7 @@ function EventRow({ event, index, visible }: { event: AuditEvent; index: number;
           {/* Git-style indicator */}
           <div className="flex items-center gap-1">
             <div className="w-1 h-1 rounded-full bg-zinc-600" />
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={expanded ? "text-[#d4af37]" : "text-zinc-600"}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={expanded ? "text-gold" : "text-zinc-600"}>
               <circle cx="12" cy="12" r="3" />
               <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
             </svg>
@@ -133,7 +133,7 @@ function EventRow({ event, index, visible }: { event: AuditEvent; index: number;
         <span className="text-xs text-zinc-500 font-mono">{event.time}</span>
         <span className="text-[11px] text-zinc-600 font-mono flex items-center gap-1">
           {expanded && (
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37]">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold">
               <polyline points="6 9 12 15 18 9" />
             </svg>
           )}
@@ -182,7 +182,7 @@ function EventRow({ event, index, visible }: { event: AuditEvent; index: number;
               </div>
               <div>
                 <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">After</span>
-                <p className="text-xs text-[#d4af37] mt-0.5">{event.after || "—"}</p>
+                <p className="text-xs text-gold mt-0.5">{event.after || "—"}</p>
               </div>
             </div>
           )}
@@ -256,10 +256,10 @@ export function Step7AuditTrail() {
               animate={{ opacity: 1 }}
               className="mt-4 px-3 py-2 flex items-center gap-2"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37]/60">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold/60">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span className="text-[11px] text-[#d4af37]/60 font-mono">
+              <span className="text-[11px] text-gold/60 font-mono">
                 7 events recorded • Audit complete • Chain of custody preserved
               </span>
             </motion.div>

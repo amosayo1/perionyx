@@ -59,9 +59,9 @@ export function QuickActionsPanel({ className }: QuickActionsPanelProps) {
               key={action.href}
               href={action.href}
               onClick={() => setOpen(false)}
-              className="flex flex-col gap-1.5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all hover:border-[#d4af37]/20 hover:bg-[#d4af37]/5"
+              className="flex flex-col gap-1.5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all hover:border-gold/20 hover:bg-gold/5"
             >
-              <action.icon className="h-4 w-4 text-[#d4af37]" />
+              <action.icon className="h-4 w-4 text-gold" />
               <span className="text-sm font-medium text-white">{action.label}</span>
               {action.description && (
                 <span className="text-[10px] text-zinc-500">{action.description}</span>

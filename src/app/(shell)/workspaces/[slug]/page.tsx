@@ -1,7 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { auth } from "@/server/auth/auth";
 import { prisma } from "@/server/db/prisma";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { PageContainer } from "@/components/enterprise/page-container";
 import { EnterprisePageHeader } from "@/components/enterprise/enterprise-page-header";
 import {
@@ -9,6 +7,8 @@ import {
   ShoppingCart, Wallet, Building2, ArrowLeft, type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Landmark, CalendarCheck, BarChart3, SearchCheck,
@@ -124,122 +124,122 @@ export default async function WorkspaceDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
-  const session = await auth();
-  if (!session?.user?.activeCompanyId) redirect("/onboarding");
-  const ctx = requireTenantContext(session.user.id, session.user.activeCompanyId, session.user.companyRole);
-
-  const workspace = await prisma.workspace.findUnique({
-    where: { companyId_slug: { companyId: ctx.companyId, slug } },
-  });
-
-  if (!workspace) notFound();
-
-  const fetcher = WORKSPACE_KPI_FETCHERS[slug];
-  const kpis = fetcher ? await fetcher(ctx.companyId) : [];
-
-  const config = workspace.config as Record<string, unknown> | null;
-  const lastSync = config?.lastSync ? String(config.lastSync) : null;
-
-  const Icon = workspace.icon && ICON_MAP[workspace.icon] ? ICON_MAP[workspace.icon] : Building2;
-
-  return (
-    <PageContainer>
-      <div className="mb-2">
-        <Link
-          href="/workspaces"
-          className="inline-flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-zinc-300"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          All Workspaces
-        </Link>
-      </div>
-
-      <EnterprisePageHeader
-        title={workspace.name}
-        description={WORKSPACE_DESCRIPTIONS[slug] ?? workspace.description ?? ""}
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((kpi) => (
-          <div
-            key={kpi.label}
-            className={`rounded-xl border bg-zinc-900/40 p-4 ${
-              kpi.trend === "warning" || kpi.trend === "needs-attention"
-                ? "border-amber-500/20"
-                : "border-white/[0.06]"
-            }`}
+  return withRuntimeContext(await headers(), async (ctx) => {
+    const { slug } = await params;
+    if (!ctx.tenant.companyId) redirect("/onboarding");
+  
+    const workspace = await prisma.workspace.findUnique({
+      where: { companyId_slug: { companyId: ctx.tenant.companyId, slug } },
+    });
+  
+    if (!workspace) notFound();
+  
+    const fetcher = WORKSPACE_KPI_FETCHERS[slug];
+    const kpis = fetcher ? await fetcher(ctx.tenant.companyId) : [];
+  
+    const config = workspace.config as Record<string, unknown> | null;
+    const lastSync = config?.lastSync ? String(config.lastSync) : null;
+  
+    const Icon = workspace.icon && ICON_MAP[workspace.icon] ? ICON_MAP[workspace.icon] : Building2;
+  
+    return (
+      <PageContainer>
+        <div className="mb-2">
+          <Link
+            href="/workspaces"
+            className="inline-flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-zinc-300"
           >
-            <p className="text-xs text-zinc-500">{kpi.label}</p>
-            <p className="mt-1 text-2xl font-bold text-white">{kpi.value}</p>
-            {kpi.trend && (
-              <span
-                className={`mt-1 inline-block text-xs font-medium ${
-                  kpi.trend === "clear" ? "text-emerald-400" : "text-amber-400"
-                }`}
-              >
-                {kpi.trend === "clear" ? "Clear" : "Needs Attention"}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03]">
-                <Icon className="h-6 w-6 text-amber-400" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-white">{workspace.name}</h2>
-                <p className="text-sm text-zinc-500">{WORKSPACE_DESCRIPTIONS[slug] ?? workspace.description ?? "No description"}</p>
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-lg border border-white/[0.06] bg-zinc-900/60 p-3">
-                <p className="text-xs text-zinc-500">Status</p>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All Workspaces
+          </Link>
+        </div>
+  
+        <EnterprisePageHeader
+          title={workspace.name}
+          description={WORKSPACE_DESCRIPTIONS[slug] ?? workspace.description ?? ""}
+        />
+  
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {kpis.map((kpi) => (
+            <div
+              key={kpi.label}
+              className={`rounded-xl border bg-zinc-900/40 p-4 ${
+                kpi.trend === "warning" || kpi.trend === "needs-attention"
+                  ? "border-amber-500/20"
+                  : "border-white/[0.06]"
+              }`}
+            >
+              <p className="text-xs text-zinc-500">{kpi.label}</p>
+              <p className="mt-1 text-2xl font-bold text-white">{kpi.value}</p>
+              {kpi.trend && (
                 <span
-                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                    workspace.isActive
-                      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                      : "border-zinc-500/20 bg-zinc-500/10 text-zinc-400"
+                  className={`mt-1 inline-block text-xs font-medium ${
+                    kpi.trend === "clear" ? "text-emerald-400" : "text-amber-400"
                   }`}
                 >
-                  {workspace.isActive ? "Active" : "Inactive"}
+                  {kpi.trend === "clear" ? "Clear" : "Needs Attention"}
                 </span>
-              </div>
-              {lastSync && (
-                <div className="rounded-lg border border-white/[0.06] bg-zinc-900/60 p-3">
-                  <p className="text-xs text-zinc-500">Last Sync</p>
-                  <p className="mt-1 text-sm text-zinc-300">{lastSync}</p>
+              )}
+            </div>
+          ))}
+        </div>
+  
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03]">
+                  <Icon className="h-6 w-6 text-amber-400" />
                 </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-white">{workspace.name}</h2>
+                  <p className="text-sm text-zinc-500">{WORKSPACE_DESCRIPTIONS[slug] ?? workspace.description ?? "No description"}</p>
+                </div>
+              </div>
+  
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-lg border border-white/[0.06] bg-zinc-900/60 p-3">
+                  <p className="text-xs text-zinc-500">Status</p>
+                  <span
+                    className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                      workspace.isActive
+                        ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                        : "border-zinc-500/20 bg-zinc-500/10 text-zinc-400"
+                    }`}
+                  >
+                    {workspace.isActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
+                {lastSync && (
+                  <div className="rounded-lg border border-white/[0.06] bg-zinc-900/60 p-3">
+                    <p className="text-xs text-zinc-500">Last Sync</p>
+                    <p className="mt-1 text-sm text-zinc-300">{lastSync}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+  
+          <div>
+            <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-zinc-500">Quick Actions</h3>
+            <div className="space-y-2">
+              <Link
+                href={`/${slug}`}
+                className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white"
+              >
+                <BarChart3 className="h-4 w-4 text-amber-400" />
+                Open Dashboard
+              </Link>
+              {workspace.isActive && (
+                <button className="flex w-full items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 text-left text-sm text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white">
+                  <Building2 className="h-4 w-4 text-amber-400" />
+                  Configure Workspace
+                </button>
               )}
             </div>
           </div>
         </div>
-
-        <div>
-          <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-zinc-500">Quick Actions</h3>
-          <div className="space-y-2">
-            <Link
-              href={`/${slug}`}
-              className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white"
-            >
-              <BarChart3 className="h-4 w-4 text-amber-400" />
-              Open Dashboard
-            </Link>
-            {workspace.isActive && (
-              <button className="flex w-full items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 text-left text-sm text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white">
-                <Building2 className="h-4 w-4 text-amber-400" />
-                Configure Workspace
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </PageContainer>
-  );
+      </PageContainer>
+    );
+  });
 }

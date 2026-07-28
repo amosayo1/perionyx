@@ -8,7 +8,7 @@ interface FinancialStatementViewerProps {
 
 export function FinancialStatementViewer({ statement }: FinancialStatementViewerProps) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-4 border-b border-gray-800 pb-3">
         <h3 className="text-base font-medium text-gray-200">{statement.name}</h3>
         <p className="text-xs text-gray-500">

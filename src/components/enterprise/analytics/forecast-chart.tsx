@@ -84,8 +84,8 @@ export const ForecastChart = memo(function ForecastChart({
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="conf-band" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#c9a84c" stopOpacity={0.08} />
-            <stop offset="100%" stopColor="#c9a84c" stopOpacity={0} />
+            <stop offset="0%" stopColor="#d4af37" stopOpacity={0.08} />
+            <stop offset="100%" stopColor="#d4af37" stopOpacity={0} />
           </linearGradient>
         </defs>
 
@@ -116,15 +116,15 @@ export const ForecastChart = memo(function ForecastChart({
           </g>
         )}
 
-        <path d={forecastLine} fill="none" stroke="#c9a84c" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
+        <path d={forecastLine} fill="none" stroke="#d4af37" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />
 
         {data.map((d, i) => {
           const x = pad.left + i * (chartW / Math.max(data.length - 1, 1));
           const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
           return d.confidence !== undefined ? (
-            <circle key={i} cx={x} cy={y} r={3} fill="#c9a84c" opacity={d.confidence / 100} />
+            <circle key={i} cx={x} cy={y} r={3} fill="#d4af37" opacity={d.confidence / 100} />
           ) : (
-            <circle key={i} cx={x} cy={y} r={2.5} fill="#c9a84c" />
+            <circle key={i} cx={x} cy={y} r={2.5} fill="#d4af37" />
           );
         })}
 
@@ -144,11 +144,11 @@ export const ForecastChart = memo(function ForecastChart({
       {showConfidence && data.some((d) => d.confidence !== undefined) && (
         <div className="flex items-center gap-4 text-[11px] text-zinc-600">
           <span className="flex items-center gap-1">
-            <span className="inline-block h-2 w-2 rounded-sm bg-[#c9a84c]/30" />
+            <span className="inline-block h-2 w-2 rounded-sm bg-gold/30" />
             Confidence range
           </span>
           <span className="flex items-center gap-1">
-            <span className="inline-block h-2 w-2 rounded-full bg-[#c9a84c]" />
+            <span className="inline-block h-2 w-2 rounded-full bg-gold" />
             Forecast
           </span>
         </div>

@@ -68,7 +68,7 @@ export default function FAImpairmentReview({ assets }: FAImpairmentReviewProps) 
           <div
             key={s.label}
             style={{
-              background: "#1a1a2e",
+              background: "#1a1a24",
               borderRadius: 12,
               borderLeft: `4px solid ${s.color}`,
               padding: "18px 22px",
@@ -114,7 +114,7 @@ export default function FAImpairmentReview({ assets }: FAImpairmentReviewProps) 
               gridTemplateColumns: "1fr 120px 80px 140px 100px 70px",
               gap: 8,
               alignItems: "center",
-              background: i % 2 === 0 ? "#1a1a2e" : "#1e1e32",
+              background: i % 2 === 0 ? "#1a1a24" : "#1e1e32",
               borderRadius: 6,
               padding: "12px 16px",
               borderLeft: `3px solid ${severityColor(imp.impairmentLoss)}`,

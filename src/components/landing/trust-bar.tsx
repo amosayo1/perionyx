@@ -44,7 +44,7 @@ export function TrustBar() {
               transition={{ delay: i * 0.05, duration: 0.4 }}
               className="flex items-center gap-3 bg-black px-5 py-4"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#d4af37]/5 border border-[#d4af37]/10 flex items-center justify-center shrink-0 text-[#d4af37]/70">
+              <div className="w-8 h-8 rounded-lg bg-gold/5 border border-gold/10 flex items-center justify-center shrink-0 text-gold/70">
                 {v.icon}
               </div>
               <span className="text-xs text-zinc-300 font-medium leading-tight">{v.label}</span>

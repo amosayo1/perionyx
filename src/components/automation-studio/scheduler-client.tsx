@@ -44,7 +44,7 @@ const TRIGGER_COLORS: Record<string, string> = {
   immediate: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   scheduled: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   recurring: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-  cron: "text-[#d4af37] bg-[#d4af37]/10 border-[#d4af37]/20",
+  cron: "text-gold bg-gold/10 border-gold/20",
   webhook: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
   manual: "text-zinc-400 bg-zinc-500/10 border-zinc-500/20",
   connector_event: "text-rose-400 bg-rose-500/10 border-rose-500/20",
@@ -86,7 +86,7 @@ function ScheduleCard({ schedule, onEdit, onDelete }: { schedule: AutomationSche
               {schedule.cronExpression && (
                 <>
                   <span className="text-zinc-600" aria-hidden="true">&middot;</span>
-                  <code className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-[#d4af37]">
+                  <code className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-gold">
                     {schedule.cronExpression}
                   </code>
                 </>
@@ -280,7 +280,7 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
             aria-selected={typeFilter === null}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
               typeFilter === null
-                ? "bg-[#d4af37]/10 text-[#d4af37]"
+                ? "bg-gold/10 text-gold"
                 : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
             }`}
           >
@@ -294,7 +294,7 @@ export function SchedulerClient({ schedules: initialSchedules }: Props) {
               aria-selected={typeFilter === t}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                 typeFilter === t
-                  ? "bg-[#d4af37]/10 text-[#d4af37]"
+                  ? "bg-gold/10 text-gold"
                   : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
               }`}
             >

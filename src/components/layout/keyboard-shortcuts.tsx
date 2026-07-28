@@ -92,7 +92,7 @@ export function KeyboardShortcutsDialog({ open, onClose }: KeyboardShortcutsDial
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <CommandIcon className="h-4 w-4 text-[#d4af37]" />
+            <CommandIcon className="h-4 w-4 text-gold" />
             <h3 className="text-sm font-semibold text-white">Keyboard Shortcuts</h3>
           </div>
           <button onClick={onClose} className="rounded-full p-1 text-zinc-500 hover:bg-white/10 hover:text-zinc-300" aria-label="Close">

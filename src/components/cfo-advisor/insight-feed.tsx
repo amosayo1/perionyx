@@ -73,8 +73,8 @@ export function InsightFeed({ insights, onAcknowledge, className }: InsightFeedP
               className={cn(
                 "rounded-xl border p-4 transition-colors",
                 insight.acknowledged
-                  ? "border-white/[0.06] bg-[#101010]/60 opacity-60"
-                  : cn(severity.border, "bg-[#101010]"),
+                  ? "border-white/[0.06] bg-[#111118]/60 opacity-60"
+                  : cn(severity.border, "bg-[#111118]"),
               )}
             >
               <div className="flex items-start gap-3">
@@ -134,7 +134,7 @@ export function InsightFeed({ insights, onAcknowledge, className }: InsightFeedP
       </AnimatePresence>
 
       {insights.length === 0 && (
-        <div className="rounded-xl border border-white/[0.06] bg-[#101010] p-8 text-center">
+        <div className="rounded-xl border border-white/[0.06] bg-[#111118] p-8 text-center">
           <Info className="mx-auto mb-2 h-5 w-5 text-zinc-500" />
           <p className="text-xs text-zinc-500">No insights at this time</p>
         </div>

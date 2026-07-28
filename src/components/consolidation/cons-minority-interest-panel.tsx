@@ -17,11 +17,11 @@ export default function ConsMinorityInterestPanel({ records }: ConsMinorityInter
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04 }}
-            style={{ background: "#1a1a2e", borderRadius: 10, padding: 16, border: "1px solid #2a2a4a" }}
+            style={{ background: "#1a1a24", borderRadius: 10, padding: 16, border: "1px solid #2a2a4a" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <span style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14 }}>{r.entityName}</span>
-              <span style={{ color: "#d4a843", fontWeight: 700, fontSize: 16 }}>{r.minorityPercentage}%</span>
+              <span style={{ color: "#d4af37", fontWeight: 700, fontSize: 16 }}>{r.minorityPercentage}%</span>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>

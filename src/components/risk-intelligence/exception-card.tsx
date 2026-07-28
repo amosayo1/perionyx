@@ -5,11 +5,11 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { ExceptionMetric } from "./types";
 
 const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
-const trendColors: Record<string, string> = { up: "text-red-400", down: "text-[#d4af37]", neutral: "text-zinc-500" };
+const trendColors: Record<string, string> = { up: "text-red-400", down: "text-gold", neutral: "text-zinc-500" };
 const statusColors: Record<string, string> = {
   critical: "border-l-red-500/40",
   warning: "border-l-amber-500/40",
-  healthy: "border-l-[#d4af37]/40",
+  healthy: "border-l-gold/40",
 };
 
 export function ExceptionCard({ metric }: { metric: ExceptionMetric }) {

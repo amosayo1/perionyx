@@ -18,7 +18,7 @@ export function LiquidityScenarioSimulator({ className }: { className?: string }
           {MOCK_SCENARIOS.map((s) => (
             <button key={s.name} onClick={() => setSelected(s)}
               className={cn("w-full rounded-lg border px-4 py-3 text-left text-[13px] transition-colors",
-                selected.name === s.name ? "border-[#c9a84c]/50 bg-[#c9a84c]/5 text-white" : "border-white/[0.06] bg-zinc-800/30 text-zinc-300 hover:border-zinc-600")}>
+                selected.name === s.name ? "border-gold/50 bg-gold/5 text-white" : "border-white/[0.06] bg-zinc-800/30 text-zinc-300 hover:border-zinc-600")}>
               <div className="flex items-center justify-between">
                 <span className="font-medium">{s.name}</span>
                 <span className={cn("rounded px-2 py-0.5 text-[10px] font-medium uppercase",
@@ -51,7 +51,7 @@ export function LiquidityScenarioSimulator({ className }: { className?: string }
           <ul className="space-y-1.5">
             {selected.recommendedActions.map((a, i) => (
               <li key={i} className="flex items-center gap-2 text-[13px] text-zinc-300">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#c9a84c]/10 text-[11px] text-[#c9a84c]">{i + 1}</span>
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gold/10 text-[11px] text-gold">{i + 1}</span>
                 {a}
               </li>
             ))}

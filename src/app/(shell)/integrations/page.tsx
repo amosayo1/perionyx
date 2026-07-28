@@ -1,5 +1,3 @@
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { connectorDiscovery } from "@/modules/connector-platform/discovery";
 import { IntegrationLayout } from "@/components/integrations/integration-layout";
 import { IntegrationHeader } from "@/components/integrations/integration-header";
@@ -16,32 +14,34 @@ import {
   getConnectionHealth,
   getRecentSyncActivity,
 } from "@/components/integrations/data-service";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { headers } from "next/headers";
 
 export default async function IntegrationsPage() {
-  const session = await auth();
-  const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-
-  const [kpis, categories, integrations, healthGroups, syncEvents] = await Promise.all([
-    getIntegrationKpis(ctx),
-    getIntegrationCategories(ctx),
-    getConnectedIntegrations(ctx),
-    getConnectionHealth(ctx),
-    getRecentSyncActivity(ctx),
-  ]);
-
-  const providers = connectorDiscovery.listSummaries();
-
-  return (
-    <IntegrationLayout>
-      <IntegrationHeader providers={providers} />
-      <IntegrationOverview kpis={kpis} />
-      <IntegrationCategories categories={categories} />
-      <IntegrationGrid integrations={integrations} />
-      <div className="grid gap-8 lg:grid-cols-2">
-        <ConnectionHealth groups={healthGroups} />
-        <RecentSyncActivity events={syncEvents} />
-      </div>
-      <QuickNavigation />
-    </IntegrationLayout>
-  );
+  return withRuntimeContext(await headers(), async (ctx) => {
+  
+    const [kpis, categories, integrations, healthGroups, syncEvents] = await Promise.all([
+      getIntegrationKpis(ctx.tenant),
+      getIntegrationCategories(ctx.tenant),
+      getConnectedIntegrations(ctx.tenant),
+      getConnectionHealth(ctx.tenant),
+      getRecentSyncActivity(ctx.tenant),
+    ]);
+  
+    const providers = connectorDiscovery.listSummaries();
+  
+    return (
+      <IntegrationLayout>
+        <IntegrationHeader providers={providers} />
+        <IntegrationOverview kpis={kpis} />
+        <IntegrationCategories categories={categories} />
+        <IntegrationGrid integrations={integrations} />
+        <div className="grid gap-8 lg:grid-cols-2">
+          <ConnectionHealth groups={healthGroups} />
+          <RecentSyncActivity events={syncEvents} />
+        </div>
+        <QuickNavigation />
+      </IntegrationLayout>
+    );
+  });
 }

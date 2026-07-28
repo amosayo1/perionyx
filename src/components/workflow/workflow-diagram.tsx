@@ -20,11 +20,11 @@ interface Props {
 function StageIcon({ stage }: { stage: WorkflowStage }) {
   switch (stage.status) {
     case "completed":
-      return <CheckCircle2 className="h-4 w-4 text-[#d4af37]" />;
+      return <CheckCircle2 className="h-4 w-4 text-gold" />;
     case "active":
       return stage.id === "approval" && stage.label === "Approvals" && stage.description?.includes("Escalated")
         ? <AlertTriangle className="h-4 w-4 text-amber-400 animate-pulse" />
-        : <Clock className="h-4 w-4 text-[#d4af37] animate-pulse" />;
+        : <Clock className="h-4 w-4 text-gold animate-pulse" />;
     case "failed":
       return <XCircle className="h-4 w-4 text-red-400" />;
     case "skipped":
@@ -52,8 +52,8 @@ export function WorkflowDiagram({ stages, compact = false }: Props) {
                   <div
                     className={cn(
                       "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300",
-                      isCompleted && "border-[#d4af37]/50 bg-[#d4af37]/10",
-                      isActive && "border-[#d4af37] bg-[#d4af37]/15 shadow-[0_0_20px_rgba(212,175,55,0.15)]",
+                      isCompleted && "border-gold/50 bg-gold/10",
+                      isActive && "border-gold bg-gold/15 shadow-[0_0_20px_rgba(212,175,55,0.15)]",
                       isFailed && "border-red-500/50 bg-red-500/10",
                       stage.status === "pending" && "border-zinc-700 bg-zinc-800/50",
                       stage.status === "skipped" && "border-zinc-700/50 bg-zinc-800/30",
@@ -65,7 +65,7 @@ export function WorkflowDiagram({ stages, compact = false }: Props) {
                     <div
                       className={cn(
                         "h-0.5 w-8 sm:w-12 md:w-16",
-                        isCompleted ? "bg-[#d4af37]/30" : "bg-zinc-700/50",
+                        isCompleted ? "bg-gold/30" : "bg-zinc-700/50",
                       )}
                     />
                   )}
@@ -76,7 +76,7 @@ export function WorkflowDiagram({ stages, compact = false }: Props) {
                   <p
                     className={cn(
                       "text-xs font-medium truncate",
-                      isActive && "text-[#d4af37]",
+                      isActive && "text-gold",
                       isCompleted && "text-zinc-300",
                       isFailed && "text-red-400",
                       stage.status === "pending" && "text-zinc-600",
@@ -90,7 +90,7 @@ export function WorkflowDiagram({ stages, compact = false }: Props) {
                     </p>
                   )}
                   {stage.owner && isActive && (
-                    <p className="text-[10px] text-[#d4af37]/80 mt-0.5 font-medium">
+                    <p className="text-[10px] text-gold/80 mt-0.5 font-medium">
                       {stage.owner}
                     </p>
                   )}

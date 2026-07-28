@@ -80,7 +80,7 @@ export const TaxPaymentCenter = memo(function TaxPaymentCenter({ payments, class
               <tr key={p.id} className="transition-colors hover:bg-zinc-800/40">
                 <td className="px-4 py-3 text-sm text-white">{p.jurisdictionId}</td>
                 <td className="px-4 py-3 text-sm capitalize text-zinc-300">{p.paymentType}</td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{formatCurrency(p.amount)}</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{formatCurrency(p.amount)}</td>
                 <td className="px-4 py-3 text-center">
                   <span className={cn("inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-medium", STATUS_STYLES[p.status] ?? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
                     <span className={cn("h-1.5 w-1.5 rounded-full", p.status === "paid" ? "bg-emerald-500" : p.status === "scheduled" ? "bg-blue-500" : p.status === "pending" ? "bg-amber-500" : "bg-zinc-500")} />

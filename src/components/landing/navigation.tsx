@@ -105,7 +105,7 @@ export function Navigation() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-center justify-between h-16 mt-3 rounded-xl border border-white/[0.06] bg-black/70 backdrop-blur-xl px-6 shadow-lg shadow-black/30">
           <Link href="/" className="flex items-center gap-3 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-[#d4af37]/20 border border-[#d4af37]/30 flex items-center justify-center overflow-hidden">
+            <div className="w-8 h-8 rounded-lg bg-gold/20 border border-gold/30 flex items-center justify-center overflow-hidden">
               <img src="/logo.svg" alt="Perionyx" className="h-full w-full object-cover" />
             </div>
             <span className="text-sm font-bold text-white tracking-tight">PERIONYX</span>
@@ -117,7 +117,7 @@ export function Navigation() {
             <Link
               href="/security"
               className={`text-sm font-medium transition-colors duration-200 ${
-                pathname === "/security" ? "text-[#d4af37]" : "text-zinc-400 hover:text-white"
+                pathname === "/security" ? "text-gold" : "text-zinc-400 hover:text-white"
               }`}
             >
               Security
@@ -125,7 +125,7 @@ export function Navigation() {
             <Link
               href="/api"
               className={`text-sm font-medium transition-colors duration-200 ${
-                pathname === "/api" ? "text-[#d4af37]" : "text-zinc-400 hover:text-white"
+                pathname === "/api" ? "text-gold" : "text-zinc-400 hover:text-white"
               }`}
             >
               Developers
@@ -143,7 +143,7 @@ export function Navigation() {
             </Link>
             <Link
               href="/request-demo"
-              className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold rounded-lg bg-[#d4af37] text-black hover:bg-[#c7a961] transition-colors duration-200 shadow-lg shadow-[#d4af37]/10 shrink-0"
+              className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold rounded-lg bg-gold text-black hover:bg-[#c7a961] transition-colors duration-200 shadow-lg shadow-gold/10 shrink-0"
             >
               Request a Demo
             </Link>

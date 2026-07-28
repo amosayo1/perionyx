@@ -7,8 +7,8 @@ const statusConfig: Record<
 > = {
   healthy: {
     label: "Healthy",
-    dot: "bg-[#d4af37] shadow-[0_0_8px_rgba(212,175,55,0.3)]",
-    bg: "border-[#d4af37]/10 bg-[#d4af37]/[0.03]",
+    dot: "bg-gold shadow-[0_0_8px_rgba(212,175,55,0.3)]",
+    bg: "border-gold/10 bg-gold/[0.03]",
   },
   warning: {
     label: "Warning",
@@ -40,7 +40,7 @@ export function ServiceStatusCard({ service }: { service: ServiceCardData }) {
         <span
           className={cn(
             "text-[10px] font-semibold uppercase tracking-wider",
-            service.status === "healthy" && "text-[#d4af37]",
+            service.status === "healthy" && "text-gold",
             service.status === "warning" && "text-amber-400",
             service.status === "offline" && "text-red-400",
           )}

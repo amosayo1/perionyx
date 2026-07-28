@@ -30,7 +30,7 @@ export function CashMovementTimeline({ className }: { className?: string }) {
   return (
     <div className={cn("rounded-lg border border-white/[0.06] bg-zinc-900/50", className)}>
       <div className="flex items-center gap-2 border-b border-white/[0.06] px-5 py-4">
-        <DollarSign className="h-5 w-5 text-[#c9a84c]" />
+        <DollarSign className="h-5 w-5 text-gold" />
         <h3 className="text-sm font-semibold text-white">Cash Movement Timeline</h3>
       </div>
 
@@ -57,7 +57,7 @@ export function CashMovementTimeline({ className }: { className?: string }) {
                   key={movement.category}
                   className={cn(
                     "border-b border-white/[0.06] text-sm transition-colors hover:bg-white/[0.02]",
-                    isTotal && "bg-[#c9a84c]/5",
+                    isTotal && "bg-gold/5",
                   )}
                 >
                   <td className="px-4 py-3">
@@ -65,7 +65,7 @@ export function CashMovementTimeline({ className }: { className?: string }) {
                       <span
                         className={cn(
                           "font-medium",
-                          isTotal ? "text-[#c9a84c]" : "text-zinc-200",
+                          isTotal ? "text-gold" : "text-zinc-200",
                         )}
                       >
                         {movement.label}
@@ -121,7 +121,7 @@ export function CashMovementTimeline({ className }: { className?: string }) {
                       <span
                         className={cn(
                           "font-semibold tabular-nums",
-                          isTotal ? "text-[#c9a84c]" : "text-white",
+                          isTotal ? "text-gold" : "text-white",
                         )}
                       >
                         {formatFullCurrency(movement.runningBalance)}
@@ -179,7 +179,7 @@ export function CashMovementTimeline({ className }: { className?: string }) {
                   {formatCurrency(totalInflow - totalOutflow)}
                 </div>
               </td>
-              <td className="px-4 py-3 text-right font-semibold text-[#c9a84c]">
+              <td className="px-4 py-3 text-right font-semibold text-gold">
                 {formatFullCurrency(finalBalance)}
               </td>
               <td className="px-4 py-3" />

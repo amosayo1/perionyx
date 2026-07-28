@@ -13,7 +13,7 @@ export default function FPAExecutiveHeader({ summary }: FPAExecutiveHeaderProps)
     { label: 'Net Income', value: formatCurrency(summary.budgetNetIncome), color: summary.budgetNetIncome >= 0 ? '#22c55e' : '#ef4444', detail: `Budget: ${formatCurrency(summary.budgetNetIncome)}` },
     { label: 'Revenue Forecast', value: formatCurrency(summary.revenueForecast), color: '#3b82f6', detail: `vs budget ${summary.budgetVariancePercent >= 0 ? '\u2191' : '\u2193'} ${Math.abs(summary.budgetVariancePercent)}%` },
     { label: 'Forecast Confidence', value: `${Math.round(summary.forecastConfidence)}%`, color: summary.forecastConfidence >= 80 ? '#22c55e' : summary.forecastConfidence >= 50 ? '#eab308' : '#ef4444', detail: `${summary.pendingApprovals} pending approvals` },
-    { label: 'Active Plans', value: `${summary.activeScenarios}`, color: '#d4a843', detail: `${summary.capitalsProjectsActive} capital projects` },
+    { label: 'Active Plans', value: `${summary.activeScenarios}`, color: '#d4af37', detail: `${summary.capitalsProjectsActive} capital projects` },
   ]
 
   return (
@@ -25,7 +25,7 @@ export default function FPAExecutiveHeader({ summary }: FPAExecutiveHeaderProps)
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08, duration: 0.3 }}
           style={{
-            background: '#1a1a2e',
+            background: '#1a1a24',
             borderRadius: 12,
             borderLeft: `4px solid ${m.color}`,
             padding: '20px 24px',

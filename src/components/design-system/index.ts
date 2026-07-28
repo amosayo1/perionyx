@@ -81,16 +81,13 @@ export { LoadingSkeleton, SkeletonCard, SkeletonTable } from "@/components/enter
 // ─── Enterprise Status (existing) ─────────────────────
 export { HealthIndicator, HealthBar } from "@/components/enterprise/health-indicator";
 
-// ─── Design Tokens (existing) ─────────────────────────
-export { colors } from "@/design-system/tokens/colors";
-export { typography } from "@/design-system/tokens/typography";
-export { spacing } from "@/design-system/tokens/spacing";
-export { radius } from "@/design-system/tokens/radius";
-export { shadows } from "@/design-system/tokens/shadows";
-export { motion } from "@/design-system/tokens/motion";
-export { zIndex } from "@/design-system/tokens/z-index";
-export { elevation } from "@/design-system/tokens/elevation";
-export { opacity } from "@/design-system/tokens/opacity";
+// ─── Design Tokens (canonical EDL source) ────────────
+export { BRAND, SURFACES, TEXT, BORDERS, STATUS, FINANCIAL, RISK, SHADOWS, ELEVATION } from "@/design-system/edl/colors";
+export { FONT_FAMILY, FONT_SIZE } from "@/design-system/edl/typography";
+export { SPACE, LAYOUT } from "@/design-system/edl/spacing";
+export { RADIUS, RADIUS_USE } from "@/design-system/edl/radius";
+export { DURATION, EASING, VARIANTS } from "@/design-system/edl/motion";
+export { Z } from "@/design-system/edl/z-index";
 
 // ─── Design Providers (existing) ──────────────────────
 export { ThemeProvider } from "@/design-system/providers/theme-provider";

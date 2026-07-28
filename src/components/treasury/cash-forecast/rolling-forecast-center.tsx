@@ -88,7 +88,7 @@ export function RollingForecastCenter({ className }: { className?: string }) {
               aria-selected={horizon === h}
               className={cn(
                 "rounded-md px-3 py-1 text-[13px] font-medium transition-colors",
-                horizon === h ? "bg-[#c9a84c]/10 text-[#c9a84c]" : "text-zinc-400 hover:text-zinc-200",
+                horizon === h ? "bg-gold/10 text-gold" : "text-zinc-400 hover:text-zinc-200",
               )}
             >
               {h}-Week

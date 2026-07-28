@@ -18,7 +18,12 @@
     "db:studio": "prisma studio",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "edl:audit": "tsx tools/design-governance/edl-audit.ts",
+    "edl:fix": "tsx tools/design-governance/fixers/edl-fixer.ts --apply",
+    "edl:report": "tsx tools/design-governance/edl-report.ts",
+    "edl:tokens": "tsx tools/design-governance/edl-tokens.ts",
+    "edl:compliance": "tsx tools/design-governance/edl-compliance.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

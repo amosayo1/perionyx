@@ -3,6 +3,7 @@ import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
 import { recordAudit } from "@/modules/audit";
 import { notificationService, NotificationService } from "@/modules/notifications";
+import { logger } from "@/lib/logger";
 import { ValidationError } from "@/lib/errors/app-error";
 import { getCached, CacheTier, tenantKey, CacheDomains } from "@/server/cache";
 import type { NormalizedLiquiditySummary, NormalizedErpPosition } from "@/modules/financial-mapping";
@@ -288,7 +289,7 @@ export class TreasuryService {
       message: `${lockResult.fromAccountName} → ${lockResult.toAccountName}`,
       link: `/transactions?id=${lockResult.id}`,
       metadata: { amount: data.amount, currency: lockResult.currency, from: data.fromAccountId, to: data.toAccountId },
-    }).catch(() => {});
+    }).catch((err) => { logger.error(err, "Failed to send transfer completed notification"); });
 
     return {
       ...lockResult,

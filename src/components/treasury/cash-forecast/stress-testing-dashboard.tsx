@@ -99,7 +99,7 @@ export function StressTestingDashboard({ className }: { className?: string }) {
               aria-label="Filter by stress type"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-[#c9a84c]/50"
+              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-gold/50"
             >
               <option value="all">All Types</option>
               {STRESS_TYPES.map((t) => (
@@ -112,7 +112,7 @@ export function StressTestingDashboard({ className }: { className?: string }) {
               aria-label="Filter by severity"
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-[#c9a84c]/50"
+              className="rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 text-[13px] text-white outline-none focus:border-gold/50"
             >
               {SEVERITIES.map((s) => (
                 <option key={s} value={s}>{s === "all" ? "All Severities" : s.charAt(0).toUpperCase() + s.slice(1)}</option>

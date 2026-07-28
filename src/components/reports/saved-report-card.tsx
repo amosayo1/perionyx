@@ -3,7 +3,7 @@ import { Pin, Share2, Lock, History, Star, FileText } from "lucide-react";
 import type { SavedReport } from "./types";
 
 const typeConfig: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
-  pinned: { label: "Pinned", icon: <Pin className="h-3 w-3" />, className: "text-[#d4af37]" },
+  pinned: { label: "Pinned", icon: <Pin className="h-3 w-3" />, className: "text-gold" },
   shared: { label: "Shared", icon: <Share2 className="h-3 w-3" />, className: "text-blue-400" },
   private: { label: "Private", icon: <Lock className="h-3 w-3" />, className: "text-amber-400" },
   recent: { label: "Recent", icon: <History className="h-3 w-3" />, className: "text-zinc-400" },

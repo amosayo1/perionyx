@@ -65,7 +65,7 @@ export function Step1PaymentRequest() {
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#d4af37]/10 text-[#d4af37]"
+              className="ml-auto text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold"
             >
               {phase === "validating" && "Validating..."}
               {phase === "generating" && "Processing..."}
@@ -91,12 +91,12 @@ export function Step1PaymentRequest() {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/20"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/10 border border-gold/20"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                <span className="text-[11px] text-[#d4af37] font-medium">Awaiting Policy Evaluation</span>
+                <span className="text-[11px] text-gold font-medium">Awaiting Policy Evaluation</span>
               </motion.div>
             )}
           </div>
@@ -115,9 +115,9 @@ export function Step1PaymentRequest() {
                   transition={{ delay: 0.05 * i, duration: 0.3 }}
                   className={`relative space-y-1.5 p-3 rounded-xl transition-all duration-300 ${
                     isValidating
-                      ? "bg-[#d4af37]/5 border border-[#d4af37]/20"
+                      ? "bg-gold/5 border border-gold/20"
                       : phase !== "idle" && isDone
-                      ? "bg-black/40 border border-[#d4af37]/10"
+                      ? "bg-black/40 border border-gold/10"
                       : "bg-black/40 border border-white/[0.06]"
                   }`}
                 >
@@ -127,7 +127,7 @@ export function Step1PaymentRequest() {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="w-3.5 h-3.5 rounded-full border-2 border-[#d4af37] border-t-transparent animate-spin"
+                        className="w-3.5 h-3.5 rounded-full border-2 border-gold border-t-transparent animate-spin"
                       />
                     )}
                     {phase !== "idle" && isDone && (
@@ -137,7 +137,7 @@ export function Step1PaymentRequest() {
                         transition={{ type: "spring", stiffness: 300, damping: 15 }}
                         width="14" height="14" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                        strokeLinejoin="round" className="text-[#d4af37]"
+                        strokeLinejoin="round" className="text-gold"
                       >
                         <polyline points="20 6 9 17 4 12" />
                       </motion.svg>
@@ -177,12 +177,12 @@ export function Step1PaymentRequest() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + i * 0.1 }}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#d4af37]/5 border border-[#d4af37]/10 hover:bg-[#d4af37]/10 transition-colors cursor-default"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/5 border border-gold/10 hover:bg-gold/10 transition-colors cursor-default"
                 >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37]">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
                   </svg>
-                  <span className="text-[11px] text-[#d4af37]">{doc}</span>
+                  <span className="text-[11px] text-gold">{doc}</span>
                 </motion.div>
               ))}
             </div>
@@ -197,7 +197,7 @@ export function Step1PaymentRequest() {
             >
               <button
                 onClick={handleSubmit}
-                className="w-full px-5 py-3 text-sm font-medium rounded-xl bg-[#d4af37] text-white hover:bg-[#d4af37] transition-all duration-200 shadow-lg shadow-[#d4af37]/20"
+                className="w-full px-5 py-3 text-sm font-medium rounded-xl bg-gold text-white hover:bg-gold transition-all duration-200 shadow-lg shadow-gold/20"
               >
                 Submit Payment Request
               </button>
@@ -212,14 +212,14 @@ export function Step1PaymentRequest() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-800/40 border border-white/[0.06]"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#d4af37]">
+              <div className="w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold">
                   <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" />
                 </svg>
               </div>
               <div>
                 <span className="text-xs text-zinc-400">Transaction ID generated</span>
-                <p className="text-sm font-mono text-[#d4af37] font-semibold">{transactionId}</p>
+                <p className="text-sm font-mono text-gold font-semibold">{transactionId}</p>
               </div>
               <motion.div
                 initial={{ opacity: 0 }}
@@ -227,7 +227,7 @@ export function Step1PaymentRequest() {
                 transition={{ delay: 0.8 }}
                 className="ml-auto"
               >
-                <div className="w-4 h-4 rounded-full border-2 border-zinc-600 border-t-[#d4af37] animate-spin" />
+                <div className="w-4 h-4 rounded-full border-2 border-zinc-600 border-t-gold animate-spin" />
               </motion.div>
             </motion.div>
           )}
@@ -238,12 +238,12 @@ export function Step1PaymentRequest() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#d4af37]/5 border border-[#d4af37]/10"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gold/5 border border-gold/10"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span className="text-xs text-[#d4af37]">Payment submitted — routing to Policy Engine for evaluation</span>
+              <span className="text-xs text-gold">Payment submitted — routing to Policy Engine for evaluation</span>
             </motion.div>
           )}
 

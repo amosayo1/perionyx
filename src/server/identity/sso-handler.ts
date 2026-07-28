@@ -1,5 +1,8 @@
 import type { AuthenticatedUser } from "./types"
 import { authenticationService } from "./authentication"
+import { logger } from "@/lib/logger"
+
+const log = logger.child({ module: "sso-handler" });
 
 export class SSOHandler {
   initiateSAML(providerId: string, relayState?: string): { redirectUrl: string; requestId: string } {
@@ -11,6 +14,7 @@ export class SSOHandler {
   }
 
   handleSAMLResponse(providerId: string, samlResponse: string, ipAddress: string, userAgent: string): AuthenticatedUser {
+    log.info({ providerId }, "Handling SAML response");
     const parsed = this.parseSAMLResponse(samlResponse)
     const token = parsed.NameID ?? `saml_${providerId}_${Date.now()}`
     return authenticationService.loginWithSSO(providerId, token, ipAddress, userAgent)
@@ -27,6 +31,7 @@ export class SSOHandler {
   }
 
   handleOIDCCallback(providerId: string, code: string, state: string, ipAddress: string, userAgent: string): AuthenticatedUser {
+    log.info({ providerId }, "Handling OIDC callback");
     const token = `oidc_${providerId}_${code.substring(0, 8)}_${Date.now()}`
     return authenticationService.loginWithSSO(providerId, token, ipAddress, userAgent)
   }
@@ -40,6 +45,7 @@ export class SSOHandler {
   }
 
   handleOAuth2Callback(providerId: string, code: string, state: string, ipAddress: string, userAgent: string): AuthenticatedUser {
+    log.info({ providerId }, "Handling OAuth2 callback");
     const token = `oauth_${providerId}_${code.substring(0, 8)}_${Date.now()}`
     return authenticationService.loginWithSSO(providerId, token, ipAddress, userAgent)
   }

@@ -15,7 +15,7 @@ export function SdkCard({ sdk }: { sdk: Sdk }) {
         </div>
       </div>
       <div className="rounded-lg bg-zinc-950 px-3 py-2 mb-3">
-        <code className="text-[11px] text-[#d4af37] font-mono">{sdk.packageManager}</code>
+        <code className="text-[11px] text-gold font-mono">{sdk.packageManager}</code>
       </div>
       <div className="flex gap-2">
         <Button variant="outline" size="sm" className="gap-1.5 text-xs flex-1">

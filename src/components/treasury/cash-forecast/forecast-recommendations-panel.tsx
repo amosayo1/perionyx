@@ -70,7 +70,7 @@ export function ForecastRecommendationsPanel() {
         <select
           value={categoryFilter ?? ""}
           onChange={(e) => setCategoryFilter(e.target.value || null)}
-          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-[#c9a84c]/50"
+          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-gold/50"
           aria-label="Filter by category"
         >
           <option value="">All Categories</option>
@@ -84,7 +84,7 @@ export function ForecastRecommendationsPanel() {
         <select
           value={entityFilter ?? ""}
           onChange={(e) => setEntityFilter(e.target.value || null)}
-          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-[#c9a84c]/50"
+          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-gold/50"
           aria-label="Filter by entity"
         >
           <option value="">All Entities</option>
@@ -96,7 +96,7 @@ export function ForecastRecommendationsPanel() {
         <select
           value={priorityFilter ?? ""}
           onChange={(e) => setPriorityFilter(e.target.value || null)}
-          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-[#c9a84c]/50"
+          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-gold/50"
           aria-label="Filter by priority"
         >
           <option value="">All Priorities</option>
@@ -124,7 +124,7 @@ export function ForecastRecommendationsPanel() {
                     "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center",
                     rec.priority === "critical"
                       ? "bg-red-500/15 text-red-400"
-                      : "bg-[#c9a84c]/10 text-[#c9a84c]"
+                      : "bg-gold/10 text-gold"
                   )}
                 >
                   <PriorityIcon className="w-4 h-4" />
@@ -149,7 +149,7 @@ export function ForecastRecommendationsPanel() {
                   <p className="text-xs text-zinc-400 mt-0.5">{rec.description}</p>
 
                   <div className="flex items-center gap-4 mt-2 flex-wrap">
-                    <span className="text-sm font-semibold text-[#c9a84c] flex items-center gap-1">
+                    <span className="text-sm font-semibold text-gold flex items-center gap-1">
                       <DollarSign className="w-3.5 h-3.5" />
                       {rec.impactLabel}
                     </span>

@@ -62,7 +62,7 @@ export default function ConsEntityPerformance({ performances }: ConsEntityPerfor
             gridTemplateColumns: "1fr 100px 100px 80px 80px 1fr 1fr",
             gap: 8,
             padding: "10px 12px",
-            background: "#1a1a2e",
+            background: "#1a1a24",
             borderRadius: 4,
             alignItems: "center",
             border: "1px solid #2a2a4a",
@@ -81,7 +81,7 @@ export default function ConsEntityPerformance({ performances }: ConsEntityPerfor
             {formatPercent(p.profitMargin)}
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <MiniBar value={p.revenue} maxValue={maxRevenue} color="#d4a843" />
+            <MiniBar value={p.revenue} maxValue={maxRevenue} color="#d4af37" />
             <span style={{ color: "#94a3b8", fontSize: 11, fontFamily: "ui-monospace, monospace", minWidth: 40, textAlign: "right" }}>
               {formatPercent(p.revenueShare)}
             </span>

@@ -85,7 +85,7 @@ export const InsightPanel = memo(function InsightPanel({
                     </div>
                   )}
                   {item.actionLabel && (
-                    <button className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-[#c9a84c] hover:text-[#dbb95c] transition-colors">
+                    <button className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-gold hover:text-[#dbb95c] transition-colors">
                       {item.actionLabel}
                       <ArrowRight className="h-3 w-3" />
                     </button>

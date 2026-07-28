@@ -50,8 +50,8 @@ function ScorecardCard({ icon: Icon, title, metrics, index }: ScorecardProps) {
       role="article" aria-label={`${title} scorecard`}
     >
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#c9a84c]/10 border border-[#c9a84c]/20">
-          <Icon className="h-4 w-4 text-[#c9a84c]" aria-hidden="true" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10 border border-gold/20">
+          <Icon className="h-4 w-4 text-gold" aria-hidden="true" />
         </div>
         <h3 className="text-sm font-semibold text-white">{title}</h3>
       </div>
@@ -61,7 +61,7 @@ function ScorecardCard({ icon: Icon, title, metrics, index }: ScorecardProps) {
         ))}
       </div>
       <div className="mt-3 pt-2 border-t border-white/[0.06]">
-        <button className="flex items-center gap-1 text-[11px] font-medium text-[#c9a84c] hover:text-[#c9a84c]/80 transition-colors" aria-label={`Open ${title}`}>
+        <button className="flex items-center gap-1 text-[11px] font-medium text-gold hover:text-gold/80 transition-colors" aria-label={`Open ${title}`}>
           Open <ArrowRight className="h-3 w-3" aria-hidden="true" />
         </button>
       </div>

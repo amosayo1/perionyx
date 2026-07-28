@@ -106,7 +106,7 @@ export function WorkflowVersionDiff({ definitionId }: Props) {
                 <select
                   value={fromVersion}
                   onChange={(e) => setFromVersion(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full rounded-lg border border-white/[0.06] bg-zinc-900/60 px-3 py-2 text-sm text-white outline-none focus:border-[#d4af37]/40"
+                  className="w-full rounded-lg border border-white/[0.06] bg-zinc-900/60 px-3 py-2 text-sm text-white outline-none focus:border-gold/40"
                 >
                   <option value="">Select...</option>
                   {versionOptions.map((opt) => (
@@ -121,7 +121,7 @@ export function WorkflowVersionDiff({ definitionId }: Props) {
                 <select
                   value={toVersion}
                   onChange={(e) => setToVersion(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full rounded-lg border border-white/[0.06] bg-zinc-900/60 px-3 py-2 text-sm text-white outline-none focus:border-[#d4af37]/40"
+                  className="w-full rounded-lg border border-white/[0.06] bg-zinc-900/60 px-3 py-2 text-sm text-white outline-none focus:border-gold/40"
                 >
                   <option value="">Select...</option>
                   {versionOptions.map((opt) => (

@@ -51,15 +51,15 @@ export function AgentCard({ agent, onClick, className }: AgentCardProps) {
       transition={{ duration: 0.15 }}
       onClick={onClick}
       className={cn(
-        "group cursor-pointer rounded-2xl border border-white/[0.09] bg-[#101010] p-5 transition-colors hover:border-white/[0.14]",
+        "group cursor-pointer rounded-2xl border border-white/[0.09] bg-[#111118] p-5 transition-colors hover:border-white/[0.14]",
         onClick && "cursor-pointer",
         className,
       )}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/10">
-            <Bot className="h-5 w-5 text-[#d4af37]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-gold/20 bg-gold/10">
+            <Bot className="h-5 w-5 text-gold" />
           </div>
           <div className="min-w-0">
             <h3 className="truncate text-sm font-semibold text-white">{agent.name}</h3>

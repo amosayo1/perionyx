@@ -29,7 +29,7 @@ export function TreasuryRecommendationsPanel({ className }: { className?: string
                   <p className="text-[12px] text-zinc-400 mt-0.5">{rec.rationale}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-sm font-semibold text-[#c9a84c]">{rec.impactLabel}</p>
+                  <p className="text-sm font-semibold text-gold">{rec.impactLabel}</p>
                   <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium",
                     rec.priority === "critical" ? "bg-red-500/10 text-red-400" :
                     rec.priority === "high" ? "bg-amber-500/10 text-amber-400" :

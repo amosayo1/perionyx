@@ -4,8 +4,8 @@ import type { PlatformService } from "./types";
 const statusConfig: Record<string, { label: string; dot: string; bg: string }> = {
   healthy: {
     label: "Healthy",
-    dot: "bg-[#d4af37] shadow-[0_0_8px_rgba(212,175,55,0.3)]",
-    bg: "border-[#d4af37]/10 bg-[#d4af37]/[0.03]",
+    dot: "bg-gold shadow-[0_0_8px_rgba(212,175,55,0.3)]",
+    bg: "border-gold/10 bg-gold/[0.03]",
   },
   warning: {
     label: "Warning",
@@ -29,7 +29,7 @@ export function ServiceStatusCard({ service }: { service: PlatformService }) {
           <div className={cn("h-2 w-2 rounded-full", cfg.dot)} />
           <span className="text-sm font-medium text-white">{service.name}</span>
         </div>
-        <span className={cn("text-[10px] font-semibold uppercase tracking-wider", service.status === "healthy" && "text-[#d4af37]", service.status === "warning" && "text-amber-400", service.status === "offline" && "text-red-400")}>
+        <span className={cn("text-[10px] font-semibold uppercase tracking-wider", service.status === "healthy" && "text-gold", service.status === "warning" && "text-amber-400", service.status === "offline" && "text-red-400")}>
           {cfg.label}
         </span>
       </div>

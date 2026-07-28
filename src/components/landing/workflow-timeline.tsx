@@ -90,7 +90,7 @@ export function WorkflowTimeline() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-8"
         >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37] mb-6">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-gold/20 bg-gold/5 text-gold mb-6">
             One Workflow in the Operating System
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
@@ -111,7 +111,7 @@ export function WorkflowTimeline() {
               onClick={() => scrollToStep(i)}
               className={`px-3 py-1.5 text-[11px] font-medium rounded-lg border transition-all duration-200 ${
                 activeStep === i
-                  ? "border-[#d4af37]/30 bg-[#d4af37]/10 text-[#d4af37]"
+                  ? "border-gold/30 bg-gold/10 text-gold"
                   : "border-white/[0.06] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12]"
               }`}
             >
@@ -122,7 +122,7 @@ export function WorkflowTimeline() {
 
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-[31px] top-0 bottom-0 w-px bg-gradient-to-b from-[#d4af37]/40 via-[#d4af37]/20 to-transparent" />
+          <div className="absolute left-[31px] top-0 bottom-0 w-px bg-gradient-to-b from-gold/40 via-gold/20 to-transparent" />
 
           <div className="space-y-24">
             {stages.map((stage, i) => (
@@ -138,7 +138,7 @@ export function WorkflowTimeline() {
               >
                 {/* Circle marker */}
                 <div className="relative z-10 flex items-start">
-                  <div className="w-[62px] h-[62px] rounded-xl border border-white/[0.08] bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center text-[#d4af37] shadow-lg">
+                  <div className="w-[62px] h-[62px] rounded-xl border border-white/[0.08] bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center text-gold shadow-lg">
                     {stage.icon}
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export function WorkflowTimeline() {
                 {/* Content */}
                 <div className="flex-1 pt-3">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[11px] font-mono text-[#d4af37]/60 font-medium">0{i + 1}</span>
+                    <span className="text-[11px] font-mono text-gold/60 font-medium">0{i + 1}</span>
                     <h3 className="text-lg font-semibold text-white">{stage.title}</h3>
                   </div>
                   <p className="text-sm text-zinc-500 leading-relaxed max-w-xl mb-3">{stage.desc}</p>
@@ -156,7 +156,7 @@ export function WorkflowTimeline() {
                 </div>
 
                 {/* Right decorative element */}
-                <div className="hidden lg:block absolute right-0 top-0 w-32 h-32 bg-[#d4af37]/3 rounded-full blur-2xl" />
+                <div className="hidden lg:block absolute right-0 top-0 w-32 h-32 bg-gold/3 rounded-full blur-2xl" />
               </motion.div>
             ))}
           </div>

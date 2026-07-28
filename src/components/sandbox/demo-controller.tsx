@@ -47,7 +47,7 @@ export function DemoController() {
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
       {open && (
-        <div className="rounded-xl border border-[#d4af37]/15 bg-zinc-900/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] p-2 w-52 animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="rounded-xl border border-gold/15 bg-zinc-900/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] p-2 w-52 animate-in fade-in slide-in-from-bottom-2 duration-200">
           <div className="space-y-1">
             <button
               onClick={handleReset}
@@ -89,10 +89,10 @@ export function DemoController() {
 
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-full border border-[#d4af37]/20 bg-gradient-to-r from-zinc-900/95 to-zinc-900/95 px-4 py-2.5 shadow-[0_4px_20px_rgba(212,175,55,0.12)] backdrop-blur-xl transition-all hover:border-[#d4af37]/30"
+        className="flex items-center gap-2 rounded-full border border-gold/20 bg-gradient-to-r from-zinc-900/95 to-zinc-900/95 px-4 py-2.5 shadow-[0_4px_20px_rgba(212,175,55,0.12)] backdrop-blur-xl transition-all hover:border-gold/30"
       >
-        <Sparkles className="h-3.5 w-3.5 text-[#d4af37]" />
-        <span className="text-xs font-semibold text-[#d4af37]">Sandbox Controls</span>
+        <Sparkles className="h-3.5 w-3.5 text-gold" />
+        <span className="text-xs font-semibold text-gold">Sandbox Controls</span>
         {open ? <X className="h-3 w-3 text-zinc-500" /> : <ChevronUp className="h-3 w-3 text-zinc-500" />}
       </button>
     </div>

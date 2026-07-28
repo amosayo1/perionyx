@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
+import { logger } from "@/lib/logger";
 import type { IFinancialTransactionManager } from "./financial-transaction-manager";
 import { FinancialTransactionManager } from "./financial-transaction-manager";
 import type {
@@ -90,7 +91,8 @@ export class RowLockManager implements IRowLockManager {
     try {
       await tx.$queryRawUnsafe(sql, ...params);
       return true;
-    } catch {
+    } catch (err) {
+      logger.debug(err, "Row lock NOWAIT failed (expected for contention)");
       return false;
     }
   }
@@ -118,7 +120,8 @@ export class RowLockManager implements IRowLockManager {
         id,
       );
       return false;
-    } catch {
+    } catch (err) {
+      logger.debug(err, "Lock check confirmed row is locked");
       return true;
     }
   }

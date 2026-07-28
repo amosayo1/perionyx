@@ -58,7 +58,7 @@ export const EnterpriseWizard = memo(function EnterpriseWizard({
                   onClick={() => i < currentStep && onStepChange(i)}
                   className={cn(
                     "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                    i === currentStep && "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/30",
+                    i === currentStep && "bg-gold/10 text-gold border border-gold/30",
                     i < currentStep && "bg-emerald-500/10 text-emerald-400 cursor-pointer hover:bg-emerald-500/20",
                     i > currentStep && "text-zinc-600",
                   )}

@@ -18,7 +18,7 @@ function CashMovementBar({ point, maxVal }: { point: TrendPoint; maxVal: number 
           className="w-8 self-end rounded-t-sm"
           style={{
             height: `${Math.max(pct * 1.1, 4)}%`,
-            background: "linear-gradient(180deg, #c9a84c 0%, rgba(201,168,76,0.3) 100%)",
+            background: "linear-gradient(180deg, #d4af37 0%, rgba(201,168,76,0.3) 100%)",
           }}
         />
       </div>

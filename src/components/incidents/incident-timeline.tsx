@@ -46,7 +46,7 @@ const eventConfig: Record<
   },
   resolved: {
     icon: <CheckCircle2 className="h-3.5 w-3.5" />,
-    color: "text-[#d4af37]",
+    color: "text-gold",
   },
   closed: {
     icon: <Clock className="h-3.5 w-3.5" />,

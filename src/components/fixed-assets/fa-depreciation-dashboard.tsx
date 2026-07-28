@@ -40,14 +40,14 @@ export default function FADepreciationDashboard({ schedules }: FADepreciationDas
       <h3 style={{ color: "#e0e0e0", fontSize: 18, fontWeight: 700, margin: 0 }}>Depreciation Schedule</h3>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
         {[
-          { label: "Total Accumulated Depreciation", value: formatCurrency(totalDepreciation), color: "#d4a843" },
+          { label: "Total Accumulated Depreciation", value: formatCurrency(totalDepreciation), color: "#d4af37" },
           { label: "Avg Useful Life", value: `${avgUsefulLife.toFixed(1)} yrs`, color: "#22c55e" },
           { label: "Avg Remaining Life", value: `${(avgRemainingLife / 12).toFixed(1)} yrs`, color: avgRemainingLife > 24 ? "#22c55e" : avgRemainingLife > 12 ? "#eab308" : "#ef4444" },
         ].map((s) => (
           <div
             key={s.label}
             style={{
-              background: "#1a1a2e",
+              background: "#1a1a24",
               borderRadius: 12,
               borderLeft: `4px solid ${s.color}`,
               padding: "18px 22px",
@@ -93,7 +93,7 @@ export default function FADepreciationDashboard({ schedules }: FADepreciationDas
               gridTemplateColumns: "1fr 100px 120px 120px 120px 100px",
               gap: 8,
               alignItems: "center",
-              background: i % 2 === 0 ? "#1a1a2e" : "#1e1e32",
+              background: i % 2 === 0 ? "#1a1a24" : "#1e1e32",
               borderRadius: 6,
               padding: "12px 16px",
             }}

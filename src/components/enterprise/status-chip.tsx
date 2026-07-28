@@ -15,7 +15,7 @@ const config = {
   error: { dot: "bg-red-500", text: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", label: "Error" },
   neutral: { dot: "bg-zinc-500", text: "text-zinc-400", bg: "bg-zinc-500/10", border: "border-zinc-500/20", label: "Idle" },
   info: { dot: "bg-blue-500", text: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", label: "Info" },
-  gold: { dot: "bg-[#c9a84c]", text: "text-[#c9a84c]", bg: "bg-gold-500/10", border: "border-gold-500/20", label: "Active" },
+  gold: { dot: "bg-gold", text: "text-gold", bg: "bg-gold-500/10", border: "border-gold-500/20", label: "Active" },
 };
 
 export function StatusChip({ status, label, className, dotOnly }: StatusChipProps) {

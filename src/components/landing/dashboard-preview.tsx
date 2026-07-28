@@ -53,7 +53,7 @@ export function DashboardPreview() {
           <div className="col-span-2 space-y-3">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">Balances</span>
-              <span className="text-[11px] text-[#d4af37]/70">Live</span>
+              <span className="text-[11px] text-gold/70">Live</span>
             </div>
             {balances.map((b, i) => (
               <motion.div
@@ -65,7 +65,7 @@ export function DashboardPreview() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-zinc-400">{b.label}</span>
-                  <span className={`text-[11px] ${b.positive ? 'text-[#d4af37]' : 'text-red-400'}`}>{b.change}</span>
+                  <span className={`text-[11px] ${b.positive ? 'text-gold' : 'text-red-400'}`}>{b.change}</span>
                 </div>
                 <span className="text-lg font-semibold text-white tracking-tight">
                   <Counter value={b.amount} />
@@ -101,7 +101,7 @@ export function DashboardPreview() {
                 <span className="text-xs text-zinc-400 truncate">{a.vendor}</span>
                 <span className="text-xs text-zinc-200 text-right font-medium">{a.amount}</span>
                 <span className={`text-xs text-right font-medium ${
-                  a.status === "Approved" ? "text-[#d4af37]" :
+                  a.status === "Approved" ? "text-gold" :
                   a.priority === "Urgent" ? "text-amber-400" : "text-zinc-400"
                 }`}>
                   {a.status === "Approved" ? a.status : a.priority === "Urgent" ? "Urgent" : "Pending"}
@@ -131,7 +131,7 @@ export function DashboardPreview() {
       </motion.div>
 
       {/* Subtle glow behind dashboard */}
-      <div className="absolute -inset-20 bg-[#d4af37]/5 rounded-full blur-3xl -z-10" />
+      <div className="absolute -inset-20 bg-gold/5 rounded-full blur-3xl -z-10" />
     </div>
   );
 }

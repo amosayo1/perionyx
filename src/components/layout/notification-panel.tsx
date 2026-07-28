@@ -77,7 +77,7 @@ export function NotificationPanel({ maxVisible = 5, className }: NotificationPan
         >
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#d4af37] px-1 text-[9px] font-bold text-black">
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-black">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -89,7 +89,7 @@ export function NotificationPanel({ maxVisible = 5, className }: NotificationPan
             Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}
           </span>
           {unreadCount > 0 && (
-            <button onClick={markAllRead} className="flex items-center gap-1 text-[10px] text-[#d4af37] hover:text-[#d4af37]/80">
+            <button onClick={markAllRead} className="flex items-center gap-1 text-[10px] text-gold hover:text-gold/80">
               <CheckCheck className="h-3 w-3" />
               Mark all read
             </button>
@@ -106,14 +106,14 @@ export function NotificationPanel({ maxVisible = 5, className }: NotificationPan
                   href={n.href ?? "/notifications"}
                   className={cn(
                     "flex flex-col gap-0.5 px-4 py-3 text-sm transition-colors hover:bg-white/[0.04]",
-                    !n.read && "bg-[#d4af37]/[0.02] border-l-2 border-l-[#d4af37]",
+                    !n.read && "bg-gold/[0.02] border-l-2 border-l-gold",
                   )}
                 >
                   <div className="flex items-center gap-2">
                     <span className={cn("text-sm", !n.read ? "text-white font-medium" : "text-zinc-400")}>
                       {n.title}
                     </span>
-                    {!n.read && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4af37]" />}
+                    {!n.read && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />}
                   </div>
                   {n.message && <span className="text-xs text-zinc-500 line-clamp-2">{n.message}</span>}
                   <span className="text-[10px] text-zinc-700">

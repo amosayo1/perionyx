@@ -11,7 +11,7 @@ export default function FATrendWidget({ label, value, target, unit, trend }: FAT
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      style={{ background: '#1a1a2e', borderRadius: 8, padding: 16, border: '1px solid #2a2a4a', minWidth: 180 }}>
+      style={{ background: '#1a1a24', borderRadius: 8, padding: 16, border: '1px solid #2a2a4a', minWidth: 180 }}>
       <div style={{ color: '#888', fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>{label}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 10 }}>
         <span style={{ color: '#e0e0e0', fontSize: 24, fontWeight: 700, fontFamily: 'ui-monospace, monospace' }}>

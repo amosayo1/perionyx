@@ -21,7 +21,7 @@ const stageColors: Record<string, string> = {
   translation: "#a855f7",
   elimination: "#f97316",
   minorityInterest: "#eab308",
-  adjustments: "#d4a843",
+  adjustments: "#d4af37",
   review: "#14b8a6",
   approved: "#22c55e",
   locked: "#ef4444",
@@ -46,7 +46,7 @@ export default function ConsConsolidationWorkspace({ runs }: ConsConsolidationWo
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: ri * 0.05 }}
-            style={{ background: "#1a1a2e", borderRadius: 12, padding: 20, border: "1px solid #2a2a4a" }}
+            style={{ background: "#1a1a24", borderRadius: 12, padding: 20, border: "1px solid #2a2a4a" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <div>
@@ -82,10 +82,10 @@ export default function ConsConsolidationWorkspace({ runs }: ConsConsolidationWo
                         width: "100%",
                         height: 4,
                         borderRadius: 2,
-                        background: isCompleted ? stageColors[stage] : isCurrent ? "#d4a843" : "#2a2a4a",
+                        background: isCompleted ? stageColors[stage] : isCurrent ? "#d4af37" : "#2a2a4a",
                       }}
                     />
-                    <span style={{ fontSize: 9, color: isCompleted ? "#94a3b8" : isCurrent ? "#d4a843" : "#555", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+                    <span style={{ fontSize: 9, color: isCompleted ? "#94a3b8" : isCurrent ? "#d4af37" : "#555", textTransform: "uppercase", whiteSpace: "nowrap" }}>
                       {stageLabels[stage]}
                     </span>
                   </div>
@@ -96,7 +96,7 @@ export default function ConsConsolidationWorkspace({ runs }: ConsConsolidationWo
             <div style={{ display: "flex", gap: 16, fontSize: 12, color: "#94a3b8" }}>
               <span>{run.entitiesCompleted.length}/{run.entitiesIncluded.length} entities</span>
               <span>{run.completedSteps}/{run.totalSteps} steps</span>
-              {run.reviewNotes && <span style={{ color: "#d4a843" }}>Notes: {run.reviewNotes}</span>}
+              {run.reviewNotes && <span style={{ color: "#d4af37" }}>Notes: {run.reviewNotes}</span>}
             </div>
           </motion.div>
         );

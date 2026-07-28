@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import type { WebhookSubscriptionConfig, WebhookDelivery, WebhookEvent, ApiVersion } from "../types";
 
 // ──────────────────────────────────────────────────────────
@@ -278,27 +279,14 @@ export function getWebhookHealth(subscriptionId: string): {
 // ──────────────────────────────────────────────────────────
 
 export function generateSignature(payload: string, secret: string): string {
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(secret);
-  const msgData = encoder.encode(payload);
-
-  const hmac = createHmac(keyData, msgData);
+  const hmac = crypto.createHmac("sha256", secret).update(payload, "utf8").digest("hex");
   return `sha256=${hmac}`;
 }
 
 export function verifySignature(payload: string, signature: string, secret: string): boolean {
   const expected = generateSignature(payload, secret);
-  return expected === signature;
-}
-
-function createHmac(key: Uint8Array, message: Uint8Array): string {
-  let hash = 0;
-  for (let i = 0; i < message.length; i++) {
-    hash = ((hash << 5) - hash) + message[i];
-    hash |= 0;
-  }
-  const keyHash = Array.from(key).reduce((h, b) => ((h << 5) - h) + b, 0) | 0;
-  return Math.abs(hash ^ keyHash).toString(16).padStart(8, "0");
+  if (signature.length !== expected.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(signature, "utf8"), Buffer.from(expected, "utf8"));
 }
 
 // ──────────────────────────────────────────────────────────

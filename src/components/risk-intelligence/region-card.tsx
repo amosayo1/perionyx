@@ -5,9 +5,9 @@ import { TrendingUp, TrendingDown, Minus, Globe } from "lucide-react";
 import type { Region } from "./types";
 
 const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
-const trendColors: Record<string, string> = { up: "text-red-400", down: "text-[#d4af37]", neutral: "text-zinc-500" };
+const trendColors: Record<string, string> = { up: "text-red-400", down: "text-gold", neutral: "text-zinc-500" };
 const riskColors: Record<string, string> = {
-  low: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20",
+  low: "bg-gold/10 text-gold border-gold/20",
   medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
   critical: "bg-red-500/10 text-red-400 border-red-500/20",

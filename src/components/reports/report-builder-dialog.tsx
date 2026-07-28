@@ -123,7 +123,7 @@ export function ReportBuilderDialog({
       <DialogContent className="w-[calc(100%-2rem)] max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-[#d4af37]" />
+            <FileText className="h-5 w-5 text-gold" />
             {template?.title ?? "Report"} — {steps[step].label}
           </DialogTitle>
           <DialogDescription>Step {step + 1} of {steps.length}</DialogDescription>
@@ -136,16 +136,16 @@ export function ReportBuilderDialog({
               <div
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold transition-colors ${
                   i === step
-                    ? "bg-[#d4af37] text-black"
+                    ? "bg-gold text-black"
                     : i < step
-                      ? "bg-[#d4af37]/20 text-[#d4af37]"
+                      ? "bg-gold/20 text-gold"
                       : "bg-zinc-800 text-zinc-600"
                 }`}
               >
                 {i < step ? <Check className="h-3 w-3" /> : i + 1}
               </div>
               {i < steps.length - 1 && (
-                <div className={`h-px flex-1 ${i < step ? "bg-[#d4af37]/40" : "bg-white/[0.06]"}`} />
+                <div className={`h-px flex-1 ${i < step ? "bg-gold/40" : "bg-white/[0.06]"}`} />
               )}
             </div>
           ))}
@@ -164,12 +164,12 @@ export function ReportBuilderDialog({
                     onClick={() => setSelectedDataset(ds.id)}
                     className={`flex items-start gap-3 rounded-lg border p-3 text-left transition-all ${
                       selectedDataset === ds.id
-                        ? "border-[#d4af37]/40 bg-[#d4af37]/5"
+                        ? "border-gold/40 bg-gold/5"
                         : "border-white/[0.06] bg-zinc-900/40 hover:bg-zinc-900/60"
                     }`}
                   >
                     <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                      selectedDataset === ds.id ? "bg-[#d4af37]/20 text-[#d4af37]" : "bg-zinc-800 text-zinc-400"
+                      selectedDataset === ds.id ? "bg-gold/20 text-gold" : "bg-zinc-800 text-zinc-400"
                     }`}>
                       <Database className="h-4 w-4" />
                     </div>
@@ -235,12 +235,12 @@ export function ReportBuilderDialog({
                       onClick={() => toggleColumn(col.id)}
                       className={`flex items-center gap-3 rounded-lg border p-2.5 text-left transition-all ${
                         selected
-                          ? "border-[#d4af37]/40 bg-[#d4af37]/5"
+                          ? "border-gold/40 bg-gold/5"
                           : "border-white/[0.06] bg-zinc-900/40 hover:bg-zinc-900/60"
                       }`}
                     >
                       <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded text-[10px] font-bold ${
-                        selected ? "bg-[#d4af37]/20 text-[#d4af37]" : "bg-zinc-800 text-zinc-600"
+                        selected ? "bg-gold/20 text-gold" : "bg-zinc-800 text-zinc-600"
                       }`}>
                         {selected ? <Check className="h-3 w-3" /> : null}
                       </div>
@@ -388,7 +388,7 @@ export function ReportBuilderDialog({
               variant="default"
               size="sm"
               onClick={handleNext}
-              className="gap-1.5 text-xs bg-[#d4af37] text-black hover:bg-[#c7a961]"
+              className="gap-1.5 text-xs bg-gold text-black hover:bg-[#c7a961]"
             >
               Next <ArrowRight className="h-3 w-3" />
             </Button>
@@ -397,7 +397,7 @@ export function ReportBuilderDialog({
               variant="default"
               size="sm"
               onClick={handleGenerate}
-              className="gap-1.5 text-xs bg-[#d4af37] text-black hover:bg-[#c7a961]"
+              className="gap-1.5 text-xs bg-gold text-black hover:bg-[#c7a961]"
             >
               <Download className="h-3 w-3" /> Generate Report
             </Button>

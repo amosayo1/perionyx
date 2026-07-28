@@ -126,7 +126,7 @@ export function ForecastAlertsPanel() {
         <select
           value={severityFilter ?? ""}
           onChange={(e) => setSeverityFilter(e.target.value || null)}
-          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-[#c9a84c]/50"
+          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-gold/50"
           aria-label="Filter by severity"
         >
           <option value="">All Severities</option>
@@ -139,7 +139,7 @@ export function ForecastAlertsPanel() {
         <select
           value={categoryFilter ?? ""}
           onChange={(e) => setCategoryFilter(e.target.value || null)}
-          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-[#c9a84c]/50"
+          className="text-xs bg-zinc-900/50 border border-white/10 rounded px-2 py-1 text-zinc-300 focus:outline-none focus:border-gold/50"
           aria-label="Filter by category"
         >
           <option value="">All Categories</option>
@@ -219,7 +219,7 @@ export function ForecastAlertsPanel() {
                     <span>{formatTimestamp(alert.timestamp)}</span>
                   </div>
 
-                  <div className="mt-2 text-xs text-[#c9a84c] flex items-center gap-1">
+                  <div className="mt-2 text-xs text-gold flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
                     {alert.suggestedAction}
                   </div>

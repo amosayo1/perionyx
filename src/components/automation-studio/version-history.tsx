@@ -29,7 +29,7 @@ export function VersionHistory({ currentVersion, name, category, description, de
     <div className="space-y-4">
       <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#d4af37]/10 text-[#d4af37]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/10 text-gold">
             <GitBranch className="h-5 w-5" />
           </div>
           <div>
@@ -37,7 +37,7 @@ export function VersionHistory({ currentVersion, name, category, description, de
             <p className="text-xs text-zinc-500">{name} &middot; {category} &middot; {description ?? ""}</p>
           </div>
           <div className="ml-auto">
-            <span className="rounded-full bg-[#d4af37]/20 px-2.5 py-0.5 text-[10px] font-medium text-[#d4af37]">Active</span>
+            <span className="rounded-full bg-gold/20 px-2.5 py-0.5 text-[10px] font-medium text-gold">Active</span>
           </div>
         </div>
       </div>

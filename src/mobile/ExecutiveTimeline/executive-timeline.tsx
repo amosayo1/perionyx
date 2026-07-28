@@ -21,7 +21,7 @@ export interface TimelineEvent {
 
 const typeConfig = {
   approval: { icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/[0.06]" },
-  payment: { icon: DollarSign, color: "text-[#d4af37]", bg: "bg-[#d4af37]/[0.06]" },
+  payment: { icon: DollarSign, color: "text-gold", bg: "bg-gold/[0.06]" },
   alert: { icon: AlertCircle, color: "text-red-400", bg: "bg-red-500/[0.06]" },
   compliance: { icon: Shield, color: "text-blue-400", bg: "bg-blue-500/[0.06]" },
   transfer: { icon: ArrowUpRight, color: "text-purple-400", bg: "bg-purple-500/[0.06]" },
@@ -98,7 +98,7 @@ export function ExecutiveTimeline({
             onClick={() => setPriorityFilter(p)}
             className={cn(
               "rounded-lg px-2.5 py-1 text-[10px] font-medium transition-colors min-h-[28px]",
-              priorityFilter === p ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 active:bg-zinc-800",
+              priorityFilter === p ? "bg-gold/10 text-gold" : "text-zinc-500 active:bg-zinc-800",
             )}
           >
             {p === "all" ? "All" : p.charAt(0).toUpperCase() + p.slice(1)}

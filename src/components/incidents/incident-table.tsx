@@ -53,7 +53,7 @@ function SlaIndicator({ incident }: { incident: Incident }) {
         <Timer className="h-3 w-3 text-zinc-600" />
         <span
           className={cn(
-            responseBreached ? "text-red-400" : responded ? "text-[#d4af37]" : "text-zinc-400",
+            responseBreached ? "text-red-400" : responded ? "text-gold" : "text-zinc-400",
           )}
         >
           {responseRemaining}
@@ -63,7 +63,7 @@ function SlaIndicator({ incident }: { incident: Incident }) {
         <Clock className="h-3 w-3 text-zinc-600" />
         <span
           className={cn(
-            resolutionBreached ? "text-red-400" : resolved ? "text-[#d4af37]" : "text-zinc-400",
+            resolutionBreached ? "text-red-400" : resolved ? "text-gold" : "text-zinc-400",
           )}
         >
           {resolutionRemaining}

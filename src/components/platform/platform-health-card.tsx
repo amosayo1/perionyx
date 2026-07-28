@@ -6,14 +6,14 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { PlatformHealthMetric } from "./types";
 
 const statusColors: Record<string, string> = {
-  healthy: "bg-[#d4af37]/10 text-[#d4af37] border-[#d4af37]/20",
+  healthy: "bg-gold/10 text-gold border-gold/20",
   warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   offline: "bg-red-500/10 text-red-400 border-red-500/20",
 };
 
 const trendIcons = { up: TrendingUp, down: TrendingDown, neutral: Minus };
 const trendColors: Record<string, string> = {
-  up: "text-[#d4af37]",
+  up: "text-gold",
   down: "text-red-400",
   neutral: "text-zinc-500",
 };
@@ -36,7 +36,7 @@ export function PlatformHealthCard({ metric }: { metric: PlatformHealthMetric })
             statusColors[metric.status],
           )}
         >
-          <span className={cn("h-1.5 w-1.5 rounded-full", metric.status === "healthy" && "bg-[#d4af37]", metric.status === "warning" && "bg-amber-500", metric.status === "offline" && "bg-red-500")} />
+          <span className={cn("h-1.5 w-1.5 rounded-full", metric.status === "healthy" && "bg-gold", metric.status === "warning" && "bg-amber-500", metric.status === "offline" && "bg-red-500")} />
           {metric.status === "healthy" ? "Healthy" : metric.status === "warning" ? "Warning" : "Offline"}
         </div>
       </div>
@@ -63,7 +63,7 @@ export function PlatformHealthCard({ metric }: { metric: PlatformHealthMetric })
               key={i}
               className={cn(
                 "w-[3px] rounded-full",
-                metric.status === "healthy" && "bg-[#d4af37]/40",
+                metric.status === "healthy" && "bg-gold/40",
                 metric.status === "warning" && "bg-amber-500/40",
                 metric.status === "offline" && "bg-red-500/40",
               )}

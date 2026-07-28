@@ -40,8 +40,8 @@ export const ExecutiveInsights = memo(function ExecutiveInsights({
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-[#d4af37]/20 bg-[#d4af37]/10">
-              <DollarSign className="h-4 w-4 text-[#d4af37]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-gold/20 bg-gold/10">
+              <DollarSign className="h-4 w-4 text-gold" />
             </div>
             <div>
               <p className="text-[11px] text-zinc-500">Total Liability</p>

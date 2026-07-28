@@ -137,7 +137,7 @@ export function PaymentAlertsPanel({ className }: PaymentAlertsPanelProps) {
               id="alert-severity-filter"
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-[#c9a84c]/50"
+              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-gold/50"
               aria-label="Filter by severity"
             >
               {SEVERITIES.map((s) => (
@@ -154,7 +154,7 @@ export function PaymentAlertsPanel({ className }: PaymentAlertsPanelProps) {
               id="alert-category-filter"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-[#c9a84c]/50"
+              className="appearance-none rounded-md border border-white/[0.06] bg-zinc-800/50 px-3 py-1.5 pr-8 text-[12px] text-zinc-300 outline-none focus:border-gold/50"
               aria-label="Filter by category"
             >
               {CATEGORIES.map((c) => (
@@ -172,7 +172,7 @@ export function PaymentAlertsPanel({ className }: PaymentAlertsPanelProps) {
           {unacknowledgedCount > 0 && (
             <button
               onClick={handleAcknowledgeAll}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#c9a84c]/30 bg-[#c9a84c]/10 px-3 py-1.5 text-[12px] font-medium text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/20"
+              className="inline-flex items-center gap-1.5 rounded-md border border-gold/30 bg-gold/10 px-3 py-1.5 text-[12px] font-medium text-gold transition-colors hover:bg-gold/20"
               aria-label="Acknowledge all alerts"
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -222,7 +222,7 @@ export function PaymentAlertsPanel({ className }: PaymentAlertsPanelProps) {
                     <span>{alert.paymentReference}</span>
                   </div>
                   <div className="mt-2 flex items-center gap-3">
-                    <span className="text-[12px] font-medium text-[#c9a84c]">{alert.suggestedAction}</span>
+                    <span className="text-[12px] font-medium text-gold">{alert.suggestedAction}</span>
                     {!isAcknowledged && (
                       <button
                         onClick={() => handleAcknowledge(alert.id)}

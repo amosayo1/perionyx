@@ -1,35 +1,34 @@
+import { z } from "zod";
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { SCENARIOS, getScenario } from "@/modules/sandbox/scenario";
 import { handleRouteError } from "@/server/http/handle-route";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+
+const ScenarioSchema = z.object({
+  scenarioId: z.string().min(1, "scenarioId is required").max(128),
+});
 
 /**
  * GET /api/v1/sandbox/scenario
  * Returns the list of all available scenarios.
  */
 export async function GET() {
-  try {
-    const session = await auth();
-    requireTenantContext(
-      session?.user?.id,
-      session?.user?.activeCompanyId,
-      session?.user?.companyRole,
-    );
-
-    const scenarios = SCENARIOS.map((s) => ({
-      id: s.id,
-      title: s.title,
-      description: s.description,
-      category: s.category,
-      estimatedDuration: s.estimatedDuration,
-      modules: s.modules,
-    }));
-
-    return NextResponse.json({ scenarios });
-  } catch (err) {
-    return handleRouteError(err);
-  }
+  return withRuntimeContext(new Headers(), async (ctx) => {
+    try {
+      const scenarios = SCENARIOS.map((s) => ({
+        id: s.id,
+        title: s.title,
+        description: s.description,
+        category: s.category,
+        estimatedDuration: s.estimatedDuration,
+        modules: s.modules,
+      }));
+  
+      return NextResponse.json({ scenarios });
+    } catch (err) {
+      return handleRouteError(err);
+    }
+  });
 }
 
 /**
@@ -38,36 +37,32 @@ export async function GET() {
  * Executes the specified scenario.
  */
 export async function POST(request: Request) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(
-      session?.user?.id,
-      session?.user?.activeCompanyId,
-      session?.user?.companyRole,
-    );
-
-    const body = await request.json();
-    const { scenarioId } = body as { scenarioId: string };
-
-    if (!scenarioId) {
-      return NextResponse.json(
-        { error: "scenarioId is required" },
-        { status: 400 },
-      );
+  return withRuntimeContext(request, async (ctx) => {
+    try {
+  
+      const rawBody = await request.json();
+      const parsed = ScenarioSchema.safeParse(rawBody);
+      if (!parsed.success) {
+        return NextResponse.json(
+          { error: { code: "VALIDATION", message: parsed.error.issues[0].message } },
+          { status: 400 },
+        );
+      }
+      const { scenarioId } = parsed.data;
+  
+      const scenario = getScenario(scenarioId);
+      if (!scenario) {
+        return NextResponse.json(
+          { error: `Scenario "${scenarioId}" not found` },
+          { status: 404 },
+        );
+      }
+  
+      const result = await scenario.run(ctx.tenant);
+  
+      return NextResponse.json({ result });
+    } catch (err) {
+      return handleRouteError(err);
     }
-
-    const scenario = getScenario(scenarioId);
-    if (!scenario) {
-      return NextResponse.json(
-        { error: `Scenario "${scenarioId}" not found` },
-        { status: 404 },
-      );
-    }
-
-    const result = await scenario.run(ctx);
-
-    return NextResponse.json({ result });
-  } catch (err) {
-    return handleRouteError(err);
-  }
+  });
 }

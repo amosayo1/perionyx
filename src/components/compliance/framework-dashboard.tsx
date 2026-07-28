@@ -32,9 +32,9 @@ export const FrameworkDashboard = memo(function FrameworkDashboard({ frameworks 
           <p className="text-2xl font-bold text-zinc-400">{total - active}</p>
           <p className="text-[11px] text-zinc-400/70">Inactive</p>
         </div>
-        <div className="rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/10 p-3 text-center">
-          <p className="text-2xl font-bold text-[#d4af37]">{total}</p>
-          <p className="text-[11px] text-[#d4af37]/70">Total</p>
+        <div className="rounded-lg border border-gold/20 bg-gold/10 p-3 text-center">
+          <p className="text-2xl font-bold text-gold">{total}</p>
+          <p className="text-[11px] text-gold/70">Total</p>
         </div>
       </div>
 

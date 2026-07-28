@@ -23,7 +23,7 @@ function StatBox({ label, value, format = "number" }: { label: string; value: nu
   };
 
   return (
-    <div className="rounded border border-gray-800 bg-[#1a1a1a] p-3">
+    <div className="rounded border border-gray-800 bg-[#1a1a24] p-3">
       <p className="text-xs text-gray-500">{label}</p>
       <p className="text-lg font-semibold text-white">{fmt(value)}</p>
     </div>

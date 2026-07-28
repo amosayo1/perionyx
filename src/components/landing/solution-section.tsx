@@ -13,7 +13,7 @@ export function SolutionSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37] mb-6">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border border-gold/20 bg-gold/5 text-gold mb-6">
             One Platform
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
@@ -31,8 +31,8 @@ export function SolutionSection() {
               { label: "Permanent audit trail", desc: "Immutable, exportable, SOC 2-ready" },
             ].map((item) => (
               <div key={item.label} className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center mt-0.5 shrink-0">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4af37]">
+                <div className="w-5 h-5 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mt-0.5 shrink-0">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
@@ -54,7 +54,7 @@ export function SolutionSection() {
           >
             <div className="rounded-xl border border-white/[0.06] bg-zinc-900/50 p-6">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full bg-[#d4af37]" />
+                <div className="w-2 h-2 rounded-full bg-gold" />
                 <span className="text-xs text-zinc-400 font-medium">Active workflow</span>
               </div>
               <div className="space-y-3">
@@ -66,8 +66,8 @@ export function SolutionSection() {
                 ].map((item) => (
                   <div key={item.step} className="flex items-center gap-3">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-mono font-medium ${
-                      item.status === "completed" ? "bg-[#d4af37]/10 text-[#d4af37] border border-[#d4af37]/20" :
-                      "bg-[#d4af37] text-white"
+                      item.status === "completed" ? "bg-gold/10 text-gold border border-gold/20" :
+                      "bg-gold text-white"
                     }`}>
                       {item.status === "completed" ? "✓" : item.step}
                     </div>
@@ -79,7 +79,7 @@ export function SolutionSection() {
                 ))}
               </div>
             </div>
-            <div className="absolute -inset-4 bg-[#d4af37]/5 rounded-full blur-2xl -z-10" />
+            <div className="absolute -inset-4 bg-gold/5 rounded-full blur-2xl -z-10" />
           </motion.div>
         </div>
       </div>

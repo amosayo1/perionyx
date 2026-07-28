@@ -10,7 +10,7 @@ interface BudgetConsumptionChartProps {
 export function BudgetConsumptionChart({ analytics }: BudgetConsumptionChartProps) {
   if (analytics.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a1a] p-6">
+      <div className="flex items-center justify-center rounded-lg border border-gray-800 bg-[#1a1a24] p-6">
         <p className="text-xs text-gray-500">No budget data available</p>
       </div>
     );
@@ -19,7 +19,7 @@ export function BudgetConsumptionChart({ analytics }: BudgetConsumptionChartProp
   const sorted = [...analytics].sort((a, b) => b.budgetPercent - a.budgetPercent);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <BarChart3 className="h-4 w-4 text-gray-500" />
         <h3 className="text-sm font-medium text-gray-200">Budget Consumption</h3>

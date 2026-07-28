@@ -62,7 +62,7 @@ export const DrillDownPanel = memo(function DrillDownPanel({
             {config.onNavigate && (
               <button
                 onClick={() => config.onNavigate!("/")}
-                className="rounded-md px-2.5 py-1.5 text-xs text-[#c9a84c] hover:bg-[#c9a84c]/10 transition-colors"
+                className="rounded-md px-2.5 py-1.5 text-xs text-gold hover:bg-gold/10 transition-colors"
                 aria-label="Open in full view"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -88,7 +88,7 @@ export const DrillDownPanel = memo(function DrillDownPanel({
                 className="flex w-full items-center justify-between rounded-lg border border-white/[0.06] bg-gradient-to-b from-zinc-900/60 to-black/40 px-4 py-3 text-sm text-zinc-300 hover:bg-white/[0.03] transition-colors"
               >
                 <span>View full report</span>
-                <ArrowRight className="h-4 w-4 text-[#c9a84c]" />
+                <ArrowRight className="h-4 w-4 text-gold" />
               </button>
             )}
 

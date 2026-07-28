@@ -19,19 +19,19 @@ export function ARExecutiveInsights({ metrics }: ARExecutiveMetricsProps) {
     <div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 20 }}>
         {[
-          { label: "Total Outstanding", value: "$" + metrics.totalOutstanding.toLocaleString(), color: "#d4a843" },
+          { label: "Total Outstanding", value: "$" + metrics.totalOutstanding.toLocaleString(), color: "#d4af37" },
           { label: "Total Overdue", value: "$" + metrics.totalOverdue.toLocaleString(), color: metrics.totalOverdue > 0 ? "#ef4444" : "#22c55e" },
           { label: "Active Collections", value: metrics.activeCollections.toString(), color: metrics.activeCollections > 0 ? "#f97316" : "#22c55e" },
           { label: "Disputed Amount", value: "$" + metrics.totalDisputed.toLocaleString(), color: metrics.totalDisputed > 0 ? "#eab308" : "#22c55e" },
         ].map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}
-            style={{ background: "#1a1a2e", borderRadius: 8, padding: 20, textAlign: "center" }}>
+            style={{ background: "#1a1a24", borderRadius: 8, padding: 20, textAlign: "center" }}>
             <div style={{ color: "#94a3b8", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>{item.label}</div>
             <div style={{ color: item.color, fontSize: 28, fontWeight: 700, fontFamily: "ui-monospace, monospace" }}>{item.value}</div>
           </motion.div>
         ))}
       </div>
-      <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 20 }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, padding: 20 }}>
         <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>AI Insights</div>
         {insights.map((insight, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}

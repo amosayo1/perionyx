@@ -50,7 +50,7 @@ export function PaginationBar({ page, pageSize, totalItems, onPageChange }: Pagi
             size="sm"
             onClick={() => onPageChange(p)}
             className={`h-8 min-w-[2rem] px-2 text-xs ${
-              p === page ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-400"
+              p === page ? "bg-gold/10 text-gold" : "text-zinc-400"
             }`}
           >
             {p + 1}

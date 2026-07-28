@@ -5,7 +5,7 @@ import type { AccountPortfolio } from "@/server/banking/workspace";
 
 const purposeColors: Record<string, string> = {
   Operating: "border-l-emerald-500/50",
-  Treasury: "border-l-[#c9a84c]/50",
+  Treasury: "border-l-gold/50",
   Payroll: "border-l-blue-500/50",
   Settlement: "border-l-purple-500/50",
   Reserve: "border-l-cyan-500/50",
@@ -15,7 +15,7 @@ const purposeColors: Record<string, string> = {
 const roleColors: Record<string, string> = {
   "Primary Operating": "text-emerald-400",
   Disbursement: "text-blue-400",
-  Concentration: "text-[#c9a84c]",
+  Concentration: "text-gold",
   Reserve: "text-cyan-400",
   Settlement: "text-purple-400",
 };

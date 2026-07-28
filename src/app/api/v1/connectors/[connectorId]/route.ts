@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext } from "@/server/context/tenant-context";
 import { handleRouteError } from "@/server/http/handle-route";
 import { ConnectorRunService } from "@/modules/connectors";
 import { rbacService } from "@/modules/rbac/rbac.service";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
 
 type RouteContext = { params: Promise<{ connectorId: string }> };
 
 export async function GET(_request: Request, context: RouteContext) {
-  try {
-    const session = await auth();
-    const ctx = requireTenantContext(session?.user?.id, session?.user?.activeCompanyId, session?.user?.companyRole);
-    await rbacService.ensurePermission(ctx.userId, ctx.companyId, 'connectors.read');
-    const { connectorId } = await context.params;
-    const result = await ConnectorRunService.getConnector(ctx, connectorId);
-    return NextResponse.json(result);
-  } catch (error) {
-    return handleRouteError(error);
-  }
+  return withRuntimeContext(_request, async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'connectors.read');
+      const { connectorId } = await context.params;
+      const result = await ConnectorRunService.getConnector(ctx.tenant, connectorId);
+      return NextResponse.json(result);
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  });
 }

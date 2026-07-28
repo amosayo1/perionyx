@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext, type TenantContext } from "@/server/context/tenant-context";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import type { TenantContext } from "@/server/context/tenant-context";
 import { rbacService } from "@/modules/rbac";
 import { logger } from "@/lib/logger";
 import type { CommandContext } from "../application/types";
@@ -20,6 +20,13 @@ function generateCorrelationId(): string {
   return `ap-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 }
 
+/**
+ * Authenticate an AP request.
+ *
+ * Wraps withRuntimeContext internally — the canonical execution path.
+ * AP routes call apAuth(req) which sets up RuntimeContext and returns
+ * the AP-specific context with correlation ID.
+ */
 export async function apAuth(
   request: Request,
 ): Promise<{ ctx: APRequestContext } | NextResponse> {
@@ -27,19 +34,16 @@ export async function apAuth(
     request.headers.get("x-correlation-id") ?? request.headers.get("x-request-id") ?? generateCorrelationId();
 
   try {
-    const session = await auth();
-    const tenant = requireTenantContext(
-      session?.user?.id,
-      session?.user?.activeCompanyId,
-      session?.user?.companyRole,
-    );
+    const result = await withRuntimeContext(request, async (ctx) => {
+      logger.info(
+        { correlationId, userId: ctx.tenant.userId, companyId: ctx.tenant.companyId, method: request.method, url: request.url },
+        "ap.request",
+      );
 
-    logger.info(
-      { correlationId, userId: tenant.userId, companyId: tenant.companyId, method: request.method, url: request.url },
-      "ap.request",
-    );
+      return { ctx: { tenant: ctx.tenant, correlationId } };
+    });
 
-    return { ctx: { tenant, correlationId } };
+    return result;
   } catch (error) {
     return apErrorResponse(error instanceof Error ? error : new Error(String(error)), correlationId);
   }

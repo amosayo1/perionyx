@@ -67,7 +67,7 @@ export function FARecommendationsPanel({ recommendations }: FARecommendationsPan
               </div>
               {items.map((r, i) => (
                 <motion.div key={r.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: i * 0.03 }}
-                  style={{ background: '#1a1a2e', borderRadius: 8, padding: 16, marginBottom: 8, border: '1px solid #2a2a4a', borderLeft: `3px solid ${priorityColors[r.priority]}` }}>
+                  style={{ background: '#1a1a24', borderRadius: 8, padding: 16, marginBottom: 8, border: '1px solid #2a2a4a', borderLeft: `3px solid ${priorityColors[r.priority]}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                       <div style={{ width: 32, height: 32, borderRadius: 8, background: priorityColors[r.priority] + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', color: priorityColors[r.priority], fontSize: 16 }}>{typeIcons[r.type] ?? '?'}</div>
@@ -78,7 +78,7 @@ export function FARecommendationsPanel({ recommendations }: FARecommendationsPan
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
                       <span style={{ background: priorityColors[r.priority] + '22', color: priorityColors[r.priority], fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, textTransform: 'uppercase' }}>{r.priority}</span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#d4a843' }}>{r.impact}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#d4af37' }}>{r.impact}</span>
                       <span style={{ background: effortColors[r.effort] + '22', color: effortColors[r.effort], fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, textTransform: 'capitalize' }}>{r.effort} effort</span>
                     </div>
                   </div>

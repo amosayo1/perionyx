@@ -34,7 +34,7 @@ const MOCK = {
 
 const priorityColors = {
   high: "border-l-red-500/50",
-  medium: "border-l-[#d4af37]/50",
+  medium: "border-l-gold/50",
   low: "border-l-zinc-600/50",
 };
 
@@ -57,7 +57,7 @@ export function TreasuryView({ className }: { className?: string }) {
 
       <div className="rounded-2xl border border-white/[0.06] bg-zinc-900/40 p-4">
         <div className="mb-3 flex items-center gap-2">
-          <Globe className="h-4 w-4 text-[#d4af37]" />
+          <Globe className="h-4 w-4 text-gold" />
           <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">FX Exposure</span>
         </div>
         <div className="space-y-2">
@@ -100,7 +100,7 @@ export function TreasuryView({ className }: { className?: string }) {
 
       <div className="rounded-2xl border border-white/[0.06] bg-zinc-900/40 p-4">
         <div className="mb-3 flex items-center gap-2">
-          <DollarSign className="h-4 w-4 text-[#d4af37]" />
+          <DollarSign className="h-4 w-4 text-gold" />
           <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Upcoming Payments</span>
         </div>
         <div className="space-y-2">

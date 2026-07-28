@@ -50,7 +50,7 @@ export function StateComparison({ diffs, version1, version2, className }: StateC
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2">
-        <Edit3 className="h-4 w-4 text-[#d4af37]" />
+        <Edit3 className="h-4 w-4 text-gold" />
         <span className="text-xs font-medium text-zinc-400">
           Comparing v{version1.version} → v{version2.version}
         </span>
@@ -93,9 +93,9 @@ export function StateComparison({ diffs, version1, version2, className }: StateC
               <div>
                 <span className="mb-1 block text-[10px] font-medium text-zinc-600">After (v{version2.version})</span>
                 {isJsonValue(diff.newValue) ? (
-                  <pre className="overflow-auto rounded bg-black/30 p-2 text-[11px] text-[#d4af37]">{formatValue(diff.newValue)}</pre>
+                  <pre className="overflow-auto rounded bg-black/30 p-2 text-[11px] text-gold">{formatValue(diff.newValue)}</pre>
                 ) : (
-                  <span className="text-sm text-[#d4af37]">{formatValue(diff.newValue)}</span>
+                  <span className="text-sm text-gold">{formatValue(diff.newValue)}</span>
                 )}
               </div>
             </div>

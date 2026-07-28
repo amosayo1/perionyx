@@ -91,7 +91,7 @@ export function MemoryExplorer({ entries, memoryType, category }: MemoryExplorer
 
   if (entries.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#101010] py-16 text-center">
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#111118] py-16 text-center">
         <Brain className="mb-3 h-8 w-8 text-zinc-500" />
         <p className="text-sm text-zinc-400">No memory entries found</p>
         <p className="mt-1 text-xs text-zinc-500">Try a different agent or adjust the category filter.</p>
@@ -108,7 +108,7 @@ export function MemoryExplorer({ entries, memoryType, category }: MemoryExplorer
           placeholder="Search memory entries..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-white/[0.09] bg-[#101010] py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-[#d4af37]/40"
+          className="w-full rounded-xl border border-white/[0.09] bg-[#111118] py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-gold/40"
         />
       </div>
 

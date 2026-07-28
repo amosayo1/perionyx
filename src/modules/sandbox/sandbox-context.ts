@@ -28,7 +28,13 @@ export const SANDBOX_EMAIL = "sandbox-guest@perionyx.dev";
  * Both creation and login use the same derivation, so no plaintext is stored or exported.
  */
 export function deriveSandboxPassword(): string {
-  const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "sandbox-fallback";
+  const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    throw new Error(
+      "AUTH_SECRET or NEXTAUTH_SECRET environment variable is required. " +
+      "Sandbox password derivation cannot use fallback secrets in production."
+    );
+  }
   const hmac = crypto.createHmac("sha256", secret).update(SANDBOX_EMAIL).digest("hex");
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
   let password = "Sb-";

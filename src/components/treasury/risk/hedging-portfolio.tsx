@@ -16,7 +16,7 @@ import {
 import { MOCK_HEDGES, MOCK_DERIVATIVES } from "./data";
 import type { HedgePosition, HedgeType } from "./types";
 
-const GOLD = "#c9a84c";
+const GOLD = "#d4af37";
 
 const HEDGE_TYPES: (HedgeType | "all")[] = ["all", "forward", "option", "swap", "natural"];
 const ENTITIES = [...new Set(MOCK_HEDGES.map((h) => h.entity))];

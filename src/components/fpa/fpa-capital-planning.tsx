@@ -48,7 +48,7 @@ export default function FPACapitalPlanning({ capitals }: FPACapitalPlanningProps
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05, duration: 0.25 }}
               style={{
-                background: '#1a1a2e',
+                background: '#1a1a24',
                 borderRadius: 12,
                 border: '1px solid #2a2a3e',
                 borderLeft: `4px solid ${statusColors[c.status] || '#64748b'}`,

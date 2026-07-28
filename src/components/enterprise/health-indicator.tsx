@@ -52,7 +52,7 @@ interface HealthBarProps {
 
 export function HealthBar({ score, max = 100, label, showValue = true, className }: HealthBarProps) {
   const pct = Math.max(0, Math.min(100, (score / max) * 100));
-  const color = pct >= 80 ? "bg-emerald-400" : pct >= 60 ? "bg-[#d4af37]" : "bg-red-400";
+  const color = pct >= 80 ? "bg-emerald-400" : pct >= 60 ? "bg-gold" : "bg-red-400";
 
   return (
     <div className={cn("space-y-1", className)}>

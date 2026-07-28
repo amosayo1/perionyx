@@ -6,11 +6,11 @@ function fmtCurrency(n: number): string { return "$" + n.toLocaleString("en-US",
 
 export function ARExecutiveHeader({ metrics }: ARExecutiveMetricsProps) {
   const items = [
-    { label: "Total Outstanding", value: fmtCurrency(metrics.totalOutstanding), color: metrics.totalOutstanding > 0 ? "#d4a843" : "#22c55e" },
+    { label: "Total Outstanding", value: fmtCurrency(metrics.totalOutstanding), color: metrics.totalOutstanding > 0 ? "#d4af37" : "#22c55e" },
     { label: "Overdue", value: fmtCurrency(metrics.totalOverdue), color: metrics.totalOverdue > 0 ? "#ef4444" : "#22c55e" },
-    { label: "DSO", value: metrics.dso.toFixed(1) + "d", color: metrics.dso > 45 ? "#ef4444" : "#d4a843" },
-    { label: "Collection Eff.", value: metrics.cei.toFixed(0) + "%", color: metrics.cei >= 85 ? "#22c55e" : metrics.cei >= 70 ? "#d4a843" : "#ef4444" },
-    { label: "Cash 30d Inflow", value: fmtCurrency(metrics.cashInflow30Days), color: "#d4a843" },
+    { label: "DSO", value: metrics.dso.toFixed(1) + "d", color: metrics.dso > 45 ? "#ef4444" : "#d4af37" },
+    { label: "Collection Eff.", value: metrics.cei.toFixed(0) + "%", color: metrics.cei >= 85 ? "#22c55e" : metrics.cei >= 70 ? "#d4af37" : "#ef4444" },
+    { label: "Cash 30d Inflow", value: fmtCurrency(metrics.cashInflow30Days), color: "#d4af37" },
     { label: "High Risk Exposure", value: fmtCurrency(metrics.highRiskExposure), color: metrics.highRiskExposure > 0 ? "#ef4444" : "#22c55e" },
   ]
   return (

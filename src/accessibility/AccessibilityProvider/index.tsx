@@ -82,8 +82,8 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
   const reset = useCallback(() => dispatch({ type: "RESET" }), []);
 
   const focusRingClass = state.focusVisibility === "always"
-    ? "focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2 focus:ring-offset-zinc-950"
-    : "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
+    ? "focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-zinc-950"
+    : "focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
 
   const value = useMemo<A11yContextValue>(
     () => ({

@@ -19,13 +19,13 @@ interface SmartAlertData {
 const alertIcons: Record<string, React.ReactNode> = {
   critical: <AlertTriangle className="h-4 w-4 text-red-400" />,
   warning: <TrendingDown className="h-4 w-4 text-amber-400" />,
-  info: <Zap className="h-4 w-4 text-[#d4af37]" />,
+  info: <Zap className="h-4 w-4 text-gold" />,
 };
 
 const severityBg: Record<string, string> = {
   critical: "bg-red-500/5 border-red-500/15",
   warning: "bg-amber-500/5 border-amber-500/15",
-  info: "bg-[#d4af37]/5 border-[#d4af37]/15",
+  info: "bg-gold/5 border-gold/15",
 };
 
 export function SmartAlerts({ alerts: initialAlerts }: { alerts: SmartAlertData[] }) {
@@ -38,7 +38,7 @@ export function SmartAlerts({ alerts: initialAlerts }: { alerts: SmartAlertData[
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <ShieldAlert className="h-4 w-4 text-[#d4af37]" />
+        <ShieldAlert className="h-4 w-4 text-gold" />
         <span className="text-xs font-semibold text-white">Smart Alerts</span>
       </div>
       <AnimatePresence>

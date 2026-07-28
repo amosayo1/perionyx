@@ -39,7 +39,7 @@ export default function FCJournalReviewBoard({ journals }: FCJournalReviewBoardP
           <div
             key={s.label}
             style={{
-              background: "#1a1a2e",
+              background: "#1a1a24",
               borderRadius: 8,
               padding: "14px 18px",
               display: "flex",
@@ -64,7 +64,7 @@ export default function FCJournalReviewBoard({ journals }: FCJournalReviewBoardP
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.02, duration: 0.2 }}
               style={{
-                background: "#1a1a2e",
+                background: "#1a1a24",
                 borderRadius: 8,
                 padding: "14px 18px",
                 display: "flex",

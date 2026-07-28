@@ -30,7 +30,7 @@ const typeColors: Record<string, string> = {
 export function RecommendationsPanel({ recommendations, max = 10, onApply }: RecommendationsPanelProps) {
   const displayed = recommendations.slice(0, max);
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+    <div className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
       <div className="mb-3 flex items-center gap-2">
         <Lightbulb className="h-4 w-4 text-amber-400" />
         <h3 className="text-sm font-medium text-gray-200">Recommendations</h3>

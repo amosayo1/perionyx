@@ -34,8 +34,8 @@ export const TransferPricingCenter = memo(function TransferPricingCenter({ recor
       <div className="grid grid-cols-4 gap-3">
         <div className="rounded-lg border border-zinc-800/60 bg-zinc-900/40 p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#d4af37]/20 bg-[#d4af37]/10">
-              <GitBranch className="h-5 w-5 text-[#d4af37]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-gold/20 bg-gold/10">
+              <GitBranch className="h-5 w-5 text-gold" />
             </div>
             <div>
               <p className="text-xs text-zinc-500">Controlled Transactions</p>
@@ -97,7 +97,7 @@ export const TransferPricingCenter = memo(function TransferPricingCenter({ recor
                 <td className="px-4 py-3 text-sm capitalize text-zinc-300">{r.transactionType}</td>
                 <td className="px-4 py-3 text-sm text-zinc-300">{r.method}</td>
                 <td className="px-4 py-3 text-right text-sm text-zinc-300">{formatCurrency(r.controlledAmount)}</td>
-                <td className="px-4 py-3 text-right text-sm font-medium text-[#d4af37]">{formatCurrency(r.armLengthAmount)}</td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-gold">{formatCurrency(r.armLengthAmount)}</td>
                 <td className="px-4 py-3 text-center">
                   <span className={cn("inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-medium", RISK_STYLES[r.riskRating] ?? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400")}>
                     {r.riskRating}

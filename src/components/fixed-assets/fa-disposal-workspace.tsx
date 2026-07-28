@@ -29,7 +29,7 @@ export default function FADisposalWorkspace({ disposals }: FADisposalWorkspacePr
 
   return (
     <div>
-      <div style={{ background: '#1a1a2e', borderRadius: 8, overflow: 'hidden', border: '1px solid #2a2a4a' }}>
+      <div style={{ background: '#1a1a24', borderRadius: 8, overflow: 'hidden', border: '1px solid #2a2a4a' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
           <thead>
             <tr style={{ background: '#16213e', borderBottom: '1px solid #2a2a4a' }}>
@@ -68,12 +68,12 @@ export default function FADisposalWorkspace({ disposals }: FADisposalWorkspacePr
           </tbody>
           {sorted.length > 0 && (
             <tfoot>
-              <tr style={{ borderTop: '2px solid #d4a843', background: '#16213e' }}>
-                <td style={{ padding: '10px 12px', color: '#d4a843', fontWeight: 700, fontSize: 11 }}>TOTAL ({totals.count})</td>
+              <tr style={{ borderTop: '2px solid #d4af37', background: '#16213e' }}>
+                <td style={{ padding: '10px 12px', color: '#d4af37', fontWeight: 700, fontSize: 11 }}>TOTAL ({totals.count})</td>
                 <td />
                 <td />
-                <td style={{ padding: '10px 12px', color: '#d4a843', fontFamily: 'ui-monospace, monospace', fontWeight: 700, textAlign: 'right' }}>${totals.proceeds.toLocaleString()}</td>
-                <td style={{ padding: '10px 12px', color: '#d4a843', fontFamily: 'ui-monospace, monospace', fontWeight: 700, textAlign: 'right' }}>${totals.nbv.toLocaleString()}</td>
+                <td style={{ padding: '10px 12px', color: '#d4af37', fontFamily: 'ui-monospace, monospace', fontWeight: 700, textAlign: 'right' }}>${totals.proceeds.toLocaleString()}</td>
+                <td style={{ padding: '10px 12px', color: '#d4af37', fontFamily: 'ui-monospace, monospace', fontWeight: 700, textAlign: 'right' }}>${totals.nbv.toLocaleString()}</td>
                 <td style={{ padding: '10px 12px', fontFamily: 'ui-monospace, monospace', fontWeight: 700, textAlign: 'right', color: totals.gainLoss >= 0 ? '#22c55e' : '#ef4444' }}>
                   {totals.gainLoss >= 0 ? '+' : ''}${totals.gainLoss.toLocaleString()}
                 </td>

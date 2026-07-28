@@ -82,7 +82,7 @@ export const AnomalyDashboard = memo(function AnomalyDashboard({
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search anomalies..."
-              className="w-44 rounded-md border border-zinc-800/60 bg-zinc-900/60 py-1.5 pl-8 pr-3 text-xs text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-[#d4af37]/40"
+              className="w-44 rounded-md border border-zinc-800/60 bg-zinc-900/60 py-1.5 pl-8 pr-3 text-xs text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-gold/40"
             />
           </div>
           <div className="flex rounded-md border border-zinc-800/60 bg-zinc-900/60 text-xs">
@@ -92,7 +92,7 @@ export const AnomalyDashboard = memo(function AnomalyDashboard({
                 onClick={() => setFilter(f)}
                 className={cn(
                   "px-2 py-1.5 transition-colors",
-                  filter === f ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 hover:text-zinc-300",
+                  filter === f ? "bg-gold/10 text-gold" : "text-zinc-500 hover:text-zinc-300",
                   f === "all" && "rounded-l-md",
                   f === "low" && "rounded-r-md"
                 )}

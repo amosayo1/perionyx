@@ -75,9 +75,9 @@ function ConfigCard({
 function SingleConfigView({ config, agent }: { config: AgentConfig; agent: AgentRef }) {
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3 rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d4af37]/10">
-          <Bot className="h-5 w-5 text-[#d4af37]" />
+      <div className="flex items-center gap-3 rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10">
+          <Bot className="h-5 w-5 text-gold" />
         </div>
         <div>
           <p className="text-sm font-medium text-white">{agent.name}</p>
@@ -93,7 +93,7 @@ function SingleConfigView({ config, agent }: { config: AgentConfig; agent: Agent
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
             <h3 className="text-sm font-semibold text-white">Allowed Actions</h3>
@@ -114,7 +114,7 @@ function SingleConfigView({ config, agent }: { config: AgentConfig; agent: Agent
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <ShieldOff className="h-4 w-4 text-red-400" />
             <h3 className="text-sm font-semibold text-white">Forbidden Actions</h3>
@@ -137,7 +137,7 @@ function SingleConfigView({ config, agent }: { config: AgentConfig; agent: Agent
       </div>
 
       {Object.keys(config.escalationRules).length > 0 && (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle className="h-4 w-4 text-amber-400" />
             <h3 className="text-sm font-semibold text-white">Escalation Rules</h3>
@@ -149,7 +149,7 @@ function SingleConfigView({ config, agent }: { config: AgentConfig; agent: Agent
       )}
 
       {Object.keys(config.safetyPolicies).length > 0 && (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <ShieldCheck className="h-4 w-4 text-blue-400" />
             <h3 className="text-sm font-semibold text-white">Safety Policies</h3>
@@ -161,7 +161,7 @@ function SingleConfigView({ config, agent }: { config: AgentConfig; agent: Agent
       )}
 
       {Object.keys(config.notificationPrefs).length > 0 && (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <Bell className="h-4 w-4 text-violet-400" />
             <h3 className="text-sm font-semibold text-white">Notification Preferences</h3>
@@ -173,7 +173,7 @@ function SingleConfigView({ config, agent }: { config: AgentConfig; agent: Agent
       )}
 
       {Object.keys(config.config).length > 0 && (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010] p-4">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118] p-4">
           <div className="flex items-center gap-2 mb-3">
             <Settings className="h-4 w-4 text-zinc-500" />
             <h3 className="text-sm font-semibold text-white">Additional Config</h3>
@@ -205,13 +205,13 @@ export function AgentConfigurationClient({
   return (
     <div className="space-y-6">
       {allConfigs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#101010] py-16 text-center">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.09] bg-[#111118] py-16 text-center">
           <Settings className="mb-3 h-6 w-6 text-zinc-500" />
           <p className="text-sm text-zinc-400">No configurations found</p>
           <p className="mt-1 text-xs text-zinc-600">Configurations are created when agents are registered</p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-white/[0.09] bg-[#101010]">
+        <div className="rounded-2xl border border-white/[0.09] bg-[#111118]">
           <div className="divide-y divide-white/[0.06]">
             {allConfigs.map((c) => (
               <Link
@@ -220,8 +220,8 @@ export function AgentConfigurationClient({
                 className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-white/[0.02]"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#d4af37]/10">
-                    <Bot className="h-4 w-4 text-[#d4af37]" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10">
+                    <Bot className="h-4 w-4 text-gold" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-white">{c.agent?.name ?? "Unknown"}</p>

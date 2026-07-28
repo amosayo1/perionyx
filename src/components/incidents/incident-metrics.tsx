@@ -56,8 +56,8 @@ export function IncidentMetrics() {
       label: "Resolved",
       value: metrics.resolved,
       icon: CheckCircle2,
-      color: "text-[#d4af37]",
-      bg: "bg-[#d4af37]/10",
+      color: "text-gold",
+      bg: "bg-gold/10",
       href: "/operations/incidents?status=resolved",
     },
     {

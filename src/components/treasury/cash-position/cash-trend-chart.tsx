@@ -28,7 +28,7 @@ export function CashTrendChart({ className }: CashTrendChartProps) {
               <div key={point.date} className="flex flex-1 flex-col items-center justify-end h-full">
                 <span className="mb-1 text-[10px] text-zinc-500">{formatCompact(point.value)}</span>
                 <div
-                  className="w-full mx-0.5 rounded-t bg-gradient-to-t from-[#c9a84c]/60 to-[#c9a84c]/30 transition-all hover:from-[#c9a84c]/80 hover:to-[#c9a84c]/50"
+                  className="w-full mx-0.5 rounded-t bg-gradient-to-t from-gold/60 to-gold/30 transition-all hover:from-gold/80 hover:to-gold/50"
                   style={{ height: `${barHeight}px` }}
                   role="img"
                   aria-label={`${point.label}: ${formatCurrency(point.value)}`}

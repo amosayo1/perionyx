@@ -34,7 +34,7 @@ const levelConfig: Record<TrustLevel, { icon: React.ReactNode; label: string; co
   simulated: {
     icon: <RefreshCw className="h-3 w-3" />,
     label: "Simulated",
-    color: "text-[#d4af37] border-[#d4af37]/20 bg-[#d4af37]/10",
+    color: "text-gold border-gold/20 bg-gold/10",
   },
 };
 

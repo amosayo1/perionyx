@@ -85,7 +85,7 @@ export function PriorityList({ priorities, onComplete, onDefer, className }: Pri
           onClick={() => setSortByUrgency(!sortByUrgency)}
           className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
         >
-          <ArrowDown className={cn("h-3 w-3 transition-transform", sortByUrgency ? "text-[#d4af37]" : "")} />
+          <ArrowDown className={cn("h-3 w-3 transition-transform", sortByUrgency ? "text-gold" : "")} />
           {sortByUrgency ? "By urgency" : "Default"}
         </button>
       </div>
@@ -110,8 +110,8 @@ export function PriorityList({ priorities, onComplete, onDefer, className }: Pri
               className={cn(
                 "rounded-xl border p-4 transition-colors",
                 isDone
-                  ? "border-white/[0.06] bg-[#101010]/60 opacity-60"
-                  : cn(urgency.border, "bg-[#101010]"),
+                  ? "border-white/[0.06] bg-[#111118]/60 opacity-60"
+                  : cn(urgency.border, "bg-[#111118]"),
               )}
             >
               <div className="flex items-start gap-3">
@@ -166,7 +166,7 @@ export function PriorityList({ priorities, onComplete, onDefer, className }: Pri
                         {onComplete && priority.status !== "completed" && (
                           <button
                             onClick={() => onComplete(priority.id)}
-                            className="flex items-center gap-1 rounded border border-[#d4af37]/30 bg-[#d4af37]/10 px-2 py-0.5 text-[10px] font-medium text-[#d4af37] hover:bg-[#d4af37]/20 transition-colors"
+                            className="flex items-center gap-1 rounded border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] font-medium text-gold hover:bg-gold/20 transition-colors"
                           >
                             <Check className="h-3 w-3" />
                             Done
@@ -190,7 +190,7 @@ export function PriorityList({ priorities, onComplete, onDefer, className }: Pri
       </AnimatePresence>
 
       {priorities.length === 0 && (
-        <div className="rounded-xl border border-white/[0.06] bg-[#101010] p-8 text-center">
+        <div className="rounded-xl border border-white/[0.06] bg-[#111118] p-8 text-center">
           <Check className="mx-auto mb-2 h-5 w-5 text-zinc-500" />
           <p className="text-xs text-zinc-500">No priorities</p>
         </div>

@@ -36,7 +36,7 @@ const TRIGGER_TYPES: { value: ScheduleTriggerType; label: string; description: s
   { value: "immediate", label: "Immediate", description: "Run as soon as created", icon: Zap, color: "text-emerald-400" },
   { value: "scheduled", label: "Scheduled", description: "Run once at a specific time", icon: Clock, color: "text-blue-400" },
   { value: "recurring", label: "Recurring", description: "Run repeatedly at intervals", icon: RefreshCw, color: "text-purple-400" },
-  { value: "cron", label: "Cron", description: "Run on a cron expression", icon: CalendarClock, color: "text-[#d4af37]" },
+  { value: "cron", label: "Cron", description: "Run on a cron expression", icon: CalendarClock, color: "text-gold" },
   { value: "webhook", label: "Webhook", description: "Triggered by incoming webhook", icon: Webhook, color: "text-cyan-400" },
   { value: "manual", label: "Manual", description: "Triggered manually by a user", icon: Play, color: "text-zinc-400" },
   { value: "connector_event", label: "Connector Event", description: "On connector run result", icon: RefreshCw, color: "text-rose-400" },
@@ -145,7 +145,7 @@ export function SchedulerForm({ open, onOpenChange, onSave, editSchedule }: Prop
                     className={cn(
                       "flex flex-col items-center gap-1 rounded-lg p-2 text-center transition-colors",
                       form.triggerType === tt.value
-                        ? "bg-[#d4af37]/10 border border-[#d4af37]/30"
+                        ? "bg-gold/10 border border-gold/30"
                         : "bg-zinc-900/40 border border-white/[0.06] hover:bg-zinc-900/60",
                     )}
                   >
@@ -287,7 +287,7 @@ export function SchedulerForm({ open, onOpenChange, onSave, editSchedule }: Prop
               <button
                 type="button"
                 onClick={addInputEntry}
-                className="inline-flex items-center gap-1 rounded-lg border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1.5 text-[11px] font-medium text-[#d4af37] hover:bg-[#d4af37]/10 transition-colors h-8 shrink-0"
+                className="inline-flex items-center gap-1 rounded-lg border border-gold/30 bg-gold/5 px-3 py-1.5 text-[11px] font-medium text-gold hover:bg-gold/10 transition-colors h-8 shrink-0"
               >
                 <Plus className="h-3 w-3" />
                 Add

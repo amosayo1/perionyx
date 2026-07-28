@@ -31,8 +31,8 @@ export function Switch({ checked = false, onCheckedChange, disabled }: Props) {
       onClick={toggle}
       className={cn(
         "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-        isChecked ? "bg-[#d4af37]" : "bg-white/[0.12]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+        isChecked ? "bg-gold" : "bg-white/[0.12]",
         disabled && "cursor-not-allowed opacity-50",
       )}
     >

@@ -20,7 +20,7 @@ export function TreasuryPerformance({ data }: { data: TreasuryPerformanceData })
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4">
           <p className="text-xs text-zinc-500 font-medium">Settlement Success</p>
-          <span className="text-2xl font-semibold text-[#d4af37] mt-1 block">{data.settlementSuccess}</span>
+          <span className="text-2xl font-semibold text-gold mt-1 block">{data.settlementSuccess}</span>
           <p className="text-[11px] text-zinc-600 mt-1">Above 99.5% target</p>
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4">
@@ -30,9 +30,9 @@ export function TreasuryPerformance({ data }: { data: TreasuryPerformanceData })
         </div>
         <div className="rounded-xl border border-white/[0.06] bg-zinc-900/40 p-4">
           <p className="text-xs text-zinc-500 font-medium">Treasury Health</p>
-          <span className="text-2xl font-semibold text-[#d4af37] mt-1 block">{data.treasuryHealth}%</span>
+          <span className="text-2xl font-semibold text-gold mt-1 block">{data.treasuryHealth}%</span>
           <div className="mt-2 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
-            <div className="h-full rounded-full bg-[#d4af37]" style={{ width: `${data.treasuryHealth}%` }} />
+            <div className="h-full rounded-full bg-gold" style={{ width: `${data.treasuryHealth}%` }} />
           </div>
         </div>
       </div>

@@ -13,14 +13,14 @@ export function ARForecastDashboard({ forecasts }: ARForecastDashboardProps) {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 20 }}>
-      <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 20 }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, padding: 20 }}>
         <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Scenario Comparison</div>
         {scenarios.map((s, i) => (
           <motion.div key={s.name} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
             style={{ marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
               <span style={{ color: "#e0e0e0", fontWeight: 500, fontSize: 13 }}>{s.name}</span>
-              <span style={{ color: "#d4a843", fontFamily: "ui-monospace, monospace", fontWeight: 600 }}>${s.collections.toLocaleString()}</span>
+              <span style={{ color: "#d4af37", fontFamily: "ui-monospace, monospace", fontWeight: 600 }}>${s.collections.toLocaleString()}</span>
             </div>
             <div style={{ background: "#2a2a4a", height: 10, borderRadius: 5, overflow: "hidden" }}>
               <div style={{ width: (s.collections / maxCollection) * 100 + "%", height: "100%", background: i === 0 ? "#22c55e" : i === 1 ? "#3b82f6" : "#ef4444", borderRadius: 5, transition: "width 0.5s ease" }} />
@@ -29,7 +29,7 @@ export function ARForecastDashboard({ forecasts }: ARForecastDashboardProps) {
           </motion.div>
         ))}
       </div>
-      <div style={{ background: "#1a1a2e", borderRadius: 8, padding: 20 }}>
+      <div style={{ background: "#1a1a24", borderRadius: 8, padding: 20 }}>
         <div style={{ color: "#e0e0e0", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Forecast Metrics</div>
         <div style={{ display: "grid", gap: 12 }}>
           {[

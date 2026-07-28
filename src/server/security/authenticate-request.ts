@@ -1,5 +1,4 @@
-import { auth } from "@/server/auth/auth";
-import { requireTenantContext, type TenantContext } from "@/server/context/tenant-context";
+import { requireRuntimeContext } from "@/runtime/context";
 import { ApiKeyService } from "@/modules/api-keys/api-keys.service";
 import { UnauthorizedError, ForbiddenError } from "@/lib/errors/app-error";
 
@@ -9,10 +8,22 @@ const SCOPE_MAP: Record<string, string[]> = {
   "admin:all": ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 
+/**
+ * Authenticate a request and return the tenant context.
+ *
+ * Primary path: reads from RuntimeContext (set by withRuntimeContext).
+ * Fallback: API key validation when proxy headers are absent.
+ */
 export async function authenticateRequest(
   request: Request,
   requiredScope?: string,
-): Promise<TenantContext> {
+) {
+  const runtimeCtx = requireRuntimeContext();
+
+  if (runtimeCtx.tenant) {
+    return runtimeCtx.tenant;
+  }
+
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
     const apiKeyResult = await ApiKeyService.validate(authHeader);
@@ -22,13 +33,8 @@ export async function authenticateRequest(
       throw new ForbiddenError(`API key does not have scope: ${requiredScope}`);
     }
 
-    return { userId: apiKeyResult.keyId, companyId: apiKeyResult.companyId, role: "ADMIN" };
+    return { userId: apiKeyResult.keyId, companyId: apiKeyResult.companyId, role: "ADMIN" as const };
   }
 
-  const session = await auth();
-  return requireTenantContext(
-    session?.user?.id,
-    session?.user?.activeCompanyId,
-    session?.user?.companyRole,
-  );
+  throw new UnauthorizedError("Authentication required");
 }

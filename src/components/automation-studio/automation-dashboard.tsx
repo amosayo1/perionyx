@@ -35,7 +35,7 @@ interface Props {
 
 const FEATURE_TILES = [
   { href: "/automation-studio/analytics", icon: BarChart3, label: "Analytics", desc: "Performance metrics, step durations, bottlenecks", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
-  { href: "/automation-studio/templates", icon: LayoutTemplate, label: "Templates", desc: "Pre-built workflow templates", color: "text-[#c9a84c] bg-gold-500/10 border-gold-500/20" },
+  { href: "/automation-studio/templates", icon: LayoutTemplate, label: "Templates", desc: "Pre-built workflow templates", color: "text-gold bg-gold-500/10 border-gold-500/20" },
   { href: "/automation-studio/designer", icon: Workflow, label: "Designer", desc: "Visual workflow builder", color: "text-purple-400 bg-purple-500/10 border-purple-500/20" },
   { href: "/automation-studio/approval-matrix", icon: ShieldCheck, label: "Approval Matrix", desc: "Role-based approval rules", color: "text-amber-400 bg-amber-500/10 border-amber-500/20" },
   { href: "/automation-studio/business-rules", icon: FileCheck, label: "Business Rules", desc: "Policy & threshold rules", color: "text-rose-400 bg-rose-500/10 border-rose-500/20" },
@@ -155,7 +155,7 @@ export function AutomationDashboardClient({ metrics, definitions, recentInstance
             <div className="p-6">
               <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700/50 bg-zinc-900/20 p-10 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gold-500/10">
-                  <Workflow className="h-6 w-6 text-[#c9a84c]" />
+                  <Workflow className="h-6 w-6 text-gold" />
                 </div>
                 <h3 className="mb-1 text-[14px] font-semibold text-white">No workflows yet</h3>
                 <p className="mb-4 max-w-sm text-[12px] text-zinc-500">Create your first automation to start streamlining financial operations.</p>
@@ -172,7 +172,7 @@ export function AutomationDashboardClient({ metrics, definitions, recentInstance
               {definitions.slice(0, 5).map((def) => (
                 <Link key={def.id} href={`/automation-studio/designer/${def.id}`} className="flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-zinc-800/30">
                   <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gold-500/10">
-                    <Workflow className="h-4 w-4 text-[#c9a84c]" />
+                    <Workflow className="h-4 w-4 text-gold" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13px] font-medium text-zinc-200">{def.name}</p>
@@ -340,7 +340,7 @@ export function AutomationDashboardClient({ metrics, definitions, recentInstance
                           </span>
                         </div>
                         <div className="h-1.5 rounded-full bg-zinc-800">
-                          <div className="h-1.5 rounded-full bg-[#c9a84c]/40" style={{ width: `${width}%` }} />
+                          <div className="h-1.5 rounded-full bg-gold/40" style={{ width: `${width}%` }} />
                         </div>
                       </div>
                     );
@@ -358,7 +358,7 @@ export function AutomationDashboardClient({ metrics, definitions, recentInstance
                   {workflowAnalytics.mostUsedWorkflows.slice(0, 5).map((w) => (
                     <div key={w.definitionId} className="flex items-center justify-between py-2">
                       <span className="truncate text-[13px] text-zinc-200">{w.name}</span>
-                      <span className="shrink-0 text-[13px] font-medium text-[#c9a84c]">{w.executionCount}</span>
+                      <span className="shrink-0 text-[13px] font-medium text-gold">{w.executionCount}</span>
                     </div>
                   ))}
                 </div>

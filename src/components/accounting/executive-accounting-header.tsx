@@ -44,7 +44,7 @@ export function ExecutiveAccountingHeader({ netIncome, grossMargin, workingCapit
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {items.map((item) => (
-        <div key={item.label} className="rounded-lg border border-gray-800 bg-[#1a1a1a] p-4">
+        <div key={item.label} className="rounded-lg border border-gray-800 bg-[#1a1a24] p-4">
           <div className="flex items-center justify-between">
             <p className="text-xs text-gray-500">{item.label}</p>
             <div className={item.color}>{item.icon}</div>

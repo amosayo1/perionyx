@@ -30,7 +30,7 @@ export function MobileReports({ className }: { className?: string }) {
             onClick={() => setSelectedType(type)}
             className={cn(
               "shrink-0 rounded-lg px-3 py-1.5 text-[10px] font-medium transition-colors min-h-[28px]",
-              selectedType === type ? "bg-[#d4af37]/10 text-[#d4af37]" : "text-zinc-500 active:bg-zinc-800",
+              selectedType === type ? "bg-gold/10 text-gold" : "text-zinc-500 active:bg-zinc-800",
             )}
           >
             {typeLabel(type)}
