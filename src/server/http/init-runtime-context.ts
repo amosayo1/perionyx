@@ -110,8 +110,12 @@ async function verifyHeaderIdentity(
   const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
 
   if (authSecret) {
+    // @auth/core `getToken` expects a Request or { headers, cookies? } — it
+    // reads the session cookie from `headers.get("cookie")`. Passing a bare
+    // Headers instance as `req` made the lookup find no cookies, so every
+    // session-authenticated request failed verification (Phase 29.0 C-01).
     const token = await getToken({
-      req: headers as unknown as Parameters<typeof getToken>[0]['req'],
+      req: { headers },
       secret: authSecret,
       cookieName: sessionTokenName,
     });
@@ -216,5 +220,9 @@ export async function withRuntimeContext<T>(
     tenant,
   };
 
-  return _withRuntimeContext(context, () => handler(routeContext));
+  // Store the RESOLVED context (with tenant) in AsyncLocalStorage so that
+  // requireRuntimeContext() / requirePermission() / requireAuth() inside the
+  // handler see the authenticated tenant on every path — including the auth()
+  // fallback where the extracted context had no tenant (Phase 29.0 C-01).
+  return _withRuntimeContext(routeContext, () => handler(routeContext));
 }
