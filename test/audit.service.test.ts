@@ -4,6 +4,7 @@ import { recordAudit, listAuditLogsForTenant } from "@/modules/audit/audit.servi
 import { prisma } from "@/server/db/prisma";
 import { createCompany, createUser, createMembership } from "../test/helpers/factories";
 import { buildTenantContext, cleanup } from "../test/helpers/db";
+import { SYSTEM_ACTOR_ID } from "@/modules/queue/jobs/job-utils";
 
 afterAll(cleanup);
 
@@ -36,6 +37,50 @@ describe("AuditService", () => {
         resourceType: "Test",
       });
       expect(log.severity).toBe("INFO");
+    });
+
+    it("maps the system actor sentinel to a NULL actor (no FK failure)", async () => {
+      const company = await createCompany();
+      const log = await recordAudit(prisma, {
+        companyId: company.id,
+        actorUserId: SYSTEM_ACTOR_ID,
+        action: "TEST_SYSTEM_ACTOR",
+        resourceType: "Test",
+      });
+      expect(log.actorUserId).toBeNull();
+    });
+
+    it("persists real user actor IDs unchanged", async () => {
+      const company = await createCompany();
+      const user = await createUser();
+      await createMembership(user.id, company.id);
+
+      const log = await recordAudit(prisma, {
+        companyId: company.id,
+        actorUserId: user.id,
+        action: "TEST_REAL_ACTOR",
+        resourceType: "Test",
+      });
+      expect(log.actorUserId).toBe(user.id);
+    });
+
+    it("persists null and undefined actors as NULL", async () => {
+      const company = await createCompany();
+      const nullLog = await recordAudit(prisma, {
+        companyId: company.id,
+        actorUserId: null,
+        action: "TEST_NULL_ACTOR",
+        resourceType: "Test",
+      });
+      expect(nullLog.actorUserId).toBeNull();
+
+      const undefLog = await recordAudit(prisma, {
+        companyId: company.id,
+        actorUserId: undefined,
+        action: "TEST_UNDEFINED_ACTOR",
+        resourceType: "Test",
+      });
+      expect(undefLog.actorUserId).toBeNull();
     });
 
     it("accepts optional fields (payloadHash, ipAddress, userAgent)", async () => {

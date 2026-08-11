@@ -19,10 +19,11 @@ export function register() {
     // Cron scheduling via schedule() is idempotent (upsert by name).
     import("@/modules/queue/jobs").then(({ registerAllJobs }) => {
       registerAllJobs();
-      return import("@/modules/queue/queue.service").then(({ startQueueWorker, scheduleCron }) =>
+      return import("@/modules/queue/queue.service").then(({ startQueueWorker, scheduleCron, unscheduleCron }) =>
         startQueueWorker().then(() =>
           Promise.all([
-            scheduleCron("fx-sync", "0 * * * *", {}, {
+            unscheduleCron("fx-sync"),
+            scheduleCron("fx-sync-cron", "0 * * * *", {}, {
               retryLimit: 2,
               retryDelay: 300,
               retryBackoff: true,

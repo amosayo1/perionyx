@@ -2,6 +2,7 @@ import type { Prisma, PrismaClient } from "@prisma/client";
 import { AuditSeverity } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
+import { SYSTEM_ACTOR_ID } from "@/modules/queue/jobs/job-utils";
 
 export type DbClient = PrismaClient | Prisma.TransactionClient;
 
@@ -23,7 +24,7 @@ export async function recordAudit(db: DbClient, params: RecordAuditParams) {
   return db.auditLog.create({
     data: {
       companyId: params.companyId ?? undefined,
-      actorUserId: params.actorUserId ?? undefined,
+      actorUserId: params.actorUserId === SYSTEM_ACTOR_ID ? undefined : (params.actorUserId ?? undefined),
       action: params.action,
       resourceType: params.resourceType,
       resourceId: params.resourceId ?? undefined,

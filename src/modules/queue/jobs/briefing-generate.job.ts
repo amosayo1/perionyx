@@ -1,8 +1,7 @@
 import { prisma } from "@/server/db/prisma";
 import { logger } from "@/lib/logger";
 import { generateAndPersistBriefing } from "@/modules/briefings/briefings.service";
-
-const SYSTEM_USER_ID = "00000000-0000-0000-0000-000000000000";
+import { SYSTEM_ACTOR_ID } from "./job-utils";
 
 interface BriefingGenerateData {
   companyId: string;
@@ -37,7 +36,7 @@ export async function handleBriefingDailyCron(): Promise<void> {
   logger.info({ companyCount: companies.length }, "[BriefingDailyCron] Companies found");
 
   for (const company of companies) {
-    const ctx = { companyId: company.id, userId: SYSTEM_USER_ID, role: "OWNER" as const };
+    const ctx = { companyId: company.id, userId: SYSTEM_ACTOR_ID, role: "OWNER" as const };
 
     try {
       await generateAndPersistBriefing(ctx, "daily");

@@ -1,5 +1,5 @@
 import { registerHandler, scheduleCron } from "../queue.service";
-import { handleFxSync } from "./fx-sync.job";
+import { handleFxSync, handleFxSyncCron } from "./fx-sync.job";
 import { handleWebhookRetry } from "./webhook-retry.job";
 import { handleWebhookSend } from "./webhook-send.job";
 import { handleReportGenerate } from "./report-generate.job";
@@ -20,6 +20,7 @@ export function registerAllJobs(): void {
   initializeConnectorPlatform();
   void initializeAiProviders();
   registerHandler("fx-sync", handleFxSync);
+  registerHandler("fx-sync-cron", handleFxSyncCron);
   registerHandler("webhook-send", handleWebhookSend);
   registerHandler("webhook-retry", async () => {
     await handleWebhookRetry();

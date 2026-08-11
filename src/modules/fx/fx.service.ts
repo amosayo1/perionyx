@@ -101,18 +101,22 @@ export class FxService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
 
-      await recordAudit(prisma, {
-        companyId,
-        actorUserId,
-        action: AuditAction.FX_RATE_SYNC_FAILED,
-        resourceType: "ExchangeRate",
-        resourceId: "fx-sync",
-        metadata: {
-          error: errorMessage,
-          provider: source,
-          timestamp: startedAt.toISOString(),
-        },
-      });
+      try {
+        await recordAudit(prisma, {
+          companyId,
+          actorUserId,
+          action: AuditAction.FX_RATE_SYNC_FAILED,
+          resourceType: "ExchangeRate",
+          resourceId: "fx-sync",
+          metadata: {
+            error: errorMessage,
+            provider: source,
+            timestamp: startedAt.toISOString(),
+          },
+        });
+      } catch (auditError) {
+        logger.error({ err: auditError }, "[FX] Failed to record FX_RATE_SYNC_FAILED audit");
+      }
 
       return {
         success: false,
