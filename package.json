@@ -28,7 +28,7 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "eslint --fix",
-      "tsc --noEmit --pretty"
+      "bash -c 'NODE_OPTIONS=--max-old-space-size=12288 tsc --noEmit --pretty'"
     ]
   },
   "dependencies": {
