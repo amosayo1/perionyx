@@ -12,7 +12,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, pickN, weightedPick, randInt, randFloat, randDecimal, randomDateInRange, daysAgo, addBusinessDays, uuidFromSeed, padNum, logProgress } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_001;
 
 // ── Data pools ───────────────────────────────────────────────────────────────
@@ -177,7 +177,7 @@ export function generateVendors(count: number = 150): GeneratedVendor[] {
     const tier = poolItem.tier;
 
     const vendorCode = `VND-${padNum(i + 1, 4)}`;
-    const id = uuidFromSeed(`vendor-${COMPANY_ID}-${vendorCode}`);
+    const id = uuidFromSeed(`vendor-${companyId}-${vendorCode}`);
     const status = tier === "onetime"
       ? weightedPick(["ACTIVE", "DEACTIVATED"], [3, 7], rng)
       : tier === "strategic"
@@ -289,7 +289,7 @@ export function generateVendors(count: number = 150): GeneratedVendor[] {
 
     vendors.push({
       id,
-      companyId: COMPANY_ID,
+      companyId,
       vendorCode,
       name,
       legalName: name,
@@ -329,7 +329,8 @@ export function generateVendors(count: number = 150): GeneratedVendor[] {
   return vendors;
 }
 
-export async function seedVendors(prisma: PrismaClient): Promise<string[]> {
+export async function seedVendors(prisma: PrismaClient, targetCompanyId: string = companyId): Promise<string[]> {
+  companyId = targetCompanyId;
   const vendors = generateVendors();
   const ids: string[] = [];
 

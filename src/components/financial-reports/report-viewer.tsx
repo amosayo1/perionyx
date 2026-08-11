@@ -54,6 +54,43 @@ export function ReportViewer({ execution, loading, onClose }: ReportViewerProps)
     }
   }, []);
 
+  const handleExport = useCallback(() => {
+    if (!execution.sections || execution.sections.length === 0) return;
+
+    const sanitize = (val: unknown): string => {
+      if (val === null || val === undefined) return "";
+      const s = String(val);
+      return s.includes(",") || s.includes('"') || s.includes("\n") ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+
+    const lines: string[] = [];
+    for (const section of execution.sections) {
+      if (section.rows.length === 0) continue;
+      lines.push(`"${section.title.replace(/"/g, '""')}"`);
+      const columnKeys = section.columns ?? [];
+      const valueKeys = section.rows.length > 0 ? Object.keys(section.rows[0].values) : [];
+      lines.push(["Label", ...columnKeys].join(","));
+      for (const row of section.rows) {
+        const cells = [sanitize(row.label)];
+        if (valueKeys.length === 0) {
+          cells.push(...Object.values(row.values).map(sanitize));
+        } else {
+          cells.push(...valueKeys.map((k) => sanitize(row.values[k] ?? "")));
+        }
+        lines.push(cells.join(","));
+      }
+      lines.push("");
+    }
+
+    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${execution.reportType}-${execution.id.slice(0, 8)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [execution]);
+
   const summaryMetrics = useMemo(() => {
     if (!execution.sections) return [];
     const metrics: { label: string; value: string }[] = [];
@@ -89,7 +126,7 @@ export function ReportViewer({ execution, loading, onClose }: ReportViewerProps)
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => {}}
+            onClick={handleExport}
             className="flex items-center gap-1.5 rounded-lg border border-white/[0.1] px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:bg-white/[0.04] hover:text-white"
           >
             <Download className="h-3.5 w-3.5" />

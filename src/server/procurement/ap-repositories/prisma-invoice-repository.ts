@@ -60,15 +60,15 @@ export class PrismaInvoiceRepository implements IInvoiceRepository {
     if (filter.currency) where.currency = filter.currency;
     if (filter.poReferenceId) where.poReferenceId = filter.poReferenceId;
     const invoiceDateRange = dateRangeFilter(filter.invoiceDateFrom, filter.invoiceDateTo);
-    if (invoiceDateRange) where.invoiceDate = invoiceDateRange as any;
+    if (invoiceDateRange) where.invoiceDate = invoiceDateRange as Prisma.DateTimeFilter;
     const dueDateRange = dateRangeFilter(filter.dueDateFrom, filter.dueDateTo);
-    if (dueDateRange) where.dueDate = dueDateRange as any;
+    if (dueDateRange) where.dueDate = dueDateRange as Prisma.DateTimeFilter;
     if (filter.search) {
       where.OR = [{ invoiceNumber: { contains: filter.search, mode: "insensitive" } }];
     }
 
     const orderBy: Prisma.ProcurementVendorInvoiceOrderByWithRelationInput = sort
-      ? { [sort.field]: sort.direction } as any
+      ? ({ [sort.field]: sort.direction } as Prisma.ProcurementVendorInvoiceOrderByWithRelationInput)
       : { createdAt: "desc" };
     const total = await this.db.procurementVendorInvoice.count({ where });
 
@@ -87,10 +87,6 @@ export class PrismaInvoiceRepository implements IInvoiceRepository {
     if (filter.vendorId) where.vendorId = filter.vendorId;
     if (filter.status) where.status = Array.isArray(filter.status) ? { in: filter.status } : filter.status;
     return this.db.procurementVendorInvoice.count({ where });
-  }
-
-  async findPendingApproval(companyId: string, sort?: SortParams, pagination?: PaginationParams): Promise<PaginatedResult<VendorInvoice>> {
-    return this.findByFilter({ companyId, status: "PENDING_APPROVAL" }, sort, pagination);
   }
 
   async findApprovedUnscheduled(companyId: string, sort?: SortParams): Promise<VendorInvoice[]> {

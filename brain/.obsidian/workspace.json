@@ -11,17 +11,14 @@
             "id": "4a4ab51b1daa797d",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "Untitled.canvas",
-                "viewState": {
-                  "x": 0,
-                  "y": 0,
-                  "zoom": 0
-                }
+                "file": "12-Roadmaps/phase-20-findings.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-layout-dashboard",
-              "title": "Untitled"
+              "icon": "lucide-file",
+              "title": "phase-20-findings"
             }
           }
         ]
@@ -99,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "framer-motion-evaluation.md",
+                "file": "03-Customer Intelligence/People/zeiad-samir.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -109,7 +106,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for framer-motion-evaluation"
+              "title": "Backlinks for zeiad-samir"
             }
           },
           {
@@ -169,13 +166,25 @@
               "icon": "lucide-list",
               "title": "Outline of framer-motion-evaluation"
             }
+          },
+          {
+            "id": "007a048cd7f1bc20",
+            "type": "leaf",
+            "state": {
+              "type": "file-properties",
+              "state": {
+                "file": "12-Roadmaps/phase-20-findings.md"
+              },
+              "icon": "lucide-info",
+              "title": "File properties for phase-20-findings"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -190,6 +199,8 @@
   },
   "active": "4a4ab51b1daa797d",
   "lastOpenFiles": [
+    "03-Customer Intelligence/People/zeiad-samir.md",
+    "Untitled.base",
     "Untitled.canvas",
     "2026-07-28.md",
     "BRAIN_CONSTITUTION.md",
@@ -199,7 +210,6 @@
     "03-Architecture/index.md",
     "Untitled 2.canvas",
     "2026-07-25.md",
-    "Untitled.base",
     "10-Research/index.md",
     "11-ADR/index.md",
     "05-Engineering/Lessons/25-one-implementation-per-primitive.md",

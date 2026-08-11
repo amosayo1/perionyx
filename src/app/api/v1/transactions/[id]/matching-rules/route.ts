@@ -17,6 +17,8 @@ export async function GET(request: Request, context: any) {
     const { params } = context;
     try {
   
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'approvals.view');
+
       const transactionId = (await params).id;
   
       // Fetch transaction

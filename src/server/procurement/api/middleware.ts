@@ -92,8 +92,12 @@ export async function cacheIdempotentResponse(
 export function applyCommonHeaders(
   response: NextResponse,
   correlationId: string,
+  cacheSeconds?: number,
 ): NextResponse {
   response.headers.set("x-correlation-id", correlationId);
-  response.headers.set("Cache-Control", "private, no-store");
+  response.headers.set(
+    "Cache-Control",
+    cacheSeconds ? `private, max-age=${cacheSeconds}` : "private, no-store",
+  );
   return response;
 }

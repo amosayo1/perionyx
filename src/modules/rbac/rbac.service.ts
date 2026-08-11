@@ -191,7 +191,7 @@ export class RBACService {
       if (membership?.role === "OWNER") return true;
     }
 
-    throw new ForbiddenError("You do not have permission to perform this action.");
+    throw new ForbiddenError(`You do not have permission to perform this action (${permissionName}).`);
   }
 }
 

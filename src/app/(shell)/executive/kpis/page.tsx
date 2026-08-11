@@ -1,7 +1,7 @@
 import { KPIExplorer } from "@/components/executive-command-center/kpi-explorer";
 
 export const metadata = {
-  title: "KPI Explorer | Vaulta",
+  title: "KPI Explorer | Perionyx",
 };
 
 export default function ExecutiveKPIsPage() {

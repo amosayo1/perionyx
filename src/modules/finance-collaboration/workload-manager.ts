@@ -10,7 +10,7 @@ import type {
   QueueType,
   CasePriority,
   GetWorkQueueInput,
-  WorkQueueItem,
+  SpecialistQueueItem,
 } from "./types";
 
 export class WorkloadManager {
@@ -237,7 +237,7 @@ export class WorkloadManager {
         caseId: undefined,
         assignmentId: undefined,
         createdAt: q.createdAt,
-      })) as WorkQueueItem[],
+      })) as SpecialistQueueItem[],
       total,
     };
   }

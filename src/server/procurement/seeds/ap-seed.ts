@@ -49,7 +49,7 @@ async function main() {
       where: { companyId }, select: { id: true }, orderBy: { createdAt: "asc" },
     })).map(v => v.id);
   } else {
-    vendorIds = await seedVendors(prisma);
+    vendorIds = await seedVendors(prisma, companyId);
   }
   process.stdout.write(`  Total vendors: ${vendorIds.length}\n\n`);
 
@@ -64,7 +64,7 @@ async function main() {
       where: { companyId }, select: { id: true },
     })).map(i => i.id);
   } else {
-    invoiceIds = await seedInvoices(prisma, vendorIds);
+    invoiceIds = await seedInvoices(prisma, companyId, vendorIds);
   }
   process.stdout.write(`  Total invoices: ${invoiceIds.length}\n\n`);
 
@@ -92,7 +92,7 @@ async function main() {
       where: { companyId }, select: { id: true },
     })).map(a => a.id);
   } else {
-    approvalIds = await seedApprovals(prisma, invoiceIds, invoiceAmounts);
+    approvalIds = await seedApprovals(prisma, companyId, invoiceIds, invoiceAmounts);
   }
   process.stdout.write(`  Total approvals: ${approvalIds.length}\n\n`);
 
@@ -107,7 +107,7 @@ async function main() {
       where: { companyId }, select: { id: true },
     })).map(e => e.id);
   } else {
-    exceptionIds = await seedExceptions(prisma, invoiceIds);
+    exceptionIds = await seedExceptions(prisma, companyId, invoiceIds);
   }
   process.stdout.write(`  Total exceptions: ${exceptionIds.length}\n\n`);
 
@@ -118,7 +118,7 @@ async function main() {
   if (existingProposalCount >= 100) {
     process.stdout.write(`  Skipping — ${existingProposalCount} proposals already exist\n`);
   } else {
-    await seedPayments(prisma, vendorIds, invoiceIds, invoiceAmounts, invoiceVendorMap);
+    await seedPayments(prisma, companyId, vendorIds, invoiceIds, invoiceAmounts, invoiceVendorMap);
   }
   const proposalIds = (await prisma.procurementPaymentProposal.findMany({
     where: { companyId }, select: { id: true },
@@ -131,7 +131,7 @@ async function main() {
   if (existingCreditCount >= 50) {
     process.stdout.write(`  Skipping — ${existingCreditCount} credits already exist\n`);
   } else {
-    await seedCredits(prisma, vendorIds, invoiceIds);
+    await seedCredits(prisma, companyId, vendorIds, invoiceIds);
   }
   process.stdout.write(`\n`);
 
@@ -141,7 +141,7 @@ async function main() {
   if (existingStmtCount >= 20) {
     process.stdout.write(`  Skipping — ${existingStmtCount} statements already exist\n`);
   } else {
-    await seedReconciliation(prisma, vendorIds, invoiceIds);
+    await seedReconciliation(prisma, companyId, vendorIds, invoiceIds);
   }
   process.stdout.write(`\n`);
 
@@ -151,7 +151,7 @@ async function main() {
   if (existingAuditCount >= 10000) {
     process.stdout.write(`  Skipping — ${existingAuditCount} audit records already exist\n`);
   } else {
-    await seedAuditRecords(prisma, invoiceIds, exceptionIds, approvalIds, proposalIds, vendorIds);
+    await seedAuditRecords(prisma, companyId, invoiceIds, exceptionIds, approvalIds, proposalIds, vendorIds);
   }
   process.stdout.write(`\n`);
 

@@ -9,9 +9,16 @@ export async function GET(request: Request) {
     try {
   
       await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'admin.manage_users');
+
+      const { searchParams } = new URL(request.url);
+      const take = Math.min(Math.max(Number(searchParams.get("take") ?? 500) || 500, 1), 1000);
+      const skip = Math.max(Number(searchParams.get("skip") ?? 0) || 0, 0);
   
       const memberships = await prisma.companyMembership.findMany({
         where: { companyId: ctx.tenant.companyId },
+        take,
+        skip,
+        orderBy: { createdAt: "asc" },
         include: {
           user: {
             include: {
@@ -24,7 +31,11 @@ export async function GET(request: Request) {
         },
       });
   
-      return NextResponse.json({ success: true, memberships });
+      const total = await prisma.companyMembership.count({
+        where: { companyId: ctx.tenant.companyId },
+      });
+  
+      return NextResponse.json({ success: true, memberships, total });
     } catch (err) {
       return handleRouteError(err);
     }

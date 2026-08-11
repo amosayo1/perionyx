@@ -1,6 +1,9 @@
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
+import type { Prisma } from "@prisma/client";
 import type { ReportConfig, ReportSection, ReportRow } from "../types";
+
+type GLBalanceRow = Prisma.GLAccountBalanceGetPayload<{ include: { account: true } }>;
 
 export class MultiCompanyBuilder {
   static async build(ctx: TenantContext, config: ReportConfig): Promise<ReportSection[]> {
@@ -40,20 +43,33 @@ export class MultiCompanyBuilder {
 
     const [assetAccounts, liabilityAccounts, equityAccounts, incomeAccounts, expenseAccounts] = catAccounts;
 
+    // Batch: single query for all target companies (Phase 28.1 F-10)
+    const balancesByCompany = new Map<string, GLBalanceRow[]>();
+    if (period) {
+      const allBalances = await prisma.gLAccountBalance.findMany({
+        where: { companyId: { in: targetIds }, periodId: period.id },
+        include: { account: true },
+      });
+      for (const b of allBalances) {
+        const list = balancesByCompany.get(b.companyId) ?? [];
+        list.push(b);
+        balancesByCompany.set(b.companyId, list);
+      }
+    }
+
+    const accountById = new Map(
+      [...assetAccounts, ...liabilityAccounts, ...equityAccounts, ...incomeAccounts, ...expenseAccounts].map((a) => [a.id, a]),
+    );
+
     const companyAccounts = new Map<string, Map<string, number>>();
 
     for (const cid of targetIds) {
-      const balances = period
-        ? await prisma.gLAccountBalance.findMany({
-            where: { companyId: cid, periodId: period.id },
-          })
-        : [];
+      const balances = balancesByCompany.get(cid) ?? [];
 
       const totalByCategory = new Map<string, number>();
 
       for (const b of balances) {
-        const allAccounts = [...assetAccounts, ...liabilityAccounts, ...equityAccounts, ...incomeAccounts, ...expenseAccounts];
-        const acct = allAccounts.find((a) => a.id === b.accountId);
+        const acct = accountById.get(b.accountId);
         if (acct) {
           const cat = acct.category;
           const endingVal = Number(b.endingBalance);
@@ -114,12 +130,7 @@ export class MultiCompanyBuilder {
       const label = companyLabels.get(cid) ?? cid;
       const currency = targetCurrencies.get(cid) ?? config.currency;
 
-      const balances = period
-        ? await prisma.gLAccountBalance.findMany({
-            where: { companyId: cid, periodId: period.id },
-            include: { account: true },
-          })
-        : [];
+      const balances = balancesByCompany.get(cid) ?? [];
 
       const balanceRows: ReportRow[] = [];
 

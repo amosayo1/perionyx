@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/server/db/prisma";
 import { PageContainer } from "@/components/enterprise/page-container";
 import { EnterprisePageHeader } from "@/components/enterprise/enterprise-page-header";
-import { CheckCircle2, Play, RotateCcw } from "lucide-react";
+import { CheckCircle2, RotateCcw } from "lucide-react";
+import { GuidanceTourButton } from "@/components/sandbox/guidance-tour-button";
 import { withRuntimeContext } from "@/server/http/init-runtime-context";
 import { headers } from "next/headers";
 
@@ -152,30 +153,7 @@ export default async function GuidancePage() {
                         )}
                       </div>
                     </div>
-                    <button
-                      className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                        isComplete
-                          ? "border border-white/[0.06] bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06] hover:text-white"
-                          : "bg-amber-400 text-black hover:bg-amber-500"
-                      }`}
-                    >
-                      {isComplete ? (
-                        <>
-                          <RotateCcw className="h-3.5 w-3.5" />
-                          Retake
-                        </>
-                      ) : hasStarted ? (
-                        <>
-                          <Play className="h-3.5 w-3.5" />
-                          Resume
-                        </>
-                      ) : (
-                        <>
-                          <Play className="h-3.5 w-3.5" />
-                          Start
-                        </>
-                      )}
-                    </button>
+                    <GuidanceTourButton isComplete={isComplete} hasStarted={hasStarted} />
                   </div>
   
                   {hasStarted && !isComplete && (

@@ -10,7 +10,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, weightedPick, randInt, randFloat, randomDateInRange, daysAgo, uuidFromSeed, logProgress, roundToCents, padNum } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_600;
 
 const CREDIT_STATUSES = ["ISSUED", "PARTIALLY_APPLIED", "FULLY_APPLIED", "EXPIRED"] as const;
@@ -60,8 +60,8 @@ export function generateCredits(
     expiryDate.setFullYear(expiryDate.getFullYear() + 1);
 
     credits.push({
-      id: uuidFromSeed(`credit-${COMPANY_ID}-${creditNumber}`),
-      companyId: COMPANY_ID,
+      id: uuidFromSeed(`credit-${companyId}-${creditNumber}`),
+      companyId,
       vendorId,
       creditNumber,
       creditDate,
@@ -81,9 +81,11 @@ export function generateCredits(
 
 export async function seedCredits(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   vendorIds: string[],
   invoiceIds: string[],
 ): Promise<void> {
+  companyId = targetCompanyId;
   const credits = generateCredits(vendorIds, invoiceIds);
   process.stdout.write(`  Seeding ${credits.length} credits...\n`);
 

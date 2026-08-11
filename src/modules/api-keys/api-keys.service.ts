@@ -1,10 +1,25 @@
 import crypto from "crypto";
 import { prisma } from "@/server/db/prisma";
 import type { TenantContext } from "@/server/context/tenant-context";
+import type { CompanyRole } from "@prisma/client";
 import { recordAudit } from "@/modules/audit";
 import { encrypt, decrypt } from "@/server/security/encryption";
 
 const KEY_PREFIX = "va_";
+
+/**
+ * Derive a CompanyRole from API key scopes (Phase 28.1 C-03).
+ *
+ * API keys are never granted blanket ADMIN: keys scoped with "admin:all"
+ * map to ADMIN, keys with any write capability map to MEMBER, and read-only
+ * keys map to VIEWER. This is the single authoritative mapping used by the
+ * proxy, authenticate-request, and require-permission.
+ */
+export function roleFromApiKeyScopes(scopes: string[]): CompanyRole {
+  if (scopes.includes("admin:all")) return "ADMIN";
+  if (scopes.some((s) => s.startsWith("write:"))) return "MEMBER";
+  return "VIEWER";
+}
 
 function hashKey(key: string): string {
   return crypto.createHash("sha256").update(key).digest("hex");

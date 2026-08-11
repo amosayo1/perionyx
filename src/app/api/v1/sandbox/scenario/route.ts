@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { SCENARIOS, getScenario } from "@/modules/sandbox/scenario";
 import { handleRouteError } from "@/server/http/handle-route";
 import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 const ScenarioSchema = z.object({
   scenarioId: z.string().min(1, "scenarioId is required").max(128),
@@ -15,6 +16,8 @@ const ScenarioSchema = z.object({
 export async function GET() {
   return withRuntimeContext(new Headers(), async (ctx) => {
     try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, "analytics.read");
+
       const scenarios = SCENARIOS.map((s) => ({
         id: s.id,
         title: s.title,
@@ -39,7 +42,8 @@ export async function GET() {
 export async function POST(request: Request) {
   return withRuntimeContext(request, async (ctx) => {
     try {
-  
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, "admin.settings");
+
       const rawBody = await request.json();
       const parsed = ScenarioSchema.safeParse(rawBody);
       if (!parsed.success) {

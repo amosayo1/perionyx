@@ -16,8 +16,18 @@ export async function GET(request: Request) {
     try {
   
       await rbacService.ensurePermission(ctx.tenant.userId, String(ctx.tenant.companyId), "admin.manage_roles");
-  
-      const roles = await prisma.role.findMany({ where: { companyId: ctx.tenant.companyId }, include: { permissions: { include: { permission: true } } } });
+
+      const { searchParams } = new URL(request.url);
+      const take = Math.min(Math.max(Number(searchParams.get("take") ?? 200) || 200, 1), 500);
+      const skip = Math.max(Number(searchParams.get("skip") ?? 0) || 0, 0);
+
+      const roles = await prisma.role.findMany({
+        where: { companyId: ctx.tenant.companyId },
+        take,
+        skip,
+        orderBy: { createdAt: "asc" },
+        include: { permissions: { include: { permission: true } } },
+      });
       return NextResponse.json(roles);
     } catch (err) {
       if (err instanceof z.ZodError) return zodErrorResponse(err);

@@ -42,6 +42,7 @@ export async function GET(request: Request) {
       const views = await prisma.financialReportSavedView.findMany({
         where,
         orderBy: [{ isDefault: "desc" }, { updatedAt: "desc" }],
+        take: 200,
       });
   
       return NextResponse.json(

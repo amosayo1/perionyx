@@ -36,7 +36,7 @@ export default function PendingApprovalsClient() {
 
   useEffect(() => {
     void fetchPending();
-    const id = setInterval(() => void fetchPending(), 10000);
+    const id = setInterval(() => void fetchPending(), 30000);
     return () => clearInterval(id);
   }, []);
 

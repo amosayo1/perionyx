@@ -11,6 +11,8 @@ export async function POST(request: Request, context: RouteContext) {
     const { params } = context;
     try {
   
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'approvals.approve');
+
       const transactionId = (await params).id;
   
       // Approve this step

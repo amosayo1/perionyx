@@ -45,6 +45,7 @@ export async function GET(request: Request) {
       const schedules = await prisma.financialReportSchedule.findMany({
         where,
         orderBy: { createdAt: "desc" },
+        take: 200,
       });
   
       return NextResponse.json(

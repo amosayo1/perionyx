@@ -123,11 +123,18 @@ export class ScenarioModelingService {
       riskScore: new Prisma.Decimal(0),
     }));
 
+    // Batch: single query for the latest execution per scenario (Phase 28.1 F-07)
+    const executions = await prisma.fPAScenarioExecution.findMany({
+      where: { scenarioId: { in: scenarioIds } },
+      orderBy: { executionDate: "desc" },
+    });
+    const lastByScenario = new Map<string, (typeof executions)[number]>();
+    for (const ex of executions) {
+      if (!lastByScenario.has(ex.scenarioId)) lastByScenario.set(ex.scenarioId, ex);
+    }
+
     for (const summary of scenarioSummaries) {
-      const lastResult = await prisma.fPAScenarioExecution.findFirst({
-        where: { scenarioId: summary.id },
-        orderBy: { executionDate: "desc" },
-      });
+      const lastResult = lastByScenario.get(summary.id);
       if (lastResult) {
         summary.profitImpact = (lastResult.financialImpact as any)?.profit ?? new Prisma.Decimal(0);
         summary.riskScore = lastResult.confidence;
@@ -140,7 +147,7 @@ export class ScenarioModelingService {
     ];
 
     for (const s of scenarios) {
-      const last = await prisma.fPAScenarioExecution.findFirst({ where: { scenarioId: s.id }, orderBy: { executionDate: "desc" } });
+      const last = lastByScenario.get(s.id);
       if (last) {
         metrics[0].values[s.id] = (last.financialImpact as any)?.revenue ?? new Prisma.Decimal(0);
         metrics[1].values[s.id] = last.confidence;

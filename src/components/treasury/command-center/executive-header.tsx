@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   DollarSign,
@@ -132,6 +133,20 @@ function KpiCard({ kpi, index }: { kpi: ExecutiveKPI; index: number }) {
 export function ExecutiveHeader({ className }: { className?: string }) {
   const health = MOCK_TREASURY_HEALTH;
 
+  const exportSnapshot = () => {
+    const rows = MOCK_EXECUTIVE_KPIS.map((k) =>
+      `${k.label},${k.value},${k.direction === "down" ? "-" : "+"}${k.changePercent.toFixed(2)}%`,
+    );
+    const csv = ["Metric,Value,Change", ...rows].join("\n");
+    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "treasury-snapshot.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className={cn("space-y-6", className)}>
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -149,19 +164,19 @@ export function ExecutiveHeader({ className }: { className?: string }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <button className="flex items-center gap-2 rounded-lg border border-gold/30 bg-gold/10 px-4 py-2.5 text-[13px] font-medium text-gold transition-colors hover:bg-gold/20" aria-label="View Full Cash Position">
+        <Link href="/treasury/cash-position" className="flex items-center gap-2 rounded-lg border border-gold/30 bg-gold/10 px-4 py-2.5 text-[13px] font-medium text-gold transition-colors hover:bg-gold/20" aria-label="View Full Cash Position">
           View Full Cash Position
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </button>
-        <button className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white" aria-label="Open Liquidity Center">
+        </Link>
+        <Link href="/treasury/liquidity" className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white" aria-label="Open Liquidity Center">
           <Droplets className="h-4 w-4" aria-hidden="true" />
           Open Liquidity Center
-        </button>
-        <button className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white" aria-label="Export Snapshot">
+        </Link>
+        <button onClick={exportSnapshot} className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white" aria-label="Export Snapshot">
           <FileDown className="h-4 w-4" aria-hidden="true" />
           Export Snapshot
         </button>
-        <button className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white" aria-label="Print Dashboard">
+        <button onClick={() => window.print()} className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-zinc-900/50 px-4 py-2.5 text-[13px] text-zinc-300 transition-colors hover:border-zinc-600 hover:text-white" aria-label="Print Dashboard">
           <Printer className="h-4 w-4" aria-hidden="true" />
           Print Dashboard
         </button>

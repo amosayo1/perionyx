@@ -12,7 +12,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, weightedPick, randInt, randFloat, randomDateInRange, daysAgo, uuidFromSeed, logProgress, roundToCents } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_500;
 
 const ACTIONS = [
@@ -148,8 +148,8 @@ export function generateAuditRecords(
       } : null;
 
       records.push({
-        id: uuidFromSeed(`audit-${COMPANY_ID}-${entityType}-${i}`),
-        companyId: COMPANY_ID,
+        id: uuidFromSeed(`audit-${companyId}-${entityType}-${i}`),
+        companyId,
         entityType,
         entityId,
         action,
@@ -177,12 +177,14 @@ export function generateAuditRecords(
 
 export async function seedAuditRecords(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   invoiceIds: string[],
   exceptionIds: string[],
   approvalIds: string[],
   proposalIds: string[],
   vendorIds: string[],
 ): Promise<void> {
+  companyId = targetCompanyId;
   const records = generateAuditRecords(invoiceIds, exceptionIds, approvalIds, proposalIds, vendorIds);
   process.stdout.write(`  Seeding ${records.length} audit records...\n`);
 

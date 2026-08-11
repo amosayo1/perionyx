@@ -7,17 +7,28 @@ import { prisma } from '@/server/db/prisma';
 export async function reconcileSettlements(companyId: string, report: Array<{ externalId: string; status: string }>) {
   const results: Array<{ externalId: string; matched: boolean }> = [];
 
+  if (report.length === 0) return results;
+
+  // Batch read: single query for all externalIds (Phase 28.1 F-04)
+  const externalIds = report.map((item) => item.externalId);
+  const recs = await prisma.settlementRecord.findMany({
+    where: { companyId, externalId: { in: externalIds } },
+    select: { id: true, externalId: true, status: true },
+  });
+  const byExternalId = new Map(recs.map((r) => [r.externalId, r]));
+
+  const toReconcile = recs
+    .filter((r) => r.status === 'DELIVERED' || r.status === 'PENDING')
+    .map((r) => r.id);
+  if (toReconcile.length > 0) {
+    await prisma.settlementRecord.updateMany({
+      where: { id: { in: toReconcile } },
+      data: { status: 'RECONCILED', updatedAt: new Date() },
+    });
+  }
+
   for (const item of report) {
-    const rec = await prisma.settlementRecord.findFirst({ where: { companyId, externalId: item.externalId } });
-    if (rec) {
-      // mark as reconciled if delivered previously
-      if (rec.status === 'DELIVERED' || rec.status === 'PENDING') {
-        await prisma.settlementRecord.update({ where: { id: rec.id }, data: { status: 'RECONCILED', updatedAt: new Date() } });
-      }
-      results.push({ externalId: item.externalId, matched: true });
-    } else {
-      results.push({ externalId: item.externalId, matched: false });
-    }
+    results.push({ externalId: item.externalId, matched: byExternalId.has(item.externalId) });
   }
 
   return results;

@@ -1,5 +1,5 @@
 import { requireRuntimeContext } from "@/runtime/context";
-import { ApiKeyService } from "@/modules/api-keys/api-keys.service";
+import { ApiKeyService, roleFromApiKeyScopes } from "@/modules/api-keys/api-keys.service";
 import { UnauthorizedError, ForbiddenError } from "@/lib/errors/app-error";
 
 const SCOPE_MAP: Record<string, string[]> = {
@@ -33,7 +33,11 @@ export async function authenticateRequest(
       throw new ForbiddenError(`API key does not have scope: ${requiredScope}`);
     }
 
-    return { userId: apiKeyResult.keyId, companyId: apiKeyResult.companyId, role: "ADMIN" as const };
+    return {
+      userId: apiKeyResult.keyId,
+      companyId: apiKeyResult.companyId,
+      role: roleFromApiKeyScopes(apiKeyResult.scopes),
+    };
   }
 
   throw new UnauthorizedError("Authentication required");

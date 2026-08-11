@@ -60,7 +60,7 @@ async function main() {
         companyId: company.id,
         name: "System Clearing",
         currency: "USD",
-        type: "OPERATING",
+        kind: "SYSTEM_CLEARING",
       },
     });
 
@@ -135,10 +135,16 @@ async function main() {
       data: {
         companyId: company.id,
         name: "Default Approval",
-        thresholdValue: 10000,
-        currency: "USD",
-        approvers: JSON.stringify([user.id]),
-        active: true,
+        description: "All transactions require CFO approval",
+        priority: 100,
+        conditions: JSON.stringify([]),
+        requiredApprovers: 1,
+        approverRoles: ["ADMIN", "TREASURER"],
+        approvalMode: "sequential",
+        thresholdField: "amount",
+        thresholdOperator: "gte",
+        thresholdValue: 0,
+        createdByUserId: user.id,
       },
     });
 
@@ -146,11 +152,11 @@ async function main() {
     await prisma.auditLog.create({
       data: {
         companyId: company.id,
-        userId: user.id,
+        actorUserId: user.id,
         action: "COMPANY_CREATED",
-        entity: "Company",
-        entityId: company.id,
-        details: JSON.stringify({ name: company.name, slug: company.slug }),
+        resourceType: "Company",
+        resourceId: company.id,
+        metadata: { name: company.name, slug: company.slug },
       },
     });
 

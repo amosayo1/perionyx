@@ -1,7 +1,7 @@
 import { DrillDownPanel } from "@/components/executive-command-center/drill-down-panel";
 
 export const metadata = {
-  title: "KPI Drill-Down | Vaulta",
+  title: "KPI Drill-Down | Perionyx",
 };
 
 export default function ExecutiveDrillDownPage({

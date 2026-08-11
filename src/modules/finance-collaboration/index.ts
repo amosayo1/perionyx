@@ -74,7 +74,7 @@ export type {
   CaseDecisionRecord,
   AssignmentRecord,
   WorkloadRecord,
-  WorkQueueItem,
+  SpecialistQueueItem,
   SharedEvidenceItem,
   MemoryEntry,
   DecisionRegistryEntry,

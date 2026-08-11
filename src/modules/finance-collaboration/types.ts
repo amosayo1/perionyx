@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────────────────────
 
 import { Prisma } from "@prisma/client";
+import type { WorkQueuePriority } from "@/modules/work-queue";
 
 // ─── Case Types ──────────────────────────────────────────────
 
@@ -27,7 +28,7 @@ export type CaseStatus =
   | "resolved"
   | "closed";
 
-export type CasePriority = "low" | "medium" | "high" | "critical";
+export type CasePriority = WorkQueuePriority;
 
 // ─── Participant Types ───────────────────────────────────────
 
@@ -354,7 +355,7 @@ export interface WorkloadRecord {
   byType: Partial<Record<AssignmentType, number>>;
 }
 
-export interface WorkQueueItem {
+export interface SpecialistQueueItem {
   id: string;
   title: string;
   queueType: QueueType;

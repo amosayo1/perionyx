@@ -12,7 +12,10 @@ export async function GET(request: Request) {
   return withRuntimeContext(request, async (ctx) => {
     try {
       await rbacService.ensurePermission(ctx.tenant.userId, String(ctx.tenant.companyId), 'connectors.manage');
-      const configs = await prisma.connectorConfig.findMany({ where: { companyId: ctx.tenant.companyId } });
+      const { searchParams } = new URL(request.url);
+      const take = Math.min(Math.max(Number(searchParams.get("take") ?? 200) || 200, 1), 500);
+      const skip = Math.max(Number(searchParams.get("skip") ?? 0) || 0, 0);
+      const configs = await prisma.connectorConfig.findMany({ where: { companyId: ctx.tenant.companyId }, take, skip, orderBy: { createdAt: "asc" } });
       return NextResponse.json(configs);
     } catch (err) {
       if (err instanceof z.ZodError) return zodErrorResponse(err);

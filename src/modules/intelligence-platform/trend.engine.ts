@@ -70,17 +70,25 @@ export class TrendEngine {
       case "yearly": startDate = new Date(now.getTime() - 1825 * 86400000); break;
     }
 
-    // Compute trends for all score types
+    // Compute trends for all score types — single batched query (Phase 28.1 F-06)
+    const scoresByType = new Map<string, { score: number; calculatedAt: Date }[]>();
+    const rawScores = await prisma.financialScore.findMany({
+      where: {
+        companyId,
+        scoreType: { in: SCORE_KEYS },
+        calculatedAt: { gte: startDate },
+      },
+      orderBy: { calculatedAt: "asc" },
+      select: { score: true, calculatedAt: true, scoreType: true },
+    });
+    for (const s of rawScores) {
+      const list = scoresByType.get(s.scoreType) ?? [];
+      list.push({ score: s.score, calculatedAt: s.calculatedAt });
+      scoresByType.set(s.scoreType, list);
+    }
+
     for (const scoreType of SCORE_KEYS) {
-      const scores = await prisma.financialScore.findMany({
-        where: {
-          companyId,
-          scoreType,
-          calculatedAt: { gte: startDate },
-        },
-        orderBy: { calculatedAt: "asc" },
-        select: { score: true, calculatedAt: true },
-      });
+      const scores = scoresByType.get(scoreType) ?? [];
 
       if (scores.length === 0) continue;
 
@@ -144,19 +152,27 @@ export class TrendEngine {
       });
     }
 
-    // Compute trends for key KPIs
+    // Compute trends for key KPIs — single batched query (Phase 28.1 F-06)
     const kpiKeys = ["revenue", "expenses", "cashBalance", "dso", "dpo", "integrityScore", "complianceScore", "healthScore"];
 
+    const kpisByKey = new Map<string, { currentValue: number; recordedAt: Date }[]>();
+    const rawKpis = await prisma.kPIValue.findMany({
+      where: {
+        companyId,
+        kpiKey: { in: kpiKeys },
+        recordedAt: { gte: startDate },
+      },
+      orderBy: { recordedAt: "asc" },
+      select: { currentValue: true, recordedAt: true, kpiKey: true },
+    });
+    for (const k of rawKpis) {
+      const list = kpisByKey.get(k.kpiKey) ?? [];
+      list.push({ currentValue: k.currentValue, recordedAt: k.recordedAt });
+      kpisByKey.set(k.kpiKey, list);
+    }
+
     for (const kpiKey of kpiKeys) {
-      const kpis = await prisma.kPIValue.findMany({
-        where: {
-          companyId,
-          kpiKey,
-          recordedAt: { gte: startDate },
-        },
-        orderBy: { recordedAt: "asc" },
-        select: { currentValue: true, recordedAt: true },
-      });
+      const kpis = kpisByKey.get(kpiKey) ?? [];
 
       if (kpis.length === 0) continue;
 

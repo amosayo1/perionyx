@@ -44,7 +44,7 @@ export async function GET(request: Request) {
 
     const result = await repos.invoice.findByFilter(filter as never, undefined, { page, limit });
 
-    return applyCommonHeaders(NextResponse.json({ data: result }), correlationId);
+    return applyCommonHeaders(NextResponse.json({ data: result }), correlationId, 15);
   } catch (error) {
     return apErrorResponse(error instanceof Error ? error : new AppError(String(error), "INTERNAL", 500), correlationId);
   }

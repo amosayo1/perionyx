@@ -189,7 +189,7 @@ export default function SetupPage() {
         return (
           <div className="space-y-6">
             <div className="rounded-lg border border-white/[0.06] bg-zinc-900/40 p-6 text-center">
-              <Server className="mx-auto h-12 w-12 text-[#d4a843] mb-4" />
+              <Server className="mx-auto h-12 w-12 text-[#d4af37] mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Perionyx Enterprise Installer</h3>
               <p className="text-sm text-zinc-400 max-w-md mx-auto">
                 This wizard will guide you through a complete platform installation, including environment validation,
@@ -198,17 +198,17 @@ export default function SetupPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AnimatedCard className="p-4 text-center" hoverEffect="scale">
-                <Shield className="mx-auto h-6 w-6 text-[#d4a843] mb-2" />
+                <Shield className="mx-auto h-6 w-6 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">Validate Environment</p>
                 <p className="text-[10px] text-zinc-600 mt-1">Check system prerequisites</p>
               </AnimatedCard>
               <AnimatedCard className="p-4 text-center" hoverEffect="scale">
-                <Database className="mx-auto h-6 w-6 text-[#d4a843] mb-2" />
+                <Database className="mx-auto h-6 w-6 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">Configure Database</p>
                 <p className="text-[10px] text-zinc-600 mt-1">Set up the data layer</p>
               </AnimatedCard>
               <AnimatedCard className="p-4 text-center" hoverEffect="scale">
-                <Building2 className="mx-auto h-6 w-6 text-[#d4a843] mb-2" />
+                <Building2 className="mx-auto h-6 w-6 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">Bootstrap Company</p>
                 <p className="text-[10px] text-zinc-600 mt-1">Create your organization</p>
               </AnimatedCard>
@@ -233,7 +233,7 @@ export default function SetupPage() {
                   <button
                     type="button"
                     onClick={loadPrerequisites}
-                    className="rounded-lg bg-[#d4a843]/10 border border-[#d4a843]/20 px-4 py-2 text-sm text-[#d4a843] hover:bg-[#d4a843]/20 transition-colors"
+                    className="rounded-lg bg-[#d4af37]/10 border border-[#d4af37]/20 px-4 py-2 text-sm text-[#d4af37] hover:bg-[#d4af37]/20 transition-colors"
                   >
                     Run Prerequisite Checks
                   </button>
@@ -613,7 +613,7 @@ export default function SetupPage() {
                         <motion.div
                           animate={{ rotate: 360 }}
                           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                          className="h-4 w-4 rounded-full border-2 border-[#d4a843] border-t-transparent"
+                          className="h-4 w-4 rounded-full border-2 border-[#d4af37] border-t-transparent"
                         />
                       ) : p.status === "completed" ? (
                         <CheckCircle2 className="h-4 w-4 text-green-400" />
@@ -652,22 +652,22 @@ export default function SetupPage() {
             </motion.div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               <AnimatedCard className="p-4 text-center">
-                <Building2 className="mx-auto h-5 w-5 text-[#d4a843] mb-2" />
+                <Building2 className="mx-auto h-5 w-5 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">{data.companyName}</p>
                 <p className="text-[10px] text-zinc-600">Company</p>
               </AnimatedCard>
               <AnimatedCard className="p-4 text-center">
-                <UserCog className="mx-auto h-5 w-5 text-[#d4a843] mb-2" />
+                <UserCog className="mx-auto h-5 w-5 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">{data.adminEmail}</p>
                 <p className="text-[10px] text-zinc-600">Administrator</p>
               </AnimatedCard>
               <AnimatedCard className="p-4 text-center">
-                <Globe className="mx-auto h-5 w-5 text-[#d4a843] mb-2" />
+                <Globe className="mx-auto h-5 w-5 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">{data.baseCurrency}</p>
                 <p className="text-[10px] text-zinc-600">Base Currency</p>
               </AnimatedCard>
               <AnimatedCard className="p-4 text-center">
-                <Database className="mx-auto h-5 w-5 text-[#d4a843] mb-2" />
+                <Database className="mx-auto h-5 w-5 text-[#d4af37] mb-2" />
                 <p className="text-xs font-medium text-zinc-300">{data.environment}</p>
                 <p className="text-[10px] text-zinc-600">Environment</p>
               </AnimatedCard>

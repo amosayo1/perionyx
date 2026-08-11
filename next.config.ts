@@ -12,9 +12,6 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   async headers() {
     const scriptSrc = isDev
       ? "'self' 'unsafe-inline' 'unsafe-eval'"

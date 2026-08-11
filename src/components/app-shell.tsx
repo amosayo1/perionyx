@@ -120,9 +120,7 @@ export function AppShell({
 
   useEffect(() => {
     return registerShortcuts([
-      { key: "n", label: "New item", description: "Create new item", category: "Actions", handler: () => {}, metaKey: true },
       { key: "f", label: "Find", description: "Find in page", category: "Actions", handler: () => { document.querySelector<HTMLInputElement>('[aria-label="Search"]')?.focus(); }, metaKey: true },
-      { key: "s", label: "Save", description: "Save current form", category: "Actions", handler: () => {}, metaKey: true },
     ]);
   }, [registerShortcuts]);
 
@@ -181,7 +179,7 @@ export function AppShell({
       } catch { /* ignore */ }
     };
     void fetchCount();
-    const id = setInterval(fetchCount, 15000);
+    const id = setInterval(fetchCount, 30000);
     return () => clearInterval(id);
   }, []);
 
@@ -204,6 +202,15 @@ export function AppShell({
     if (isSandbox && SANDBOX_RESTRICTED.includes(item.href)) return false;
     return true;
   });
+
+  // Section groups must respect the same role/permission/sandbox filtering as
+  // the flat nav — otherwise ADMIN-only destinations render for every user.
+  const visibleSections = NAV_SECTIONS
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => visibleNav.some((navItem) => navItem.href === item.href)),
+    }))
+    .filter((section) => section.items.length > 0);
 
   const openCommandPalette = useCallback(() => {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
@@ -233,7 +240,7 @@ export function AppShell({
         <div className="flex h-screen overflow-hidden bg-perionyx-bg-primary text-perionyx-text-primary">
           <EnterpriseSidebarNew
             nav={visibleNav}
-            sections={NAV_SECTIONS}
+            sections={visibleSections}
             pendingApprovals={pendingApprovals}
             isSandbox={isSandbox}
             favorites={favorites}

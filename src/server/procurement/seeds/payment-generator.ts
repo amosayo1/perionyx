@@ -11,7 +11,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, weightedPick, randInt, randFloat, randomDateInRange, daysAgo, uuidFromSeed, logProgress, roundToCents, padNum } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_400;
 
 const PROPOSAL_STATUSES = ["DRAFT", "SUBMITTED", "REVIEWED", "APPROVED", "REJECTED", "EXECUTED", "CANCELLED"] as const;
@@ -103,7 +103,7 @@ export function generatePayments(
 
   for (let i = 0; i < proposalCount; i++) {
     const seq = i + 1;
-    const id = uuidFromSeed(`proposal-${COMPANY_ID}-${seq}`);
+    const id = uuidFromSeed(`proposal-${companyId}-${seq}`);
     const proposalNumber = `PP-${padNum(seq, 5)}`;
     const proposalDate = randomDateInRange(daysAgo(600), daysAgo(7), rng);
     const paymentDate = new Date(proposalDate.getTime() + randInt(3, 15, rng) * 86400000);
@@ -147,7 +147,7 @@ export function generatePayments(
     }
 
     proposals.push({
-      id, companyId: COMPANY_ID, proposalNumber, proposalDate, paymentDate,
+      id, companyId, proposalNumber, proposalDate, paymentDate,
       currency: "USD", totalAmount, totalInvoices, totalVendors,
       paymentMethod, status, submittedBy, submittedAt, reviewedBy, reviewedAt,
       approvedBy, approvedAt, rejectedBy, rejectionReason, createdBy: "seed-system",
@@ -162,7 +162,7 @@ export function generatePayments(
   for (let i = 0; i < batchCount; i++) {
     const proposal = executedProposals[i % executedProposals.length];
     const seq = i + 1;
-    const id = uuidFromSeed(`batch-${COMPANY_ID}-${seq}`);
+    const id = uuidFromSeed(`batch-${companyId}-${seq}`);
     const batchNumber = `PB-${padNum(seq, 5)}`;
 
     const status = weightedPick([...BATCH_STATUSES], BATCH_WEIGHTS, rng);
@@ -186,8 +186,8 @@ export function generatePayments(
     }
 
     batches.push({
-      id, companyId: COMPANY_ID, batchNumber, proposalId: proposal.id,
-      paymentMethod: proposal.paymentMethod, bankAccountId: `bank-${COMPANY_ID}-${i}`,
+      id, companyId, batchNumber, proposalId: proposal.id,
+      paymentMethod: proposal.paymentMethod, bankAccountId: `bank-${companyId}-${i}`,
       totalPayments, totalAmount,
       totalFees, netDisbursement, status, submittedAt, completedAt,
       confirmedBy, createdBy: "seed-system",
@@ -210,7 +210,7 @@ export function generatePayments(
 
       records.push({
         id: uuidFromSeed(`payment-${payNum}`),
-        companyId: COMPANY_ID,
+        companyId,
         paymentNumber: payNum,
         paymentBatchId: batch.id,
         vendorInvoiceId: invoiceId,
@@ -239,11 +239,13 @@ export function generatePayments(
 
 export async function seedPayments(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   vendorIds: string[],
   invoiceIds: string[],
   invoiceAmounts: Map<string, number>,
   invoiceVendorMap: Map<string, string>,
 ): Promise<void> {
+  companyId = targetCompanyId;
   const { proposals, batches, records } = generatePayments(vendorIds, invoiceIds, invoiceAmounts, invoiceVendorMap);
 
   process.stdout.write(`  Seeding ${proposals.length} proposals, ${batches.length} batches, ${records.length} records...\n`);

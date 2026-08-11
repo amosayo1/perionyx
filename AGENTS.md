@@ -646,6 +646,37 @@ Every new feature, edit, or optimization MUST pass all 10 questions below. Docum
 - **Documentation** (6 files): DESIGN_GOVERNANCE, DESIGN_TOKEN_POLICY, DESIGN_REVIEW_CHECKLIST, EDL_CI_PIPELINE, DESIGN_COMPLIANCE_REPORT, EDP_22_0B_5
 - **Brain**: Lesson 40 updated ("Architecture is enforced through tooling"), Principle #17 (Architecture Enforcement Through Tooling), evolution timeline entry
 
+### Phase 22.1 — Product & Design Research Program (Complete)
+- **Scope**: Reverse-engineer the world's best software into decision-ready principles for Perionyx — grounded exclusively in first-party sources, every claim traceable, every inference labeled `[inferred]`
+- **4 deep-dive reviews** (~10,400 lines) at `docs/research/`:
+  - **Stripe Dashboard** (`stripe-dashboard-review/stripe-design-review.md`) — "The Perionyx Design Bible" — dashboard trust patterns, metric hierarchy, empty states
+  - **Linear** (`linear-review/`, 10-part series incl. `linear-design-review.md`) — navigation/IA, workflows, interaction & performance, keyboard, visual design, microinteractions, design decisions, opportunities, principles, roadmap comparison
+  - **Ramp** (`ramp-review/ramp-design-review.md`) — spend management, corporate cards, AP, procurement, banking, AI agents
+  - **Coupa** (`coupa-review/coupa-design-review.md`) — Total Spend Management: procurement, AP, supplier management, contracts, spend intelligence
+- **Key cross-product findings**: module drift is a trust tax (consistency = release requirement via EDL governance); tabular numerals as a design rule for financial columns; trust = verifiable numbers; evidence-first over polish; the reset is a funded recurring program, not a fire drill
+- **Inputs directly consumed by Phase 22.2 (Dashboard v2) and Phase 22.3 (Decision Workspace)** design specs
+
+### Phase 22.2 — Dashboard v2 (Complete)
+- **Scope**: Rebuilt the executive dashboard around the `DashboardDataV2` contract — answers "What should I do next?", not "What happened?"
+- **Docs**: `docs/dashboard/{DASHBOARD_AUDIT, DASHBOARD_REDESIGN_SPEC, DASHBOARD_VALIDATION}.md` — 15 severity-ranked findings (SEV-1…SEV-15), 8 non-negotiable commitments, 100% finding resolution
+- **Key violations fixed**: fake scalar confidence (SEV-1) → categorical bands with basis; no evidence package (SEV-2); heuristic branded as AI (SEV-3) → real `Decision` objects, "Decision Brief" not "AI Brief"; dead action buttons (SEV-4); hardcoded "previous period" (SEV-5) → computed `pctDelta`; no source/timestamp (SEV-6); no drill-down (SEV-7); greeting before KPIs (SEV-8); double fetch (SEV-9) → single composed payload; lossy preview projection (SEV-10); no data-mode boundary (SEV-11); activity without consequence (SEV-12); single hardcoded persona (SEV-13) → `personaFromRole()`; false "All caught up" (SEV-14); dashboard dead-ends (SEV-15)
+- **Module**: `src/modules/dashboard/` — `DashboardV2CompositionService` (parallel section composition with per-section `.catch()` fallibility), 5 real KPIs (cash position, pending approvals, open AP value, automation rate, open exceptions) with `value/delta/basis/source/updatedAt/status/drillTarget`, ranked attention queue, decision brief, full work-queue state, today's work, consequence-rich activity
+- **Route**: `src/app/api/dashboard/data/route.ts` — `withRuntimeContext` + `cacheHeaders(15)`; `INSTANCE_DATA_MODE=live` env for live/seeded badge
+- **Pages/components**: `dashboard-page-client`, `dashboard-metric-strip`, `dashboard-attention-queue`, `dashboard-decision-brief`, `dashboard-work-queue`, `dashboard-todays-work`, `dashboard-activity`; deleted `dashboard-greeting`/`dashboard-ai-brief`/`dashboard-queue-preview`/`dashboard-financial-health`
+- **Verification**: 16/16 `test/dashboard-composition.test.ts`, typecheck + build pass, H-01 deep-import respected (client imports types only)
+- **Deferred**: persona section *visibility* filtering (identity only), section dismissal persistence, timestamped empty states
+
+### Phase 22.3 — Decision Workspace (Complete)
+- **Scope**: Replaced the Invoice Workspace details page with the canonical evidence-first, auditable financial decision surface — "Can I confidently make this financial decision?"
+- **Docs**: `docs/decision-workspace/{DECISION_WORKSPACE_AUDIT, DECISION_WORKSPACE_REDESIGN_SPEC, DECISION_WORKSPACE_VALIDATION, EDP_22_3}.md` — Product System compliance ~35% → ~90%
+- **Module**: `src/modules/decision-workspace/` — `types.ts` (EvidenceItem/Group, Recommendation, DecisionSummary, TimelineEntry, ActionContext), `evidence.ts` (`buildEvidencePackage` → 14 ordered groups, absence always disclosed as negative/pending), `recommendation.ts` (`deriveRecommendation` — deterministic priority reject→review→approve→no-signal, `ai: null` reserved, no fabricated scalars), `workspace-service.ts` (server-only composition over `getAPRepositories()`, PO/GRN via direct Prisma — no AP PO/GRN repo exists)
+- **Components**: `src/components/decision-workspace/` — 3-zone layout (summary / evidence+timeline / actions), keyboard shortcuts (`?` legend + `a/r/x/b/d/v/k/j/t` with `isTypingTarget` guard), consequence previews, confirmation dialogs (AnimatedDialog)
+- **Page**: `src/app/(shell)/procurement/invoices/[invoiceId]/page.tsx`
+- **Constraints honored**: no new API surface (reuses `/api/v1/ap/invoices/[id]/{approve,reject,escalate,block,dispute,void}`), money formatted in exactly one server-side `format.ts`, EDL tokens only
+- **Key decision (EDP)**: `formatted` client bag removed (server pre-formats); `request-info`/`assign` actions dropped (no endpoint); `v` shortcut added; item component inlined
+- **Verification**: 14/14 `test/decision-workspace.test.ts`, 112/112 regression (`ap-api` 52 + `runtime` 60), typecheck + build pass; build hazard fixed — client components deep-import `types`/`format` (barrel pulls Prisma→`pg` into client bundle)
+- **Deferred**: `ai` stays `null` until DI ships (evidence package is its contract), evidence search (`f`), live demo data (Demo Company has 0 AP invoices)
+
 ### Phase 23.0 — Perionyx Platform Constitution (Complete)
 - **Scope**: Constitutional architecture for the Enterprise Financial Operating System — 32 documents, 15 Architectural Laws, 15 Platforms, canonical financial model, provider driver model
 - **Constitutional Authority**: `docs/platform/PLATFORM_CONSTITUTION.md` — highest engineering authority for all Perionyx code
@@ -860,6 +891,45 @@ Every new feature, edit, or optimization MUST pass all 10 questions below. Docum
 - **Key Findings**: Readiness 6.75/10 (Conditionally Ready). 27 debt items (3 P0). 20 risks (2 Critical). 43% hypothesis rate in business rules. Only 1 formal interview supports entire spec. 6 missing rules (Critical: vendor bank change requires approval). Invoice Detail ~320 data points cognitive overload risk. Persona count inconsistent (9 vs 10).
 - **Documents**: PRODUCT_REVIEW_REPORT, PRODUCT_READINESS_SCORECARD, PRODUCT_RISK_REGISTER, PRODUCT_DEBT_REGISTER, COGNITIVE_LOAD_REVIEW, BUSINESS_RULE_AUDIT, AI_TRUST_REVIEW, CUSTOMER_TRACEABILITY_AUDIT, PRODUCT_SIMPLIFICATION_REPORT, PHASE_27_1R_EXECUTIVE_SUMMARY, EDP_27_1R
 - **Brain**: Lesson 56, Principle #33, ADR-033, evolution timeline entry
+
+### Phase 28.1 — Enterprise Readiness Remediation (Complete)
+- **Scope**: Resolve every Critical and High finding from the Phase 28.0 survey; re-verify; document honestly. Constraint: no new features, no untestable code, every change maps to a documented finding
+- **Security (all fixed)**:
+  - **C-01 (Critical) header spoofing** — proxy now strips `x-user-id`/`x-company-id`/`x-company-role` from ALL requests and derives identity only from verified JWT (`token.sub`/`activeCompanyId`/`companyRole`) or DB-backed API key (`roleFromApiKeyScopes`); `verifyHeaderIdentity()` in `withRuntimeContext` re-verifies claims + rejects unknown roles (defense-in-depth)
+  - **C-02 (Critical) unguarded tick** — `CRON_SECRET` mandatory (≥16 chars else 503 fail-closed), `crypto.timingSafeEqual`, 401 on mismatch
+  - **C-03 (Critical) API-key ADMIN** — `roleFromApiKeyScopes(scopes)`: `admin:all`→ADMIN, `write:*`→MEMBER, else VIEWER; single source of truth (proxy + authenticate-request + require-permission)
+  - **H-01 MFA enforcement** — `enforceMfa()`: `PermissionRegistry.requiresMfa` permissions demand fresh TOTP/recovery verification (12h window) for enrolled users; un-enrolled users not blocked (accepted — forced enrollment is a product decision)
+  - **H-02 webhook mutations** — `webhooks.manage` required on POST/PATCH/DELETE + Zod schemas (idempotency preserved)
+  - **H-03 13 unguarded v1 routes** — 7 gated (`approvals.view/approve/reject`, `analytics.read`, `admin.settings`), 6 documented as correctly open (public leads, token-authenticated invites, existing session guards)
+  - **H-04 inbound webhook verification** — documented ACCEPTED RISK with wiring plan (verifiers unit-complete; no inbound source exists; wiring deferred to first real integration)
+  - **H-05 legacy identity module** — documented accepted (zero-consumer; deletion blocked by system/identity pages)
+- **Performance (all fixed)**: `ignoreBuildErrors` removed + `docs/site` excluded from root tsconfig + `seed-fresh.ts` errors fixed → **typecheck 0 errors** (was 11 pre-existing); approval polling hammer (30s polls, select, take 100, cache 10s); 9 N+1 loops → single-query batches (reconciliation-engine, approval-thread, trend.engine, scenario-modeling, calendar, risk, multi-company-builder, automation-engine, anomaly-detection); 9 unbounded queries → take/skip (admin users/roles/connectors/webhooks + financial-reports ×4); cache headers on cfo/dashboard (30s), ap/invoices (15s), ledger (15s)
+- **UX (all fixed)**: `/invoices` + `/audit-trail` rebuilt as live Prisma server components (fabricated figures removed; merged AuditLog + ProcurementAPAuditRecord feed — verified live 1,673 open invoices / 21,780 AP audit records); `/reports` un-disabled in nav; deprecated `/accounting` tree removed from nav (routes kept); Guidance Start/Resume/Retake wired to `useOnboarding().startTour()`; report Export → real CSV
+- **Test fix**: `ForbiddenError` message includes permission name (satisfies authorization suite)
+- **Verification**: typecheck 0 errors; `pnpm build` passes (12 GB heap — 8 GB OOMs a worker); `pnpm vitest run` — 47 failures all pre-existing environmental (dev-DB workflow tests + env-dependent ai-provider/secrets), zero in changed modules; targeted 5 suites 50/50; live-DB smoke passed
+- **Deliverables**: 11 documents at `docs/readiness/` — REMEDIATION_LOG, VERIFICATION_REPORT, updated README/SECURITY_REVIEW/ENTERPRISE_READINESS (6.6 → 7.8)/OPEN_DECISIONS (6 of 8 resolved)/KNOWN_LIMITATIONS; AGENTS.md entry; brain updates
+- **Remaining (deferred, non-blocking)**: D-04 treasury hub mocks, D-05 one-command seed, CSP/chunked-body/rate-limit-keying hardening, forced MFA enrollment, H-04 wiring, 650 `formatCurrency` / 803 `as any` / zero-consumer modules
+- **Brain**: Lesson 58, Principle #35, evolution timeline entry
+
+### Phase 28.0 — Enterprise Readiness Survey (Complete)
+- **Scope**: Evidence-based readiness assessment for a CFO-facing demo and production — 9 objectives, 5 parallel deep-dive audits (UX, Security, Performance, Demo, Tech Debt), live-DB verification, 7 high-confidence fixes
+- **Verdict**: **Overall 6.6/10** — Demo-ready with caveats (Sandbox tenant + AP seed); **NOT production-ready** (3 Critical security findings)
+- **Blocker Found & Fixed**: AP seed generators hardcoded a phantom company ID (`cmqvfocev0001koor7ragb8bq`, zero rows) → parameterized via `SEED_COMPANY_ID`/`--company-id`; **verified live: 150 vendors / 3,500 invoices / 21,780 audit records written to Demo Company, 0 to phantom**
+- **Performance F-01 Fixed**: `cacheHeaders()` emitted `no-store` overriding TTLs (0 of 212 "cached" GETs cached) + `s-maxage` CDN cross-tenant leak → `private, max-age=N` (`handle-route.ts:61`)
+- **UX Fixed**: treasury hub 404 (EBAM) + 6 dead buttons wired; sidebar role-filtering bypass fixed (sections ∩ RBAC-filtered nav); no-op Cmd+N/Cmd+S removed; Vaulta→Perionyx tab titles (6 pages); legacy `#d4a843`→`#d4af37` (13×)
+- **Security Findings**: C-01 forged `x-user-id`/`x-company-id`/`x-company-role` headers bypass auth on ~195 non-v1 routes; C-02 unguarded `/api/v1/tick`; C-03 API key → ADMIN; MFA unenforced; webhook HMAC/Plaid JWS verifiers written but never wired; ~half of `docs/security` remediation claims verified fixed, 2 PARTIAL, 1 still present
+- **Performance**: 15 N+1 loops (10 read-path), 9 unbounded admin queries, `ignoreBuildErrors: true`, approval polling hammer (10s+15s, uncached, take 200)
+- **Known limitations**: 650 `formatCurrency` (0 use canonical), 803 `as any`, zero-consumer `persistence/` (31 files) + `locks/` (5), 3 workflow engines, 4 stub screens (`/invoices`, `/audit-trail` with fabricated figures, `/mobile-dashboard`, `/mobile/treasury`), treasury hub still `MOCK_*`
+- **Deliverables**: 8 documents at `docs/readiness/` — README (checklist), ENTERPRISE_READINESS (scorecard), SECURITY_REVIEW, PERFORMANCE_REVIEW, UX_AUDIT, DEMO_READINESS, KNOWN_LIMITATIONS, OPEN_DECISIONS (8 decisions D-01…D-08) + 5 raw audits at `docs/readiness/source-audits/`
+- **Verification**: typecheck — zero new errors (only 11 documented pre-existing: `docs/site` + `seed-fresh.ts`); test suite — 33 failures unchanged (pre-existing environmental: env-dependent ai-provider/secrets tests + dev-DB state in workflow tests), zero related to survey changes
+- **Brain**: Lesson 57, Principle #34, evolution timeline entry
+
+### H-01 — Work Queue Domain Consolidation (Complete)
+- **Scope**: Made `src/modules/work-queue/` the single canonical source of truth for Work Queue state (types, status labels, SLA labels, priority/SLA derivation, filters, pagination, preview projection) and eliminated all duplicate implementations
+- **Canonical module additions**: `constants.ts` (`VendorInvoiceStatus`, `HIGH_VALUE_THRESHOLD`=25000, `PENDING_STATUSES`, `WORK_QUEUE_STATUS_LABELS`), `status.ts` (`WORK_QUEUE_SLA_LABELS`, `toWorkQueueStatusLabel`, `toWorkQueueSlaLabel`, `workQueueStatusToNextAction`, `deriveSlaStatus`, `derivePriority`), `filters.ts` (`buildWorkQueueWhere`, `getWorkQueuePagination`, `DEFAULT_WORK_QUEUE_FILTERS`), `preview.ts` (`toWorkQueuePreviewItem`); `types.ts` rewritten with canonical `WorkQueuePriority`, `WorkQueueSlaStatus`, `WorkQueueItem`, `WorkQueuePreviewItem`, `WorkQueueFilters`
+- **Duplicates eliminated**: dashboard `WorkQueueItem` deleted → canonical `WorkQueuePreviewItem` (composition.service uses `toWorkQueuePreviewItem`); todays-work imports canonical `PENDING_STATUSES`/`HIGH_VALUE_THRESHOLD`; finance-collab `CasePriority` now aliases `WorkQueuePriority` + its `WorkQueueItem` renamed `SpecialistQueueItem` (distinct concept, thin adapter over `prisma.workQueue`); dead `findPendingApproval` removed from `IInvoiceRepository` + InMemory + Prisma implementations; hardcoded SLA label map in `work-queue-page-client.tsx` replaced with canonical `toWorkQueueSlaLabel` (client component deep-imports from `work-queue/status` — barrel import pulls `WorkQueueService` → Prisma → `pg` into the client bundle and breaks Turbopack on Node `dns`)
+- **Verified**: zero duplicate `WorkQueueItem`/status/priority/filter logic in the AP invoice queue domain (remaining same-literal unions are distinct severity/risk/confidence domains); `pnpm typecheck` clean except pre-existing `docs/site` + `prisma/seed-fresh.ts` errors; 57/57 targeted tests pass (incl. 22 in `test/work-queue-domain.test.ts`); full suite failures unchanged (pre-existing environmental only); `pnpm build` passes
+- **No UI, API, or behaviour changes**
 
 ### Recommended Next Phase
 

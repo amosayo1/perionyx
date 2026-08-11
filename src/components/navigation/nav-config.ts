@@ -21,6 +21,7 @@ export interface NavItem {
   permission?: string;
   minRole?: string;
   badge?: "pending-approvals";
+  disabled?: boolean;
   keywords?: string;
 }
 
@@ -31,6 +32,7 @@ export interface NavSection {
 
 export const ALL_NAV: NavItem[] = [
   { href: "/dashboard", label: "Executive Overview", icon: LayoutDashboard },
+  { href: "/work-queue", label: "Work Queue", icon: ListTodo, keywords: "work queue tasks pending review" },
   { href: "/command-center", label: "Command Center", icon: Command, minRole: "ADMIN" },
   { href: "/executive/dashboard", label: "Executive Command Center", icon: Crown, permission: "executive.view", minRole: "ADMIN" },
   { href: "/executive/kpis", label: "KPI Explorer", icon: BarChart3, permission: "executive.view", minRole: "ADMIN" },
@@ -45,7 +47,6 @@ export const ALL_NAV: NavItem[] = [
   { href: "/executive-ai/overview", label: "Executive AI", icon: Brain, permission: "executive-ai.view", minRole: "ADMIN" },
   { href: "/copilot", label: "Copilot", icon: MessageSquareText, minRole: "ADMIN" },
 
-  { href: "/accounting", label: "Accounting Overview", icon: Calculator, permission: "accounting.view", minRole: "TREASURER", keywords: "general ledger journals periods" },
   { href: "/general-ledger", label: "General Ledger", icon: BookOpenCheck, permission: "gl.view", minRole: "MEMBER", keywords: "general ledger gl accounting journals posting coa chart of accounts periods" },
   { href: "/financial-close", label: "Financial Close", icon: FileCheck, permission: "fc.view", minRole: "ADMIN", keywords: "financial close month end quarter end year end reconciliation period close" },
   { href: "/reconciliation", label: "Reconciliation", icon: RefreshCw, permission: "reconciliation.run", minRole: "TREASURER" },
@@ -53,6 +54,7 @@ export const ALL_NAV: NavItem[] = [
   { href: "/consolidation", label: "Consolidation", icon: Layers, permission: "cons.view", minRole: "ADMIN", keywords: "consolidation group reporting intercompany elimination minority interest" },
   { href: "/order-to-cash", label: "Order-to-Cash", icon: Receipt, permission: "ordertocash.view", minRole: "MEMBER", keywords: "order to cash o2c revenue billing collections credit" },
   { href: "/accounts-receivable", label: "Accounts Receivable", icon: DollarSign, permission: "ar.view", minRole: "TREASURER", keywords: "accounts receivable ar invoices collections customers credit cash application disputes" },
+  { href: "/invoices", label: "Invoices", icon: ReceiptText, keywords: "invoices billing payments vendor invoices" },
   { href: "/procurement", label: "Procurement", icon: ShoppingCart, permission: "procurement.view", minRole: "MEMBER", keywords: "procurement p2p sourcing vendors purchase" },
   { href: "/procurement/exceptions", label: "Exception Queue", icon: AlertTriangle, permission: "ap.exceptions.view", minRole: "MEMBER", keywords: "ap exceptions queue errors variance duplicate" },
   { href: "/procurement/reports", label: "AP Reports", icon: BarChart3, permission: "ap.reports.view", minRole: "MEMBER", keywords: "ap reports aging payment calendar cash requirements duplicates analytics" },
@@ -91,6 +93,7 @@ export const ALL_NAV: NavItem[] = [
   { href: "/audit/controls", label: "Controls", icon: Lock, permission: "audit.manage", minRole: "ADMIN" },
   { href: "/audit/findings", label: "Findings", icon: AlertTriangle, permission: "audit.manage", minRole: "ADMIN" },
   { href: "/audit/readiness", label: "Audit Readiness", icon: CheckCircle, permission: "audit.manage", minRole: "ADMIN" },
+  { href: "/audit-trail", label: "Audit Trail", icon: ScrollText, keywords: "audit trail activity log changes history" },
   { href: "/compliance/dashboard", label: "Compliance Dashboard", icon: ShieldAlert, permission: "compliance.manage", minRole: "ADMIN", keywords: "compliance regulatory policy" },
   { href: "/compliance/policies", label: "Policies", icon: BookOpen, permission: "compliance.manage", minRole: "ADMIN" },
   { href: "/compliance/violations", label: "Violations", icon: AlertTriangle, permission: "compliance.manage", minRole: "ADMIN" },
@@ -118,6 +121,7 @@ export const ALL_NAV: NavItem[] = [
   { href: "/finance/memory", label: "Enterprise Memory", icon: Brain, permission: "finance.manage", minRole: "ADMIN" },
 
   { href: "/platform", label: "Platform Health", icon: Activity, minRole: "ADMIN" },
+  { href: "/reports", label: "Reports", icon: BarChart3, keywords: "reports analytics export" },
   { href: "/settings", label: "Settings", icon: Settings },
   { href: "/settings/company", label: "Company Profile", icon: Building2 },
   { href: "/admin/users", label: "Users", icon: UserCircle, permission: "admin.manage_users", minRole: "OWNER" },
@@ -135,6 +139,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "Executive Office",
     items: [
       { href: "/dashboard", label: "Executive Overview", icon: LayoutDashboard },
+      { href: "/work-queue", label: "Work Queue", icon: ListTodo, keywords: "work queue tasks pending review" },
       { href: "/command-center", label: "Command Center", icon: Command, minRole: "ADMIN" },
       { href: "/executive/dashboard", label: "Executive Command Center", icon: Crown, permission: "executive.view", minRole: "ADMIN" },
       { href: "/executive/kpis", label: "Executive Insights", icon: BarChart3, permission: "executive.view", minRole: "ADMIN" },
@@ -151,7 +156,6 @@ export const NAV_SECTIONS: NavSection[] = [
   {
     title: "Financial Operations",
     items: [
-      { href: "/accounting", label: "Accounting Overview", icon: Calculator, permission: "accounting.view", minRole: "TREASURER", keywords: "general ledger journals periods" },
       { href: "/general-ledger", label: "General Ledger", icon: BookOpenCheck, permission: "gl.view", minRole: "MEMBER" },
       { href: "/financial-close", label: "Financial Close", icon: FileCheck, permission: "fc.view", minRole: "ADMIN" },
       { href: "/reconciliation", label: "Reconciliation", icon: RefreshCw, permission: "reconciliation.run", minRole: "TREASURER" },
@@ -159,6 +163,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/consolidation", label: "Consolidation", icon: Layers, permission: "cons.view", minRole: "ADMIN" },
       { href: "/order-to-cash", label: "Order-to-Cash", icon: Receipt, permission: "ordertocash.view", minRole: "MEMBER" },
       { href: "/accounts-receivable", label: "Accounts Receivable", icon: DollarSign, permission: "ar.view", minRole: "TREASURER" },
+      { href: "/invoices", label: "Invoices", icon: ReceiptText, keywords: "invoices billing payments vendor invoices" },
       { href: "/procurement", label: "Procurement", icon: ShoppingCart, permission: "procurement.view", minRole: "MEMBER" },
       { href: "/procurement/exceptions", label: "Exception Queue", icon: AlertTriangle, permission: "ap.exceptions.view", minRole: "MEMBER", keywords: "ap exceptions queue errors variance duplicate" },
       { href: "/procurement/reports", label: "AP Reports", icon: BarChart3, permission: "ap.reports.view", minRole: "MEMBER", keywords: "ap reports aging payment calendar cash requirements duplicates analytics" },
@@ -207,6 +212,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/audit/controls", label: "Controls", icon: Lock, permission: "audit.manage", minRole: "ADMIN" },
       { href: "/audit/findings", label: "Findings", icon: AlertTriangle, permission: "audit.manage", minRole: "ADMIN" },
       { href: "/audit/readiness", label: "Audit Readiness", icon: CheckCircle, permission: "audit.manage", minRole: "ADMIN" },
+      { href: "/audit-trail", label: "Audit Trail", icon: ScrollText, keywords: "audit trail activity log changes history" },
       { href: "/compliance/dashboard", label: "Compliance Dashboard", icon: ShieldAlert, permission: "compliance.manage", minRole: "ADMIN" },
       { href: "/compliance/policies", label: "Policies", icon: BookOpen, permission: "compliance.manage", minRole: "ADMIN" },
       { href: "/compliance/violations", label: "Violations", icon: AlertTriangle, permission: "compliance.manage", minRole: "ADMIN" },
@@ -247,6 +253,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "Administration & Settings",
     items: [
       { href: "/platform", label: "Platform Health", icon: Activity, minRole: "ADMIN" },
+      { href: "/reports", label: "Reports", icon: BarChart3 },
       { href: "/settings", label: "Settings", icon: Settings },
       { href: "/settings/company", label: "Company Profile", icon: Building2 },
       { href: "/admin/users", label: "Users", icon: UserCircle, permission: "admin.manage_users", minRole: "OWNER" },

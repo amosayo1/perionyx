@@ -14,7 +14,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, pickN, weightedPick, randInt, randFloat, randomDateInRange, daysAgo, addBusinessDays, uuidFromSeed, padNum, logProgress, roundToCents } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_100;
 
 const STATUSES = [
@@ -138,7 +138,7 @@ export function generateInvoices(
     } while (usedInvoiceNumbers.has(invoiceNumber));
     usedInvoiceNumbers.add(invoiceNumber);
 
-    const id = uuidFromSeed(`invoice-${COMPANY_ID}-${invoiceNumber}`);
+    const id = uuidFromSeed(`invoice-${companyId}-${invoiceNumber}`);
 
     // Status
     const status = weightedPick(
@@ -267,7 +267,7 @@ export function generateInvoices(
 
     invoices.push({
       id,
-      companyId: COMPANY_ID,
+      companyId,
       vendorId,
       invoiceNumber,
       invoiceDate,
@@ -306,8 +306,10 @@ export function generateInvoices(
 
 export async function seedInvoices(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   vendorIds: string[],
 ): Promise<string[]> {
+  companyId = targetCompanyId;
   const invoices = generateInvoices(vendorIds);
   const ids: string[] = [];
 

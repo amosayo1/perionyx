@@ -12,7 +12,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, weightedPick, randInt, randFloat, randomDateInRange, daysAgo, uuidFromSeed, logProgress, roundToCents } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_300;
 
 const EXCEPTION_TYPES = [
@@ -172,8 +172,8 @@ export function generateExceptions(
     }
 
     exceptions.push({
-      id: uuidFromSeed(`exception-${COMPANY_ID}-${i}`),
-      companyId: COMPANY_ID,
+      id: uuidFromSeed(`exception-${companyId}-${i}`),
+      companyId,
       vendorInvoiceId: invoiceId,
       exceptionType,
       severity,
@@ -197,8 +197,10 @@ export function generateExceptions(
 
 export async function seedExceptions(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   invoiceIds: string[],
 ): Promise<string[]> {
+  companyId = targetCompanyId;
   const exceptions = generateExceptions(invoiceIds);
   const ids: string[] = [];
 

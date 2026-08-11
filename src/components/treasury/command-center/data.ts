@@ -220,8 +220,8 @@ export const MOCK_NAVIGATION_CARDS: NavigationCard[] = [
   { id: "nav-liquidity", title: "Liquidity Center", description: "Pool management, funding requests, intercompany, and scenario analysis", route: "/treasury/liquidity", icon: "Droplets", status: "active", metrics: [{ label: "Score", value: "94" }, { label: "Coverage", value: "2.4x" }] },
   { id: "nav-payments", title: "Payments Hub", description: "Payment lifecycle, approvals, rail optimization, and settlement tracking", route: "/treasury/payments", icon: "ArrowUpDown", status: "active", metrics: [{ label: "Today", value: "187" }, { label: "Volume", value: "$42.5M" }] },
   { id: "nav-risk", title: "Risk Management", description: "FX, counterparty, interest rate risk with hedging and policy enforcement", route: "/treasury/risk", icon: "Shield", status: "active", metrics: [{ label: "Score", value: "78" }, { label: "VaR", value: "$12.5M" }] },
-  { id: "nav-ebam", title: "EBAM", description: "Electronic Bank Account Management with mandate lifecycle and compliance", route: "/treasury/ebam", icon: "Landmark", status: "active", metrics: [{ label: "Accounts", value: "48" }, { label: "Banks", value: "18" }] },
-  { id: "nav-forecast", title: "Cash Forecasting", description: "AI-powered cash flow forecasting with scenario modeling and variance analysis", route: "/treasury/cash-forecast", icon: "TrendingUp", status: "coming_soon", metrics: [{ label: "Accuracy", value: "88%" }, { label: "Confidence", value: "76%" }] },
+  { id: "nav-ebam", title: "EBAM", description: "Electronic Bank Account Management with mandate lifecycle and compliance", route: "/treasury/bank-accounts", icon: "Landmark", status: "active", metrics: [{ label: "Accounts", value: "48" }, { label: "Banks", value: "18" }] },
+  { id: "nav-forecast", title: "Cash Forecasting", description: "AI-powered cash flow forecasting with scenario modeling and variance analysis", route: "/treasury/cash-forecast", icon: "TrendingUp", status: "active", metrics: [{ label: "Accuracy", value: "88%" }, { label: "Confidence", value: "76%" }] },
 ];
 
 export const MOCK_COMING_SOON_MODULES: ComingSoonModule[] = [

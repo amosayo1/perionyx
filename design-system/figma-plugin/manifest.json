@@ -1,0 +1,13 @@
+{
+  "name": "Perionyx PEDS Builder",
+  "id": "perionyx-peds-builder",
+  "api": "1.0.0",
+  "main": "code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": ["figma"],
+  "ui": {
+    "type": "text",
+    "description": "Building Perionyx Enterprise Design System..."
+  }
+}

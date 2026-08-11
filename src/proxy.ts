@@ -193,6 +193,37 @@ export default async function proxy(req: NextRequest) {
     }
   }
 
+  // -- Identity headers: the proxy is the ONLY source of identity --
+  // Phase 28.1 C-01/D-01: client-supplied x-user-id / x-company-id /
+  // x-company-role are NEVER trusted. Strip them from every request and
+  // re-derive them exclusively from a verified JWT or API key below.
+  requestHeaders.delete("x-user-id");
+  requestHeaders.delete("x-company-id");
+  requestHeaders.delete("x-company-role");
+
+  // For API routes, derive identity from a verified JWT (session) or a
+  // validated API key. Previously this only happened under /api/v1 with a
+  // JWT, leaving ~195 non-v1 routes trusting forged client headers.
+  if (pathname.startsWith("/api/")) {
+    if (token) {
+      if (token.sub) requestHeaders.set("x-user-id", String(token.sub));
+      if (token.activeCompanyId) requestHeaders.set("x-company-id", String(token.activeCompanyId));
+      if (token.companyRole) requestHeaders.set("x-company-role", String(token.companyRole));
+    } else if (hasApiKey) {
+      try {
+        const { ApiKeyService, roleFromApiKeyScopes } = await import("@/modules/api-keys/api-keys.service");
+        const apiKey = await ApiKeyService.validate(authHeader);
+        if (apiKey) {
+          requestHeaders.set("x-user-id", apiKey.keyId);
+          requestHeaders.set("x-company-id", apiKey.companyId);
+          requestHeaders.set("x-company-role", roleFromApiKeyScopes(apiKey.scopes));
+        }
+      } catch (err) {
+        logger.error({ path: pathname, requestId, err }, "API key resolution failed");
+      }
+    }
+  }
+
   const isProtectedAppRoute =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/wallets") ||
@@ -239,17 +270,6 @@ export default async function proxy(req: NextRequest) {
   if (pathname.startsWith("/api/v1") && !publicApiPaths.includes(pathname)) {
     if (!token && !hasApiKey) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: { "x-request-id": requestId } });
-    }
-    if (token) {
-      const headers = new Headers(requestHeaders);
-      if (token.sub) headers.set("x-user-id", String(token.sub));
-      if (token.activeCompanyId) headers.set("x-company-id", String(token.activeCompanyId));
-      if (token.companyRole) headers.set("x-company-role", String(token.companyRole));
-      const response = NextResponse.next({ request: { headers } });
-      const duration = Date.now() - start;
-      response.headers.set("x-request-id", requestId);
-      response.headers.set("Server-Timing", `total;dur=${duration}`);
-      return response;
     }
     const response = NextResponse.next({ request: { headers: requestHeaders } });
     const duration = Date.now() - start;

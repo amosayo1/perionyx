@@ -40,6 +40,7 @@ export async function GET(request: Request) {
       const definitions = await prisma.financialReportDefinition.findMany({
         where,
         orderBy: { updatedAt: "desc" },
+        take: 200,
       });
   
       return NextResponse.json(

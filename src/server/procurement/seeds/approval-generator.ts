@@ -11,7 +11,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, weightedPick, randInt, randomDateInRange, daysAgo, uuidFromSeed, logProgress } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_200;
 
 const APPROVER_IDS = [
@@ -139,8 +139,8 @@ export function generateApprovals(
     }
 
     approvals.push({
-      id: uuidFromSeed(`approval-${COMPANY_ID}-${invoiceId}-${level}`),
-      companyId: COMPANY_ID,
+      id: uuidFromSeed(`approval-${companyId}-${invoiceId}-${level}`),
+      companyId,
       vendorInvoiceId: invoiceId,
       approvalLevel: level,
       approvalLevelName: levelName,
@@ -168,9 +168,11 @@ export function generateApprovals(
 
 export async function seedApprovals(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   invoiceIds: string[],
   invoiceAmounts: Map<string, number>,
 ): Promise<string[]> {
+  companyId = targetCompanyId;
   const approvals = generateApprovals(invoiceIds, invoiceAmounts);
   const ids: string[] = [];
 

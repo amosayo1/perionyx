@@ -18,8 +18,17 @@ export async function GET(request: Request) {
     try {
   
       await rbacService.ensurePermission(ctx.tenant.userId, String(ctx.tenant.companyId), "webhooks.manage");
-  
-      const hooks = await prisma.webhook.findMany({ where: { companyId: ctx.tenant.companyId } });
+
+      const { searchParams } = new URL(request.url);
+      const take = Math.min(Math.max(Number(searchParams.get("take") ?? 200) || 200, 1), 500);
+      const skip = Math.max(Number(searchParams.get("skip") ?? 0) || 0, 0);
+
+      const hooks = await prisma.webhook.findMany({
+        where: { companyId: ctx.tenant.companyId },
+        take,
+        skip,
+        orderBy: { createdAt: "asc" },
+      });
       return NextResponse.json(hooks);
     } catch (err) {
       if (err instanceof z.ZodError) return zodErrorResponse(err);

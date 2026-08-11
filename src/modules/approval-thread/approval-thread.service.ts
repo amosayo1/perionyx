@@ -28,24 +28,25 @@ async function notifyMentionedRoles(
   actorUserId: string,
   commentBody: string,
 ) {
-  for (const mention of mentions) {
-    const roleName = mention.replace("@", "");
-    const members = await prisma.companyMembership.findMany({
-      where: { companyId, role: roleName as any },
-      select: { userId: true },
+  // Batch role member lookup in a single query (Phase 28.1 F-05)
+  const roleNames = mentions.map((mention) => mention.replace("@", ""));
+  const members = await prisma.companyMembership.findMany({
+    where: { companyId, role: { in: roleNames as any } },
+    select: { userId: true, role: true },
+  });
+  const notified = new Set<string>([actorUserId]);
+  for (const m of members) {
+    if (notified.has(m.userId)) continue;
+    notified.add(m.userId);
+    await notificationService.send({
+      companyId,
+      userId: m.userId,
+      eventType: "APPROVAL_REQUIRED",
+      title: `You were mentioned in an approval discussion`,
+      message: commentBody.slice(0, 200),
+      link: `/transactions/${transactionId}`,
+      metadata: { threadId, transactionId, mention: `@${m.role}` },
     });
-    for (const m of members) {
-      if (m.userId === actorUserId) continue;
-      await notificationService.send({
-        companyId,
-        userId: m.userId,
-        eventType: "APPROVAL_REQUIRED",
-        title: `You were mentioned in an approval discussion`,
-        message: commentBody.slice(0, 200),
-        link: `/transactions/${transactionId}`,
-        metadata: { threadId, transactionId, mention },
-      });
-    }
   }
 }
 

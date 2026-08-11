@@ -60,8 +60,11 @@ export async function parseJsonBody<T>(
 
 export function cacheHeaders(ttlSeconds = 60): Record<string, string> {
   return {
-    "Cache-Control": `private, no-store, s-maxage=${ttlSeconds}, stale-while-revalidate=${ttlSeconds * 10}`,
-    "CDN-Cache-Control": `private, s-maxage=${ttlSeconds}`,
+    // Private (browser-only) caching: authenticated payloads must never be
+    // stored in a shared/CDN cache. `no-store` previously overrode the TTL
+    // directives, silently disabling all caching; `s-maxage` risked
+    // cross-tenant leakage if a CDN were introduced.
+    "Cache-Control": `private, max-age=${ttlSeconds}`,
     "Vary": "Accept-Encoding",
   };
 }

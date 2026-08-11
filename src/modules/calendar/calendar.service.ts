@@ -133,20 +133,30 @@ export class CalendarService {
       });
     }
 
+    // Batch dedupe lookup instead of findFirst per event (Phase 28.1 F-08)
+    const existingEvents = await prisma.calendarEvent.findMany({
+      where: {
+        companyId: ctx.companyId,
+        title: { in: events.map((e) => e.title) },
+        startDate: { in: events.map((e) => e.startDate) },
+      },
+      select: { title: true, startDate: true, type: true },
+    });
+    const existingKeys = new Set(
+      existingEvents.map((e) => `${e.title}|${e.startDate.getTime()}|${e.type}`),
+    );
+
     for (const e of events) {
-      const existing = await prisma.calendarEvent.findFirst({
-        where: { companyId: ctx.companyId, title: e.title, startDate: e.startDate, type: e.type as any },
+      const key = `${e.title}|${e.startDate.getTime()}|${e.type}`;
+      if (existingKeys.has(key)) continue;
+      await prisma.calendarEvent.create({
+        data: {
+          companyId: ctx.companyId, title: e.title, type: e.type as any,
+          startDate: e.startDate, endDate: e.endDate,
+          referenceType: e.referenceType, referenceId: e.referenceId,
+          status: e.status ?? "SCHEDULED", createdByUserId: ctx.userId,
+        },
       });
-      if (!existing) {
-        await prisma.calendarEvent.create({
-          data: {
-            companyId: ctx.companyId, title: e.title, type: e.type as any,
-            startDate: e.startDate, endDate: e.endDate,
-            referenceType: e.referenceType, referenceId: e.referenceId,
-            status: e.status ?? "SCHEDULED", createdByUserId: ctx.userId,
-          },
-        });
-      }
     }
   }
 

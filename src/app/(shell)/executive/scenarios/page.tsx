@@ -1,7 +1,7 @@
 import { ScenarioSimulator } from "@/components/executive-command-center/scenario-simulator";
 
 export const metadata = {
-  title: "Demo Scenarios | Vaulta",
+  title: "Demo Scenarios | Perionyx",
 };
 
 export default function ExecutiveScenariosPage() {

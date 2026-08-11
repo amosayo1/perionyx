@@ -11,17 +11,30 @@ export class AutomationEngine {
       orderBy: { priority: "desc" },
     });
 
-    for (const rule of rules) {
-      if (rule.cooldownSec) {
-        const recent = await prisma.workflowLog.findFirst({
-          where: {
-            companyId: ctx.companyId,
-            message: `automation:${rule.id}`,
-            createdAt: { gte: new Date(Date.now() - rule.cooldownSec * 1000) },
-          },
-        });
-        if (recent) continue;
+    // Batch cooldown check — single query instead of one per rule (Phase 28.1 F-11)
+    const cooldownRules = rules.filter((r) => r.cooldownSec);
+    const cooledDown = new Set<string>();
+    if (cooldownRules.length > 0) {
+      const maxCooldown = Math.max(...cooldownRules.map((r) => r.cooldownSec as number));
+      const recentLogs = await prisma.workflowLog.findMany({
+        where: {
+          companyId: ctx.companyId,
+          message: { in: cooldownRules.map((r) => `automation:${r.id}`) },
+          createdAt: { gte: new Date(Date.now() - maxCooldown * 1000) },
+        },
+        select: { message: true, createdAt: true },
+      });
+      const now = Date.now();
+      for (const rule of cooldownRules) {
+        const inCooldown = recentLogs.some(
+          (l) => l.message === `automation:${rule.id}` && l.createdAt.getTime() >= now - rule.cooldownSec! * 1000,
+        );
+        if (inCooldown) cooledDown.add(rule.id);
       }
+    }
+
+    for (const rule of rules) {
+      if (cooledDown.has(rule.id)) continue;
 
       const condition = rule.condition as Record<string, unknown> | null;
       if (condition && !this.evaluateCondition(condition, payload)) continue;

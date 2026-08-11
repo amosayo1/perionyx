@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { healthManager } from "@/server/health/health-manager";
-import { cacheHeaders } from "@/server/http/handle-route";
+import { cacheHeaders, handleRouteError } from "@/server/http/handle-route";
 import { prisma } from "@/server/db/prisma";
+import { withRuntimeContext } from "@/server/http/init-runtime-context";
+import { rbacService } from "@/modules/rbac/rbac.service";
 
 export const dynamic = "force-dynamic";
 
@@ -11,14 +13,26 @@ interface CheckResult {
 }
 
 export async function GET() {
+  return withRuntimeContext(new Headers(), async (ctx) => {
+    try {
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, "admin.settings");
+
+      return await buildHealthResponse();
+    } catch (err) {
+      return handleRouteError(err);
+    }
+  });
+}
+
+async function buildHealthResponse(): Promise<Response> {
   const checks: Record<string, CheckResult> = {};
   let healthy = true;
 
   try {
     await prisma.$queryRaw`SELECT 1`;
     checks.database = { status: "ok" };
-  } catch (err) {
-    checks.database = { status: "error", detail: String(err) };
+  } catch {
+    checks.database = { status: "error" };
     healthy = false;
   }
 
@@ -31,8 +45,8 @@ export async function GET() {
     const running = isQueueRunning();
     checks.queueWorker = { status: running ? "ok" : "error", detail: running ? undefined : "PgBoss worker not started" };
     if (!running) healthy = false;
-  } catch (err) {
-    checks.queueWorker = { status: "error", detail: String(err) };
+  } catch {
+    checks.queueWorker = { status: "error" };
     healthy = false;
   }
 
@@ -49,7 +63,6 @@ export async function GET() {
         upSince: global.__perionyx_startedAt ? new Date(global.__perionyx_startedAt as number).toISOString() : null,
         uptime: Math.floor(process.uptime()),
         version: process.env.NEXT_PUBLIC_APP_VERSION ?? "0.0.0",
-        node: process.version,
       },
       timestamp: new Date().toISOString(),
     },

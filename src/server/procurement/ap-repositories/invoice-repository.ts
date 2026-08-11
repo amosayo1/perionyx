@@ -30,7 +30,6 @@ export interface IInvoiceRepository {
   // ── Queries ───────────────────────────────────────────────────────────────
   findByFilter(filter: InvoiceQueryFilter, sort?: SortParams, pagination?: PaginationParams): Promise<PaginatedResult<VendorInvoice>>;
   countByFilter(filter: InvoiceQueryFilter): Promise<number>;
-  findPendingApproval(companyId: string, sort?: SortParams, pagination?: PaginationParams): Promise<PaginatedResult<VendorInvoice>>;
   findApprovedUnscheduled(companyId: string, sort?: SortParams): Promise<VendorInvoice[]>;
   findOverdue(companyId: string): Promise<VendorInvoice[]>;
   findByVendorId(vendorId: string, companyId: string, status?: VendorInvoiceStatus): Promise<VendorInvoice[]>;
@@ -127,10 +126,6 @@ export class InMemoryInvoiceRepository implements IInvoiceRepository {
 
   async countByFilter(filter: InvoiceQueryFilter): Promise<number> {
     return this.findByFilter(filter).then((r) => r.total);
-  }
-
-  async findPendingApproval(companyId: string, sort?: SortParams, pagination?: PaginationParams): Promise<PaginatedResult<VendorInvoice>> {
-    return this.findByFilter({ companyId, status: "PENDING_APPROVAL" }, sort, pagination);
   }
 
   async findApprovedUnscheduled(companyId: string, sort?: SortParams): Promise<VendorInvoice[]> {

@@ -51,6 +51,7 @@ export async function GET(request: Request) {
       const boardPacks = await prisma.boardPack.findMany({
         where,
         orderBy: { createdAt: "desc" },
+        take: 200,
       });
   
       return NextResponse.json(

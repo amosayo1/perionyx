@@ -19,6 +19,8 @@ export async function POST(request: Request, context: any) {
     const { params } = context;
     try {
   
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'approvals.reject');
+
       const transactionId = (await params).id;
       const rawBody = await request.json();
       const parsed = RejectApprovalSchema.safeParse(rawBody);

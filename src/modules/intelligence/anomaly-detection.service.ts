@@ -45,15 +45,30 @@ const STDDEV_THRESHOLD = 2;
 export async function detectAnomalies(companyId: string): Promise<AnomalyResult[]> {
   const anomalies: AnomalyResult[] = [];
 
-  for (const metric of MONITORED_METRICS) {
-    try {
-      const records = await prisma.intelligenceSnapshot.findMany({
-        where: { companyId, metric },
-        orderBy: { takenAt: "desc" },
-        take: 50,
-        select: { value: true, label: true, takenAt: true },
-      });
+  // Parallel per-metric reads instead of sequential (Phase 28.1 F-12)
+  const results = await Promise.all(
+    MONITORED_METRICS.map(async (metric) => {
+      try {
+        const records = await prisma.intelligenceSnapshot.findMany({
+          where: { companyId, metric },
+          orderBy: { takenAt: "desc" },
+          take: 50,
+          select: { value: true, label: true, takenAt: true },
+        });
+        return { metric, records, error: undefined as unknown };
+      } catch (error) {
+        return { metric, records: [], error };
+      }
+    }),
+  );
 
+  for (const { metric, records, error } of results) {
+    if (error) {
+      logger.error({ companyId, metric, err: error }, "[AnomalyDetection] Snapshot query failed");
+      continue;
+    }
+
+    try {
       if (records.length < MIN_SAMPLES) {
         logger.debug({ companyId, metric, count: records.length }, "[AnomalyDetection] Insufficient samples");
         continue;

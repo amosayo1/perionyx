@@ -10,7 +10,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createRng, pick, weightedPick, randInt, randFloat, randomDateInRange, daysAgo, uuidFromSeed, logProgress, roundToCents, padNum } from "./seed-utils";
 
-const COMPANY_ID = "cmqvfocev0001koor7ragb8bq";
+let companyId = process.env.SEED_COMPANY_ID ?? "";
 const SEED = 42_700;
 
 const STATEMENT_STATUSES = ["RECEIVED", "PARSED", "RECONCILING", "RECONCILED", "EXCEPTION"] as const;
@@ -43,10 +43,10 @@ export function generateReconciliation(
 
     const stmtStatus = weightedPick([...STATEMENT_STATUSES], [10, 15, 20, 45, 10], rng);
 
-    const stmtId = uuidFromSeed(`stmt-${COMPANY_ID}-${statementNumber}`);
+    const stmtId = uuidFromSeed(`stmt-${companyId}-${statementNumber}`);
     statements.push({
       id: stmtId,
-      companyId: COMPANY_ID,
+      companyId,
       vendorId,
       statementNumber,
       statementDate: stmtDate,
@@ -75,7 +75,7 @@ export function generateReconciliation(
 
       allLines.push({
         id: uuidFromSeed(`stmtline-${stmtId}-${ln}`),
-        companyId: COMPANY_ID,
+        companyId,
         vendorStatementId: stmtId,
         lineNumber: ln,
         transactionDate: txnDate,
@@ -100,7 +100,7 @@ export function generateReconciliation(
 
     results.push({
       id: uuidFromSeed(`recon-${stmtId}`),
-      companyId: COMPANY_ID,
+      companyId,
       vendorStatementId: stmtId,
       vendorId,
       reconciliationDate: new Date(stmtDate.getTime() + randInt(1, 7, rng) * 86400000),
@@ -127,9 +127,11 @@ export function generateReconciliation(
 
 export async function seedReconciliation(
   prisma: PrismaClient,
+  targetCompanyId: string = companyId,
   vendorIds: string[],
   invoiceIds: string[],
 ): Promise<void> {
+  companyId = targetCompanyId;
   const { statements, lines, results } = generateReconciliation(vendorIds, invoiceIds);
   process.stdout.write(`  Seeding ${statements.length} statements, ${lines.length} lines, ${results.length} results...\n`);
 

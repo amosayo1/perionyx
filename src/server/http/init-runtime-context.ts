@@ -28,10 +28,13 @@
 
 import type { RuntimeContext } from '@/runtime/context/types';
 import type { TenantContext } from '@/server/context/tenant-context';
+import type { CompanyRole } from '@prisma/client';
 import { UnauthorizedError, ForbiddenError } from '@/lib/errors/app-error';
 import { withRuntimeContext as _withRuntimeContext } from '@/runtime/context';
 
 export type { TenantContext } from '@/server/context/tenant-context';
+
+const VALID_ROLES = new Set<CompanyRole>(["OWNER", "ADMIN", "TREASURER", "MEMBER", "VIEWER"]);
 
 /**
  * Normalize Request | Headers to a Headers object.
@@ -81,11 +84,67 @@ function extractContextFromHeaders(headers: Headers): RuntimeContext {
 }
 
 /**
+ * Verify that claimed identity headers are backed by a verifiable credential
+ * present in the same request (Phase 28.1 C-01/D-01 — defense in depth).
+ *
+ * The proxy is the primary identity boundary: it strips client-supplied
+ * identity headers and re-derives them from a verified JWT or API key. This
+ * function makes the runtime safe even if the proxy is bypassed or
+ * misconfigured by requiring one of:
+ *
+ *   1. A session JWT whose sub/activeCompanyId/companyRole match the claims
+ *      (JWT verify only — no DB read), or
+ *   2. A Bearer API key that resolves to the claimed company and whose
+ *      scope-derived role matches the claimed role (DB read).
+ *
+ * Returns true when the claims are backed by a credential; false when no
+ * credential exists (or none matches). Callers must treat false as
+ * unauthenticated — never as "fall through to session".
+ */
+async function verifyHeaderIdentity(
+  headers: Headers,
+  claimed: { userId: string; companyId: string; role: string },
+): Promise<boolean> {
+  const { getToken } = await import('next-auth/jwt');
+  const { sessionTokenName } = await import('@/server/auth/auth');
+  const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+
+  if (authSecret) {
+    const token = await getToken({
+      req: headers as unknown as Parameters<typeof getToken>[0]['req'],
+      secret: authSecret,
+      cookieName: sessionTokenName,
+    });
+    if (token) {
+      return (
+        token.sub === claimed.userId &&
+        String(token.activeCompanyId ?? "") === claimed.companyId &&
+        String(token.companyRole ?? "") === claimed.role
+      );
+    }
+  }
+
+  const authHeader = headers.get('authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    const { ApiKeyService, roleFromApiKeyScopes } = await import('@/modules/api-keys/api-keys.service');
+    const apiKey = await ApiKeyService.validate(authHeader);
+    if (!apiKey) return false;
+    return (
+      apiKey.companyId === claimed.companyId &&
+      roleFromApiKeyScopes(apiKey.scopes) === claimed.role
+    );
+  }
+
+  return false;
+}
+
+/**
  * Validate and narrow a raw tenant object to TenantContext.
  *
  * Replicates the guards from requireTenantContext():
  * - Throws UnauthorizedError if userId is missing
  * - Throws ForbiddenError if companyId or role is missing
+ * - Rejects roles outside the CompanyRole enum (Phase 28.1 C-01)
  * - Enforces LICENSE_COMPANY_ID if set
  */
 function validateTenantContext(
@@ -96,6 +155,9 @@ function validateTenantContext(
   }
   if (!raw.companyId || !raw.role) {
     throw new ForbiddenError('No active company on the session.');
+  }
+  if (!VALID_ROLES.has(raw.role as CompanyRole)) {
+    throw new ForbiddenError('Invalid role on the session.');
   }
 
   const licensedCompanyId = process.env.LICENSE_COMPANY_ID;
@@ -131,6 +193,13 @@ export async function withRuntimeContext<T>(
 
   let tenant: TenantContext;
   if (context.tenant) {
+    // Identity headers must be backed by a verifiable credential in the
+    // same request (Phase 28.1 C-01/D-01). Unverified claims are rejected,
+    // never trusted.
+    const verified = await verifyHeaderIdentity(headers, context.tenant);
+    if (!verified) {
+      throw new UnauthorizedError('Authentication required.');
+    }
     tenant = validateTenantContext(context.tenant);
   } else {
     const { auth } = await import('@/server/auth/auth');

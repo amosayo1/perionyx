@@ -57,6 +57,44 @@ function NavLink({
 }) {
   const Icon = item.icon;
 
+  if (item.disabled) {
+    const baseClasses = cn(
+      "flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium cursor-not-allowed",
+      collapsed ? "justify-center h-10 w-10" : "",
+      "text-zinc-700",
+    );
+    const content = (
+      <>
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-zinc-700">
+          <Icon className="h-3.5 w-3.5" />
+        </span>
+        {!collapsed && (
+          <span className="flex flex-1 items-center gap-2 truncate">
+            {item.label}
+            <span className="text-[9px] uppercase tracking-wider text-zinc-700">Coming soon</span>
+          </span>
+        )}
+      </>
+    );
+    if (collapsed) {
+      return (
+        <div className="group relative flex items-center justify-center" aria-label={`${item.label} (coming soon)`}>
+          <div className={baseClasses} aria-disabled="true">
+            <Icon className="h-4 w-4" />
+          </div>
+          <div className="absolute left-full ml-2 hidden rounded-md bg-zinc-900 px-2.5 py-1.5 text-[12px] font-medium text-zinc-600 shadow-xl group-hover:block whitespace-nowrap z-50 border border-zinc-800">
+            {item.label} — Coming soon
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className={baseClasses} aria-disabled="true" title="Coming soon">
+        {content}
+      </div>
+    );
+  }
+
   if (collapsed) {
     return (
       <div className="group relative flex items-center justify-center">

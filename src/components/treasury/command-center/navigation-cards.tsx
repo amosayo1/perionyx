@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, DollarSign, Droplets, ArrowUpDown, Shield, Landmark, TrendingUp } from "lucide-react";
 import { MOCK_NAVIGATION_CARDS } from "./data";
@@ -50,9 +51,9 @@ export function NavigationCards({ className }: { className?: string }) {
                 ))}
               </div>
               {!isComing && (
-                <button className="mt-3 flex items-center gap-1 text-[11px] font-medium text-gold hover:text-gold/80 transition-colors" aria-label={`Open ${card.title}`}>
+                <Link href={card.route} className="mt-3 flex items-center gap-1 text-[11px] font-medium text-gold hover:text-gold/80 transition-colors" aria-label={`Open ${card.title}`}>
                   Open <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                </button>
+                </Link>
               )}
             </motion.div>
           );

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, DollarSign, Droplets, ArrowUpDown, Landmark, TrendingUp, Briefcase } from "lucide-react";
 import {
@@ -36,11 +37,12 @@ function MetricRow({ label, value }: MetricRowProps) {
 interface ScorecardProps {
   icon: React.ElementType;
   title: string;
+  route: string;
   metrics: MetricRowProps[];
   index: number;
 }
 
-function ScorecardCard({ icon: Icon, title, metrics, index }: ScorecardProps) {
+function ScorecardCard({ icon: Icon, title, route, metrics, index }: ScorecardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -61,9 +63,9 @@ function ScorecardCard({ icon: Icon, title, metrics, index }: ScorecardProps) {
         ))}
       </div>
       <div className="mt-3 pt-2 border-t border-white/[0.06]">
-        <button className="flex items-center gap-1 text-[11px] font-medium text-gold hover:text-gold/80 transition-colors" aria-label={`Open ${title}`}>
+        <Link href={route} className="flex items-center gap-1 text-[11px] font-medium text-gold hover:text-gold/80 transition-colors" aria-label={`Open ${title}`}>
           Open <ArrowRight className="h-3 w-3" aria-hidden="true" />
-        </button>
+        </Link>
       </div>
     </motion.div>
   );
@@ -81,6 +83,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
     {
       icon: DollarSign,
       title: "Cash Position",
+      route: "/treasury/cash-position",
       metrics: [
         { label: "Total Cash", value: formatCompact(cash.totalCash) },
         { label: "Available", value: formatCompact(cash.availableCash) },
@@ -90,6 +93,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
     {
       icon: Droplets,
       title: "Liquidity",
+      route: "/treasury/liquidity",
       metrics: [
         { label: "Score", value: `${liquidity.liquidityScore}/100` },
         { label: "Coverage Ratio", value: `${liquidity.coverageRatio}x` },
@@ -99,6 +103,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
     {
       icon: ArrowUpDown,
       title: "Payments",
+      route: "/treasury/payments",
       metrics: [
         { label: "Today", value: `${payments.paymentsToday} (${formatCompact(payments.paymentsTodayValue)})` },
         { label: "Collections", value: `${payments.collectionsToday} (${formatCompact(payments.collectionsTodayValue)})` },
@@ -108,6 +113,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
     {
       icon: Landmark,
       title: "Bank Accounts",
+      route: "/treasury/bank-accounts",
       metrics: [
         { label: "Active", value: `${banks.activeAccounts}` },
         { label: "Dormant", value: `${banks.dormantAccounts}` },
@@ -117,6 +123,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
     {
       icon: TrendingUp,
       title: "Forecast",
+      route: "/treasury/cash-forecast",
       metrics: [
         { label: "Accuracy", value: `${forecast.forecastAccuracy}%` },
         { label: "Confidence", value: `${forecast.confidenceScore}%` },
@@ -126,6 +133,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
     {
       icon: Briefcase,
       title: "Working Capital",
+      route: "/treasury/dashboard",
       metrics: [
         { label: "NWC", value: formatCompact(wc.netWorkingCapital) },
         { label: "Current Ratio", value: `${wc.currentRatio}x` },
@@ -137,7 +145,7 @@ export function TreasuryScorecards({ className }: { className?: string }) {
   return (
     <div className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6", className)} role="list" aria-label="Treasury scorecards">
       {cards.map((card, i) => (
-        <ScorecardCard key={card.title} index={i} icon={card.icon} title={card.title} metrics={card.metrics} />
+        <ScorecardCard key={card.title} index={i} icon={card.icon} title={card.title} route={card.route} metrics={card.metrics} />
       ))}
     </div>
   );

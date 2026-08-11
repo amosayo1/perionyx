@@ -17,7 +17,7 @@ Engineering and product lessons with evidence — numbered, categorized, and lin
 
 ## Summary
 
-The Lessons folder contains 56 numbered lessons (01–56) organized by domain. Each lesson follows a standard structure: observation, evidence, principle, and application. Lessons feed into the Decision Network (Principles) and inform future engineering choices.
+The Lessons folder contains 58 numbered lessons (01–58) organized by domain. Each lesson follows a standard structure: observation, evidence, principle, and application. Lessons feed into the Decision Network (Principles) and inform future engineering choices.
 
 ## Content Map
 
@@ -89,6 +89,8 @@ The Lessons folder contains 56 numbered lessons (01–56) organized by domain. E
 | 54 | Customer Knowledge Compounds | Product |
 | 55 | The Best Enterprise Software Is Designed Around Decisions, Not Transactions | Product |
 | 56 | Enterprise Products Earn Trust Through Independent Review Before Implementation | Product |
+| 57 | Demo Readiness Is Earned Through Live-DB Verification | Data |
+| 58 | Remediation Is Verification | Quality |
 
 ## Navigation
 

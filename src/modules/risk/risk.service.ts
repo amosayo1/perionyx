@@ -209,15 +209,22 @@ export class RiskService {
       });
     }
 
+    // Batch dedupe lookup instead of findFirst per alert (Phase 28.1 F-09)
+    const existingAlerts = await this.prisma.riskAlert.findMany({
+      where: {
+        companyId: ctx.companyId,
+        title: { in: alerts.map((a) => a.title) },
+        status: { in: ["OPEN", "ACKNOWLEDGED"] },
+      },
+      select: { title: true },
+    });
+    const existingTitles = new Set(existingAlerts.map((e) => e.title));
+
     for (const a of alerts) {
-      const existing = await this.prisma.riskAlert.findFirst({
-        where: { companyId: ctx.companyId, title: a.title, status: { in: ["OPEN", "ACKNOWLEDGED"] } },
+      if (existingTitles.has(a.title)) continue;
+      await this.prisma.riskAlert.create({
+        data: { companyId: ctx.companyId, ...a },
       });
-      if (!existing) {
-        await this.prisma.riskAlert.create({
-          data: { companyId: ctx.companyId, ...a },
-        });
-      }
     }
   }
 

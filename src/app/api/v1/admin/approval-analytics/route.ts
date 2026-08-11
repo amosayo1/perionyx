@@ -13,6 +13,8 @@ export async function GET(request: Request) {
   return withRuntimeContext(request, async (ctx) => {
     try {
   
+      await rbacService.ensurePermission(ctx.tenant.userId, ctx.tenant.companyId, 'approvals.view');
+
       // Fetch all analytics in parallel
       const [metrics, ruleUsage, bottlenecks, transactionTypes, recentActivity] =
         await Promise.all([
