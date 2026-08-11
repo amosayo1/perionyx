@@ -126,11 +126,16 @@ describe("work-queue shared utilities", () => {
       expect(where.dueDate.gte).toBe(TODAY_START);
     });
 
-    it("builds quick-approvals status list", () => {
+    it("builds quick-approvals to include invoices awaiting approval", () => {
       const where = buildWorkQueueWhere({ filter: "quick-approvals" }, "company-1", TODAY_START) as {
         status: { in: string[] };
+        dueDate: { gte: Date };
       };
-      expect(where.status.in).toEqual(["VALIDATED", "MATCHED"]);
+      // PENDING_APPROVAL invoices are exactly what quick approvals must
+      // surface; APPROVED (decided) invoices are excluded.
+      expect(where.status.in).toEqual(["VALIDATED", "MATCHED", "PENDING_APPROVAL"]);
+      expect(where.status.in).not.toContain("APPROVED");
+      expect(where.dueDate.gte).toBe(TODAY_START);
     });
 
     it("builds exceptions filter", () => {

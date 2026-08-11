@@ -812,9 +812,12 @@ export class ExecutiveCommandCenter {
     // Treasury alerts
     if (results[1]?.status === "fulfilled") {
       const d = results[1].value as Record<string, unknown>;
-      const alerts_ = d?.alerts as unknown[] | undefined;
-      if (alerts_) {
-        for (const a of alerts_.slice(0, 10)) {
+      // TreasurySpecialist returns alerts as an object { totalActive, bySeverity,
+      // byType, criticalAlerts }. The item-level feed is criticalAlerts — mirror
+      // the CFO block above, which reads briefing.criticalAlerts.
+      const alertFeed = (d?.alerts as { criticalAlerts?: unknown[] } | undefined)?.criticalAlerts;
+      if (alertFeed) {
+        for (const a of alertFeed.slice(0, 10)) {
           const alert = a as Record<string, unknown>;
           alerts.push({
             id: `alert-treasury-${alerts.length}`,
@@ -1132,9 +1135,9 @@ export class ExecutiveCommandCenter {
         });
       }
 
-      const alerts = d?.alerts as unknown[] | undefined;
-      if (alerts) {
-        for (const a of alerts.slice(0, 3)) {
+      const alertFeed = (d?.alerts as { criticalAlerts?: unknown[] } | undefined)?.criticalAlerts;
+      if (alertFeed) {
+        for (const a of alertFeed.slice(0, 3)) {
           const alert = a as Record<string, unknown>;
           topRisks.push({
             id: `risk-treasury-${topRisks.length}`,

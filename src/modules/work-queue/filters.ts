@@ -44,7 +44,17 @@ export function buildWorkQueueWhere(
       where.dueDate = { gte: todayStart };
       break;
     case "quick-approvals":
-      where.status = { in: ["VALIDATED" as VendorInvoiceStatus, "MATCHED" as VendorInvoiceStatus] };
+      // Invoices ready to be decided on today: already validated/matched and
+      // sitting in the approval queue. PENDING_APPROVAL invoices are exactly
+      // what "quick approvals" must surface — APPROVED invoices are excluded
+      // because they are no longer awaiting a decision.
+      where.status = {
+        in: [
+          "VALIDATED" as VendorInvoiceStatus,
+          "MATCHED" as VendorInvoiceStatus,
+          "PENDING_APPROVAL" as VendorInvoiceStatus,
+        ],
+      };
       where.dueDate = { gte: todayStart };
       break;
     case "exceptions":

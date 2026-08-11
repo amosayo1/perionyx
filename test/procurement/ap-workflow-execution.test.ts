@@ -841,6 +841,65 @@ describe("Workflow 8 — Approval Routing", () => {
     expect(delegated.success).toBe(true);
     expect(delegated.data!.delegatedTo).toBe(CFO);
   });
+
+  it("escalating a level activates the next level and never leaves a stale PENDING record on an APPROVED invoice", async () => {
+    const vendor = await onboardVendor();
+    const inv = (
+      await invoiceSvc.receiveInvoice(
+        {
+          vendorId: vendor.id,
+          invoiceNumber: "INV-ESCALATE",
+          invoiceDate: new Date("2026-01-15"),
+          dueDate: new Date("2026-02-14"),
+          subtotal: d(25000),
+          lineItems: [
+            { lineNumber: 1, description: "Escalation fixture", quantity: d(1), unitPrice: d(25000) },
+          ],
+        },
+        ctx(),
+      )
+    ).data!;
+    await invoiceSvc.validateInvoice({ invoiceId: inv.id }, ctx());
+    const invRefreshed = (await repos.invoice.findById(inv.id, COMPANY))!;
+    invRefreshed.poReferenceId = "po-esc-001";
+    await repos.invoice.save(invRefreshed);
+    await invoiceSvc.runThreeWayMatch({ invoiceId: invRefreshed.id }, ctx());
+
+    const records = (await approvalSvc.requestApproval({ invoiceId: inv.id }, ctx())).data!;
+    expect(records.length).toBeGreaterThanOrEqual(2);
+    const level1 = records.find((r) => r.approvalLevel === 1)!;
+    expect(level1.status).toBe("PENDING");
+
+    // Escalating L1 auto-approves L1 and activates L2 (SKIPPED → PENDING).
+    // The invoice must remain PENDING_APPROVAL — L2 still needs a decision —
+    // rather than being marked APPROVED while a PENDING record survives.
+    const escalated = await approvalSvc.escalateApprovalLevel(
+      { approvalRecordId: level1.id, reason: "SLA breach — fast-track to next level" },
+      ctx(APPROVER),
+    );
+    expect(escalated.success).toBe(true);
+
+    const after = await repos.approval.findRecordsByInvoiceId(inv.id, COMPANY);
+    const l1 = after.find((r) => r.approvalLevel === 1)!;
+    const l2 = after.find((r) => r.approvalLevel === 2)!;
+    expect(l1.status).toBe("APPROVED");
+    expect(l2.status).toBe("PENDING");
+
+    const invAfter = await repos.invoice.findById(inv.id, COMPANY);
+    expect(invAfter?.status).toBe("PENDING_APPROVAL");
+
+    // Sanity: the chain cannot complete until the final level decides, so
+    // there is no path to invoice=APPROVED with a PENDING record.
+    const decided = await approvalSvc.approveLevel(
+      { approvalRecordId: l2.id, decision: "APPROVED", comment: "Approved after escalation" },
+      ctx(CFO),
+    );
+    expect(decided.success).toBe(true);
+    const finalInv = await repos.invoice.findById(inv.id, COMPANY);
+    expect(finalInv?.status).toBe("APPROVED");
+    const finalRecords = await repos.approval.findRecordsByInvoiceId(inv.id, COMPANY);
+    expect(finalRecords.every((r) => r.status === "APPROVED")).toBe(true);
+  });
 });
 
 // ══════════════════════════════════════════════════════════════════════════

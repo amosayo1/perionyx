@@ -671,7 +671,15 @@ export class ApprovalApplicationService {
       }),
     );
 
-    const allApproved = allRecords.every((r) => r.status === "APPROVED" || r.status === "SKIPPED");
+    // Chain completion must be judged against POST-mutation state. `allRecords`
+    // is a pre-mutation snapshot: the next level may have just been activated
+    // from SKIPPED → PENDING (or may already have been PENDING), so it is not an
+    // approved chain yet. Marking the invoice APPROVED here while a PENDING
+    // record remains is what creates the stale-record state (invoice APPROVED
+    // with an undecided approval level). Re-fetch the chain and require every
+    // record to be APPROVED — the same invariant approveLevel() enforces.
+    const freshRecords = await this.repos.approval.findRecordsByInvoiceId(record.vendorInvoiceId, ctx.companyId);
+    const allApproved = freshRecords.every((r) => r.status === "APPROVED");
     if (allApproved) {
       const invoice = await this.repos.invoice.findById(record.vendorInvoiceId, ctx.companyId);
       if (invoice) {

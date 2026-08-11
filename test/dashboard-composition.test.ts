@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
 import {
   DashboardV2CompositionService,
@@ -197,6 +198,117 @@ describe("DashboardV2CompositionService", () => {
       });
       expect(Array.isArray(result.decisions)).toBe(true);
       expect(result.decisions).toHaveLength(0);
+    });
+  });
+
+  describe("pending-approvals KPI counts invoices, not approval records", () => {
+    let ctx: TestContext;
+    let vendorId: string;
+
+    beforeAll(async () => {
+      ctx = await createTestData();
+
+      const vendor = await prisma.procurementVendor.create({
+        data: {
+          companyId: ctx.companyId,
+          vendorCode: `DC-VND-${Date.now()}`,
+          name: "KPI Test Vendor",
+          legalName: "KPI Test Vendor LLC",
+          category: "SUPPLIER",
+          taxId: "00-0000000",
+          taxCountry: "US",
+          createdBy: ctx.userId,
+          updatedBy: ctx.userId,
+        },
+      });
+      vendorId = vendor.id;
+      ctx.cleanup.push(() =>
+        prisma.procurementVendor.delete({ where: { id: vendor.id } }).catch(() => {}),
+      );
+    });
+
+    afterAll(async () => {
+      await cleanupTestData(ctx);
+    });
+
+    async function createInvoice(over: {
+      invoiceNumber: string;
+      status: string;
+      approvalRecords: { approvalLevel: number; status: string }[];
+    }) {
+      const invoice = await prisma.procurementVendorInvoice.create({
+        data: {
+          companyId: ctx.companyId,
+          vendorId,
+          invoiceNumber: over.invoiceNumber,
+          invoiceDate: new Date("2026-07-01"),
+          dueDate: new Date("2026-08-01"),
+          status: over.status as never,
+          subtotal: new Prisma.Decimal(25000),
+          totalAmount: new Prisma.Decimal(27000),
+          totalWithTax: new Prisma.Decimal(27000),
+          balanceDue: new Prisma.Decimal(27000),
+          netBalance: new Prisma.Decimal(27000),
+          createdBy: ctx.userId,
+          updatedBy: ctx.userId,
+        },
+      });
+      ctx.cleanup.push(() =>
+        prisma.procurementVendorInvoice.delete({ where: { id: invoice.id } }).catch(() => {}),
+      );
+
+      for (const r of over.approvalRecords) {
+        const record = await prisma.procurementApprovalRecord.create({
+          data: {
+            companyId: ctx.companyId,
+            vendorInvoiceId: invoice.id,
+            approvalLevel: r.approvalLevel,
+            approvalLevelName: `Level ${r.approvalLevel}`,
+            requiredRole: "CONTROLLER",
+            requiredThreshold: new Prisma.Decimal(25000),
+            status: r.status as never,
+            createdBy: ctx.userId,
+            updatedBy: ctx.userId,
+          },
+        });
+        ctx.cleanup.push(() =>
+          prisma.procurementApprovalRecord.delete({ where: { id: record.id } }).catch(() => {}),
+        );
+      }
+
+      return invoice;
+    }
+
+    it("counts genuinely pending invoices, ignores stale records on APPROVED invoices", async () => {
+      // Genuinely pending invoice with a legitimate multi-level chain:
+      // 2 PENDING records on 1 invoice → counts as 1.
+      await createInvoice({
+        invoiceNumber: "INV-PENDING-MULTI",
+        status: "PENDING_APPROVAL",
+        approvalRecords: [
+          { approvalLevel: 1, status: "PENDING" },
+          { approvalLevel: 2, status: "PENDING" },
+        ],
+      });
+
+      // APPROVED invoice carrying a stale PENDING record (the INV-NS-7002
+      // shape) → must NOT inflate the KPI.
+      await createInvoice({
+        invoiceNumber: "INV-APPROVED-STALE",
+        status: "APPROVED",
+        approvalRecords: [{ approvalLevel: 2, status: "PENDING" }],
+      });
+
+      const result = await service.getDashboardData({
+        companyId: ctx.companyId,
+        userId: ctx.userId,
+        role: "MEMBER",
+      });
+
+      const approvals = result.metrics.find((m) => m.id === "pending-approvals");
+      expect(approvals?.value).toBe("1");
+      expect(approvals?.source).toBe("AP Approvals");
+      expect(approvals?.drillTarget).toBe("/procurement/invoices");
     });
   });
 });

@@ -174,12 +174,19 @@ export class DashboardV2CompositionService {
         where: { companyId, createdAt: { gte: day60, lt: day30 } },
         _sum: { totalAmount: true },
       }),
-      // 3. Pending approvals + 7d volume comparison
-      prisma.transaction.count({ where: { companyId, status: "PENDING_APPROVAL" } }),
-      prisma.transaction.count({
+      // 3. Pending approvals + 7d volume comparison. Source of truth is the
+      //    canonical AP invoice state: invoices in PENDING_APPROVAL. Counting
+      //    ProcurementApprovalRecord rows over-reports — a single invoice can
+      //    legitimately hold several pending approval levels, and a stale
+      //    PENDING record can survive an invoice that has already left
+      //    PENDING_APPROVAL (see ApprovalApplicationService — chain completion
+      //    is now computed against post-mutation state, and seed data assigns
+      //    record statuses independently of invoice status).
+      prisma.procurementVendorInvoice.count({ where: { companyId, status: "PENDING_APPROVAL" } }),
+      prisma.procurementVendorInvoice.count({
         where: { companyId, createdAt: { gte: day7 } },
       }),
-      prisma.transaction.count({
+      prisma.procurementVendorInvoice.count({
         where: { companyId, createdAt: { gte: day14, lt: day7 } },
       }),
       // 4. Automation rate (30d vs prior 30d)
@@ -271,9 +278,9 @@ export class DashboardV2CompositionService {
         basis: approvalDelta ? "created, 7d vs prior 7d" : "no prior period",
         deltaIsGood: false,
         status: pendingCount > 10 ? "warning" : pendingCount > 0 ? "healthy" : "healthy",
-        source: "Governance",
+        source: "AP Approvals",
         updatedAt: new Date().toISOString(),
-        drillTarget: "/approvals",
+        drillTarget: "/procurement/invoices",
       },
       {
         id: "open-ap-value",
