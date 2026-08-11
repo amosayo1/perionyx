@@ -900,6 +900,80 @@ describe("Workflow 8 — Approval Routing", () => {
     const finalRecords = await repos.approval.findRecordsByInvoiceId(inv.id, COMPANY);
     expect(finalRecords.every((r) => r.status === "APPROVED")).toBe(true);
   });
+
+  it("escalating the final pending level completes the chain, approves the invoice, and emits chain-approved events + status-change audits", async () => {
+    const vendor = await onboardVendor();
+    const inv = (
+      await invoiceSvc.receiveInvoice(
+        {
+          vendorId: vendor.id,
+          invoiceNumber: "INV-ESCALATE-FINAL",
+          invoiceDate: new Date("2026-01-15"),
+          dueDate: new Date("2026-02-14"),
+          subtotal: d(25000),
+          lineItems: [
+            { lineNumber: 1, description: "Final-level escalation fixture", quantity: d(1), unitPrice: d(25000) },
+          ],
+        },
+        ctx(),
+      )
+    ).data!;
+    await invoiceSvc.validateInvoice({ invoiceId: inv.id }, ctx());
+    const invRefreshed = (await repos.invoice.findById(inv.id, COMPANY))!;
+    invRefreshed.poReferenceId = "po-esc-final-001";
+    await repos.invoice.save(invRefreshed);
+    await invoiceSvc.runThreeWayMatch({ invoiceId: invRefreshed.id }, ctx());
+
+    const records = (await approvalSvc.requestApproval({ invoiceId: inv.id }, ctx())).data!;
+    expect(records.length).toBeGreaterThanOrEqual(2);
+    const level1 = records.find((r) => r.approvalLevel === 1)!;
+    expect(level1.status).toBe("PENDING");
+
+    // Reproduce the stale-seed shape from the INV-NS-7002 review case: every
+    // higher level is already APPROVED while level 1 is the sole remaining
+    // PENDING record. Escalating level 1 is therefore escalating the final
+    // pending level — the completion branch must fire: every record APPROVED,
+    // invoice APPROVED, and the chain-approved event + status-change audits
+    // must be emitted.
+    const higher = records.filter((r) => r.approvalLevel > 1);
+    for (const r of higher) {
+      r.status = "APPROVED";
+      r.decision = "APPROVE";
+      r.decisionAt = new Date().toISOString();
+      r.decisionBy = APPROVER;
+      r.updatedAt = new Date().toISOString();
+      r.updatedBy = APPROVER;
+      r.version += 1;
+      await repos.approval.saveRecord(r);
+    }
+
+    const escalated = await approvalSvc.escalateApprovalLevel(
+      { approvalRecordId: level1.id, reason: "SLA breach — last pending level escalated" },
+      ctx(APPROVER),
+    );
+    expect(escalated.success).toBe(true);
+
+    const finalRecords = await repos.approval.findRecordsByInvoiceId(inv.id, COMPANY);
+    expect(finalRecords.every((r) => r.status === "APPROVED")).toBe(true);
+
+    const finalInv = await repos.invoice.findById(inv.id, COMPANY);
+    expect(finalInv?.status).toBe("APPROVED");
+    expect(finalInv?.approvedAt).toBeTruthy();
+
+    const eventTypes = escalated.events.map((e) => e.eventType);
+    expect(eventTypes).toContain("approval.level.decided");
+    expect(eventTypes).toContain("approval.level.escalated");
+    expect(eventTypes).toContain("approval.chain.approved");
+    expect(eventTypes).toContain("invoice.updated");
+
+    const actions = escalated.auditEntries.map((a) => a.action);
+    expect(actions).toContain("approval.escalated");
+    expect(actions).toContain("approval.chain_approved");
+    expect(actions).toContain("invoice.status_changed");
+    expect(
+      escalated.auditEntries.find((a) => a.action === "invoice.status_changed")?.metadata,
+    ).toMatchObject({ previousStatus: "PENDING_APPROVAL", newStatus: "APPROVED" });
+  });
 });
 
 // ══════════════════════════════════════════════════════════════════════════
